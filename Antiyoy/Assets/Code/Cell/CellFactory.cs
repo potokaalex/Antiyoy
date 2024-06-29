@@ -14,13 +14,13 @@
         public void Create()
         {
             var eventsBus = _ecsProvider.GetEventsBus();
-            var mapWidth = _configProvider.GetMap().Width;
+            var mapConfig = _configProvider.GetMap();
             
-            for (var i = 0; i < 10; i++)
-            for (var j = 0; j < 10; j++)
+            for (var i = 0; i < mapConfig.Width; i++)
+            for (var j = 0; j < mapConfig.Height; j++)
             {
                 ref var createRequest = ref eventsBus.NewEvent<CellCreateRequest>();
-                createRequest.Index = i * mapWidth + j;
+                createRequest.Index = i * mapConfig.Width + j;
             }
         }
     }
