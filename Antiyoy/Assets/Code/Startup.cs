@@ -1,21 +1,28 @@
 using UnityEngine;
+using Zenject;
 
 namespace Code
 {
     public class Startup : MonoBehaviour
     {
-        [SerializeField] private ConfigProvider _configProvider;
         [SerializeField] private CameraObject _camera;
+        private EcsProvider _ecsProvider;
+        private CellFactory _cellFactory;
+        private EcsFactory _ecsFactory;
 
+        [Inject]
+        private void Constructor(EcsProvider ecsProvider, CellFactory cellFactory, EcsFactory ecsFactory)
+        {
+            _ecsProvider = ecsProvider;
+            _cellFactory = cellFactory;
+            _ecsFactory = ecsFactory;
+        }
+        
         private void Awake()
         {
-            var ecsFactory = new EcsFactory();
-            var ecsProvider = new EcsProvider(ecsFactory);
-            var cellFactory = new CellFactory(ecsProvider, _configProvider);
-
-            ecsProvider.Initialize();
-            cellFactory.Create();
-            ecsFactory.Create();
+            _ecsProvider.Initialize();
+            _cellFactory.Create();
+            _ecsFactory.Create();
         }
 
         private void Update()
