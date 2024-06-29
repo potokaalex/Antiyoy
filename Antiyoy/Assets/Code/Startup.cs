@@ -1,3 +1,4 @@
+using Code.Cell;
 using UnityEngine;
 using Zenject;
 

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Code
+namespace Code.Cell
 {
     public class CellObject : MonoBehaviour
     {

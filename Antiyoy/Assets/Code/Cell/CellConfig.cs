@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Code
+namespace Code.Cell
 {
     [Serializable]
     public class CellConfig

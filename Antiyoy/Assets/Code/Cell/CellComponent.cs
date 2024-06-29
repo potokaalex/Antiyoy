@@ -1,4 +1,4 @@
-﻿namespace Code
+﻿namespace Code.Cell
 {
     public struct CellComponent
     {
