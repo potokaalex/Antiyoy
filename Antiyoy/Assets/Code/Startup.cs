@@ -1,4 +1,6 @@
+using System;
 using Code.Cell;
+using Leopotam.EcsLite;
 using UnityEngine;
 using Zenject;
 
@@ -10,6 +12,7 @@ namespace Code
         private EcsProvider _ecsProvider;
         private CellFactory _cellFactory;
         private EcsFactory _ecsFactory;
+        private IEcsSystems _ecsSystems;
 
         [Inject]
         private void Constructor(EcsProvider ecsProvider, CellFactory cellFactory, EcsFactory ecsFactory)
@@ -21,15 +24,18 @@ namespace Code
         
         private void Awake()
         {
-            _ecsProvider.Initialize();
-            _cellFactory.Create();
             _ecsFactory.Create();
+            _cellFactory.Create();
+            _ecsSystems = _ecsProvider.GetSystems();
         }
 
-        private void Update()
-        {
-            TouchCell();
-        }
+        private void Start() => _ecsSystems.Init();
+
+        private void FixedUpdate() => _ecsSystems.Run();
+
+        private void Update() => TouchCell();
+
+        private void OnDestroy() => _ecsFactory.Destroy();
 
         private void TouchCell()
         {

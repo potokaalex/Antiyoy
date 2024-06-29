@@ -8,7 +8,10 @@ namespace Code
     public class ConfigProvider
     {
         [SerializeField] private CellConfig _cellConfig;
+        [SerializeField] private MapConfig _mapConfig;
         
         public CellConfig GetCell() => _cellConfig;
+
+        public MapConfig GetMap() => _mapConfig;
     }
 }

@@ -1,16 +1,25 @@
 ﻿using Leopotam.EcsLite;
+using SevenBoldPencil.EasyEvents;
 
 namespace Code
 {
     public class EcsProvider
     {
-        private readonly EcsFactory _factory;
         private EcsWorld _world;
+        private EventsBus _eventBus;
+        private IEcsSystems _systems;
 
-        public EcsProvider(EcsFactory factory) => _factory = factory;
-
-        public void Initialize() => _world = _factory.CreateWorld();
+        public void Initialize(EcsWorld world, EventsBus eventBus, IEcsSystems systems)
+        {
+            _world = world;
+            _eventBus = eventBus;
+            _systems = systems;
+        }
 
         public EcsWorld GetWorld() => _world;
+
+        public EventsBus GetEventsBus() => _eventBus;
+
+        public IEcsSystems GetSystems() => _systems;
     }
 }

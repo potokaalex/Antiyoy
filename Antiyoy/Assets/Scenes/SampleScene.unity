@@ -200,7 +200,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 2.5, y: 4, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -281,6 +281,9 @@ MonoBehaviour:
   _configProvider:
     _cellConfig:
       Prefab: {fileID: 2510216717212271286, guid: 6eb3e4bec3209af4fa64a7ba0f05300b, type: 3}
+    _mapConfig:
+      Width: 10
+      Height: 10
 --- !u!114 &950199259
 MonoBehaviour:
   m_ObjectHideFlags: 0
