@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -8,5 +9,6 @@ namespace Code.Cell
         public SpriteRenderer SpriteRenderer;
         public TextMeshProUGUI DebugText;
         public int Entity;
+        public List<Vector2Int> Neighbours;
     }
 }

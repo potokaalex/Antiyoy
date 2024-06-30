@@ -16,7 +16,7 @@ namespace Code.Tile
 
         public void Init(IEcsSystems systems)
         {
-            var world = systems.GetWorld();
+            var world = _ecsProvider.GetWorld();
             
             _eventsBus = _ecsProvider.GetEventsBus();
             _requestFilter = _eventsBus.GetEventBodies(out _requestPool);
