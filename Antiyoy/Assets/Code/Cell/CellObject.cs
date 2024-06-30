@@ -4,6 +4,7 @@ namespace Code.Cell
 {
     public class CellObject : MonoBehaviour
     {
-        public int Index;
+        public SpriteRenderer SpriteRenderer;
+        public int Index;//TODO entityIndex!
     }
 }

@@ -1,4 +1,5 @@
 using Code.Cell;
+using Code.Tile;
 using UnityEngine;
 using Zenject;
 
@@ -16,6 +17,7 @@ namespace Code
             Container.Bind<EcsProvider>().AsSingle();
             
             Container.Bind<CellFactory>().AsSingle();
+            Container.Bind<TileFactory>().AsSingle();
         }
     }
 }
