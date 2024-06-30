@@ -1,4 +1,4 @@
-using Code.Cell;
+using Code.Tile;
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.UnityEditor;
 using SevenBoldPencil.EasyEvents;
@@ -43,8 +43,10 @@ namespace Code
             systems.AddWorld(_eventBus.GetEventsWorld(), "Events");
 
             AddDebugSystems(systems);
-            systems.Add(CreateSystem<CellCreateSystem>());
-            systems.Add(_eventBus.GetDestroyEventsSystem().IncReplicant<CellCreateRequest>());
+            systems.Add(CreateSystem<TileCreateSystem>());
+            systems.Add(CreateSystem<TileDestroySystem>());
+            systems.Add(_eventBus.GetDestroyEventsSystem().IncReplicant<TileCreateRequest>());
+            systems.Add(_eventBus.GetDestroyEventsSystem().IncReplicant<TileDestroyRequest>());
 
             return systems;
         }

@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 namespace Code.Cell
@@ -5,6 +6,7 @@ namespace Code.Cell
     public class CellObject : MonoBehaviour
     {
         public SpriteRenderer SpriteRenderer;
-        public int Index;//TODO entityIndex!
+        public TextMeshProUGUI DebugText;
+        public int Entity;
     }
 }

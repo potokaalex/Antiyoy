@@ -31,6 +31,8 @@ namespace Code
             _ecsFactory.Create();
             _cellFactory.Create();
             _ecsSystems = _ecsProvider.GetSystems();
+
+            _tileFactory.Initialize();
         }
 
         private void Start() => _ecsSystems.Init();
