@@ -13,6 +13,7 @@ namespace Code
         private CellFactory _cellFactory;
         private EcsFactory _ecsFactory;
         private IEcsSystems _ecsSystems;
+        private bool _isCreateCellMode;
 
         [Inject]
         private void Constructor(EcsProvider ecsProvider, CellFactory cellFactory, EcsFactory ecsFactory)
@@ -37,6 +38,9 @@ namespace Code
 
         private void OnDestroy() => _ecsFactory.Destroy();
 
+        //мы должны создать псевдо-клетки, только для того, чтобы получить индекс, для создания/удаления настоящей клетки!
+        //создать новую систему (т.к. создание мнимымых клеток подразумевается только здесь.
+        //расширить старую систему ?
         private void TouchCell()
         {
             if (!Input.GetMouseButtonDown(0)) 
@@ -45,11 +49,19 @@ namespace Code
             var ray = _camera.GetRayFromCurrentMousePosition();
             var hit = Physics2D.Raycast(ray.origin, ray.direction);
             
+            //hmm...
             if (hit.transform)
             {
                 if(hit.transform.TryGetComponent<CellObject>(out var cell))
-                    Debug.Log(cell.name);
+                    Debug.Log(cell.Index);
             }
+        }
+
+        private void OnGUI()
+        {
+            if (GUI.Button(new Rect(10, 10, 100, 100), "CreateCell"))
+                _isCreateCellMode = true;
+            //if()
         }
     }
 }
