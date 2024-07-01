@@ -6,7 +6,7 @@ namespace Code.Cell
     public class CellObject : MonoBehaviour
     {
         public SpriteRenderer SpriteRenderer;
-        public TextMeshProUGUI DebugText;
+        public TextMeshPro DebugText;
         public int Entity;
     }
 }
