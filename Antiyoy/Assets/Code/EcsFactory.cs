@@ -1,3 +1,4 @@
+using Code.Region;
 using Code.Tile;
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.UnityEditor;
@@ -45,6 +46,9 @@ namespace Code
             AddDebugSystems(systems);
             systems.Add(CreateSystem<TileCreateSystem>());
             systems.Add(CreateSystem<TileDestroySystem>());
+            systems.Add(CreateSystem<RegionJoinSystem>());
+            systems.Add(CreateSystem<RegionDivideSystem>());
+            systems.Add(CreateSystem<RegionDebugSystem>());
             systems.Add(_eventBus.GetDestroyEventsSystem().IncReplicant<TileCreateRequest>());
             systems.Add(_eventBus.GetDestroyEventsSystem().IncReplicant<TileDestroyRequest>());
 

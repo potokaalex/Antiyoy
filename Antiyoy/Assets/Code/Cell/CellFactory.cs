@@ -56,7 +56,6 @@ namespace Code.Cell
                         continue;
 
                     cell.NeighboursCellsEntities.Add(_pool.Find(_filter, c => c.Hex == neighbourHex));
-                    cellObject.Neighbours.Add(arrayIndex);
                 }
             }
         }
@@ -69,14 +68,16 @@ namespace Code.Cell
             ref var cell = ref _pool.Add(entity);
             cell.Hex = hex;
             cell.NeighboursCellsEntities = new List<int>();
-
+            
             var position = hex.ToWorldPosition();
             var cellObject = Object.Instantiate(cellConfig.Prefab, position, Quaternion.identity);
             cellObject.transform.SetParent(_cellsRoot);
             cellObject.name = $"Cell({hex})";
             cellObject.Entity = entity;
-            cellObject.DebugText.text = $"{hex}\n{hex.ToArrayIndex()}";
+            //cellObject.DebugText.text = $"{hex}\n{hex.ToArrayIndex()}";
 
+            cell.Object = cellObject;
+            
             return cellObject;
         }
     }

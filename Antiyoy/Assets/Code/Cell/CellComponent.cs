@@ -6,6 +6,7 @@ namespace Code.Cell
     public struct CellComponent
     {
         public List<int> NeighboursCellsEntities;
+        public CellObject Object;
         public HexCoordinates Hex;
     }
 }
