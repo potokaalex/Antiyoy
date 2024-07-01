@@ -58,7 +58,7 @@ namespace Code.Region
             if (regionTilesParts[0].Count != baseRegion.TilesEntities.Count)
                 Divide(regionTilesParts, baseRegion);
 
-            foreach (var tilesPart in regionTilesParts) 
+            foreach (var tilesPart in regionTilesParts)
                 ListPool<int>.Release(tilesPart);
             ListPool<List<int>>.Release(regionTilesParts);
         }
@@ -136,19 +136,23 @@ namespace Code.Region
             ListPool<int>.Release(remainsTiles);
         }
 
+        private readonly HashSet<int> _t = new();
+
         //проход волновым алгоритмом по regionTiles и возвращение(resultTiles) тайлов, до которых смог добраться алгоритм.
         private void GetWaveTiles(List<int> resultTiles, List<int> regionTiles, int baseRegionEntity)
         {
             var tilesFront = ListPool<int>.Get();
             tilesFront.Add(regionTiles[0]);
             resultTiles.Add(regionTiles[0]);
+            _t.Add(regionTiles[0]);
 
             for (var i = 0; i < regionTiles.Count; i++)
             {
                 if (tilesFront.Count == 0)
                     break;
 
-                var baseTile = tilesFront[0];
+                var baseTileIndex = tilesFront.Count - 1;
+                var baseTile = tilesFront[baseTileIndex];
                 var neighbours = _cellPool.Get(baseTile).NeighboursCellsEntities;
 
                 foreach (var neighbour in neighbours)
@@ -158,16 +162,18 @@ namespace Code.Region
 
                     var link = _linkPool.Get(neighbour);
 
-                    if (link.Entity != baseRegionEntity || resultTiles.Contains(neighbour))
+                    if (link.Entity != baseRegionEntity || _t.Contains(neighbour)) //500 вызовов?
                         continue;
 
                     resultTiles.Add(neighbour);
                     tilesFront.Add(neighbour);
+                    _t.Add(neighbour);
                 }
 
-                tilesFront.Remove(baseTile);
+                tilesFront.RemoveAt(baseTileIndex);
             }
 
+            _t.Clear();
             ListPool<int>.Release(tilesFront);
         }
     }
