@@ -19,6 +19,7 @@ namespace Code.Region
         private EcsPool<RegionComponent> _pool;
         private EcsPool<CellComponent> _cellPool;
         private EcsPool<RegionLink> _linkPool;
+        private GetRegionPartsTool _getRegionPartsTool;
 
         public RegionDivideSystem(EcsProvider ecsProvider) => _ecsProvider = ecsProvider;
 
@@ -29,8 +30,9 @@ namespace Code.Region
             _world = _ecsProvider.GetWorld();
             _tileRequestFilter = eventsBus.GetEventBodies(out _tileRequestPool);
             _pool = _world.GetPool<RegionComponent>();
-            _cellPool = _world.GetPool<CellComponent>();
             _linkPool = _world.GetPool<RegionLink>();
+            var cellPool = _world.GetPool<CellComponent>();
+            _getRegionPartsTool = new GetRegionPartsTool(cellPool);
         }
 
         public void Run(IEcsSystems systems)
@@ -53,7 +55,7 @@ namespace Code.Region
             }
 
             var regionTilesParts = ListPool<List<int>>.Get();
-            GetRegionTilesParts(regionTilesParts, baseRegion, regionLink.Entity);
+            _getRegionPartsTool.Get(regionTilesParts, baseRegion);
 
             if (regionTilesParts[0].Count != baseRegion.TilesEntities.Count)
                 Divide(regionTilesParts, baseRegion);
@@ -113,68 +115,6 @@ namespace Code.Region
             }
 
             return majorTilesPart;
-        }
-
-        //возвращает(regionTilesParts) тайлы из которых можно составить новые регионы (тайлы которые не граничат с другими тайлами)
-        private void GetRegionTilesParts(List<List<int>> regionTilesParts, RegionComponent region, int baseRegionEntity)
-        {
-            var remainsTiles = ListPool<int>.Get(region.TilesEntities);
-
-            for (var i = 0; i < region.TilesEntities.Count; i++)
-            {
-                var tiles = ListPool<int>.Get();
-                GetWaveTiles(tiles, remainsTiles, baseRegionEntity);
-                regionTilesParts.Add(tiles);
-
-                foreach (var tile in tiles)
-                    remainsTiles.Remove(tile);
-
-                if (remainsTiles.Count == 0)
-                    break;
-            }
-
-            ListPool<int>.Release(remainsTiles);
-        }
-
-        private readonly HashSet<int> _t = new();
-
-        //проход волновым алгоритмом по regionTiles и возвращение(resultTiles) тайлов, до которых смог добраться алгоритм.
-        private void GetWaveTiles(List<int> resultTiles, List<int> regionTiles, int baseRegionEntity)
-        {
-            var tilesFront = ListPool<int>.Get();
-            tilesFront.Add(regionTiles[0]);
-            resultTiles.Add(regionTiles[0]);
-            _t.Add(regionTiles[0]);
-
-            for (var i = 0; i < regionTiles.Count; i++)
-            {
-                if (tilesFront.Count == 0)
-                    break;
-
-                var baseTileIndex = tilesFront.Count - 1;
-                var baseTile = tilesFront[baseTileIndex];
-                var neighbours = _cellPool.Get(baseTile).NeighboursCellsEntities;
-
-                foreach (var neighbour in neighbours)
-                {
-                    if (!_linkPool.Has(neighbour))
-                        continue;
-
-                    var link = _linkPool.Get(neighbour);
-
-                    if (link.Entity != baseRegionEntity || _t.Contains(neighbour)) //500 вызовов?
-                        continue;
-
-                    resultTiles.Add(neighbour);
-                    tilesFront.Add(neighbour);
-                    _t.Add(neighbour);
-                }
-
-                tilesFront.RemoveAt(baseTileIndex);
-            }
-
-            _t.Clear();
-            ListPool<int>.Release(tilesFront);
         }
     }
 }
