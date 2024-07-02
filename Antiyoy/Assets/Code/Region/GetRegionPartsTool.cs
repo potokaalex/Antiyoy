@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Code.Cell;
 using Leopotam.EcsLite;
-using UnityEngine;
 
 namespace Code.Region
 {
@@ -37,8 +35,15 @@ namespace Code.Region
         //проход волновым алгоритмом по regionTiles и возвращение(resultTiles) тайлов, до которых смог добраться алгоритм.
         private List<int> GetWaveTiles(HashSet<int> noPassedTiles)
         {
+            var firstItem = 0;
+
+            foreach (var tile in noPassedTiles)
+            {
+                firstItem = tile;
+                break;
+            }
+            
             var resultTiles = ListPool<int>.Get(noPassedTiles.Count);
-            var firstItem = noPassedTiles.FirstOrDefault();
             var noPassedTilesInitialCount = noPassedTiles.Count;
             
             _tilesFront.Push(firstItem);

@@ -80,7 +80,7 @@ namespace Code.Region
         {
             var entity = _world.NewEntity();
             ref var region = ref _pool.Add(entity);
-            region.TilesEntities = new List<int>();
+            region.TilesEntities = ListPool<int>.Get();
             return entity;
         }
 
@@ -102,7 +102,8 @@ namespace Code.Region
 
                 foreach (var tile in region.TilesEntities)
                     ConnectTileWithRegion(tile, majorRegionEntity);
-                    
+
+                ListPool<int>.Release(_pool.Get(regionEntity).TilesEntities);
                 _pool.Del(regionEntity);
             }
         }

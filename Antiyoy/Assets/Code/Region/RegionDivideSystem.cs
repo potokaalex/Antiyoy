@@ -17,7 +17,6 @@ namespace Code.Region
         private EcsPool<TileDestroyRequest> _tileRequestPool;
         private EcsFilter _tileRequestFilter;
         private EcsPool<RegionComponent> _pool;
-        private EcsPool<CellComponent> _cellPool;
         private EcsPool<RegionLink> _linkPool;
         private GetRegionPartsTool _getRegionPartsTool;
 
@@ -50,6 +49,7 @@ namespace Code.Region
 
             if (baseRegion.TilesEntities.Count == 0)
             {
+                ListPool<int>.Release(_pool.Get(regionLink.Entity).TilesEntities);
                 _pool.Del(regionLink.Entity);
                 return;
             }
@@ -83,7 +83,7 @@ namespace Code.Region
 
                 var newRegionEntity = _world.NewEntity();
                 ref var newRegion = ref _pool.Add(newRegionEntity);
-                newRegion.TilesEntities = new List<int>();
+                newRegion.TilesEntities = ListPool<int>.Get(tilesPart.Count);
 
                 MoveTiles(tilesPart, newRegion, baseRegion, newRegionEntity);
             }
