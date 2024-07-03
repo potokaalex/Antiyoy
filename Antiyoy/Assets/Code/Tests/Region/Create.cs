@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Code.Cell;
+using Code.Region.Components;
 using Leopotam.EcsLite;
 using NSubstitute;
 using SevenBoldPencil.EasyEvents;
@@ -28,12 +29,26 @@ namespace Code.Tests.Region
             return cellEntity;
         }
 
+        public static int CellWithRegionLink(EcsWorld world, int regionEntity)
+        {
+            var cellEntity = Cell(world);
+            world.GetPool<RegionLink>().Add(cellEntity).RegionEntity = regionEntity;
+            return cellEntity;
+        }
+        
         public static IEcsProvider EcsProvider(EcsWorld world, EventsBus eventBus)
         {
             var ecsProvider = Substitute.For<IEcsProvider>();
             ecsProvider.GetWorld().Returns(world);
             ecsProvider.GetEventsBus().Returns(eventBus);
             return ecsProvider;
+        }
+
+        public static int Region(EcsWorld world)
+        {
+            var regionEntity = world.NewEntity();
+            world.GetPool<RegionComponent>().Add(regionEntity).CellEntities = new List<int>();
+            return regionEntity;
         }
     }
 }

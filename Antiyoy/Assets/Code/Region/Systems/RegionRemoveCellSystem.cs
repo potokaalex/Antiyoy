@@ -1,7 +1,6 @@
 ﻿using Code.Cell;
 using Code.Region.Components;
 using Code.Region.Tools;
-using Code.Tile;
 using Leopotam.EcsLite;
 
 namespace Code.Region.Systems

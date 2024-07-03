@@ -28,17 +28,17 @@ namespace Code.Region.Tools
             return majorRegion;
         }
 
-        private static int GetMajorRegion(List<int> neighbourRegions, EcsPool<RegionComponent> pool)
+        private static int GetMajorRegion(List<int> regions, EcsPool<RegionComponent> pool)
         {
-            var majorRegionEntity = neighbourRegions[0];
+            var majorRegionEntity = regions[0];
 
-            for (var i = 1; i < neighbourRegions.Count; i++)
+            for (var i = 1; i < regions.Count; i++)
             {
                 var mainRegion = pool.Get(majorRegionEntity);
-                var region = pool.Get(neighbourRegions[i]);
+                var region = pool.Get(regions[i]);
 
                 if (region.CellEntities.Count > mainRegion.CellEntities.Count)
-                    majorRegionEntity = neighbourRegions[i];
+                    majorRegionEntity = regions[i];
             }
 
             return majorRegionEntity;
