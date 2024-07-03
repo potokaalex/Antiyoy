@@ -1,4 +1,6 @@
 ﻿using Code.Cell;
+using Code.Region;
+using Code.Region.Components;
 using Leopotam.EcsLite;
 using Plugins.EcsLite;
 using SevenBoldPencil.EasyEvents;
@@ -38,6 +40,9 @@ namespace Code.Tile
 
             ref var request = ref _eventsBus.NewEvent<TileCreateRequest>();
             request.Cell = cell;
+            
+            ref var regionRequest = ref _eventsBus.NewEvent<RegionAddCellRequest>();
+            regionRequest.CellEntity = cell.Entity;
         }
         
         public void Destroy(CellObject cell)

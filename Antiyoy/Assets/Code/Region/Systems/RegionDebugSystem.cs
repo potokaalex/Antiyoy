@@ -1,9 +1,10 @@
 ﻿using Code.Cell;
+using Code.Region.Components;
 using Code.Tile;
 using Leopotam.EcsLite;
 using SevenBoldPencil.EasyEvents;
 
-namespace Code.Region
+namespace Code.Region.Systems
 {
     public class RegionDebugSystem : IEcsInitSystem, IEcsRunSystem
     {
@@ -29,7 +30,7 @@ namespace Code.Region
 
         public void Run(IEcsSystems systems)
         {
-            if (!_eventsBus.HasEvents<TileDestroyRequest>() && !_eventsBus.HasEvents<TileCreateRequest>())
+            if (!_eventsBus.HasEvents<TileDestroyRequest>() && !_eventsBus.HasEvents<RegionAddCellRequest>())
                 return;
 
             foreach (var cellEntity in _cellFilter)
@@ -39,7 +40,7 @@ namespace Code.Region
                     var link = _linkPool.Get(cellEntity);
 
                     _cellPool.Get(cellEntity).Object.DebugText.text =
-                        $"{link.Entity}\n{_pool.Get(link.Entity).TilesEntities.Count}".ToString();
+                        $"{link.RegionEntity}\n{_pool.Get(link.RegionEntity).CellEntities.Count}".ToString();
                 }
                 else
                     _cellPool.Get(cellEntity).Object.DebugText.text = string.Empty;

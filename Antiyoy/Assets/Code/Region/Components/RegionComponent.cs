@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 
-namespace Code.Region
+namespace Code.Region.Components
 {
     public struct RegionComponent
     {
-        public List<int> TilesEntities;
+        public List<int> CellEntities;
     }
 }

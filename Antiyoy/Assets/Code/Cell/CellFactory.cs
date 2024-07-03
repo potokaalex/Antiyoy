@@ -55,7 +55,7 @@ namespace Code.Cell
                         arrayIndex.y < 0 || arrayIndex.y >= mapConfig.Height)
                         continue;
 
-                    cell.NeighboursCellsEntities.Add(_pool.Find(_filter, c => c.Hex == neighbourHex));
+                    cell.NeighbourCellEntities.Add(_pool.Find(_filter, c => c.Hex == neighbourHex));
                 }
             }
         }
@@ -67,7 +67,7 @@ namespace Code.Cell
             var entity = world.NewEntity();
             ref var cell = ref _pool.Add(entity);
             cell.Hex = hex;
-            cell.NeighboursCellsEntities = new List<int>();
+            cell.NeighbourCellEntities = new List<int>();
             
             var position = hex.ToWorldPosition();
             var cellObject = Object.Instantiate(cellConfig.Prefab, position, Quaternion.identity);

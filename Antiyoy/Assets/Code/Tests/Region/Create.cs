@@ -10,7 +10,7 @@ namespace Code.Tests.Region
         {
             var cellEntity = world.NewEntity();
             ref var cell = ref cellPool.Add(cellEntity);
-            cell.NeighboursCellsEntities = new List<int>();
+            cell.NeighbourCellEntities = new List<int>();
             return cellEntity;
         }
 
@@ -18,7 +18,7 @@ namespace Code.Tests.Region
         {
             var cellEntity = Cell(world, cellPool);
             for (var i = 0; i < 6; i++)
-                cellPool.Get(cellEntity).NeighboursCellsEntities.Add(Cell(world, cellPool));
+                cellPool.Get(cellEntity).NeighbourCellEntities.Add(Cell(world, cellPool));
             return cellEntity;
         }
     }
