@@ -1,8 +1,10 @@
-﻿using Leopotam.EcsLite;
+﻿using Code.Ecs;
+using Code.Tile.Components;
+using Leopotam.EcsLite;
 using SevenBoldPencil.EasyEvents;
 using UnityEngine;
 
-namespace Code.Tile
+namespace Code.Tile.Systems
 {
     public class TileDestroySystem : IEcsInitSystem, IEcsRunSystem
     {

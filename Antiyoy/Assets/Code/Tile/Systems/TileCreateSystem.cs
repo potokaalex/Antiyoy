@@ -1,24 +1,20 @@
-﻿using Leopotam.EcsLite;
+﻿using Code.Ecs;
+using Code.Tile.Components;
+using Leopotam.EcsLite;
 using SevenBoldPencil.EasyEvents;
 using UnityEngine;
 
-namespace Code.Tile
+namespace Code.Tile.Systems
 {
     public class TileCreateSystem : IEcsInitSystem, IEcsRunSystem
     {
         private readonly IEcsProvider _ecsProvider;
-        private readonly ConfigProvider _configProvider;
         private EventsBus _eventsBus;
         private EcsPool<TileCreateRequest> _requestPool;
         private EcsFilter _requestFilter;
         private EcsPool<TileComponent> _pool;
-        private EcsFilter _filer;
 
-        public TileCreateSystem(IEcsProvider ecsProvider, ConfigProvider configProvider)
-        {
-            _ecsProvider = ecsProvider;
-            _configProvider = configProvider;
-        }
+        public TileCreateSystem(IEcsProvider ecsProvider) => _ecsProvider = ecsProvider;
 
         public void Init(IEcsSystems systems)
         {
@@ -27,8 +23,6 @@ namespace Code.Tile
             _eventsBus = _ecsProvider.GetEventsBus();
             _requestFilter = _eventsBus.GetEventBodies(out _requestPool);
             _pool = world.GetPool<TileComponent>();
-            _filer = world.Filter<TileComponent>().End();
-            //_mapWidth
         }
 
         public void Run(IEcsSystems systems)
@@ -40,13 +34,8 @@ namespace Code.Tile
         private void CreateTile(TileCreateRequest request)
         {
             var thisEntity = request.Cell.Entity;
-            ref var tile = ref _pool.Add(thisEntity);
-            //из индекса получить индекс другой клетки и только теперь по индексу другой клетки отыскать нужную нам.
-
-           // _pool.Has()
-            
+            _pool.Add(thisEntity);
             request.Cell.SpriteRenderer.color = Color.white;
-            //request.Cell.DebugText.text = thisEntity.ToString();
         }
     }
 }

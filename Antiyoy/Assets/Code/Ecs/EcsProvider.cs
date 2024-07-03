@@ -1,7 +1,7 @@
 ﻿using Leopotam.EcsLite;
 using SevenBoldPencil.EasyEvents;
 
-namespace Code
+namespace Code.Ecs
 {
     public class EcsProvider : IEcsProvider
     {

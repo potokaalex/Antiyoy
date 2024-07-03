@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Code.Ecs;
 using Code.Hex;
 using Leopotam.EcsLite;
 using Plugins.EcsLite;
@@ -74,7 +75,6 @@ namespace Code.Cell
             cellObject.transform.SetParent(_cellsRoot);
             cellObject.name = $"Cell({hex})";
             cellObject.Entity = entity;
-            //cellObject.DebugText.text = $"{hex}\n{hex.ToArrayIndex()}";
 
             cell.Object = cellObject;
             

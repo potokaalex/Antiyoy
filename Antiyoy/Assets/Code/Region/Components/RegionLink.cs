@@ -2,6 +2,6 @@
 {
     public struct RegionLink
     {
-        public int RegionEntity;//entity региона.
+        public int RegionEntity;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Code.Cell;
-using Code.Region;
+using Code.Ecs;
 using Code.Region.Components;
+using Code.Tile.Components;
 using Leopotam.EcsLite;
 using Plugins.EcsLite;
 using SevenBoldPencil.EasyEvents;

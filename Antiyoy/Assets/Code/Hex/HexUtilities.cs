@@ -4,21 +4,21 @@ namespace Code.Hex
 {
     public static class HexUtilities
     {
-        private static readonly HexCoordinates South = new(0, 1);
-        private static readonly HexCoordinates Southeast = new(1, 0);
-        private static readonly HexCoordinates Northeast = new(1, -1);
-        private static readonly HexCoordinates North = new(0, -1);
-        private static readonly HexCoordinates Northwest = new(-1, 0);
-        private static readonly HexCoordinates Southwest = new(-1, 1);
+        private static readonly HexCoordinates _south = new(0, 1);
+        private static readonly HexCoordinates _southeast = new(1, 0);
+        private static readonly HexCoordinates _northeast = new(1, -1);
+        private static readonly HexCoordinates _north = new(0, -1);
+        private static readonly HexCoordinates _northwest = new(-1, 0);
+        private static readonly HexCoordinates _southwest = new(-1, 1);
         
         public static readonly HexCoordinates[] Directions =
         {
-            South,
-            Southeast,
-            Northeast,
-            North,
-            Northwest,
-            Southwest
+            _south,
+            _southeast,
+            _northeast,
+            _north,
+            _northwest,
+            _southwest
         };
         
         public static HexCoordinates FromArrayIndex(Vector2Int index)

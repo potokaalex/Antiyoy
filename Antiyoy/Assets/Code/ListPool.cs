@@ -19,17 +19,6 @@ namespace Code
 
             return new List<T>(capacity);
         }
-        
-        public static List<T> Get(IList<T> elements)
-        {
-            var item = Get(elements.Count);
-
-            foreach (var i in elements)
-                item.Add(i);
-            
-            _freeItems.Remove(item);
-            return item;
-        }
 
         public static List<T> Get()
         {

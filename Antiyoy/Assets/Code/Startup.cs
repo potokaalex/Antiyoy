@@ -1,4 +1,5 @@
 using Code.Cell;
+using Code.Ecs;
 using Code.Tile;
 using Leopotam.EcsLite;
 using UnityEngine;

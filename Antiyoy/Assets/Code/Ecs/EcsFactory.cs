@@ -1,12 +1,13 @@
 using Code.Region.Components;
 using Code.Region.Systems;
-using Code.Tile;
+using Code.Tile.Components;
+using Code.Tile.Systems;
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.UnityEditor;
 using SevenBoldPencil.EasyEvents;
 using Zenject;
 
-namespace Code
+namespace Code.Ecs
 {
     public class EcsFactory
     {

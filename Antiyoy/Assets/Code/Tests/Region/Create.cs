@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Code.Cell;
+using Code.Ecs;
 using Code.Region.Components;
 using Leopotam.EcsLite;
 using NSubstitute;

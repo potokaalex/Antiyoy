@@ -1,9 +1,9 @@
 ﻿using Code.Cell;
 using SevenBoldPencil.EasyEvents;
 
-namespace Code.Tile
+namespace Code.Tile.Components
 {
-    public struct TileCreateRequest : IEventReplicant
+    public struct TileDestroyRequest : IEventReplicant
     {
         public CellObject Cell;
     }

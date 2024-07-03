@@ -7,7 +7,7 @@ namespace Code.Hex
         public int Q;
         public int R;
 
-        public int S => -Q - R;
+        private int S => -Q - R;
 
         public HexCoordinates(int q, int r)
         {
