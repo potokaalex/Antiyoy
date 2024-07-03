@@ -13,7 +13,7 @@ namespace Code.Region.Systems
     //переносим данные из других регионов в major и удаляем их
     public class RegionAddCellSystem : IEcsInitSystem, IEcsRunSystem
     {
-        private readonly EcsProvider _ecsProvider;
+        private readonly IEcsProvider _ecsProvider;
         private readonly List<int> _neighbourRegions = new();
         private EcsWorld _world;
         private EcsFilter _requestFilter;
@@ -22,7 +22,7 @@ namespace Code.Region.Systems
         private EcsPool<CellComponent> _cellPool;
         private EcsPool<RegionLink> _linkPool;
         
-        public RegionAddCellSystem(EcsProvider ecsProvider) => _ecsProvider = ecsProvider;
+        public RegionAddCellSystem(IEcsProvider ecsProvider) => _ecsProvider = ecsProvider;
 
         public void Init(IEcsSystems systems)
         {

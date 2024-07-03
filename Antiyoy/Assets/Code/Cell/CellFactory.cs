@@ -8,13 +8,13 @@ namespace Code.Cell
 {
     public class CellFactory
     {
-        private readonly EcsProvider _ecsProvider;
+        private readonly IEcsProvider _ecsProvider;
         private readonly ConfigProvider _configProvider;
         private Transform _cellsRoot;
         private EcsPool<CellComponent> _pool;
         private EcsFilter _filter;
 
-        public CellFactory(EcsProvider ecsProvider, ConfigProvider configProvider)
+        public CellFactory(IEcsProvider ecsProvider, ConfigProvider configProvider)
         {
             _ecsProvider = ecsProvider;
             _configProvider = configProvider;

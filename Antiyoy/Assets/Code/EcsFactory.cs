@@ -1,4 +1,3 @@
-using Code.Region;
 using Code.Region.Components;
 using Code.Region.Systems;
 using Code.Tile;
@@ -12,13 +11,13 @@ namespace Code
     public class EcsFactory
     {
         private readonly IInstantiator _instantiator;
-        private readonly EcsProvider _provider;
+        private readonly IEcsProvider _provider;
 
         private EcsWorld _world;
         private IEcsSystems _systems;
         private EventsBus _eventBus;
 
-        public EcsFactory(IInstantiator instantiator, EcsProvider provider)
+        public EcsFactory(IInstantiator instantiator, IEcsProvider provider)
         {
             _instantiator = instantiator;
             _provider = provider;
@@ -49,12 +48,13 @@ namespace Code
             systems.Add(CreateSystem<TileCreateSystem>());
             systems.Add(_eventBus.GetDestroyEventsSystem().IncReplicant<TileCreateRequest>());
             systems.Add(CreateSystem<TileDestroySystem>());
+            systems.Add(_eventBus.GetDestroyEventsSystem().IncReplicant<TileDestroyRequest>());
             
             systems.Add(CreateSystem<RegionAddCellSystem>());
             systems.Add(CreateSystem<RegionRemoveCellSystem>());
             systems.Add(CreateSystem<RegionDebugSystem>());
             systems.Add(_eventBus.GetDestroyEventsSystem().IncReplicant<RegionAddCellRequest>());
-            systems.Add(_eventBus.GetDestroyEventsSystem().IncReplicant<TileDestroyRequest>());
+            systems.Add(_eventBus.GetDestroyEventsSystem().IncReplicant<RegionRemoveCellRequest>());
 
             return systems;
         }

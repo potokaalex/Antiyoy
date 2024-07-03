@@ -9,7 +9,7 @@ namespace Code
     public class Startup : MonoBehaviour
     {
         [SerializeField] private CameraObject _camera;
-        private EcsProvider _ecsProvider;
+        private IEcsProvider _ecsProvider;
         private CellFactory _cellFactory;
         private EcsFactory _ecsFactory;
         private TileFactory _tileFactory;
@@ -17,7 +17,7 @@ namespace Code
         private bool _isCreateTileMode;
 
         [Inject]
-        private void Constructor(EcsProvider ecsProvider, CellFactory cellFactory, EcsFactory ecsFactory,
+        private void Constructor(IEcsProvider ecsProvider, CellFactory cellFactory, EcsFactory ecsFactory,
             TileFactory tileFactory)
         {
             _ecsProvider = ecsProvider;

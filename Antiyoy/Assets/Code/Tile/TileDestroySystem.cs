@@ -6,13 +6,13 @@ namespace Code.Tile
 {
     public class TileDestroySystem : IEcsInitSystem, IEcsRunSystem
     {
-        private readonly EcsProvider _ecsProvider;
+        private readonly IEcsProvider _ecsProvider;
         private EventsBus _eventsBus;
         private EcsPool<TileDestroyRequest> _requestPool;
         private EcsFilter _requestFilter;
         private EcsPool<TileComponent> _pool;
 
-        public TileDestroySystem(EcsProvider ecsProvider) => _ecsProvider = ecsProvider;
+        public TileDestroySystem(IEcsProvider ecsProvider) => _ecsProvider = ecsProvider;
 
         public void Init(IEcsSystems systems)
         {

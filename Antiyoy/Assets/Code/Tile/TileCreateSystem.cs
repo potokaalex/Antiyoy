@@ -6,7 +6,7 @@ namespace Code.Tile
 {
     public class TileCreateSystem : IEcsInitSystem, IEcsRunSystem
     {
-        private readonly EcsProvider _ecsProvider;
+        private readonly IEcsProvider _ecsProvider;
         private readonly ConfigProvider _configProvider;
         private EventsBus _eventsBus;
         private EcsPool<TileCreateRequest> _requestPool;
@@ -14,7 +14,7 @@ namespace Code.Tile
         private EcsPool<TileComponent> _pool;
         private EcsFilter _filer;
 
-        public TileCreateSystem(EcsProvider ecsProvider, ConfigProvider configProvider)
+        public TileCreateSystem(IEcsProvider ecsProvider, ConfigProvider configProvider)
         {
             _ecsProvider = ecsProvider;
             _configProvider = configProvider;

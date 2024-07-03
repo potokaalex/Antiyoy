@@ -8,14 +8,14 @@ namespace Code.Region.Systems
 {
     public class RegionDebugSystem : IEcsInitSystem, IEcsRunSystem
     {
-        private readonly EcsProvider _ecsProvider;
+        private readonly IEcsProvider _ecsProvider;
         private EventsBus _eventsBus;
         private EcsPool<CellComponent> _cellPool;
         private EcsFilter _cellFilter;
         private EcsPool<RegionLink> _linkPool;
         private EcsPool<RegionComponent> _pool;
 
-        public RegionDebugSystem(EcsProvider ecsProvider) => _ecsProvider = ecsProvider;
+        public RegionDebugSystem(IEcsProvider ecsProvider) => _ecsProvider = ecsProvider;
 
         public void Init(IEcsSystems systems)
         {
@@ -30,7 +30,7 @@ namespace Code.Region.Systems
 
         public void Run(IEcsSystems systems)
         {
-            if (!_eventsBus.HasEvents<TileDestroyRequest>() && !_eventsBus.HasEvents<RegionAddCellRequest>())
+            if (!_eventsBus.HasEvents<RegionRemoveCellRequest>() && !_eventsBus.HasEvents<RegionAddCellRequest>())
                 return;
 
             foreach (var cellEntity in _cellFilter)

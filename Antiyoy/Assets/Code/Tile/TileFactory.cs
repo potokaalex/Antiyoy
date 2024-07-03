@@ -10,7 +10,7 @@ namespace Code.Tile
     //нажимая на клетку, я создаю тайл, тайл имеет регион и сущность.
     public class TileFactory
     {
-        private readonly EcsProvider _ecsProvider;
+        private readonly IEcsProvider _ecsProvider;
         private EventsBus _eventsBus;
         private EcsPool<TileComponent> _pool;
         private EcsPool<TileCreateRequest> _createRequestPool;
@@ -18,7 +18,7 @@ namespace Code.Tile
         private EcsFilter _createRequestFilter;
         private EcsFilter _destroyRequestFilter;
 
-        public TileFactory(EcsProvider ecsProvider) => _ecsProvider = ecsProvider;
+        public TileFactory(IEcsProvider ecsProvider) => _ecsProvider = ecsProvider;
 
         public void Initialize()
         {
@@ -55,6 +55,9 @@ namespace Code.Tile
 
             ref var request = ref _eventsBus.NewEvent<TileDestroyRequest>();
             request.Cell = cell;
+            
+            ref var regionRequest = ref _eventsBus.NewEvent<RegionRemoveCellRequest>();
+            regionRequest.CellEntity = cell.Entity;
         }
     }
 }

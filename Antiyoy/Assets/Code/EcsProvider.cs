@@ -3,7 +3,7 @@ using SevenBoldPencil.EasyEvents;
 
 namespace Code
 {
-    public class EcsProvider
+    public class EcsProvider : IEcsProvider
     {
         private EcsWorld _world;
         private EventsBus _eventBus;

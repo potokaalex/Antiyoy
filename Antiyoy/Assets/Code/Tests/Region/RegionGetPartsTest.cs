@@ -25,7 +25,7 @@ namespace Code.Tests.Region
             //Arrange.
             var cells = new List<int>
             {
-                Create.IndependentRegionCell(_world, _cellPool)
+                Create.CellWithNeighbour(_world)
             };
 
             //Act.
@@ -41,9 +41,9 @@ namespace Code.Tests.Region
             //Arrange.
             var cells = new List<int>
             {
-                Create.IndependentRegionCell(_world, _cellPool),
-                Create.IndependentRegionCell(_world, _cellPool),
-                Create.IndependentRegionCell(_world, _cellPool)
+                Create.CellWithNeighbour(_world),
+                Create.CellWithNeighbour(_world),
+                Create.CellWithNeighbour(_world)
             };
             _cellPool.Get(cells[0]).NeighbourCellEntities.Add(cells[1]);
             _cellPool.Get(cells[1]).NeighbourCellEntities.Add(cells[2]);
@@ -62,9 +62,9 @@ namespace Code.Tests.Region
             //Arrange.
             var cells = new List<int>
             {
-                Create.IndependentRegionCell(_world, _cellPool),
-                Create.IndependentRegionCell(_world, _cellPool),
-                Create.IndependentRegionCell(_world, _cellPool)
+                Create.CellWithNeighbour(_world),
+                Create.CellWithNeighbour(_world),
+                Create.CellWithNeighbour(_world)
             };
 
             //Act.

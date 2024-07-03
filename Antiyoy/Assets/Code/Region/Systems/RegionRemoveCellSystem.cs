@@ -13,15 +13,15 @@ namespace Code.Region.Systems
     //выбираем из частей major, вычитаем из региона все не major части и создаём из них новые регионы.
     public class RegionRemoveCellSystem : IEcsInitSystem, IEcsRunSystem
     {
-        private readonly EcsProvider _ecsProvider;
+        private readonly IEcsProvider _ecsProvider;
         private EcsWorld _world;
-        private EcsPool<TileDestroyRequest> _tileRequestPool;
+        private EcsPool<RegionRemoveCellRequest> _tileRequestPool;
         private EcsFilter _tileRequestFilter;
         private EcsPool<RegionComponent> _pool;
         private EcsPool<RegionLink> _linkPool;
         private EcsPool<CellComponent> _cellPool;
 
-        public RegionRemoveCellSystem(EcsProvider ecsProvider) => _ecsProvider = ecsProvider;
+        public RegionRemoveCellSystem(IEcsProvider ecsProvider) => _ecsProvider = ecsProvider;
 
         public void Init(IEcsSystems systems)
         {
@@ -40,12 +40,12 @@ namespace Code.Region.Systems
                 Analyze(_tileRequestPool.Get(requestEntity));
         }
 
-        private void Analyze(TileDestroyRequest request)
+        private void Analyze(RegionRemoveCellRequest request)
         {
-            var regionLink = _linkPool.Get(request.Cell.Entity);
+            var regionLink = _linkPool.Get(request.CellEntity);
             var baseRegion = _pool.Get(regionLink.RegionEntity);
 
-            RemoveCell(request.Cell.Entity, baseRegion);
+            RemoveCell(request.CellEntity, baseRegion);
 
             if (baseRegion.CellEntities.Count == 0)
             {
