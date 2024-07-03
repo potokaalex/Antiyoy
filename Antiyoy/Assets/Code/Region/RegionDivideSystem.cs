@@ -55,7 +55,7 @@ namespace Code.Region
             }
 
             var regionTilesParts = ListPool<List<int>>.Get();
-            _getRegionPartsTool.Get(regionTilesParts, baseRegion);
+            _getRegionPartsTool.Get(regionTilesParts, baseRegion.TilesEntities);
 
             if (regionTilesParts[0].Count != baseRegion.TilesEntities.Count)
                 Divide(regionTilesParts, baseRegion);

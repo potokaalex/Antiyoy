@@ -14,15 +14,15 @@ namespace Code.Region
         public GetRegionPartsTool(EcsPool<CellComponent> cellPool) => _cellPool = cellPool;
 
         //возвращает(regionTilesParts) тайлы из которых можно составить новые регионы (тайлы которые не граничат с другими тайлами)
-        public void Get(List<List<int>> regionTilesParts, RegionComponent region)
+        public void Get(List<List<int>> regionPartsBuffer, List<int> regionTiles)
         {
-            for (var i = 0; i < region.TilesEntities.Count; i++)
-                _remaining.Add(region.TilesEntities[i]);
+            for (var i = 0; i < regionTiles.Count; i++)
+                _remaining.Add(regionTiles[i]);
 
-            for (var i = 0; i < region.TilesEntities.Count; i++)
+            for (var i = 0; i < regionTiles.Count; i++)
             {
                 var tiles = GetWaveTiles(_remaining);
-                regionTilesParts.Add(tiles);
+                regionPartsBuffer.Add(tiles);
 
                 if (_remaining.Count == 0)
                     break;
@@ -72,7 +72,6 @@ namespace Code.Region
             if (_tilesFront.Count > 0)
                 throw new Exception($"Error of the wave algorithm: _tilesFront.Count = {_tilesFront.Count}!");
 
-            _tilesFront.Clear();
             return resultTiles;
         }
     }
