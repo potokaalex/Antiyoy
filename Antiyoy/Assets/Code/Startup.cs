@@ -1,4 +1,7 @@
 using Code.Cell;
+using Code.Ecs;
+using Code.Tile;
+using Leopotam.EcsLite;
 using UnityEngine;
 using Zenject;
 
@@ -7,42 +10,51 @@ namespace Code
     public class Startup : MonoBehaviour
     {
         [SerializeField] private CameraObject _camera;
-        private EcsProvider _ecsProvider;
+        private IEcsProvider _ecsProvider;
         private CellFactory _cellFactory;
         private EcsFactory _ecsFactory;
+        private TileFactory _tileFactory;
+        private IEcsSystems _ecsSystems;
+        private bool _isCreateTileMode;
 
         [Inject]
-        private void Constructor(EcsProvider ecsProvider, CellFactory cellFactory, EcsFactory ecsFactory)
+        private void Constructor(IEcsProvider ecsProvider, CellFactory cellFactory, EcsFactory ecsFactory,
+            TileFactory tileFactory)
         {
             _ecsProvider = ecsProvider;
             _cellFactory = cellFactory;
             _ecsFactory = ecsFactory;
-        }
-        
-        private void Awake()
-        {
-            _ecsProvider.Initialize();
-            _cellFactory.Create();
-            _ecsFactory.Create();
+            _tileFactory = tileFactory;
         }
 
-        private void Update()
+        private void Awake()
         {
-            TouchCell();
+            _ecsFactory.Create();
+            _cellFactory.Create();
+            _ecsSystems = _ecsProvider.GetSystems();
+
+            _tileFactory.Initialize();
         }
+
+        private void Start() => _ecsSystems.Init();
+
+        private void FixedUpdate() => _ecsSystems.Run();
+
+        private void Update() => TouchCell();
+
+        private void OnDestroy() => _ecsFactory.Destroy();
 
         private void TouchCell()
         {
-            if (!Input.GetMouseButtonDown(0)) 
-                return;
-            
             var ray = _camera.GetRayFromCurrentMousePosition();
             var hit = Physics2D.Raycast(ray.origin, ray.direction);
-            
-            if (hit.transform)
+
+            if (hit.transform && hit.transform.TryGetComponent<CellObject>(out var cell))
             {
-                if(hit.transform.TryGetComponent<CellObject>(out var cell))
-                    Debug.Log(cell.name);
+                if (Input.GetMouseButton(0))
+                    _tileFactory.Create(cell);
+                else if (Input.GetMouseButton(1))
+                    _tileFactory.Destroy(cell);
             }
         }
     }

@@ -1,14 +1,21 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using Code.Ecs;
+using Code.Hex;
+using Leopotam.EcsLite;
+using Plugins.EcsLite;
+using UnityEngine;
 
 namespace Code.Cell
 {
     public class CellFactory
     {
-        private readonly EcsProvider _ecsProvider;
+        private readonly IEcsProvider _ecsProvider;
         private readonly ConfigProvider _configProvider;
         private Transform _cellsRoot;
+        private EcsPool<CellComponent> _pool;
+        private EcsFilter _filter;
 
-        public CellFactory(EcsProvider ecsProvider, ConfigProvider configProvider)
+        public CellFactory(IEcsProvider ecsProvider, ConfigProvider configProvider)
         {
             _ecsProvider = ecsProvider;
             _configProvider = configProvider;
@@ -16,48 +23,62 @@ namespace Code.Cell
 
         public void Create()
         {
+            var world = _ecsProvider.GetWorld();
+            var mapConfig = _configProvider.GetMap();
+            var cells = new CellObject[mapConfig.Width * mapConfig.Height];
+
+            _pool = world.GetPool<CellComponent>();
+            _filter = world.Filter<CellComponent>().End();
             _cellsRoot = new GameObject("CellsRoot").transform;
 
-            CreateCells();
+            for (var i = 0; i < mapConfig.Width; i++)
+            for (var j = 0; j < mapConfig.Height; j++)
+            {
+                var index = i * mapConfig.Width + j;
+                var hex = HexUtilities.FromArrayIndex(new Vector2Int(i, j));
+                cells[index] = CreateCell(world, hex);
+            }
+
+            ConnectCells(cells, mapConfig);
         }
 
-        private void CreateCells()
+        private void ConnectCells(CellObject[] cells, MapConfig mapConfig)
         {
-            for (var i = 0; i < 10; i++)
-            for (var j = 0; j < 10; j++)
+            foreach (var cellObject in cells)
             {
-                CreateCell(i, j);
+                foreach (var direction in HexUtilities.Directions)
+                {
+                    ref var cell = ref _pool.Get(cellObject.Entity);
+                    var neighbourHex = cell.Hex + direction;
+                    var arrayIndex = neighbourHex.ToArrayIndex();
+                    
+                    if (arrayIndex.x < 0 || arrayIndex.x >= mapConfig.Width || 
+                        arrayIndex.y < 0 || arrayIndex.y >= mapConfig.Height)
+                        continue;
+
+                    cell.NeighbourCellEntities.Add(_pool.Find(_filter, c => c.Hex == neighbourHex));
+                }
             }
         }
 
-        private void CreateCell(int i, int j)
+        private CellObject CreateCell(EcsWorld world, HexCoordinates hex)
         {
-            var world = _ecsProvider.GetWorld();
             var cellConfig = _configProvider.GetCell();
 
             var entity = world.NewEntity();
-            var pool = world.GetPool<CellComponent>();
-            pool.Add(entity); //ref var cellComponent = ref pool.Add(entity);
-
-            var position = GetPositionFromIndexes(i, j);
+            ref var cell = ref _pool.Add(entity);
+            cell.Hex = hex;
+            cell.NeighbourCellEntities = new List<int>();
+            
+            var position = hex.ToWorldPosition();
             var cellObject = Object.Instantiate(cellConfig.Prefab, position, Quaternion.identity);
             cellObject.transform.SetParent(_cellsRoot);
-            cellObject.name = $"Cell({i},{j})";
-        }
+            cellObject.name = $"Cell({hex})";
+            cellObject.Entity = entity;
 
-        private Vector2 GetPositionFromIndexes(int i, int j)
-        {
-            const float sideLength = 1f / 2;
-            const float bigRadius = sideLength;
-            const float smallRadius = sideLength * 0.8660254038f; //0.8660254038 = sqrt(3) / 2
-
-            var x = i * bigRadius * 1.5f;
-            var y = j * smallRadius * 2;
-
-            if (i % 2 != 0)
-                y += smallRadius;
-
-            return new Vector2(x, y);
+            cell.Object = cellObject;
+            
+            return cellObject;
         }
     }
 }
