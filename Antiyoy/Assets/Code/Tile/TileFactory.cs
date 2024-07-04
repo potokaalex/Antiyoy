@@ -8,7 +8,6 @@ using SevenBoldPencil.EasyEvents;
 
 namespace Code.Tile
 {
-    //нажимая на клетку, я создаю тайл, тайл имеет регион и сущность.
     public class TileFactory
     {
         private readonly IEcsProvider _ecsProvider;

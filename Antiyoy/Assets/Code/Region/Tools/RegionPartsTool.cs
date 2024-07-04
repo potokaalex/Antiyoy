@@ -10,16 +10,15 @@ namespace Code.Region.Tools
     {
         private static readonly HashSet<int> _remaining = new();
         private static readonly Stack<int> _front = new();
-
-        //возвращает(regionCellsParts) тайлы из которых можно составить новые регионы (тайлы которые не граничат с другими тайлами)
-        public static List<RegionPart> Get(List<int> baseCells, EcsPool<CellComponent> cellPool)
+        
+        public static List<RegionPart> Get(List<int> baseRegionCells, EcsPool<CellComponent> cellPool)
         {
             var resultParts = ListPool<RegionPart>.Get();
-            
-            for (var i = 0; i < baseCells.Count; i++)
-                _remaining.Add(baseCells[i]);
 
-            for (var i = 0; i < baseCells.Count; i++)
+            for (var i = 0; i < baseRegionCells.Count; i++)
+                _remaining.Add(baseRegionCells[i]);
+
+            for (var i = 0; i < baseRegionCells.Count; i++)
             {
                 var part = GetWavePart(_remaining, cellPool);
                 resultParts.Add(part);
@@ -30,7 +29,7 @@ namespace Code.Region.Tools
 
             if (_remaining.Count > 0)
                 throw new Exception($"Error not all cells were passed: _remaining.Count = {_remaining.Count}!");
-            
+
             return resultParts;
         }
 
@@ -38,11 +37,11 @@ namespace Code.Region.Tools
         {
             foreach (var tilesPart in parts)
                 ListPool<int>.Release(tilesPart.Cells);
-            
+
             ListPool<RegionPart>.Release(parts);
         }
-        
-        //проход волновым алгоритмом по regionCells и возвращение(resultCells) тайлов, до которых смог добраться алгоритм.
+
+        //passes the wave algorithm through noPassedCells and returns the cells that the algorithm has reached. Automatically remove cells from noPassedCells.
         private static RegionPart GetWavePart(HashSet<int> noPassedCells, EcsPool<CellComponent> cellPool)
         {
             var firstItem = 0;

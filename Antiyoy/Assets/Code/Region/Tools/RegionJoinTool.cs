@@ -6,7 +6,7 @@ namespace Code.Region.Tools
 {
     public static class RegionJoinTool
     {
-        //перемещает данные из других регионов в major и удаляет другие регионы.
+        //moves data to a major region from non-major regions. Deletes non-major regions.
         public static int Join(List<int> regions, EcsPool<RegionComponent> pool,
             EcsPool<RegionLink> linkPool)
         {

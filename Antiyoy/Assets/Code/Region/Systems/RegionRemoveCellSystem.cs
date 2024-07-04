@@ -6,11 +6,6 @@ using Leopotam.EcsLite;
 
 namespace Code.Region.Systems
 {
-    //1) удаляет регион
-    //2) при удалении тайла, возможна ситуация, при которой разделяется регион на 2-3 части.
-    //как проверить нужно ли разделить регион?
-    //мы обходим все тайлы, если мы не можем попасть к следующему тайлу - создаём части регона.
-    //выбираем из частей major, вычитаем из региона все не major части и создаём из них новые регионы.
     public class RegionRemoveCellSystem : IEcsInitSystem, IEcsRunSystem
     {
         private readonly IEcsProvider _ecsProvider;

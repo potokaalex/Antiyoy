@@ -7,8 +7,8 @@ namespace Code.Region.Tools
 {
     public static class RegionDivideTool
     {
-        //отделяем от major региона тайлы и создаёт из них новые регионы
-        public static void Divide(List<RegionPart> regionParts, List<int> baseRegionCellEntities, EcsWorld world,
+        //separates non-major regionParts from baseRegionCells. Creates new regions from non-major parts.
+        public static void Divide(List<RegionPart> regionParts, List<int> baseRegionCells, EcsWorld world,
             EcsPool<RegionComponent> pool, EcsPool<RegionLink> linkPool)
         {
             var majorPart = GetMajorPart(regionParts);
@@ -21,17 +21,17 @@ namespace Code.Region.Tools
                 var newRegionEntity = RegionFactoryTool.Create(world, pool, part.Cells.Count);
                 ref var newRegion = ref pool.Get(newRegionEntity);
 
-                MoveCells(part, newRegion, baseRegionCellEntities, newRegionEntity, linkPool);
+                MoveCells(part, newRegion, baseRegionCells, newRegionEntity, linkPool);
             }
         }
 
-        private static void MoveCells(RegionPart part, RegionComponent newRegion, List<int> baseRegionCellEntities,
+        private static void MoveCells(RegionPart part, RegionComponent newRegion, List<int> baseRegionCells,
             int newRegionEntity, EcsPool<RegionLink> linkPool)
         {
             foreach (var cell in part.Cells)
             {
                 newRegion.CellEntities.Add(cell);
-                baseRegionCellEntities.Remove(cell);
+                baseRegionCells.Remove(cell);
 
                 ref var link = ref linkPool.Get(cell);
                 link.RegionEntity = newRegionEntity;
