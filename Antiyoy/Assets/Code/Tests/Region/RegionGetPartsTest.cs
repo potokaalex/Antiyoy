@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using Code.Cell;
-using Code.Region.Tools;
+using Code.Gameplay.Cell;
+using Code.Gameplay.Region.Tools;
 using FluentAssertions;
 using Leopotam.EcsLite;
 using NUnit.Framework;

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using Code.Region.Components;
-using Code.Region.Tools;
+using Code.Gameplay.Region.Components;
+using Code.Gameplay.Region.Tools;
 using FluentAssertions;
 using Leopotam.EcsLite;
 using NUnit.Framework;
