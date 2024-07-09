@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Code.Region.Components;
-using Code.Region.Systems;
-using Code.Region.Tools;
+using Code.Gameplay.Region.Components;
+using Code.Gameplay.Region.Systems;
+using Code.Gameplay.Region.Tools;
 using FluentAssertions;
 using Leopotam.EcsLite;
 using NUnit.Framework;

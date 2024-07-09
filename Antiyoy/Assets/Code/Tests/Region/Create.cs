@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Code.Cell;
-using Code.Ecs;
-using Code.Region.Components;
+using Code.Gameplay.Cell;
+using Code.Gameplay.Ecs;
+using Code.Gameplay.Region.Components;
 using Leopotam.EcsLite;
 using NSubstitute;
 using SevenBoldPencil.EasyEvents;

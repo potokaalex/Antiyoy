@@ -1,6 +1,6 @@
-using Code.Ecs;
-using Code.Region.Components;
-using Code.Region.Systems;
+using Code.Gameplay.Ecs;
+using Code.Gameplay.Region.Components;
+using Code.Gameplay.Region.Systems;
 using FluentAssertions;
 using Leopotam.EcsLite;
 using NUnit.Framework;

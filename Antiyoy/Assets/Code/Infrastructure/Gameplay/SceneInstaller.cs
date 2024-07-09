@@ -1,0 +1,25 @@
+using Code.Gameplay;
+using Code.Gameplay.Cell;
+using Code.Gameplay.Ecs;
+using Code.Gameplay.Tile;
+using UnityEngine;
+using Zenject;
+
+namespace Code.Infrastructure.Gameplay
+{
+    public class SceneInstaller : MonoInstaller
+    {
+        [SerializeField] private GameplayConfigProvider _configProvider;
+
+        public override void InstallBindings()
+        {
+            Container.Bind<GameplayConfigProvider>().FromInstance(_configProvider).AsSingle();
+            
+            Container.Bind<EcsFactory>().AsSingle();
+            Container.Bind<IEcsProvider>().To<EcsProvider>().AsSingle();
+            
+            Container.Bind<CellFactory>().AsSingle();
+            Container.Bind<TileFactory>().AsSingle();
+        }
+    }
+}
