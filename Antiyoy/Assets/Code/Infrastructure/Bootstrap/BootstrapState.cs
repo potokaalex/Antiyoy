@@ -1,7 +1,7 @@
 using Code.Services.SceneLoader;
 using Code.Services.StateMachine;
 
-namespace Code.Infrastructure
+namespace Code.Infrastructure.Bootstrap
 {
     public class BootstrapState : IState
     {

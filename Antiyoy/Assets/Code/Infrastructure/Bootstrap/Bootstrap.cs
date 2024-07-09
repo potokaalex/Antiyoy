@@ -2,7 +2,7 @@ using Code.Services.StateMachine;
 using UnityEngine;
 using Zenject;
 
-namespace Code.Infrastructure
+namespace Code.Infrastructure.Bootstrap
 {
     public class Bootstrap : MonoBehaviour
     {

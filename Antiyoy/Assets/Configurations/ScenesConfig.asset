@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f67ebe4f0d4461aaa61d04b239a32b9, type: 3}
   m_Name: ScenesConfig
   m_EditorClassIdentifier: 
+  BootstrapSceneName: Bootstrap
   MainMenuSceneName: MainMenu
   MapEditorSceneName: MapEditor
   GameplaySceneName: Gameplay
