@@ -1,14 +1,22 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Zenject;
 
 namespace Code.Infrastructure.Bootstrap
 {
     public class BootstrapLoader : MonoBehaviour
     {
-        [SerializeField] private ScenesConfig _scenesConfig;
-        
 #if UNITY_EDITOR
-        private void Start() => SceneManager.LoadScene(_scenesConfig.BootstrapSceneName);
+        private ConfigProvider _configProvider;
+
+        [Inject]
+        private void Construct(ConfigProvider configProvider) => _configProvider = configProvider;
+
+        private void Awake()
+        {
+            var scenesConfig = _configProvider.GetScenes();
+            SceneManager.LoadScene(scenesConfig.BootstrapSceneName);
+        }
 #endif
     }
 }
