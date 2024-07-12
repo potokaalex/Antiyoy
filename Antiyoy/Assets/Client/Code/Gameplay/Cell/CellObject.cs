@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace Code.Gameplay.Cell
+namespace ClientCode.Gameplay.Cell
 {
     public class CellObject : MonoBehaviour
     {

@@ -1,4 +1,4 @@
-﻿namespace Code.Gameplay.Tile.Components
+﻿namespace ClientCode.Gameplay.Tile.Components
 {
     public struct TileComponent
     {

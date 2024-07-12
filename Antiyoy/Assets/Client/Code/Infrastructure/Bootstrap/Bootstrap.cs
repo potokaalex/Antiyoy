@@ -1,8 +1,9 @@
-using Code.Services.StateMachine;
+using ClientCode.Infrastructure.MainMenu;
+using ClientCode.Services.StateMachine;
 using UnityEngine;
 using Zenject;
 
-namespace Code.Infrastructure.Bootstrap
+namespace ClientCode.Infrastructure.Bootstrap
 {
     public class Bootstrap : MonoBehaviour
     {
@@ -11,6 +12,6 @@ namespace Code.Infrastructure.Bootstrap
         [Inject]
         private void Constructor(IStateMachine stateMachine) => _stateMachine = stateMachine;
 
-        private void Start() => _stateMachine.SwitchTo<BootstrapState>();
+        private void Start() => _stateMachine.SwitchTo<MainMenuLoadState>();
     }
 }

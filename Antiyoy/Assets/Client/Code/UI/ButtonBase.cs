@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Code.UI
+namespace ClientCode.UI
 {
     [RequireComponent(typeof(Image), typeof(Button))]
     public abstract class ButtonBase : MonoBehaviour

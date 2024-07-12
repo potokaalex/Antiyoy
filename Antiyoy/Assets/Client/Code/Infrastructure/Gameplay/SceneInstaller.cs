@@ -1,11 +1,10 @@
-using Code.Gameplay;
-using Code.Gameplay.Cell;
-using Code.Gameplay.Ecs;
-using Code.Gameplay.Tile;
+using ClientCode.Gameplay.Cell;
+using ClientCode.Gameplay.Ecs;
+using ClientCode.Gameplay.Tile;
 using UnityEngine;
 using Zenject;
 
-namespace Code.Infrastructure.Gameplay
+namespace ClientCode.Infrastructure.Gameplay
 {
     public class SceneInstaller : MonoInstaller
     {

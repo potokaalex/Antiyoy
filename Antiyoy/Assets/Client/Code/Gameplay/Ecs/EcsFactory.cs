@@ -1,13 +1,13 @@
-using Code.Gameplay.Region.Components;
-using Code.Gameplay.Region.Systems;
-using Code.Gameplay.Tile.Components;
-using Code.Gameplay.Tile.Systems;
+using ClientCode.Gameplay.Region.Components;
+using ClientCode.Gameplay.Region.Systems;
+using ClientCode.Gameplay.Tile.Components;
+using ClientCode.Gameplay.Tile.Systems;
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.UnityEditor;
 using SevenBoldPencil.EasyEvents;
 using Zenject;
 
-namespace Code.Gameplay.Ecs
+namespace ClientCode.Gameplay.Ecs
 {
     public class EcsFactory
     {

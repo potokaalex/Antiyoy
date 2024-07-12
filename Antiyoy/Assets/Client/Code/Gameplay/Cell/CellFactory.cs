@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
-using Code.Gameplay.Ecs;
-using Code.Gameplay.Hex;
-using Code.Infrastructure.Gameplay;
+using ClientCode.Data.Configs;
+using ClientCode.Gameplay.Ecs;
+using ClientCode.Gameplay.Hex;
+using ClientCode.Infrastructure.Gameplay;
 using Leopotam.EcsLite;
 using Plugins.EcsLite;
 using UnityEngine;
 
-namespace Code.Gameplay.Cell
+namespace ClientCode.Gameplay.Cell
 {
     public class CellFactory
     {

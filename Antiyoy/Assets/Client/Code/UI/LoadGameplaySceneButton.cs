@@ -1,24 +1,26 @@
-using Code.Infrastructure;
-using Code.Services.SceneLoader;
+using ClientCode.Data.Configs;
+using ClientCode.Infrastructure;
+using ClientCode.Services.SceneLoader;
+using ClientCode.Services.StaticDataProvider;
 using Zenject;
 
-namespace Code.UI
+namespace ClientCode.UI
 {
     public class LoadGameplaySceneButton : ButtonBase
     {
         private ISceneLoader _sceneLoader;
-        private ConfigProvider _configProvider;
+        private StaticDataProvider _staticDataProvider;
 
         [Inject]
-        private void Construct(ISceneLoader sceneLoader, ConfigProvider configProvider)
+        private void Construct(ISceneLoader sceneLoader, StaticDataProvider staticDataProvider)
         {
             _sceneLoader = sceneLoader;
-            _configProvider = configProvider;
+            _staticDataProvider = staticDataProvider;
         }
 
         private protected override void OnClick()
         {
-            var scenesConfig = _configProvider.GetScenes();
+            var scenesConfig = _staticDataProvider.Get<SceneConfig>();
             _sceneLoader.LoadSceneAsync(scenesConfig.GameplaySceneName);
         }
     }

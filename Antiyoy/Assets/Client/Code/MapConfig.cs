@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Code.Gameplay
+namespace ClientCode.Data.Configs
 {
     [Serializable]
     public class MapConfig

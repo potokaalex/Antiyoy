@@ -1,12 +1,12 @@
-using Code.Gameplay.Ecs;
-using Code.Gameplay.Region.Components;
-using Code.Gameplay.Region.Systems;
+using ClientCode.Gameplay.Ecs;
+using ClientCode.Gameplay.Region.Components;
+using ClientCode.Gameplay.Region.Systems;
 using FluentAssertions;
 using Leopotam.EcsLite;
 using NUnit.Framework;
 using SevenBoldPencil.EasyEvents;
 
-namespace Code.Tests.Region
+namespace Tests.Region
 {
     public class RegionAddCellTest
     {

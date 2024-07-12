@@ -1,12 +1,12 @@
-using Code.Gameplay;
-using Code.Gameplay.Cell;
-using Code.Gameplay.Ecs;
-using Code.Gameplay.Tile;
+using ClientCode.Gameplay;
+using ClientCode.Gameplay.Cell;
+using ClientCode.Gameplay.Ecs;
+using ClientCode.Gameplay.Tile;
 using Leopotam.EcsLite;
 using UnityEngine;
 using Zenject;
 
-namespace Code.Infrastructure.Gameplay
+namespace ClientCode.Infrastructure.Gameplay
 {
     public class Startup : MonoBehaviour
     {

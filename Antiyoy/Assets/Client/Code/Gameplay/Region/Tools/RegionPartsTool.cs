@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Code.Gameplay.Cell;
-using Code.Gameplay.Region.Systems;
+using ClientCode.Gameplay.Cell;
+using ClientCode.Gameplay.Region.Systems;
+using ClientCode.Services;
 using Leopotam.EcsLite;
 
-namespace Code.Gameplay.Region.Tools
+namespace ClientCode.Gameplay.Region.Tools
 {
     public class RegionPartsTool
     {

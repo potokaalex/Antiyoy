@@ -1,6 +1,6 @@
 {
     "name": "Code",
-    "rootNamespace": "",
+    "rootNamespace": "ClientCode",
     "references": [
         "GUID:e59bf9fc7d5a44b18a819a92edd46163",
         "GUID:206779980ac58453ea65e900299ccf71",

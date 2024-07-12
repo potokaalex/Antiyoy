@@ -1,6 +1,6 @@
 ﻿using Zenject;
 
-namespace Code.Services.StateMachine
+namespace ClientCode.Services.StateMachine
 {
     public class StateFactory
     {

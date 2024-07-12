@@ -1,20 +1,22 @@
+using ClientCode.Data.Configs;
+using ClientCode.Services.StaticDataProvider;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;
 
-namespace Code.Infrastructure.Bootstrap
+namespace ClientCode.Infrastructure.Bootstrap
 {
     public class BootstrapLoader : MonoBehaviour
     {
 #if UNITY_EDITOR
-        private ConfigProvider _configProvider;
+        private StaticDataProvider _staticDataProvider;
 
         [Inject]
-        private void Construct(ConfigProvider configProvider) => _configProvider = configProvider;
+        private void Construct(StaticDataProvider staticDataProvider) => _staticDataProvider = staticDataProvider;
 
         private void Awake()
         {
-            var scenesConfig = _configProvider.GetScenes();
+            var scenesConfig = _staticDataProvider.Get<SceneConfig>();
             SceneManager.LoadScene(scenesConfig.BootstrapSceneName);
         }
 #endif

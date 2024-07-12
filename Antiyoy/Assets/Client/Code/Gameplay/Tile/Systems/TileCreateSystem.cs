@@ -1,10 +1,10 @@
-﻿using Code.Gameplay.Ecs;
-using Code.Gameplay.Tile.Components;
+﻿using ClientCode.Gameplay.Ecs;
+using ClientCode.Gameplay.Tile.Components;
 using Leopotam.EcsLite;
 using SevenBoldPencil.EasyEvents;
 using UnityEngine;
 
-namespace Code.Gameplay.Tile.Systems
+namespace ClientCode.Gameplay.Tile.Systems
 {
     public class TileCreateSystem : IEcsInitSystem, IEcsRunSystem
     {

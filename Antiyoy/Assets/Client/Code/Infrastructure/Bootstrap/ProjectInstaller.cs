@@ -1,19 +1,20 @@
-using Code.Services.SceneLoader;
-using Code.Services.StateMachine;
+using ClientCode.Services.SceneLoader;
+using ClientCode.Services.StateMachine;
+using ClientCode.Services.StaticDataProvider;
 using UnityEngine;
 using Zenject;
 
-namespace Code.Infrastructure.Bootstrap
+namespace ClientCode.Infrastructure.Bootstrap
 {
     public class ProjectInstaller : MonoInstaller
     {
-        [SerializeField] private ConfigProvider _configProvider;
+        [SerializeField] private StaticDataProvider _staticDataProvider;
         
         public override void InstallBindings()
         {
             BindStateMachine();
             Container.Bind<ISceneLoader>().To<SceneLoader>().AsSingle();
-            Container.Bind<ConfigProvider>().FromInstance(_configProvider).AsSingle();
+            Container.Bind<StaticDataProvider>().FromInstance(_staticDataProvider).AsSingle();
         }
 
         private void BindStateMachine()

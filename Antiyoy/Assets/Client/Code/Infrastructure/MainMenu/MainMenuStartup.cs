@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Code.Infrastructure.MainMenu
+namespace ClientCode.Infrastructure.MainMenu
 {
     public class MainMenuStartup : MonoBehaviour
     {

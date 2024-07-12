@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Code.Gameplay
+namespace ClientCode.Gameplay
 {
     public class CameraObject : MonoBehaviour
     {

@@ -1,9 +1,10 @@
+using ClientCode.Services.StaticDataProvider;
 using UnityEngine;
 
-namespace Code.Infrastructure
+namespace ClientCode.Data.Configs
 {
     [CreateAssetMenu(menuName = "Configs/Scenes", fileName = "ScenesConfig", order = 0)]
-    public class ScenesConfig : ScriptableObject
+    public class SceneConfig : ScriptableObject, IStaticData
     {
         public string BootstrapSceneName;
         public string MainMenuSceneName;

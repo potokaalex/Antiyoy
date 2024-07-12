@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Code
+namespace ClientCode.Services
 {
     public static class ListPool<T>
     {

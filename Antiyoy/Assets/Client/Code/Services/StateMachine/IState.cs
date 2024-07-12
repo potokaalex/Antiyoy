@@ -1,4 +1,4 @@
-namespace Code.Services.StateMachine
+namespace ClientCode.Services.StateMachine
 {
     public interface IState
     {

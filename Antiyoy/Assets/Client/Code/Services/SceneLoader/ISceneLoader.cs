@@ -1,4 +1,4 @@
-﻿namespace Code.Services.SceneLoader
+﻿namespace ClientCode.Services.SceneLoader
 {
     public interface ISceneLoader
     {

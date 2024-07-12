@@ -1,4 +1,4 @@
-﻿namespace Code.Gameplay.Region.Components
+﻿namespace ClientCode.Gameplay.Region.Components
 {
     public struct RegionLink
     {

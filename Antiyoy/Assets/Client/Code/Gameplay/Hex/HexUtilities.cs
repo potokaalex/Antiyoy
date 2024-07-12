@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Code.Gameplay.Hex
+namespace ClientCode.Gameplay.Hex
 {
     public static class HexUtilities
     {

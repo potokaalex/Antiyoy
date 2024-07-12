@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Code.Gameplay.Hex;
+using ClientCode.Gameplay.Hex;
 
-namespace Code.Gameplay.Cell
+namespace ClientCode.Gameplay.Cell
 {
     public struct CellComponent
     {

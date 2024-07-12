@@ -1,10 +1,10 @@
-﻿using Code.Gameplay.Cell;
-using Code.Gameplay.Ecs;
-using Code.Gameplay.Region.Components;
+﻿using ClientCode.Gameplay.Cell;
+using ClientCode.Gameplay.Ecs;
+using ClientCode.Gameplay.Region.Components;
 using Leopotam.EcsLite;
 using SevenBoldPencil.EasyEvents;
 
-namespace Code.Gameplay.Region.Systems
+namespace ClientCode.Gameplay.Region.Systems
 {
     public class RegionDebugSystem : IEcsInitSystem, IEcsRunSystem
     {

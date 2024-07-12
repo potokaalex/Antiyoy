@@ -1,9 +1,10 @@
 ﻿using System;
-using Code.Gameplay;
-using Code.Gameplay.Cell;
+using ClientCode.Data.Configs;
+using ClientCode.Gameplay;
+using ClientCode.Gameplay.Cell;
 using UnityEngine;
 
-namespace Code.Infrastructure.Gameplay
+namespace ClientCode.Infrastructure.Gameplay
 {
     [Serializable]
     public class GameplayConfigProvider

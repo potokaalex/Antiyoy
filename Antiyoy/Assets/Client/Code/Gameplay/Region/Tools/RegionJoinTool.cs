@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using Code.Gameplay.Region.Components;
+using ClientCode.Gameplay.Region.Components;
 using Leopotam.EcsLite;
 
-namespace Code.Gameplay.Region.Tools
+namespace ClientCode.Gameplay.Region.Tools
 {
     public static class RegionJoinTool
     {

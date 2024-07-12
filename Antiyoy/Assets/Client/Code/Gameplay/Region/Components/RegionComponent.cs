@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Code.Gameplay.Region.Components
+namespace ClientCode.Gameplay.Region.Components
 {
     public struct RegionComponent
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Code.Gameplay.Cell
+namespace ClientCode.Gameplay.Cell
 {
     [Serializable]
     public class CellConfig

@@ -1,12 +1,12 @@
 using System.Collections.Generic;
-using Code.Gameplay.Cell;
-using Code.Gameplay.Ecs;
-using Code.Gameplay.Region.Components;
+using ClientCode.Gameplay.Cell;
+using ClientCode.Gameplay.Ecs;
+using ClientCode.Gameplay.Region.Components;
 using Leopotam.EcsLite;
 using NSubstitute;
 using SevenBoldPencil.EasyEvents;
 
-namespace Code.Tests.Region
+namespace Tests.Region
 {
     public class Create
     {

@@ -1,7 +1,7 @@
 using Leopotam.EcsLite;
 using SevenBoldPencil.EasyEvents;
 
-namespace Code.Gameplay.Ecs
+namespace ClientCode.Gameplay.Ecs
 {
     public interface IEcsProvider
     {

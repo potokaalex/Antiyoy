@@ -1,4 +1,4 @@
-namespace Code.UI
+namespace ClientCode.UI
 {
     public class GameExitButton : ButtonBase
     {

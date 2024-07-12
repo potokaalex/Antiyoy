@@ -1,10 +1,10 @@
-﻿using Code.Gameplay.Cell;
-using Code.Gameplay.Ecs;
-using Code.Gameplay.Region.Components;
-using Code.Gameplay.Region.Tools;
+﻿using ClientCode.Gameplay.Cell;
+using ClientCode.Gameplay.Ecs;
+using ClientCode.Gameplay.Region.Components;
+using ClientCode.Gameplay.Region.Tools;
 using Leopotam.EcsLite;
 
-namespace Code.Gameplay.Region.Systems
+namespace ClientCode.Gameplay.Region.Systems
 {
     public class RegionRemoveCellSystem : IEcsInitSystem, IEcsRunSystem
     {

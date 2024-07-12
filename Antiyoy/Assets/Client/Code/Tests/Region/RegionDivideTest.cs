@@ -1,12 +1,12 @@
 using System.Collections.Generic;
-using Code.Gameplay.Region.Components;
-using Code.Gameplay.Region.Systems;
-using Code.Gameplay.Region.Tools;
+using ClientCode.Gameplay.Region.Components;
+using ClientCode.Gameplay.Region.Systems;
+using ClientCode.Gameplay.Region.Tools;
 using FluentAssertions;
 using Leopotam.EcsLite;
 using NUnit.Framework;
 
-namespace Code.Tests.Region
+namespace Tests.Region
 {
     public class RegionDivideTest
     {
