@@ -2,7 +2,6 @@
 using ClientCode.Data.Configs;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Hex;
-using ClientCode.Infrastructure.Gameplay;
 using Leopotam.EcsLite;
 using Plugins.EcsLite;
 using UnityEngine;

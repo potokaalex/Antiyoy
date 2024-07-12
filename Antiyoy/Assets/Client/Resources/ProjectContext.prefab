@@ -75,9 +75,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 857ff153c34547a58832beca715ff420, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _configProvider:
-    _scenesConfig: {fileID: 11400000, guid: 2c9cb30022f8bdb4a81ae32ff34e15d6, type: 2}
-  _bootstrapLoader: {fileID: -3031721437745657548}
 --- !u!114 &-3031721437745657548
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -90,4 +87,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: beda6361f1034480ab19390560da5e3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _scenesConfig: {fileID: 11400000, guid: 2c9cb30022f8bdb4a81ae32ff34e15d6, type: 2}
+  _sceneConfig: {fileID: 11400000, guid: 2c9cb30022f8bdb4a81ae32ff34e15d6, type: 2}

@@ -4,7 +4,7 @@ using ClientCode.Gameplay.Tile;
 using UnityEngine;
 using Zenject;
 
-namespace ClientCode.Infrastructure.Gameplay
+namespace ClientCode.Infrastructure.Installers
 {
     public class SceneInstaller : MonoInstaller
     {

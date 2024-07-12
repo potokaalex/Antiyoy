@@ -3,7 +3,7 @@ using ClientCode.Services.SceneLoader;
 using ClientCode.Services.StateMachine;
 using ClientCode.Services.StaticDataProvider;
 
-namespace ClientCode.Infrastructure.MainMenu
+namespace ClientCode.Infrastructure.States
 {
     public class MainMenuLoadState : IState
     {

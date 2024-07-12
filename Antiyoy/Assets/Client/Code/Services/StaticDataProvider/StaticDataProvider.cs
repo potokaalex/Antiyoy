@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace ClientCode.Services.StaticDataProvider
 {
-    [Serializable]
     public class StaticDataProvider : IStaticDataProvider
     {
         private Dictionary<Type, IStaticData> _date;

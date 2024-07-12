@@ -6,7 +6,7 @@ using Leopotam.EcsLite;
 using UnityEngine;
 using Zenject;
 
-namespace ClientCode.Infrastructure.Gameplay
+namespace ClientCode.Infrastructure
 {
     public class Startup : MonoBehaviour
     {
