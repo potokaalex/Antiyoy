@@ -1,3 +1,4 @@
+using ClientCode.Data.Progress;
 using ClientCode.Gameplay;
 using ClientCode.Gameplay.Cell;
 using ClientCode.Gameplay.Ecs;
@@ -31,7 +32,8 @@ namespace ClientCode.Infrastructure.Startup
         private void Awake()
         {
             _ecsFactory.Create();
-            _cellFactory.Create();
+            _cellFactory.Initialize();
+            _cellFactory.Create(new MapProgressData());
             _ecsSystems = _ecsProvider.GetSystems();
 
             _tileFactory.Initialize();

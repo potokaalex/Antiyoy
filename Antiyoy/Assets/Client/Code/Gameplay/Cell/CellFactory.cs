@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using ClientCode.Data.Progress;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Hex;
+using ClientCode.Services.StaticDataProvider;
 using Leopotam.EcsLite;
 using Plugins.EcsLite;
 using UnityEngine;
@@ -10,39 +12,44 @@ namespace ClientCode.Gameplay.Cell
     public class CellFactory
     {
         private readonly IEcsProvider _ecsProvider;
-        private readonly GameplayConfigProvider _configProvider;
+        private readonly IStaticDataProvider _staticDataProvider;
         private Transform _cellsRoot;
         private EcsPool<CellComponent> _pool;
         private EcsFilter _filter;
+        private EcsWorld _world;
+        private CellObject _cellPrefab;
 
-        public CellFactory(IEcsProvider ecsProvider, GameplayConfigProvider configProvider)
+        public CellFactory(IEcsProvider ecsProvider, IStaticDataProvider staticDataProvider)
         {
             _ecsProvider = ecsProvider;
-            _configProvider = configProvider;
+            _staticDataProvider = staticDataProvider;
         }
 
-        public void Create()
+        public void Initialize()
         {
-            var world = _ecsProvider.GetWorld();
-            var mapConfig = _configProvider.GetMap();
-            var cells = new CellObject[mapConfig.Width * mapConfig.Height];
-
-            _pool = world.GetPool<CellComponent>();
-            _filter = world.Filter<CellComponent>().End();
+            _world = _ecsProvider.GetWorld();
+            _pool = _world.GetPool<CellComponent>();
+            _filter = _world.Filter<CellComponent>().End();
             _cellsRoot = new GameObject("CellsRoot").transform;
+            _cellPrefab = _staticDataProvider.Prefabs.CellObject;
+        }
+        
+        public void Create(MapProgressData mapData)
+        {
+            var cells = new CellObject[mapData.Width * mapData.Height];
 
-            for (var i = 0; i < mapConfig.Width; i++)
-            for (var j = 0; j < mapConfig.Height; j++)
+            for (var i = 0; i < mapData.Width; i++)
+            for (var j = 0; j < mapData.Height; j++)
             {
-                var index = i * mapConfig.Width + j;
+                var index = i * mapData.Width + j;
                 var hex = HexUtilities.FromArrayIndex(new Vector2Int(i, j));
-                cells[index] = CreateCell(world, hex);
+                cells[index] = CreateCell(hex);
             }
 
-            ConnectCells(cells, mapConfig);
+            ConnectCells(cells, mapData);
         }
 
-        private void ConnectCells(CellObject[] cells, MapConfig mapConfig)
+        private void ConnectCells(CellObject[] cells, MapProgressData mapData)
         {
             foreach (var cellObject in cells)
             {
@@ -52,8 +59,8 @@ namespace ClientCode.Gameplay.Cell
                     var neighbourHex = cell.Hex + direction;
                     var arrayIndex = neighbourHex.ToArrayIndex();
 
-                    if (arrayIndex.x < 0 || arrayIndex.x >= mapConfig.Width ||
-                        arrayIndex.y < 0 || arrayIndex.y >= mapConfig.Height)
+                    if (arrayIndex.x < 0 || arrayIndex.x >= mapData.Width ||
+                        arrayIndex.y < 0 || arrayIndex.y >= mapData.Height)
                         continue;
 
                     cell.NeighbourCellEntities.Add(_pool.Find(_filter, c => c.Hex == neighbourHex));
@@ -61,17 +68,15 @@ namespace ClientCode.Gameplay.Cell
             }
         }
 
-        private CellObject CreateCell(EcsWorld world, HexCoordinates hex)
+        private CellObject CreateCell(HexCoordinates hex)
         {
-            var cellConfig = _configProvider.GetCell();
-
-            var entity = world.NewEntity();
+            var entity = _world.NewEntity();
             ref var cell = ref _pool.Add(entity);
             cell.Hex = hex;
             cell.NeighbourCellEntities = new List<int>();
 
             var position = hex.ToWorldPosition();
-            var cellObject = Object.Instantiate(cellConfig.Prefab, position, Quaternion.identity);
+            var cellObject = Object.Instantiate(_cellPrefab, position, Quaternion.identity);
             cellObject.transform.SetParent(_cellsRoot);
             cellObject.name = $"Cell({hex})";
             cellObject.Entity = entity;

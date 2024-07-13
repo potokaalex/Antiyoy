@@ -1,10 +1,11 @@
 using System;
+using ClientCode.Gameplay.Cell;
 
 namespace ClientCode.Data.Static
 {
     [Serializable]
     public class Prefabs
     {
-        //все префабы здесь!
+        public CellObject CellObject;
     }
 }

@@ -78,6 +78,8 @@ MonoBehaviour:
   _loadData:
     Configs:
       Scene: {fileID: 11400000, guid: 2c9cb30022f8bdb4a81ae32ff34e15d6, type: 2}
+    Prefabs:
+      CellObject: {fileID: 2510216717212271286, guid: 6eb3e4bec3209af4fa64a7ba0f05300b, type: 3}
 --- !u!114 &-3031721437745657548
 MonoBehaviour:
   m_ObjectHideFlags: 0
