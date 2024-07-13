@@ -10,9 +10,9 @@ namespace ClientCode.Gameplay.Tile.Systems
     {
         private readonly IEcsProvider _ecsProvider;
         private EventsBus _eventsBus;
-        private EcsPool<TileDestroyRequest> _requestPool;
-        private EcsFilter _requestFilter;
         private EcsPool<TileComponent> _pool;
+        private EcsFilter _requestFilter;
+        private EcsPool<TileDestroyRequest> _requestPool;
 
         public TileDestroySystem(IEcsProvider ecsProvider) => _ecsProvider = ecsProvider;
 

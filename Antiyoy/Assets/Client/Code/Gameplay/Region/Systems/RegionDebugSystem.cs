@@ -9,9 +9,9 @@ namespace ClientCode.Gameplay.Region.Systems
     public class RegionDebugSystem : IEcsInitSystem, IEcsRunSystem
     {
         private readonly IEcsProvider _ecsProvider;
-        private EventsBus _eventsBus;
-        private EcsPool<CellComponent> _cellPool;
         private EcsFilter _cellFilter;
+        private EcsPool<CellComponent> _cellPool;
+        private EventsBus _eventsBus;
         private EcsPool<RegionLink> _linkPool;
         private EcsPool<RegionComponent> _pool;
 

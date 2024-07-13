@@ -11,12 +11,12 @@ namespace ClientCode.Gameplay.Region.Systems
     {
         private readonly IEcsProvider _ecsProvider;
         private readonly List<int> _neighbourRegions = new();
-        private EcsWorld _world;
-        private EcsFilter _requestFilter;
-        private EcsPool<RegionAddCellRequest> _requestPool;
-        private EcsPool<RegionComponent> _pool;
         private EcsPool<CellComponent> _cellPool;
         private EcsPool<RegionLink> _linkPool;
+        private EcsPool<RegionComponent> _pool;
+        private EcsFilter _requestFilter;
+        private EcsPool<RegionAddCellRequest> _requestPool;
+        private EcsWorld _world;
 
         public RegionAddCellSystem(IEcsProvider ecsProvider) => _ecsProvider = ecsProvider;
 

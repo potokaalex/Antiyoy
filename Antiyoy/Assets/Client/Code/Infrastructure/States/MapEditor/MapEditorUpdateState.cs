@@ -12,10 +12,10 @@ namespace ClientCode.Infrastructure.States.MapEditor
 {
     public class MapEditorUpdateState : IState
     {
-        private readonly IUpdater _updater;
         private readonly IEcsProvider _ecsProvider;
-        private readonly TileFactory _tileFactory;
         private readonly ISceneDataProvider<MapEditorSceneData> _sceneDataProvider;
+        private readonly TileFactory _tileFactory;
+        private readonly IUpdater _updater;
         private IEcsSystems _ecsSystems;
         private MapEditorSceneData _sceneData;
 
@@ -50,9 +50,9 @@ namespace ClientCode.Infrastructure.States.MapEditor
 
         private void TouchCell()
         {
-            if(_sceneData.EventSystem.IsPointerOverGameObject())
+            if (_sceneData.EventSystem.IsPointerOverGameObject())
                 return;
-            
+
             var ray = _sceneData.Camera.GetRayFromCurrentMousePosition();
             var hit = Physics2D.Raycast(ray.origin, ray.direction);
 

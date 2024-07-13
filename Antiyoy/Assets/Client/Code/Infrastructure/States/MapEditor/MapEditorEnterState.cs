@@ -10,8 +10,8 @@ namespace ClientCode.Infrastructure.States.MapEditor
     {
         private readonly CellFactory _cellFactory;
         private readonly EcsFactory _ecsFactory;
-        private readonly TileFactory _tileFactory;
         private readonly IStateMachine _stateMachine;
+        private readonly TileFactory _tileFactory;
 
         public MapEditorEnterState(CellFactory cellFactory, EcsFactory ecsFactory, TileFactory tileFactory, IStateMachine stateMachine)
         {
@@ -25,12 +25,12 @@ namespace ClientCode.Infrastructure.States.MapEditor
         {
             //загрузить мир (в прогресс) -> создать мир
             _ecsFactory.Create();
-            
+
             _cellFactory.Initialize();
             _cellFactory.Create(new MapProgressData());
-            
+
             _tileFactory.Initialize();
-            
+
             _stateMachine.SwitchTo<MapEditorUpdateState>();
         }
     }

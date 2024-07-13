@@ -11,12 +11,12 @@ namespace ClientCode.Gameplay.Tile
     public class TileFactory
     {
         private readonly IEcsProvider _ecsProvider;
+        private EcsFilter _createRequestFilter;
+        private EcsPool<TileCreateRequest> _createRequestPool;
+        private EcsFilter _destroyRequestFilter;
+        private EcsPool<TileDestroyRequest> _destroyRequestPool;
         private EventsBus _eventsBus;
         private EcsPool<TileComponent> _pool;
-        private EcsPool<TileCreateRequest> _createRequestPool;
-        private EcsPool<TileDestroyRequest> _destroyRequestPool;
-        private EcsFilter _createRequestFilter;
-        private EcsFilter _destroyRequestFilter;
 
         public TileFactory(IEcsProvider ecsProvider) => _ecsProvider = ecsProvider;
 

@@ -10,9 +10,9 @@ namespace ClientCode.Gameplay.Tile.Systems
     {
         private readonly IEcsProvider _ecsProvider;
         private EventsBus _eventsBus;
-        private EcsPool<TileCreateRequest> _requestPool;
-        private EcsFilter _requestFilter;
         private EcsPool<TileComponent> _pool;
+        private EcsFilter _requestFilter;
+        private EcsPool<TileCreateRequest> _requestPool;
 
         public TileCreateSystem(IEcsProvider ecsProvider) => _ecsProvider = ecsProvider;
 

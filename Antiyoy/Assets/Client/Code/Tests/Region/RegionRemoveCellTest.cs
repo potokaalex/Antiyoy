@@ -10,10 +10,10 @@ namespace Tests.Region
 {
     public class RegionRemoveCellTest
     {
-        private EcsWorld _world;
+        private IEcsProvider _ecsProvider;
         private EventsBus _eventBus;
         private EcsSystems _systems;
-        private IEcsProvider _ecsProvider;
+        private EcsWorld _world;
 
         [SetUp]
         public void Setup()

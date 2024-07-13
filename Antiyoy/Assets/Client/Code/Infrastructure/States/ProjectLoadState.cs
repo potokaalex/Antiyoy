@@ -1,4 +1,3 @@
-using ClientCode.Data.Progress;
 using ClientCode.Data.Progress.Load;
 using ClientCode.Services.ProgressDataProvider;
 using ClientCode.Services.StateMachine;
@@ -8,9 +7,9 @@ namespace ClientCode.Infrastructure.States
 {
     public class ProjectLoadState : IState
     {
-        private readonly IStaticDataProvider _staticDataProvider;
         private readonly IProgressDataProvider _progressDataProvider;
         private readonly IStateMachine _stateMachine;
+        private readonly IStaticDataProvider _staticDataProvider;
 
         public ProjectLoadState(IStaticDataProvider staticDataProvider, IProgressDataProvider progressDataProvider, IStateMachine stateMachine)
         {

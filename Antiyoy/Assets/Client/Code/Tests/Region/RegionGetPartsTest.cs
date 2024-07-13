@@ -9,8 +9,8 @@ namespace Tests.Region
 {
     public class RegionGetPartsTest
     {
-        private EcsWorld _world;
         private EcsPool<CellComponent> _cellPool;
+        private EcsWorld _world;
 
         [SetUp]
         public void Setup()

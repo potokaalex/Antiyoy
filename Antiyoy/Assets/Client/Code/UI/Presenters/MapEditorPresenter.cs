@@ -10,13 +10,13 @@ namespace ClientCode.UI.Presenters
     {
         private IStateMachine _stateMachine;
 
-        [Inject]
-        public void Construct(IStateMachine stateMachine) => _stateMachine = stateMachine;
-
         public void Handle(SceneType sceneType)
         {
-            if(sceneType == SceneType.MainMenu)
+            if (sceneType == SceneType.MainMenu)
                 _stateMachine.SwitchTo<MapEditorExitState>();
         }
+
+        [Inject]
+        public void Construct(IStateMachine stateMachine) => _stateMachine = stateMachine;
     }
 }
