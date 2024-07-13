@@ -1,5 +1,4 @@
 using ClientCode.Data.Progress.Load;
-using ClientCode.Data.Static;
 using ClientCode.Infrastructure.States.MapEditor;
 using ClientCode.Services.ProgressDataProvider;
 using ClientCode.Services.StateMachine;

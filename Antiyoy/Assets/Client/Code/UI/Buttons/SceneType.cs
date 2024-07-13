@@ -1,4 +1,4 @@
-namespace ClientCode.Data.Static
+namespace ClientCode.UI.Buttons
 {
     public enum SceneType
     {

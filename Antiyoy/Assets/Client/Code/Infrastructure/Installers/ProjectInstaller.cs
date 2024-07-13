@@ -1,4 +1,5 @@
-using ClientCode.Data.Progress.Load;
+using ClientCode.Data;
+using ClientCode.Data.Static;
 using ClientCode.Services.ProgressDataProvider;
 using ClientCode.Services.SaveLoader;
 using ClientCode.Services.SaveLoader.Progress;
@@ -6,6 +7,7 @@ using ClientCode.Services.SceneLoader;
 using ClientCode.Services.StateMachine;
 using ClientCode.Services.StaticDataProvider;
 using ClientCode.Services.Updater;
+using ClientCode.UI;
 using UnityEngine;
 using Zenject;
 
@@ -13,7 +15,7 @@ namespace ClientCode.Infrastructure.Installers
 {
     public class ProjectInstaller : MonoInstaller
     {
-        [SerializeField] private ProjectLoadData _loadData;
+        [SerializeField] private ProjectLoadDataConfig _loadDataConfig;
 
         public override void InstallBindings()
         {
@@ -28,7 +30,7 @@ namespace ClientCode.Infrastructure.Installers
         private void BindSaveLoaders()
         {
             Container.Bind<ISaveLoader>().To<SaveLoader>().AsSingle();
-            Container.Bind<IProgressDataSaveLoader>().To<ProgressDataSaveLoader>().AsSingle().WithArguments(_loadData);
+            Container.Bind<IProgressDataSaveLoader>().To<ProgressDataSaveLoader>().AsSingle().WithArguments(_loadDataConfig.Data);
         }
 
         private void BindProviders()
