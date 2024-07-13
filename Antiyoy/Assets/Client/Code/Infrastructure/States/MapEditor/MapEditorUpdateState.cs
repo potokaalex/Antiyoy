@@ -50,9 +50,9 @@ namespace ClientCode.Infrastructure.States.MapEditor
 
         private void TouchCell()
         {
-            if(_sceneData.EventSystem.IsPointerOverGameObject())
+            if (_sceneData.EventSystem.IsPointerOverGameObject())
                 return;
-            
+
             var ray = _sceneData.Camera.GetRayFromCurrentMousePosition();
             var hit = Physics2D.Raycast(ray.origin, ray.direction);
 

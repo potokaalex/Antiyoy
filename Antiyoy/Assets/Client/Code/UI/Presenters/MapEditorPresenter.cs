@@ -15,7 +15,7 @@ namespace ClientCode.UI.Presenters
 
         public void Handle(SceneType sceneType)
         {
-            if(sceneType == SceneType.MainMenu)
+            if (sceneType == SceneType.MainMenu)
                 _stateMachine.SwitchTo<MapEditorExitState>();
         }
     }
