@@ -1,3 +1,4 @@
+using ClientCode.Data.Progress;
 using ClientCode.Data.Scene;
 
 namespace ClientCode.Services.SceneDataProvider

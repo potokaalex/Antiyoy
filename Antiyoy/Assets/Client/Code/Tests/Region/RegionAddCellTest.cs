@@ -10,10 +10,10 @@ namespace Tests.Region
 {
     public class RegionAddCellTest
     {
-        private IEcsProvider _ecsProvider;
+        private EcsWorld _world;
         private EventsBus _eventBus;
         private EcsSystems _systems;
-        private EcsWorld _world;
+        private IEcsProvider _ecsProvider;
 
         [SetUp]
         public void Setup()

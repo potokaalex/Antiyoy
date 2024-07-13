@@ -31,7 +31,7 @@ namespace ClientCode.Infrastructure.Installers
             Container.Bind<IStateMachine>().To<StateMachine>().AsSingle();
             Container.Bind<StateFactory>().AsSingle();
         }
-
+        
         private void BindProviders()
         {
             Container.Bind<ISceneDataProvider<MapEditorSceneData>>().To<SceneDataProvider<MapEditorSceneData>>().AsSingle()

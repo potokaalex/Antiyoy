@@ -13,11 +13,11 @@ namespace ClientCode.Gameplay.Cell
     {
         private readonly IEcsProvider _ecsProvider;
         private readonly IStaticDataProvider _staticDataProvider;
-        private CellObject _cellPrefab;
         private Transform _cellsRoot;
-        private EcsFilter _filter;
         private EcsPool<CellComponent> _pool;
+        private EcsFilter _filter;
         private EcsWorld _world;
+        private CellObject _cellPrefab;
 
         public CellFactory(IEcsProvider ecsProvider, IStaticDataProvider staticDataProvider)
         {
