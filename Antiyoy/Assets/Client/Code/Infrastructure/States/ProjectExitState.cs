@@ -6,7 +6,7 @@ namespace ClientCode.Infrastructure.States
     {
         public void Enter()
         {
-            //TODO: выход из игры здесь
+            //TODO: сохранение перед выходом их игры здесь
         }
     }
 }
