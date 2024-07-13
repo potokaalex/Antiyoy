@@ -1,6 +1,6 @@
 namespace ClientCode.UI
 {
-    public class GameExitButton : ButtonBase
+    public class ProjectExitButton : ButtonBase
     {
         private protected override void OnClick()
 #if UNITY_EDITOR
