@@ -1,4 +1,3 @@
-using ClientCode.Data.Configs;
 using ClientCode.Services.SceneLoader;
 using ClientCode.Services.StateMachine;
 using ClientCode.Services.StaticDataProvider;
@@ -8,9 +7,9 @@ namespace ClientCode.Infrastructure.States
     public class MainMenuLoadState : IState
     {
         private readonly ISceneLoader _sceneLoader;
-        private readonly StaticDataProvider _staticDataProvider;
+        private readonly IStaticDataProvider _staticDataProvider;
 
-        public MainMenuLoadState(ISceneLoader sceneLoader, StaticDataProvider staticDataProvider)
+        public MainMenuLoadState(ISceneLoader sceneLoader, IStaticDataProvider staticDataProvider)
         {
             _sceneLoader = sceneLoader;
             _staticDataProvider = staticDataProvider;
@@ -18,7 +17,7 @@ namespace ClientCode.Infrastructure.States
 
         public void Enter()
         {
-            var scenesConfig = _staticDataProvider.Get<SceneConfig>();
+            var scenesConfig = _staticDataProvider.Configs.Scene;
             _sceneLoader.LoadSceneAsync(scenesConfig.MainMenuSceneName);
         }
     }

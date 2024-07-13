@@ -1,4 +1,4 @@
-using ClientCode.Data.Configs;
+using ClientCode.Data.Static;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 

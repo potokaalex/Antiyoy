@@ -1,5 +1,5 @@
 using System;
-using ClientCode.Data.SceneData;
+using ClientCode.Data.Static;
 using UnityEngine;
 
 namespace ClientCode.Services
@@ -11,6 +11,4 @@ namespace ClientCode.Services
         
         public ProjectLoadData Get() => _data;
     }
-    
-    //унимерсальный data-provider
 }

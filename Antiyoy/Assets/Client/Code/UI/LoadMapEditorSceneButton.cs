@@ -1,5 +1,3 @@
-using ClientCode.Data.Configs;
-using ClientCode.Infrastructure;
 using ClientCode.Services.SceneLoader;
 using ClientCode.Services.StaticDataProvider;
 using Zenject;
@@ -9,10 +7,10 @@ namespace ClientCode.UI
     public class LoadMapEditorSceneButton : ButtonBase
     {
         private ISceneLoader _sceneLoader;
-        private StaticDataProvider _staticDataProvider;
+        private IStaticDataProvider _staticDataProvider;
 
         [Inject]
-        private void Construct(ISceneLoader sceneLoader, StaticDataProvider staticDataProvider)
+        private void Construct(ISceneLoader sceneLoader, IStaticDataProvider staticDataProvider)
         {
             _sceneLoader = sceneLoader;
             _staticDataProvider = staticDataProvider;
@@ -20,7 +18,7 @@ namespace ClientCode.UI
 
         private protected override void OnClick()
         {
-            var scenesConfig = _staticDataProvider.Get<SceneConfig>();
+            var scenesConfig = _staticDataProvider.Configs.Scene;
             _sceneLoader.LoadSceneAsync(scenesConfig.MapEditorSceneName);
         }
     }

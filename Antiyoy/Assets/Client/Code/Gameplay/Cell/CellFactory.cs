@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using ClientCode.Data.Configs;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Hex;
 using Leopotam.EcsLite;

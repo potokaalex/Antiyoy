@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using ClientCode.Data.SceneData;
-using ClientCode.Services;
 using ClientCode.Services.StateMachine;
 using ClientCode.Services.StaticDataProvider;
 
@@ -9,22 +6,24 @@ namespace ClientCode.Infrastructure.States
     public class ProjectLoadState : IState
     {
         private readonly IStaticDataProvider _staticDataProvider;
-        private ProjectLoadDataProvider _loadDataProvider;
+        private readonly IStateMachine _stateMachine;
 
-        public ProjectLoadState(IStaticDataProvider staticDataProvider) => _staticDataProvider = staticDataProvider;
+        public ProjectLoadState(IStaticDataProvider staticDataProvider, IStateMachine stateMachine)
+        {
+            _staticDataProvider = staticDataProvider;
+            _stateMachine = stateMachine;
+        }
 
         public void Enter()
         {
-            var loadData = _loadDataProvider.Get();
-            InitializeStaticData(loadData);
+            InitializeStaticData();
+            _stateMachine.SwitchTo<MainMenuLoadState>();
         }
 
-        private void InitializeStaticData(ProjectLoadData projectLoadData)
+        private void InitializeStaticData()
         {
-            _staticDataProvider.Initialize(new List<IStaticData>
-            {
-                projectLoadData.SceneConfig
-            });
+            var loadData =  _staticDataProvider.ProjectLoadData;
+            _staticDataProvider.Initialize(loadData.Configs, loadData.Prefabs);
         }
     }
 }

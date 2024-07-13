@@ -1,18 +1,21 @@
-using System;
-using System.Collections.Generic;
+using ClientCode.Data.Static;
 
 namespace ClientCode.Services.StaticDataProvider
 {
     public class StaticDataProvider : IStaticDataProvider
     {
-        private Dictionary<Type, IStaticData> _date;
+        public StaticDataProvider(ProjectLoadData projectLoadData) => ProjectLoadData = projectLoadData;
 
-        public void Initialize(List<IStaticData> data)
+        public void Initialize(Configs configs, Prefabs prefabs)
         {
-            foreach (var d in data) 
-                _date.Add(d.GetType(), d);
+            Prefabs = prefabs;
+            Configs = configs;
         }
 
-        public T Get<T>() where T : IStaticData => (T)_date[typeof(T)];
+        public ProjectLoadData ProjectLoadData { get; }
+
+        public Configs Configs { get; private set; }
+        
+        public Prefabs Prefabs { get; private set; }
     }
 }
