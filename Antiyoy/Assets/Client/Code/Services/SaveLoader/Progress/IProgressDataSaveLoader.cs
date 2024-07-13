@@ -7,6 +7,6 @@ namespace ClientCode.Services.SaveLoader.Progress
     {
         ProjectLoadData LoadProjectLoadData();
         bool LoadProjectProgress(ProjectProgressData defaultData);
-        bool LoadMapProgress(string key, MapProgressData defaultData);
+        void LoadMapProgress(string key, MapProgressData defaultData);
     }
 }

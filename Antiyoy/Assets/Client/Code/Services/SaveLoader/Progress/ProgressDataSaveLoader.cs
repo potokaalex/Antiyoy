@@ -2,16 +2,15 @@ using System.IO;
 using ClientCode.Data.Const;
 using ClientCode.Data.Progress;
 using ClientCode.Data.Progress.Load;
-using ClientCode.Data.Static;
 using ClientCode.Services.ProgressDataProvider;
 
 namespace ClientCode.Services.SaveLoader.Progress
 {
     public class ProgressDataSaveLoader : IProgressDataSaveLoader
     {
-        private readonly ISaveLoader _saveLoader;
         private readonly IProgressDataProvider _dataProvider;
         private readonly ProjectLoadData _projectLoadData;
+        private readonly ISaveLoader _saveLoader;
 
         public ProgressDataSaveLoader(ISaveLoader saveLoader, IProgressDataProvider dataProvider, ProjectLoadData projectLoadData)
         {
@@ -29,11 +28,10 @@ namespace ClientCode.Services.SaveLoader.Progress
             return result;
         }
 
-        public bool LoadMapProgress(string key, MapProgressData defaultData)
+        public void LoadMapProgress(string key, MapProgressData defaultData)
         {
-            var result = _saveLoader.Load(GetPath(key, StorageConstants.MapSubPath), defaultData, out var data);
+            _saveLoader.Load(GetPath(key, StorageConstants.MapSubPath), defaultData, out var data);
             _dataProvider.Map = data;
-            return result;
         }
 
         private string GetPath(string key, string subPath = null)
@@ -42,9 +40,7 @@ namespace ClientCode.Services.SaveLoader.Progress
 
             if (subPath != null)
                 path = Path.Combine(StorageConstants.BasePath, subPath);
-            
-            UnityEngine.Debug.LogError(Path.Combine(path, key) + StorageConstants.FilesExtension);
-            
+
             return Path.Combine(path, key) + StorageConstants.FilesExtension;
         }
     }

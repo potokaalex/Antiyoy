@@ -6,9 +6,9 @@ namespace ClientCode.Infrastructure.States
 {
     public class ProjectLoadState : IState
     {
+        private readonly IProgressDataSaveLoader _saveLoader;
         private readonly IStateMachine _stateMachine;
         private readonly IStaticDataProvider _staticDataProvider;
-        private readonly IProgressDataSaveLoader _saveLoader;
 
         public ProjectLoadState(IStaticDataProvider staticDataProvider, IProgressDataSaveLoader saveLoader, IStateMachine stateMachine)
         {

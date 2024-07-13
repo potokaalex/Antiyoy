@@ -12,7 +12,7 @@ namespace ClientCode.Services.SaveLoader
                 result = defaultData;
                 return false;
             }
-            
+
             using var streamReader = new StreamReader(path, false);
             result = JsonUtility.FromJson<T>(streamReader.ReadToEnd());
             return true;

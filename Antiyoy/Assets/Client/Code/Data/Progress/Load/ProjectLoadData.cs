@@ -4,7 +4,7 @@ using ClientCode.Data.Static;
 namespace ClientCode.Data.Progress.Load
 {
     [Serializable]
-    public class ProjectLoadData : ILoadData
+    public class ProjectLoadData
     {
         public Configs Configs;
         public Prefabs Prefabs;
