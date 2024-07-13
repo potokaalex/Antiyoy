@@ -468,6 +468,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _sceneData:
     Camera: {fileID: 519420033}
+    EventSystem: {fileID: 931327819}
 --- !u!114 &950199259
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,5 +1,4 @@
 using ClientCode.Data.Scene;
-using ClientCode.Gameplay;
 using ClientCode.Gameplay.Cell;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Tile;
@@ -18,7 +17,7 @@ namespace ClientCode.Infrastructure.States.MapEditor
         private readonly TileFactory _tileFactory;
         private readonly ISceneDataProvider<MapEditorSceneData> _sceneDataProvider;
         private IEcsSystems _ecsSystems;
-        private CameraObject _camera;
+        private MapEditorSceneData _sceneData;
 
         public MapEditorUpdateState(IUpdater updater, IEcsProvider ecsProvider, TileFactory tileFactory,
             ISceneDataProvider<MapEditorSceneData> sceneDataProvider)
@@ -31,7 +30,7 @@ namespace ClientCode.Infrastructure.States.MapEditor
 
         public void Enter()
         {
-            _camera = _sceneDataProvider.Get().Camera;
+            _sceneData = _sceneDataProvider.Get();
             _ecsSystems = _ecsProvider.GetSystems();
             _ecsSystems.Init();
 
@@ -51,7 +50,10 @@ namespace ClientCode.Infrastructure.States.MapEditor
 
         private void TouchCell()
         {
-            var ray = _camera.GetRayFromCurrentMousePosition();
+            if(_sceneData.EventSystem.IsPointerOverGameObject())
+                return;
+            
+            var ray = _sceneData.Camera.GetRayFromCurrentMousePosition();
             var hit = Physics2D.Raycast(ray.origin, ray.direction);
 
             if (hit.transform && hit.transform.TryGetComponent<CellObject>(out var cell))
