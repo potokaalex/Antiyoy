@@ -5,7 +5,7 @@ namespace ClientCode.Services
     public static class ListPool<T>
     {
         private static readonly List<List<T>> _freeItems = new();
-        
+
         public static List<T> Get(int capacity)
         {
             foreach (var item in _freeItems)
@@ -24,7 +24,7 @@ namespace ClientCode.Services
         {
             if (_freeItems.Count == 0)
                 return new List<T>();
-            
+
             var lastIndex = _freeItems.Count - 1;
             var item = _freeItems[lastIndex];
             _freeItems.RemoveAt(lastIndex);

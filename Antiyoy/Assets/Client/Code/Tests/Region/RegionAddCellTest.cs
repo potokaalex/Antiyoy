@@ -23,7 +23,7 @@ namespace Tests.Region
             _systems = new EcsSystems(_world);
             _ecsProvider = Create.EcsProvider(_world, _eventBus);
         }
-        
+
         [Test]
         public void WhenAddingRegion_AndNoRegions_ThenRegionCountShouldBe1()
         {
@@ -31,16 +31,16 @@ namespace Tests.Region
             ref var request = ref _eventBus.NewEvent<RegionAddCellRequest>();
             request.CellEntity = Create.Cell(_world);
             _systems.Add(new RegionAddCellSystem(_ecsProvider));
-            
+
             //Act.
             _systems.Init();
             _systems.Run();
-            
+
             //Assert.
             var regionCount = _world.Filter<RegionComponent>().End().GetEntitiesCount();
             regionCount.Should().Be(1);
         }
-        
+
         [Test]
         public void WhenAddingRegion_AndNoRegions_ThenCellShouldHasRegionWithCellCount1()
         {
@@ -48,11 +48,11 @@ namespace Tests.Region
             ref var request = ref _eventBus.NewEvent<RegionAddCellRequest>();
             request.CellEntity = Create.Cell(_world);
             _systems.Add(new RegionAddCellSystem(_ecsProvider));
-            
+
             //Act.
             _systems.Init();
             _systems.Run();
-            
+
             //Assert.
             var regionEntity = _world.GetPool<RegionLink>().Get(request.CellEntity).RegionEntity;
             var regionCellCount = _world.GetPool<RegionComponent>().Get(regionEntity).CellEntities.Count;

@@ -11,7 +11,7 @@ namespace ClientCode.Gameplay.Region.Tools
         {
             ref var link = ref linkPool.GetOrAdd(cellEntity);
             link.RegionEntity = regionEntity;
-            
+
             ref var region = ref pool.Get(regionEntity);
             region.CellEntities.Add(cellEntity);
         }

@@ -22,10 +22,10 @@ namespace Tests.Region
                 Create.Region(world),
                 Create.Region(world)
             };
-            
+
             //Act.
             RegionJoinTool.Join(regions, pool, linkPool);
-            
+
             //Assert.
             var regionCount = world.Filter<RegionComponent>().End().GetEntitiesCount();
             regionCount.Should().Be(1);

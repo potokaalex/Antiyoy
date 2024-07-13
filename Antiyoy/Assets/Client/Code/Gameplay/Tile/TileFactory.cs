@@ -29,33 +29,33 @@ namespace ClientCode.Gameplay.Tile
             _createRequestFilter = _eventsBus.GetEventBodies(out _createRequestPool);
             _destroyRequestFilter = _eventsBus.GetEventBodies(out _destroyRequestPool);
         }
-        
+
         public void Create(CellObject cell)
         {
-            if(_createRequestPool.Has(_createRequestFilter, r => r.Cell == cell))
+            if (_createRequestPool.Has(_createRequestFilter, r => r.Cell == cell))
                 return;
-            
+
             if (_pool.Has(cell.Entity))
                 return;
 
             ref var request = ref _eventsBus.NewEvent<TileCreateRequest>();
             request.Cell = cell;
-            
+
             ref var regionRequest = ref _eventsBus.NewEvent<RegionAddCellRequest>();
             regionRequest.CellEntity = cell.Entity;
         }
-        
+
         public void Destroy(CellObject cell)
         {
-            if(_destroyRequestPool.Has(_destroyRequestFilter, r => r.Cell == cell))
+            if (_destroyRequestPool.Has(_destroyRequestFilter, r => r.Cell == cell))
                 return;
-            
+
             if (!_pool.Has(cell.Entity))
                 return;
 
             ref var request = ref _eventsBus.NewEvent<TileDestroyRequest>();
             request.Cell = cell;
-            
+
             ref var regionRequest = ref _eventsBus.NewEvent<RegionRemoveCellRequest>();
             regionRequest.CellEntity = cell.Entity;
         }

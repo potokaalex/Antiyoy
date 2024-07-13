@@ -11,14 +11,14 @@ namespace Tests.Region
     {
         private EcsWorld _world;
         private EcsPool<CellComponent> _cellPool;
-        
+
         [SetUp]
         public void Setup()
         {
             _world = new EcsWorld();
             _cellPool = _world.GetPool<CellComponent>();
         }
-        
+
         [Test]
         public void WhenGettingRegionParts_AndRegionConsistsOf1Cell_ThenRegionPartsShouldBe1()
         {
@@ -55,7 +55,7 @@ namespace Tests.Region
             //Assert.
             parts[0].Cells.Count.Should().Be(3);
         }
-        
+
         [Test]
         public void WhenGettingRegionParts_AndRegionConsistsOf3IndependentCell_ThenRegionPartsShouldBe3()
         {
@@ -68,7 +68,7 @@ namespace Tests.Region
             };
 
             //Act.
-            var parts =RegionPartsTool.Get(cells, _cellPool);
+            var parts = RegionPartsTool.Get(cells, _cellPool);
 
             //Assert.
             parts.Count.Should().Be(3);

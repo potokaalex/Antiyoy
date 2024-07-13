@@ -16,7 +16,7 @@ namespace ClientCode.UI
 
         public void Handle(SceneType sceneType)
         {
-            switch(sceneType)
+            switch (sceneType)
             {
                 case SceneType.MainMenu:
                     _stateMachine.SwitchTo<MainMenuLoadState>();

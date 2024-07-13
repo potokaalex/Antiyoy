@@ -15,7 +15,7 @@ namespace ClientCode.Services.StaticDataProvider
         public ProjectLoadData ProjectLoadData { get; }
 
         public Configs Configs { get; private set; }
-        
+
         public Prefabs Prefabs { get; private set; }
     }
 }

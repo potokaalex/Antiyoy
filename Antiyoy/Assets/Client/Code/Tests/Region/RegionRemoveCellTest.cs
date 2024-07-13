@@ -23,7 +23,7 @@ namespace Tests.Region
             _systems = new EcsSystems(_world);
             _ecsProvider = Create.EcsProvider(_world, _eventBus);
         }
-        
+
         [Test]
         public void WhenRemovingRegion_AndThereIs1CellWithRegion_ThenRegionCountShouldBe0()
         {

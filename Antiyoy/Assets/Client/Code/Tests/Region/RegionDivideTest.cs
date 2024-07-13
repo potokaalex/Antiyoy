@@ -17,9 +17,9 @@ namespace Tests.Region
             var world = new EcsWorld();
             var regionEntity = world.NewEntity();
             var pool = world.GetPool<RegionComponent>();
-            
+
             pool.Add(regionEntity);
-            
+
             var baseRegionCells = new List<int>();
             for (var i = 0; i < 4; i++)
                 baseRegionCells.Add(Create.CellWithRegionLink(world, regionEntity));
@@ -30,7 +30,7 @@ namespace Tests.Region
                 new() { Cells = new List<int> { baseRegionCells[2] } },
                 new() { Cells = new List<int> { baseRegionCells[3] } }
             };
-            
+
             //Act.
             RegionDivideTool.Divide(regionParts, baseRegionCells, world, pool, world.GetPool<RegionLink>());
 

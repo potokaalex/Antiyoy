@@ -19,7 +19,7 @@ namespace ClientCode.Gameplay.Tile.Systems
         public void Init(IEcsSystems systems)
         {
             var world = _ecsProvider.GetWorld();
-            
+
             _eventsBus = _ecsProvider.GetEventsBus();
             _requestFilter = _eventsBus.GetEventBodies(out _requestPool);
             _pool = world.GetPool<TileComponent>();

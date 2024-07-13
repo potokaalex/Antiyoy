@@ -16,7 +16,7 @@ namespace ClientCode.Gameplay.Hex
         }
 
         public override string ToString() => $"{Q};{R};{S}";
-        
+
         public static HexCoordinates operator +(HexCoordinates a, HexCoordinates b)
         {
             a.Q += b.Q;

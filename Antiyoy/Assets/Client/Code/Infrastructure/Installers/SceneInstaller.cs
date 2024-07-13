@@ -13,10 +13,10 @@ namespace ClientCode.Infrastructure.Installers
         public override void InstallBindings()
         {
             Container.Bind<GameplayConfigProvider>().FromInstance(_configProvider).AsSingle();
-            
+
             Container.Bind<EcsFactory>().AsSingle();
             Container.Bind<IEcsProvider>().To<EcsProvider>().AsSingle();
-            
+
             Container.Bind<CellFactory>().AsSingle();
             Container.Bind<TileFactory>().AsSingle();
         }

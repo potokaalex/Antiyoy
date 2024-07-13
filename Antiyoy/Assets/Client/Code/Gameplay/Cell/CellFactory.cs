@@ -51,8 +51,8 @@ namespace ClientCode.Gameplay.Cell
                     ref var cell = ref _pool.Get(cellObject.Entity);
                     var neighbourHex = cell.Hex + direction;
                     var arrayIndex = neighbourHex.ToArrayIndex();
-                    
-                    if (arrayIndex.x < 0 || arrayIndex.x >= mapConfig.Width || 
+
+                    if (arrayIndex.x < 0 || arrayIndex.x >= mapConfig.Width ||
                         arrayIndex.y < 0 || arrayIndex.y >= mapConfig.Height)
                         continue;
 
@@ -69,7 +69,7 @@ namespace ClientCode.Gameplay.Cell
             ref var cell = ref _pool.Add(entity);
             cell.Hex = hex;
             cell.NeighbourCellEntities = new List<int>();
-            
+
             var position = hex.ToWorldPosition();
             var cellObject = Object.Instantiate(cellConfig.Prefab, position, Quaternion.identity);
             cellObject.transform.SetParent(_cellsRoot);
@@ -77,7 +77,7 @@ namespace ClientCode.Gameplay.Cell
             cellObject.Entity = entity;
 
             cell.Object = cellObject;
-            
+
             return cellObject;
         }
     }

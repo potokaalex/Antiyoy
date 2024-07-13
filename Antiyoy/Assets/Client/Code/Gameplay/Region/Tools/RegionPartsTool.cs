@@ -11,7 +11,7 @@ namespace ClientCode.Gameplay.Region.Tools
     {
         private static readonly HashSet<int> _remaining = new();
         private static readonly Stack<int> _front = new();
-        
+
         public static List<RegionPart> Get(List<int> baseRegionCells, EcsPool<CellComponent> cellPool)
         {
             var resultParts = ListPool<RegionPart>.Get();

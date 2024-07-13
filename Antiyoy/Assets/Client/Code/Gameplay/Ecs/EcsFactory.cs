@@ -23,7 +23,7 @@ namespace ClientCode.Gameplay.Ecs
             _instantiator = instantiator;
             _provider = provider;
         }
-        
+
         public void Create()
         {
             _world = new EcsWorld();
@@ -50,7 +50,7 @@ namespace ClientCode.Gameplay.Ecs
             systems.Add(_eventBus.GetDestroyEventsSystem().IncReplicant<TileCreateRequest>());
             systems.Add(CreateSystem<TileDestroySystem>());
             systems.Add(_eventBus.GetDestroyEventsSystem().IncReplicant<TileDestroyRequest>());
-            
+
             systems.Add(CreateSystem<RegionAddCellSystem>());
             systems.Add(CreateSystem<RegionRemoveCellSystem>());
             systems.Add(CreateSystem<RegionDebugSystem>());

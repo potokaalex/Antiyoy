@@ -23,10 +23,10 @@ namespace Tests.Region
         {
             var cellEntity = Cell(world);
             var pool = world.GetPool<CellComponent>();
-            
+
             for (var i = 0; i < 6; i++)
                 pool.Get(cellEntity).NeighbourCellEntities.Add(Cell(world));
-            
+
             return cellEntity;
         }
 
@@ -36,7 +36,7 @@ namespace Tests.Region
             world.GetPool<RegionLink>().Add(cellEntity).RegionEntity = regionEntity;
             return cellEntity;
         }
-        
+
         public static IEcsProvider EcsProvider(EcsWorld world, EventsBus eventBus)
         {
             var ecsProvider = Substitute.For<IEcsProvider>();

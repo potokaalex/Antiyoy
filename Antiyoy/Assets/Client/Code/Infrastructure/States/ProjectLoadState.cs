@@ -22,7 +22,7 @@ namespace ClientCode.Infrastructure.States
 
         private void InitializeStaticData()
         {
-            var loadData =  _staticDataProvider.ProjectLoadData;
+            var loadData = _staticDataProvider.ProjectLoadData;
             _staticDataProvider.Initialize(loadData.Configs, loadData.Prefabs);
         }
     }

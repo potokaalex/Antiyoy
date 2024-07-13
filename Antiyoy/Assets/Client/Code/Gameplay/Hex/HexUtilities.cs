@@ -10,7 +10,7 @@ namespace ClientCode.Gameplay.Hex
         private static readonly HexCoordinates _north = new(0, -1);
         private static readonly HexCoordinates _northwest = new(-1, 0);
         private static readonly HexCoordinates _southwest = new(-1, 1);
-        
+
         public static readonly HexCoordinates[] Directions =
         {
             _south,
@@ -20,7 +20,7 @@ namespace ClientCode.Gameplay.Hex
             _northwest,
             _southwest
         };
-        
+
         public static HexCoordinates FromArrayIndex(Vector2Int index)
         {
             return new HexCoordinates
