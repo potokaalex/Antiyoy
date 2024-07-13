@@ -6,7 +6,7 @@ using Zenject;
 
 namespace ClientCode.Infrastructure.Installers
 {
-    public class SceneInstaller : MonoInstaller
+    public class MapEditorInstaller : MonoInstaller
     {
         [SerializeField] private GameplayConfigProvider _configProvider;
 

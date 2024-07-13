@@ -2,7 +2,7 @@ using ClientCode.Data.Static;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace ClientCode.Infrastructure.CompositionRoot
+namespace ClientCode.Utilities
 {
     public class BootstrapLoader : MonoBehaviour
     {

@@ -6,9 +6,9 @@ using Leopotam.EcsLite;
 using UnityEngine;
 using Zenject;
 
-namespace ClientCode.Infrastructure
+namespace ClientCode.Infrastructure.Startup
 {
-    public class Startup : MonoBehaviour
+    public class MapEditorStartup : MonoBehaviour
     {
         [SerializeField] private CameraObject _camera;
         private IEcsProvider _ecsProvider;

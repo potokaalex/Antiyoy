@@ -3,7 +3,7 @@ using ClientCode.Services.StateMachine;
 using ClientCode.Services.Updater;
 using Zenject;
 
-namespace ClientCode.Infrastructure.CompositionRoot
+namespace ClientCode.Infrastructure.Startup
 {
     public class Bootstrap : IInitializable
     {

@@ -1,4 +1,4 @@
-using ClientCode.Infrastructure.CompositionRoot;
+using ClientCode.Infrastructure.Startup;
 using Zenject;
 
 namespace ClientCode.Infrastructure.Installers

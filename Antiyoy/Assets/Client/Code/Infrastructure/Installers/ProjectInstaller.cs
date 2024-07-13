@@ -6,7 +6,7 @@ using ClientCode.Services.Updater;
 using UnityEngine;
 using Zenject;
 
-namespace ClientCode.Infrastructure.CompositionRoot
+namespace ClientCode.Infrastructure.Installers
 {
     public class ProjectInstaller : MonoInstaller
     {
