@@ -3,7 +3,7 @@ static - не изменяются в процессе игры, существ�
 progress - изменяются в процессе игры и могут быть сохранены
 
 загрузка проекта:
-ProjectInstaller -- BootstrapInstaller -> Bootstrap -> ProjectLoadState -> TODO: mainMenuInstaller -> mainMenuStartup
+ProjectInstaller -- BootstrapInstaller -> Bootstrap -> ProjectLoadState -> mainMenuInstaller -- buttonsOnScene
 
 staticDataProvider должен быть инициализирован из projectLoadData в ProjectLoadState
 1) может быть я могу запихнуть нужные мне данные сразу в staticDataProvider чтобы не заниматься этой инициализацией?

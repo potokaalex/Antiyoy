@@ -1,4 +1,4 @@
-namespace ClientCode.UI
+namespace ClientCode.UI.Buttons
 {
     public class ProjectExitButton : ButtonBase
     {

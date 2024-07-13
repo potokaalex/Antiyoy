@@ -569,6 +569,7 @@ GameObject:
   - component: {fileID: 937203281}
   - component: {fileID: 937203280}
   - component: {fileID: 937203279}
+  - component: {fileID: 937203282}
   m_Layer: 5
   m_Name: StartBattleButton
   m_TagString: Untagged
@@ -678,6 +679,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 937203277}
   m_CullTransparentMesh: 1
+--- !u!114 &937203282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 937203277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47660fbde379df84d9e687804bf4b1b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _sceneType: 3
 --- !u!1 &1113668339
 GameObject:
   m_ObjectHideFlags: 0
@@ -1011,9 +1025,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1594451701}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 307fabd43a744f6095e4602d5a6322c1, type: 3}
+  m_Script: {fileID: 11500000, guid: 47660fbde379df84d9e687804bf4b1b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _sceneType: 2
 --- !u!1 &1643174515
 GameObject:
   m_ObjectHideFlags: 0
@@ -1255,6 +1270,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2140980175}
   - component: {fileID: 2140980176}
+  - component: {fileID: 2140980177}
   m_Layer: 0
   m_Name: Startup
   m_TagString: Untagged
@@ -1290,7 +1306,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _scriptableObjectInstallers: []
-  _monoInstallers: []
+  _monoInstallers:
+  - {fileID: 2140980177}
   _installerPrefabs: []
   _autoRun: 1
   OnPreInstall:
@@ -1308,6 +1325,18 @@ MonoBehaviour:
   _parentNewObjectsUnderSceneContext: 0
   _contractNames: []
   _parentContractNames: []
+--- !u!114 &2140980177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2140980174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdfcf6680d4441b6b0343f2e8e8dda89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

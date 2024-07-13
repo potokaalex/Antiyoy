@@ -1,22 +1,21 @@
 using ClientCode.Services.SceneLoader;
+using ClientCode.Services.StateMachine;
 using ClientCode.Services.StaticDataProvider;
-using Zenject;
 
-namespace ClientCode.UI
+namespace ClientCode.Infrastructure.States
 {
-    public class LoadMapEditorSceneButton : ButtonBase
+    public class MapEditorLoadState : IState
     {
-        private ISceneLoader _sceneLoader;
-        private IStaticDataProvider _staticDataProvider;
+        private readonly ISceneLoader _sceneLoader;
+        private readonly IStaticDataProvider _staticDataProvider;
 
-        [Inject]
-        private void Construct(ISceneLoader sceneLoader, IStaticDataProvider staticDataProvider)
+        public MapEditorLoadState(ISceneLoader sceneLoader, IStaticDataProvider staticDataProvider)
         {
             _sceneLoader = sceneLoader;
             _staticDataProvider = staticDataProvider;
         }
 
-        private protected override void OnClick()
+        public void Enter()
         {
             var scenesConfig = _staticDataProvider.Configs.Scene;
             _sceneLoader.LoadSceneAsync(scenesConfig.MapEditorSceneName);
