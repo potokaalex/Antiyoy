@@ -24,7 +24,7 @@ namespace ClientCode.UI.Presenters
         {
             if (sceneType == SceneType.MapEditor)
             {
-                _progressDataProvider.Load = new MapEditorLoadData();
+                _progressDataProvider.Load = new MapEditorLoadData();//TODO: user should choose mapKey!
                 _stateMachine.SwitchTo<MapEditorLoadState>();
             }
         }
