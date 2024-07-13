@@ -2,7 +2,7 @@ using ClientCode.Services.SceneLoader;
 using ClientCode.Services.StateMachine;
 using ClientCode.Services.StaticDataProvider;
 
-namespace ClientCode.Infrastructure.States
+namespace ClientCode.Infrastructure.States.MapEditor
 {
     public class MapEditorLoadState : IState
     {

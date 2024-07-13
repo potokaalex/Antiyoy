@@ -1,3 +1,6 @@
+using ClientCode.Data.Progress;
+using ClientCode.Data.Progress.Load;
+using ClientCode.Services.ProgressDataProvider;
 using ClientCode.Services.StateMachine;
 using ClientCode.Services.StaticDataProvider;
 
@@ -6,11 +9,13 @@ namespace ClientCode.Infrastructure.States
     public class ProjectLoadState : IState
     {
         private readonly IStaticDataProvider _staticDataProvider;
+        private readonly IProgressDataProvider _progressDataProvider;
         private readonly IStateMachine _stateMachine;
 
-        public ProjectLoadState(IStaticDataProvider staticDataProvider, IStateMachine stateMachine)
+        public ProjectLoadState(IStaticDataProvider staticDataProvider, IProgressDataProvider progressDataProvider, IStateMachine stateMachine)
         {
             _staticDataProvider = staticDataProvider;
+            _progressDataProvider = progressDataProvider;
             _stateMachine = stateMachine;
         }
 
@@ -22,7 +27,7 @@ namespace ClientCode.Infrastructure.States
 
         private void InitializeStaticData()
         {
-            var loadData = _staticDataProvider.ProjectLoadData;
+            var loadData = (ProjectLoadData)_progressDataProvider.Load;
             _staticDataProvider.Initialize(loadData.Configs, loadData.Prefabs);
         }
     }

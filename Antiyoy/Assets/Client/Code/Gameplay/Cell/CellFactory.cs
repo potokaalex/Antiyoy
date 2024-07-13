@@ -33,7 +33,7 @@ namespace ClientCode.Gameplay.Cell
             _cellsRoot = new GameObject("CellsRoot").transform;
             _cellPrefab = _staticDataProvider.Prefabs.CellObject;
         }
-        
+
         public void Create(MapProgressData mapData)
         {
             var cells = new CellObject[mapData.Width * mapData.Height];

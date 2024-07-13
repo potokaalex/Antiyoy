@@ -1,4 +1,7 @@
+using ClientCode.Data.Progress;
+using ClientCode.Data.Progress.Load;
 using ClientCode.Data.Static;
+using ClientCode.Services.ProgressDataProvider;
 using ClientCode.Services.SceneLoader;
 using ClientCode.Services.StateMachine;
 using ClientCode.Services.StaticDataProvider;
@@ -23,7 +26,8 @@ namespace ClientCode.Infrastructure.Installers
 
         private void BindProviders()
         {
-            Container.Bind<IStaticDataProvider>().To<StaticDataProvider>().AsSingle().WithArguments(_loadData);
+            Container.Bind<IStaticDataProvider>().To<StaticDataProvider>().AsSingle();
+            Container.Bind<IProgressDataProvider>().To<ProgressDataProvider>().AsSingle().WithArguments(_loadData);
         }
 
         private void BindStateMachine()
