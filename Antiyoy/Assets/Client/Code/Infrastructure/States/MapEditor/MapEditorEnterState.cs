@@ -26,7 +26,7 @@ namespace ClientCode.Infrastructure.States.MapEditor
 
         public void Enter()
         {
-            var map = _progressDataProvider.Map;
+            var map = _progressDataProvider.MapEditor.Map;
 
             _ecsFactory.Create();
 

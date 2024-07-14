@@ -1,4 +1,3 @@
-using ClientCode.Data.Progress.Load;
 using ClientCode.Infrastructure.States.MapEditor;
 using ClientCode.Services.ProgressDataProvider;
 using ClientCode.Services.StateMachine;
@@ -23,7 +22,7 @@ namespace ClientCode.UI.Presenters
         {
             if (sceneType == SceneType.MapEditor)
             {
-                _progressDataProvider.Load = new MapEditorLoadData();//TODO: user should choose mapKey!
+                _progressDataProvider.MapEditor.MapKey = "SomeMapKey"; //TODO: user should choose mapKey!
                 _stateMachine.SwitchTo<MapEditorLoadState>();
             }
         }
