@@ -43,6 +43,9 @@ namespace ClientCode.Services.SaveLoader.Progress
 
         private MapProgressData LoadMapProgress(string key, MapProgressData defaultData)
         {
+            if (string.IsNullOrEmpty(key))
+                return defaultData;
+            
             _saveLoader.Load(GetFilePath(key, StorageConstants.MapSubPath), defaultData, out var data);
             return data;
         }

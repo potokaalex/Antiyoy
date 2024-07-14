@@ -21,11 +21,8 @@ namespace ClientCode.UI.Handlers
 
         void ILoadButtonHandler.Handle(LoadButtonType loadButtonType)
         {
-            if (loadButtonType == LoadButtonType.MapEditor)
-            {
-                _progressDataProvider.MainMenu.SelectedMapKey = "SomeMapKey"; //TODO: pass NULL to get new Map (?)
+            if (loadButtonType == LoadButtonType.MapEditor) 
                 _stateMachine.SwitchTo<MapEditorLoadState>();
-            }
         }
 
         void ISelectMapButtonHandler.Handle(string mapKey)
