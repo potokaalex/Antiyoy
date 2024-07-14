@@ -22,7 +22,7 @@ namespace ClientCode.Services.SaveLoader
                 result = defaultData;
                 return false;
             }
-            
+
             return true;
         }
 
@@ -30,10 +30,10 @@ namespace ClientCode.Services.SaveLoader
         {
             if (!Directory.Exists(path))
                 return Array.Empty<string>();
-            
+
             var files = Directory.GetFiles(path, $"*.{extension}");
 
-            for (var i = 0; i < files.Length; i++) 
+            for (var i = 0; i < files.Length; i++)
                 files[i] = Path.GetFileNameWithoutExtension(files[i]);
 
             return files;

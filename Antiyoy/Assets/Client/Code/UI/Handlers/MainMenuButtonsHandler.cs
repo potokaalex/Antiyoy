@@ -1,13 +1,13 @@
 using ClientCode.Infrastructure.States.MapEditor;
 using ClientCode.Services.ProgressDataProvider;
 using ClientCode.Services.StateMachine;
-using ClientCode.UI.Buttons;
 using ClientCode.UI.Buttons.Load;
+using ClientCode.UI.Buttons.Map;
 using Zenject;
 
-namespace ClientCode.UI.Presenters
+namespace ClientCode.UI.Handlers
 {
-    public class MainMenuPresenter : ILoadButtonHandler, ISelectMapButtonHandler
+    public class MainMenuButtonsHandler : ILoadButtonHandler, ISelectMapButtonHandler
     {
         private IStateMachine _stateMachine;
         private IProgressDataProvider _progressDataProvider;

@@ -47,7 +47,8 @@ namespace ClientCode.Services.SaveLoader.Progress
             return data;
         }
 
-        private string GetFilePath(string key, string subPath = null) => Path.ChangeExtension(Path.Combine(GetPath(subPath), key), StorageConstants.FilesExtension);
+        private string GetFilePath(string key, string subPath = null) =>
+            Path.ChangeExtension(Path.Combine(GetPath(subPath), key), StorageConstants.FilesExtension);
 
         private string GetPath(string subPath)
         {

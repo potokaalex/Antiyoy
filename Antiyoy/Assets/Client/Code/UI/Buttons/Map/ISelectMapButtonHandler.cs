@@ -1,4 +1,4 @@
-namespace ClientCode.UI.Buttons
+namespace ClientCode.UI.Buttons.Map
 {
     public interface ISelectMapButtonHandler
     {

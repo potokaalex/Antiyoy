@@ -4,9 +4,8 @@ using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Tile;
 using ClientCode.Infrastructure.Startup;
 using ClientCode.Services.StateMachine;
-using ClientCode.UI.Buttons;
 using ClientCode.UI.Buttons.Load;
-using ClientCode.UI.Presenters;
+using ClientCode.UI.Handlers;
 using UnityEngine;
 using Zenject;
 
@@ -22,7 +21,7 @@ namespace ClientCode.Infrastructure.Installers
             BindFactories();
             BindProviders();
 
-            Container.Bind<ILoadButtonHandler>().To<MapEditorPresenter>().AsSingle();
+            Container.Bind<ILoadButtonHandler>().To<MapEditorButtonsHandler>().AsSingle();
             Container.BindInterfacesTo<MapEditorStartup>().AsSingle();
         }
 

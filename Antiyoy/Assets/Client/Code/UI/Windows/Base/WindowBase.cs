@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace ClientCode.UI.Windows.Base
 {
-    public abstract class WindowBase : MonoBehaviour, IWindow
+    public abstract class WindowBase : MonoBehaviour, IUIElement
     {
         public bool IsOpen { get; private set; }
 
@@ -11,7 +11,7 @@ namespace ClientCode.UI.Windows.Base
             IsOpen = true;
             gameObject.SetActive(true);
         }
-        
+
         public virtual void Close()
         {
             IsOpen = false;

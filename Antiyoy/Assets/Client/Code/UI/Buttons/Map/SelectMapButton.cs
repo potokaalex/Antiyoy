@@ -1,9 +1,9 @@
-using ClientCode.UI.Windows;
+using ClientCode.UI.Buttons.Base;
 using TMPro;
 using UnityEngine;
 using Zenject;
 
-namespace ClientCode.UI.Buttons
+namespace ClientCode.UI.Buttons.Map
 {
     public class SelectMapButton : ButtonBase
     {
@@ -19,7 +19,7 @@ namespace ClientCode.UI.Buttons
             _mapKey = mapKey;
             _text.text = mapKey;
         }
-        
+
         private protected override void OnClick() => _selectMapButtonHandler.Handle(_mapKey);
     }
 }

@@ -1,12 +1,11 @@
 using ClientCode.Infrastructure.States.MapEditor;
 using ClientCode.Services.StateMachine;
-using ClientCode.UI.Buttons;
 using ClientCode.UI.Buttons.Load;
 using Zenject;
 
-namespace ClientCode.UI.Presenters
+namespace ClientCode.UI.Handlers
 {
-    public class MapEditorPresenter : ILoadButtonHandler
+    public class MapEditorButtonsHandler : ILoadButtonHandler
     {
         private IStateMachine _stateMachine;
 

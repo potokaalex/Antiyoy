@@ -1,5 +1,4 @@
 using ClientCode.Services.StaticDataProvider;
-using ClientCode.UI.Buttons;
 using ClientCode.UI.Buttons.Base;
 using ClientCode.UI.Windows.Base;
 using ClientCode.Utilities.Extensions;
@@ -19,9 +18,9 @@ namespace ClientCode.UI
             _instantiator = instantiator;
         }
 
-        public IWindow CreateWindow(WindowType type, Transform root) =>
+        public WindowBase CreateWindow(WindowType type, Transform root) =>
             _instantiator.InstantiateMonoBehaviour(_staticDataProvider.Prefabs.Windows[type], root);
-        
+
         public ButtonBase CreateButton(ButtonType type, Transform root) =>
             _instantiator.InstantiateMonoBehaviour(_staticDataProvider.Prefabs.Buttons[type], root);
 

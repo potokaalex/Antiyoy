@@ -1,5 +1,4 @@
 using System;
-using ClientCode.Data.Progress;
 using ClientCode.Data.Progress.Project;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;

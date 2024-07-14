@@ -31,7 +31,7 @@ namespace ClientCode.Infrastructure.States
         {
             var projectData = _saveLoader.LoadProject();
             _progressDataProvider.Project = projectData;
-            
+
             _staticDataProvider.Initialize(projectData.Load.Configs, projectData.Load.Prefabs);
         }
     }

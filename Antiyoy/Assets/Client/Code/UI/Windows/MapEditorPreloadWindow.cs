@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using ClientCode.UI.Buttons;
 using ClientCode.UI.Buttons.Base;
+using ClientCode.UI.Buttons.Map;
 using ClientCode.UI.Windows.Base;
 using UnityEngine;
 using Zenject;
@@ -40,10 +40,10 @@ namespace ClientCode.UI.Windows
                 _selectMapButtons.Add(newButton);
             }
         }
-        
+
         private void RemoveButtons()
         {
-            foreach (var button in _selectMapButtons) 
+            foreach (var button in _selectMapButtons)
                 _uiFactory.Destroy(button);
             _selectMapButtons.Clear();
         }

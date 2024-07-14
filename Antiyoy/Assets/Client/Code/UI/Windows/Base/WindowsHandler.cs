@@ -7,7 +7,7 @@ namespace ClientCode.UI.Windows.Base
     {
         private readonly UIFactory _factory;
         private readonly Transform _windowsRoot;
-        private readonly Dictionary<WindowType, IWindow> _windows = new();
+        private readonly Dictionary<WindowType, WindowBase> _windows = new();
 
         private protected WindowsHandler(UIFactory factory, Transform windowsRoot)
         {
@@ -28,7 +28,7 @@ namespace ClientCode.UI.Windows.Base
                 Open(window);
         }
 
-        private protected virtual void Open(IWindow window) => window.Open();
+        private protected virtual void Open(WindowBase window) => window.Open();
 
         private void Create(WindowType type)
         {

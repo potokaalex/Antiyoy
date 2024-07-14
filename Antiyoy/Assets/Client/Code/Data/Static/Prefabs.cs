@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using ClientCode.Gameplay.Cell;
-using ClientCode.UI;
-using ClientCode.UI.Buttons;
 using ClientCode.UI.Buttons.Base;
 using ClientCode.UI.Windows.Base;
 using Sirenix.Serialization;

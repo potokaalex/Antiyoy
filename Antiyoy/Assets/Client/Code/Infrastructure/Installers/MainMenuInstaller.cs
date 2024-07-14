@@ -1,8 +1,8 @@
 using ClientCode.Data.Scene;
 using ClientCode.UI;
-using ClientCode.UI.Buttons;
 using ClientCode.UI.Buttons.Load;
-using ClientCode.UI.Presenters;
+using ClientCode.UI.Buttons.Map;
+using ClientCode.UI.Handlers;
 using ClientCode.UI.Windows.Base;
 using UnityEngine;
 using Zenject;
@@ -23,8 +23,8 @@ namespace ClientCode.Infrastructure.Installers
         {
             Container.Bind<UIFactory>().AsSingle();
             Container.Bind<IWindowsHandler>().To<MainMenuWindowsHandler>().AsSingle();
-            Container.Bind<ILoadButtonHandler>().To<MainMenuPresenter>().AsCached();
-            Container.Bind<ISelectMapButtonHandler>().To<MainMenuPresenter>().AsCached();
+            Container.Bind<ILoadButtonHandler>().To<MainMenuButtonsHandler>().AsCached();
+            Container.Bind<ISelectMapButtonHandler>().To<MainMenuButtonsHandler>().AsCached();
         }
     }
 }
