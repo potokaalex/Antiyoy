@@ -8,5 +8,7 @@ namespace ClientCode.Services.ProgressDataProvider
         public ProjectProgressData Project { get; set; }
         
         public MapEditorProgressData MapEditor { get; set; }
+        
+        public MainMenuProgressData MainMenu { get; set; }
     }
 }

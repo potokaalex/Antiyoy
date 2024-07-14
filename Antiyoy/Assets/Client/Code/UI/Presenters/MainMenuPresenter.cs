@@ -22,7 +22,7 @@ namespace ClientCode.UI.Presenters
         {
             if (sceneType == SceneType.MapEditor)
             {
-                _progressDataProvider.MapEditor.MapKey = "SomeMapKey"; //TODO: user should choose mapKey!
+                _progressDataProvider.MainMenu.SelectedMapKey = "SomeMapKey"; //TODO: user should choose mapKey!
                 _stateMachine.SwitchTo<MapEditorLoadState>();
             }
         }

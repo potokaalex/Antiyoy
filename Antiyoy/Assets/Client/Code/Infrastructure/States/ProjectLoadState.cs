@@ -25,7 +25,7 @@ namespace ClientCode.Infrastructure.States
 
         private void InitializeStaticData()
         {
-            var loadData = _saveLoader.LoadProjectLoadData();
+            var loadData = _saveLoader.LoadProject().Load;
             _staticDataProvider.Initialize(loadData.Configs, loadData.Prefabs);
         }
     }

@@ -1,7 +1,9 @@
+using ClientCode.Data.Progress.Load;
+
 namespace ClientCode.Data.Progress
 {
     public class ProjectProgressData
     {
-        //Общие данные проекта: версия, количество карт (?)
+        public ProjectLoadData Load;
     }
 }

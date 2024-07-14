@@ -1,12 +1,12 @@
+using ClientCode.Data;
 using ClientCode.Data.Progress;
-using ClientCode.Data.Progress.Load;
 
 namespace ClientCode.Services.SaveLoader.Progress
 {
     public interface IProgressDataSaveLoader
     {
-        ProjectLoadData LoadProjectLoadData();
-        ProjectProgressData LoadProjectProgress(ProjectProgressData defaultData);
-        MapProgressData LoadMapProgress(string key, MapProgressData defaultData);
+        ProjectProgressData LoadProject();
+        MainMenuProgressData LoadMainMenu();
+        MapEditorProgressData LoadMapEditor(string mapKey);
     }
 }

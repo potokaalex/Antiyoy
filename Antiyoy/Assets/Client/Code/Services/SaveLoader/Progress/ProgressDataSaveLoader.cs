@@ -1,4 +1,5 @@
 using System.IO;
+using ClientCode.Data;
 using ClientCode.Data.Const;
 using ClientCode.Data.Progress;
 using ClientCode.Data.Progress.Load;
@@ -16,15 +17,31 @@ namespace ClientCode.Services.SaveLoader.Progress
             _projectLoadData = projectLoadData;
         }
 
-        public ProjectLoadData LoadProjectLoadData() => _projectLoadData;
-
-        public ProjectProgressData LoadProjectProgress(ProjectProgressData defaultData)
+        public ProjectProgressData LoadProject()
         {
-            _saveLoader.Load(GetPath(StorageConstants.ProjectProgressKey), defaultData, out var data);
+            _saveLoader.Load(GetPath(StorageConstants.ProjectProgressKey), CreateDefaultProjectProgress(), out var data);
             return data;
         }
 
-        public MapProgressData LoadMapProgress(string key, MapProgressData defaultData)
+        public MainMenuProgressData LoadMainMenu() => new();
+
+        public MapEditorProgressData LoadMapEditor(string mapKey)
+        {
+            return new MapEditorProgressData
+            {
+                Map = LoadMapProgress(mapKey, new MapProgressData())
+            };
+        }
+
+        private ProjectProgressData CreateDefaultProjectProgress()
+        {
+            return new ProjectProgressData
+            {
+                Load = _projectLoadData
+            };
+        }
+
+        private MapProgressData LoadMapProgress(string key, MapProgressData defaultData)
         {
             _saveLoader.Load(GetPath(key, StorageConstants.MapSubPath), defaultData, out var data);
             return data;
