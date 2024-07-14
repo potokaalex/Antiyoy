@@ -1,4 +1,3 @@
-using ClientCode.Data;
 using ClientCode.Data.Static;
 using ClientCode.Services.ProgressDataProvider;
 using ClientCode.Services.SaveLoader;
@@ -7,7 +6,6 @@ using ClientCode.Services.SceneLoader;
 using ClientCode.Services.StateMachine;
 using ClientCode.Services.StaticDataProvider;
 using ClientCode.Services.Updater;
-using ClientCode.UI;
 using UnityEngine;
 using Zenject;
 

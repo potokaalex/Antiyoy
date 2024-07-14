@@ -1,9 +1,8 @@
-using ClientCode.Data;
 using ClientCode.Data.Progress;
 
 namespace ClientCode.Services.ProgressDataProvider
 {
-    public interface IProgressDataProvider //TODO: обобщить ?
+    public interface IProgressDataProvider
     {
         MapEditorProgressData MapEditor { get; set; }
         MainMenuProgressData MainMenu { get; set; }

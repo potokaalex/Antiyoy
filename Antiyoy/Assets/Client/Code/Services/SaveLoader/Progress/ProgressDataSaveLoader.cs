@@ -1,5 +1,4 @@
 using System.IO;
-using ClientCode.Data;
 using ClientCode.Data.Const;
 using ClientCode.Data.Progress;
 
@@ -18,8 +17,8 @@ namespace ClientCode.Services.SaveLoader.Progress
 
         public ProjectProgressData LoadProject()
         {
-            _saveLoader.Load(GetPath(StorageConstants.ProjectProgressKey), CreateDefaultProjectProgress(), out var data);
-            return data;
+            //_saveLoader.Load(GetPath(StorageConstants.ProjectProgressKey), CreateDefaultProjectProgress(), out var data);
+            return CreateDefaultProjectProgress();
         }
 
         public MainMenuProgressData LoadMainMenu() => new();

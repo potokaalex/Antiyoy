@@ -1,4 +1,3 @@
-using ClientCode.Data.Static;
 using UnityEngine;
 using Zenject;
 

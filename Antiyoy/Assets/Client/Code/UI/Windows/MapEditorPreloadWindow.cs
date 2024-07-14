@@ -1,5 +1,4 @@
 using ClientCode.UI.Windows.Base;
-using UnityEngine;
 
 namespace ClientCode.UI.Windows
 {
@@ -10,7 +9,7 @@ namespace ClientCode.UI.Windows
             IsOpen = true;
             gameObject.SetActive(true);
         }
-        
+
         public override void Close()
         {
             IsOpen = false;

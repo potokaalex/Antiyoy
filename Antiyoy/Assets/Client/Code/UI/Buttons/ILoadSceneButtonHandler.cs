@@ -1,5 +1,3 @@
-using ClientCode.Data.Static;
-
 namespace ClientCode.UI.Buttons
 {
     public interface ILoadSceneButtonHandler

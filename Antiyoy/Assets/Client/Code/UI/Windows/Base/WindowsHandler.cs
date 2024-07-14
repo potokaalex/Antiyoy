@@ -17,11 +17,11 @@ namespace ClientCode.UI.Windows.Base
 
         public void Toggle(WindowType type)
         {
-            if(!_windows.ContainsKey(type))
+            if (!_windows.ContainsKey(type))
                 Create(type);
 
             var window = _windows[type];
-            
+
             if (window.IsOpen)
                 window.Close();
             else

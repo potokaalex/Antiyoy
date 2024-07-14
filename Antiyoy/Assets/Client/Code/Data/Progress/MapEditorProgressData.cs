@@ -1,6 +1,4 @@
-using ClientCode.Data.Progress;
-
-namespace ClientCode.Data
+namespace ClientCode.Data.Progress
 {
     public class MapEditorProgressData
     {
