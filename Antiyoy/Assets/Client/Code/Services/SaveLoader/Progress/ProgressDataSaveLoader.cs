@@ -2,7 +2,6 @@ using System.IO;
 using ClientCode.Data;
 using ClientCode.Data.Const;
 using ClientCode.Data.Progress;
-using ClientCode.Data.Progress.Load;
 
 namespace ClientCode.Services.SaveLoader.Progress
 {

@@ -1,5 +1,5 @@
 using System;
-using ClientCode.Data.Progress.Load;
+using ClientCode.Data.Progress;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
