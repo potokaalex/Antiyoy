@@ -1,6 +1,7 @@
 using System.IO;
 using ClientCode.Data.Const;
 using ClientCode.Data.Progress;
+using ClientCode.Data.Progress.Project;
 
 namespace ClientCode.Services.SaveLoader.Progress
 {
@@ -35,24 +36,27 @@ namespace ClientCode.Services.SaveLoader.Progress
         {
             return new ProjectProgressData
             {
-                Load = _projectLoadData
+                Load = _projectLoadData,
+                MapKeys = _saveLoader.GetFileNames(GetPath(StorageConstants.MapSubPath), StorageConstants.FilesExtension)
             };
         }
 
         private MapProgressData LoadMapProgress(string key, MapProgressData defaultData)
         {
-            _saveLoader.Load(GetPath(key, StorageConstants.MapSubPath), defaultData, out var data);
+            _saveLoader.Load(GetFilePath(key, StorageConstants.MapSubPath), defaultData, out var data);
             return data;
         }
 
-        private string GetPath(string key, string subPath = null)
+        private string GetFilePath(string key, string subPath = null) => Path.ChangeExtension(Path.Combine(GetPath(subPath), key), StorageConstants.FilesExtension);
+
+        private string GetPath(string subPath)
         {
             var path = StorageConstants.BasePath;
 
             if (subPath != null)
                 path = Path.Combine(StorageConstants.BasePath, subPath);
 
-            return Path.Combine(path, key) + StorageConstants.FilesExtension;
+            return path;
         }
     }
 }

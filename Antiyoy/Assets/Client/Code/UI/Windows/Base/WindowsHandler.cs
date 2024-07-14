@@ -1,18 +1,18 @@
 using System.Collections.Generic;
-using ClientCode.Data.Scene;
+using UnityEngine;
 
 namespace ClientCode.UI.Windows.Base
 {
-    public class WindowsHandler : IWindowsHandler
+    public abstract class WindowsHandler : IWindowsHandler
     {
         private readonly UIFactory _factory;
-        private readonly MainMenuSceneData _sceneData;
+        private readonly Transform _windowsRoot;
         private readonly Dictionary<WindowType, IWindow> _windows = new();
 
-        public WindowsHandler(UIFactory factory, MainMenuSceneData sceneData)
+        private protected WindowsHandler(UIFactory factory, Transform windowsRoot)
         {
             _factory = factory;
-            _sceneData = sceneData;
+            _windowsRoot = windowsRoot;
         }
 
         public void Toggle(WindowType type)
@@ -25,12 +25,14 @@ namespace ClientCode.UI.Windows.Base
             if (window.IsOpen)
                 window.Close();
             else
-                window.Open();
+                Open(window);
         }
+
+        private protected virtual void Open(IWindow window) => window.Open();
 
         private void Create(WindowType type)
         {
-            var window = _factory.CreateWindow(type, _sceneData.UIRoot);
+            var window = _factory.CreateWindow(type, _windowsRoot);
             _windows.Add(type, window);
         }
     }

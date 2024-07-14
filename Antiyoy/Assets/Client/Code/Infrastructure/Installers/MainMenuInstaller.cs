@@ -21,9 +21,10 @@ namespace ClientCode.Infrastructure.Installers
 
         private void BindUI()
         {
-            Container.Bind<ILoadButtonHandler>().To<MainMenuPresenter>().AsSingle();
-            Container.Bind<IWindowsHandler>().To<WindowsHandler>().AsSingle();
             Container.Bind<UIFactory>().AsSingle();
+            Container.Bind<IWindowsHandler>().To<MainMenuWindowsHandler>().AsSingle();
+            Container.Bind<ILoadButtonHandler>().To<MainMenuPresenter>().AsCached();
+            Container.Bind<ISelectMapButtonHandler>().To<MainMenuPresenter>().AsCached();
         }
     }
 }

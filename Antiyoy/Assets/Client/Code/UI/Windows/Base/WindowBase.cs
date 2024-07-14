@@ -4,10 +4,18 @@ namespace ClientCode.UI.Windows.Base
 {
     public abstract class WindowBase : MonoBehaviour, IWindow
     {
-        public bool IsOpen { get; private protected set; }
+        public bool IsOpen { get; private set; }
 
-        public abstract void Close();
-
-        public abstract void Open();
+        public virtual void Open()
+        {
+            IsOpen = true;
+            gameObject.SetActive(true);
+        }
+        
+        public virtual void Close()
+        {
+            IsOpen = false;
+            gameObject.SetActive(false);
+        }
     }
 }

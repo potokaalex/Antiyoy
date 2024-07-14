@@ -1,4 +1,5 @@
 using ClientCode.Data.Progress;
+using ClientCode.Data.Progress.Project;
 
 namespace ClientCode.Services.SaveLoader.Progress
 {

@@ -1,4 +1,6 @@
 using ClientCode.Services.StaticDataProvider;
+using ClientCode.UI.Buttons;
+using ClientCode.UI.Buttons.Base;
 using ClientCode.UI.Windows.Base;
 using ClientCode.Utilities.Extensions;
 using UnityEngine;
@@ -19,5 +21,10 @@ namespace ClientCode.UI
 
         public IWindow CreateWindow(WindowType type, Transform root) =>
             _instantiator.InstantiateMonoBehaviour(_staticDataProvider.Prefabs.Windows[type], root);
+        
+        public ButtonBase CreateButton(ButtonType type, Transform root) =>
+            _instantiator.InstantiateMonoBehaviour(_staticDataProvider.Prefabs.Buttons[type], root);
+
+        public void Destroy<T>(T element) where T : MonoBehaviour, IUIElement => Object.Destroy(element);
     }
 }

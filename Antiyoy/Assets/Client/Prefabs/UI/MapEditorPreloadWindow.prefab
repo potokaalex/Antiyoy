@@ -224,6 +224,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8016e6200a354920867641d953d1cada, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _selectMapButtonsRoot: {fileID: 6271384101468729901}
 --- !u!1 &3602024421817743740
 GameObject:
   m_ObjectHideFlags: 0

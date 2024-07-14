@@ -7,7 +7,7 @@ using Zenject;
 
 namespace ClientCode.UI.Presenters
 {
-    public class MainMenuPresenter : ILoadButtonHandler
+    public class MainMenuPresenter : ILoadButtonHandler, ISelectMapButtonHandler
     {
         private IStateMachine _stateMachine;
         private IProgressDataProvider _progressDataProvider;
@@ -19,13 +19,19 @@ namespace ClientCode.UI.Presenters
             _stateMachine = stateMachine;
         }
 
-        public void Handle(LoadButtonType loadButtonType)
+        void ILoadButtonHandler.Handle(LoadButtonType loadButtonType)
         {
             if (loadButtonType == LoadButtonType.MapEditor)
             {
-                _progressDataProvider.MainMenu.SelectedMapKey = "SomeMapKey"; //TODO: user should choose mapKey!
+                _progressDataProvider.MainMenu.SelectedMapKey = "SomeMapKey"; //TODO: pass NULL to get new Map (?)
                 _stateMachine.SwitchTo<MapEditorLoadState>();
             }
+        }
+
+        void ISelectMapButtonHandler.Handle(string mapKey)
+        {
+            _progressDataProvider.MainMenu.SelectedMapKey = mapKey;
+            _stateMachine.SwitchTo<MapEditorLoadState>();
         }
     }
 }

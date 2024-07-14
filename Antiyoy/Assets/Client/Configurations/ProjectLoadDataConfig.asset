@@ -19,6 +19,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 2c9cb30022f8bdb4a81ae32ff34e15d6, type: 2}
     - {fileID: 2510216717212271286, guid: 6eb3e4bec3209af4fa64a7ba0f05300b, type: 3}
     - {fileID: 447804621650574473, guid: 30c77c98fc9aded4f994d6b965c44e58, type: 3}
+    - {fileID: 5398685322357457025, guid: bd51b8ab9f7ae1249b8b6cd32333ee10, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -26,7 +27,7 @@ MonoBehaviour:
     SerializationNodes:
     - Name: Data
       Entry: 7
-      Data: 0|ClientCode.Data.Progress.Load.ProjectLoadData, Code
+      Data: 0|ClientCode.Data.Progress.Project.ProjectLoadData, Code
     - Name: Configs
       Entry: 7
       Data: 1|ClientCode.Data.Static.Configs, Code
@@ -71,6 +72,44 @@ MonoBehaviour:
     - Name: $v
       Entry: 10
       Data: 2
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: Buttons
+      Entry: 7
+      Data: 5|System.Collections.Generic.Dictionary`2[[ClientCode.UI.Buttons.Base.ButtonType,
+        Code],[ClientCode.UI.Buttons.ButtonBase, Code]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 6|System.Collections.Generic.EnumEqualityComparer`1[[ClientCode.UI.Buttons.Base.ButtonType,
+        Code]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 10
+      Data: 3
     - Name: 
       Entry: 8
       Data: 

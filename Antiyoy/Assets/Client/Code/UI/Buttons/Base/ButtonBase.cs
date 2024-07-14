@@ -4,7 +4,7 @@ using UnityEngine.UI;
 namespace ClientCode.UI.Buttons
 {
     [RequireComponent(typeof(Image), typeof(Button))]
-    public abstract class ButtonBase : MonoBehaviour
+    public abstract class ButtonBase : MonoBehaviour, IUIElement
     {
         private Button _button;
 

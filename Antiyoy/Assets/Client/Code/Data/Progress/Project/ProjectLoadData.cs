@@ -2,7 +2,7 @@ using System;
 using ClientCode.Data.Static;
 using Sirenix.Serialization;
 
-namespace ClientCode.Data.Progress
+namespace ClientCode.Data.Progress.Project
 {
     [Serializable]
     public class ProjectLoadData
