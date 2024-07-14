@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using ClientCode.UI.Buttons.Base;
-using ClientCode.UI.Buttons.Map;
+using ClientCode.UI.Buttons.Map.Select;
 using ClientCode.UI.Windows.Base;
 using UnityEngine;
 using Zenject;
@@ -10,7 +10,7 @@ namespace ClientCode.UI.Windows
     public class MapEditorPreloadWindow : WindowBase
     {
         [SerializeField] private Transform _selectMapButtonsRoot;
-        private readonly List<SelectMapButton> _selectMapButtons = new();
+        private readonly List<MapSelectButton> _selectMapButtons = new();
         private UIFactory _uiFactory;
         private string[] _mapKeys;
 
@@ -19,23 +19,23 @@ namespace ClientCode.UI.Windows
 
         public void Initialize(string[] mapKeys) => _mapKeys = mapKeys;
 
-        public override void Open()
+        private protected override void OnOpen()
         {
             CreateButtons();
-            base.Open();
+            base.OnOpen();
         }
 
-        public override void Close()
+        private protected override void OnClose()
         {
             RemoveButtons();
-            base.Close();
+            base.OnClose();
         }
 
         private void CreateButtons()
         {
             foreach (var mapKey in _mapKeys)
             {
-                var newButton = (SelectMapButton)_uiFactory.CreateButton(ButtonType.SelectMapButton, _selectMapButtonsRoot);
+                var newButton = (MapSelectButton)_uiFactory.CreateButton(ButtonType.SelectMapButton, _selectMapButtonsRoot);
                 newButton.Initialize(mapKey);
                 _selectMapButtons.Add(newButton);
             }

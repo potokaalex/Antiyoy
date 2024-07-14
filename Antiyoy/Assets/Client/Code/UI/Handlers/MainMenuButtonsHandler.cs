@@ -3,11 +3,12 @@ using ClientCode.Services.ProgressDataProvider;
 using ClientCode.Services.StateMachine;
 using ClientCode.UI.Buttons.Load;
 using ClientCode.UI.Buttons.Map;
+using ClientCode.UI.Buttons.Map.Select;
 using Zenject;
 
 namespace ClientCode.UI.Handlers
 {
-    public class MainMenuButtonsHandler : ILoadButtonHandler, ISelectMapButtonHandler
+    public class MainMenuButtonsHandler : ILoadButtonHandler, IMapSelectButtonHandler
     {
         private IStateMachine _stateMachine;
         private IProgressDataProvider _progressDataProvider;
@@ -25,7 +26,7 @@ namespace ClientCode.UI.Handlers
                 _stateMachine.SwitchTo<MapEditorLoadState>();
         }
 
-        void ISelectMapButtonHandler.Handle(string mapKey)
+        void IMapSelectButtonHandler.Handle(string mapKey)
         {
             _progressDataProvider.MainMenu.SelectedMapKey = mapKey;
             _stateMachine.SwitchTo<MapEditorLoadState>();

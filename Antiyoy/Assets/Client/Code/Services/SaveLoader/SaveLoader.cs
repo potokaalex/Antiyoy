@@ -6,7 +6,28 @@ namespace ClientCode.Services.SaveLoader
 {
     public class SaveLoader : ISaveLoader
     {
-        public bool Load<T>(string path, T defaultData, out T result)
+        public bool Save<T>(string path, T data)
+        {
+            var directory = Path.GetDirectoryName(path);
+
+            if (directory != null)
+                Directory.CreateDirectory(directory);
+
+            try
+            {
+                using var streamWriter = new StreamWriter(path, false);
+                streamWriter.Write(JsonUtility.ToJson(data));
+            }
+            catch(Exception exc)
+            {
+                Debug.Log(exc);
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool Load<T>(string path, T defaultData, out T result) //where T : ISavedData
         {
             if (!File.Exists(path))
             {

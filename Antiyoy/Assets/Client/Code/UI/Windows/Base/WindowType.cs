@@ -2,6 +2,7 @@ namespace ClientCode.UI.Windows.Base
 {
     public enum WindowType
     {
-        MapEditorPreloadWindow = 1
+        MapEditorPreload = 1,
+        Writing = 2,
     }
 }

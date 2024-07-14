@@ -28,8 +28,6 @@ namespace ClientCode.Infrastructure.States.MapEditor
         public void Enter()
         {
             _ecsSystems = _ecsProvider.GetSystems();
-            _ecsSystems.Init();
-
             _updater.OnUpdate += Update;
             _updater.OnFixedUpdate += FixedUpdate;
         }

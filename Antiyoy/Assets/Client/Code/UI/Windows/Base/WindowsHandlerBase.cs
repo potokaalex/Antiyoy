@@ -3,33 +3,27 @@ using UnityEngine;
 
 namespace ClientCode.UI.Windows.Base
 {
-    public abstract class WindowsHandler : IWindowsHandler
+    public abstract class WindowsHandlerBase : IWindowsHandler
     {
         private readonly UIFactory _factory;
         private readonly Transform _windowsRoot;
         private readonly Dictionary<WindowType, WindowBase> _windows = new();
 
-        private protected WindowsHandler(UIFactory factory, Transform windowsRoot)
+        private protected WindowsHandlerBase(UIFactory factory, Transform windowsRoot)
         {
             _factory = factory;
             _windowsRoot = windowsRoot;
         }
 
-        public void Toggle(WindowType type)
+        public WindowBase Get(WindowType type)
         {
             if (!_windows.ContainsKey(type))
                 Create(type);
-
-            var window = _windows[type];
-
-            if (window.IsOpen)
-                window.Close();
-            else
-                Open(window);
+            return _windows[type];
         }
 
-        private protected virtual void Open(WindowBase window) => window.Open();
-
+        public abstract void OnBeforeOpen(WindowBase window);
+        
         private void Create(WindowType type)
         {
             var window = _factory.CreateWindow(type, _windowsRoot);

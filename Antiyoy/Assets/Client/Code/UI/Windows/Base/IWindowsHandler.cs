@@ -2,6 +2,7 @@ namespace ClientCode.UI.Windows.Base
 {
     public interface IWindowsHandler
     {
-        void Toggle(WindowType type);
+        WindowBase Get(WindowType type);
+        void OnBeforeOpen(WindowBase window);
     }
 }

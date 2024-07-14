@@ -5,22 +5,18 @@ using ClientCode.UI.Windows.Base;
 
 namespace ClientCode.UI.Handlers
 {
-    public class MainMenuWindowsHandler : WindowsHandler
+    public class MainMenuWindowsHandler : WindowsHandlerBase
     {
         private readonly IProgressDataProvider _progressDataProvider;
 
         public MainMenuWindowsHandler(UIFactory factory, MainMenuSceneData sceneData, IProgressDataProvider progressDataProvider)
-            : base(factory, sceneData.UIRoot)
-        {
+            : base(factory, sceneData.UIRoot) =>
             _progressDataProvider = progressDataProvider;
-        }
 
-        private protected override void Open(WindowBase window)
+        public override void OnBeforeOpen(WindowBase window)
         {
             if (window is MapEditorPreloadWindow preloadWindow)
                 preloadWindow.Initialize(_progressDataProvider.Project.MapKeys);
-
-            base.Open(window);
         }
     }
 }

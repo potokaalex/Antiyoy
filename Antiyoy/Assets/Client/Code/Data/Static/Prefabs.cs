@@ -11,7 +11,7 @@ namespace ClientCode.Data.Static
     public class Prefabs
     {
         public CellObject CellObject;
-        [OdinSerialize] public Dictionary<WindowType, WindowBase> Windows;
         [OdinSerialize] public Dictionary<ButtonType, ButtonBase> Buttons;
+        [OdinSerialize] public Dictionary<WindowType, WindowBase> Windows;
     }
 }

@@ -1,18 +1,32 @@
 using UnityEngine;
+using Zenject;
 
 namespace ClientCode.UI.Windows.Base
 {
     public abstract class WindowBase : MonoBehaviour, IUIElement
     {
-        public bool IsOpen { get; private set; }
+        private IWindowsHandler _windowsHandler;
 
-        public virtual void Open()
+        [Inject]
+        public void BaseConstruct(IWindowsHandler windowsHandler) => _windowsHandler = windowsHandler;
+
+        public bool IsOpen { get; private set; }
+        
+        public void Open()
+        {
+            _windowsHandler.OnBeforeOpen(this);
+            OnOpen();
+        }
+
+        public void Close() => OnClose();
+
+        private protected virtual void OnOpen()
         {
             IsOpen = true;
             gameObject.SetActive(true);
         }
-
-        public virtual void Close()
+        
+        private protected virtual void OnClose()
         {
             IsOpen = false;
             gameObject.SetActive(false);

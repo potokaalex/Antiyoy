@@ -2,6 +2,7 @@ using ClientCode.Data.Scene;
 using ClientCode.UI;
 using ClientCode.UI.Buttons.Load;
 using ClientCode.UI.Buttons.Map;
+using ClientCode.UI.Buttons.Map.Select;
 using ClientCode.UI.Handlers;
 using ClientCode.UI.Windows.Base;
 using UnityEngine;
@@ -24,7 +25,7 @@ namespace ClientCode.Infrastructure.Installers
             Container.Bind<UIFactory>().AsSingle();
             Container.Bind<IWindowsHandler>().To<MainMenuWindowsHandler>().AsSingle();
             Container.Bind<ILoadButtonHandler>().To<MainMenuButtonsHandler>().AsCached();
-            Container.Bind<ISelectMapButtonHandler>().To<MainMenuButtonsHandler>().AsCached();
+            Container.Bind<IMapSelectButtonHandler>().To<MainMenuButtonsHandler>().AsCached();
         }
     }
 }

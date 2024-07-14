@@ -4,8 +4,11 @@ using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Tile;
 using ClientCode.Infrastructure.Startup;
 using ClientCode.Services.StateMachine;
+using ClientCode.UI;
 using ClientCode.UI.Buttons.Load;
+using ClientCode.UI.Buttons.Map.SaveLoad;
 using ClientCode.UI.Handlers;
+using ClientCode.UI.Windows.Base;
 using UnityEngine;
 using Zenject;
 
@@ -20,9 +23,17 @@ namespace ClientCode.Infrastructure.Installers
             BindStateMachine();
             BindFactories();
             BindProviders();
-
-            Container.Bind<ILoadButtonHandler>().To<MapEditorButtonsHandler>().AsSingle();
+            BindUI();
+            
             Container.BindInterfacesTo<MapEditorStartup>().AsSingle();
+        }
+
+        private void BindUI()
+        {
+            Container.Bind<ILoadButtonHandler>().To<MapEditorButtonsHandler>().AsCached();
+            Container.Bind<IMapSaveLoadButtonHandler>().To<MapEditorButtonsHandler>().AsCached();
+            Container.Bind<IWindowsHandler>().To<MapEditorWindowsHandler>().AsSingle();
+            Container.Bind<UIFactory>().AsSingle();
         }
 
         private void BindStateMachine()

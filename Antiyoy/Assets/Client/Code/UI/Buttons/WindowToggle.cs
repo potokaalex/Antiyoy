@@ -13,6 +13,14 @@ namespace ClientCode.UI.Buttons
         [Inject]
         public void Construct(IWindowsHandler handler) => _handler = handler;
 
-        private protected override void OnClick() => _handler.Toggle(_windowType);
+        private protected override void OnClick()
+        {
+            var window = _handler.Get(_windowType);
+            
+            if(window.IsOpen)
+                window.Close();
+            else
+                window.Open();
+        }
     }
 }

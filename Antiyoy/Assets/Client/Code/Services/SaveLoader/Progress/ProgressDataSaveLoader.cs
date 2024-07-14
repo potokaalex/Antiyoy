@@ -32,6 +32,11 @@ namespace ClientCode.Services.SaveLoader.Progress
             };
         }
 
+        public bool SaveMapEditor(MapProgressData progress)
+        {
+            return _saveLoader.Save(GetFilePath(StorageConstants.MapEditorKey), progress);
+        }
+
         private ProjectProgressData CreateDefaultProjectProgress()
         {
             return new ProjectProgressData
@@ -45,7 +50,7 @@ namespace ClientCode.Services.SaveLoader.Progress
         {
             if (string.IsNullOrEmpty(key))
                 return defaultData;
-            
+
             _saveLoader.Load(GetFilePath(key, StorageConstants.MapSubPath), defaultData, out var data);
             return data;
         }
