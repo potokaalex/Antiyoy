@@ -1,6 +1,6 @@
-namespace ClientCode.UI.Buttons
+namespace ClientCode.UI.Buttons.Load
 {
-    public enum SceneType
+    public enum LoadButtonType
     {
         MainMenu = 1,
         MapEditor = 2,

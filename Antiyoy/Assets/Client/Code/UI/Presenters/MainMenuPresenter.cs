@@ -2,11 +2,12 @@ using ClientCode.Infrastructure.States.MapEditor;
 using ClientCode.Services.ProgressDataProvider;
 using ClientCode.Services.StateMachine;
 using ClientCode.UI.Buttons;
+using ClientCode.UI.Buttons.Load;
 using Zenject;
 
 namespace ClientCode.UI.Presenters
 {
-    public class MainMenuPresenter : ILoadSceneButtonHandler
+    public class MainMenuPresenter : ILoadButtonHandler
     {
         private IStateMachine _stateMachine;
         private IProgressDataProvider _progressDataProvider;
@@ -18,9 +19,9 @@ namespace ClientCode.UI.Presenters
             _stateMachine = stateMachine;
         }
 
-        public void Handle(SceneType sceneType)
+        public void Handle(LoadButtonType loadButtonType)
         {
-            if (sceneType == SceneType.MapEditor)
+            if (loadButtonType == LoadButtonType.MapEditor)
             {
                 _progressDataProvider.MainMenu.SelectedMapKey = "SomeMapKey"; //TODO: user should choose mapKey!
                 _stateMachine.SwitchTo<MapEditorLoadState>();
