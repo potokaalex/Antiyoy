@@ -2,7 +2,6 @@ using ClientCode.Data.Scene;
 using ClientCode.Gameplay.Cell;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Tile;
-using ClientCode.Services.SceneDataProvider;
 using ClientCode.Services.StateMachine;
 using ClientCode.Services.Updater;
 using Leopotam.EcsLite;
@@ -15,22 +14,19 @@ namespace ClientCode.Infrastructure.States.MapEditor
         private readonly IUpdater _updater;
         private readonly IEcsProvider _ecsProvider;
         private readonly TileFactory _tileFactory;
-        private readonly ISceneDataProvider<MapEditorSceneData> _sceneDataProvider;
+        private readonly MapEditorSceneData _sceneData;
         private IEcsSystems _ecsSystems;
-        private MapEditorSceneData _sceneData;
 
-        public MapEditorUpdateState(IUpdater updater, IEcsProvider ecsProvider, TileFactory tileFactory,
-            ISceneDataProvider<MapEditorSceneData> sceneDataProvider)
+        public MapEditorUpdateState(IUpdater updater, IEcsProvider ecsProvider, TileFactory tileFactory, MapEditorSceneData sceneData)
         {
             _updater = updater;
             _ecsProvider = ecsProvider;
             _tileFactory = tileFactory;
-            _sceneDataProvider = sceneDataProvider;
+            _sceneData = sceneData;
         }
 
         public void Enter()
         {
-            _sceneData = _sceneDataProvider.Get();
             _ecsSystems = _ecsProvider.GetSystems();
             _ecsSystems.Init();
 

@@ -3,7 +3,6 @@ using ClientCode.Gameplay.Cell;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Tile;
 using ClientCode.Infrastructure.Startup;
-using ClientCode.Services.SceneDataProvider;
 using ClientCode.Services.StateMachine;
 using ClientCode.UI.Buttons;
 using ClientCode.UI.Presenters;
@@ -34,8 +33,7 @@ namespace ClientCode.Infrastructure.Installers
 
         private void BindProviders()
         {
-            Container.Bind<ISceneDataProvider<MapEditorSceneData>>().To<SceneDataProvider<MapEditorSceneData>>().AsSingle()
-                .WithArguments(_sceneData);
+            Container.Bind<MapEditorSceneData>().FromInstance(_sceneData).AsSingle();
             Container.Bind<IEcsProvider>().To<EcsProvider>().AsSingle();
         }
 
