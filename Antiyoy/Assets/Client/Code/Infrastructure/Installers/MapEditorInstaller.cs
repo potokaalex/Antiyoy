@@ -1,4 +1,5 @@
 using ClientCode.Data.Scene;
+using ClientCode.Gameplay;
 using ClientCode.Gameplay.Cell;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Tile;
@@ -27,7 +28,7 @@ namespace ClientCode.Infrastructure.Installers
             BindUI();
             BindProgress();
 
-            //Container.BindInterfacesTo<MapEditorStartup>().AsSingle();
+            Container.Bind<CameraController>().AsSingle().WithArguments(_sceneData.Camera);
         }
 
         private void BindProgress()

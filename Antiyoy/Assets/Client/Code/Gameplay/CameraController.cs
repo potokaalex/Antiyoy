@@ -2,11 +2,13 @@ using UnityEngine;
 
 namespace ClientCode.Gameplay
 {
-    public class CameraObject : MonoBehaviour
+    public class CameraController
     {
-        [SerializeField] private Camera _camera;
+        private readonly Camera _camera;
 
-        private void Update()
+        public CameraController(Camera camera) => _camera = camera;
+        
+        public void Update()
         {
             Move();
             Scroll();
@@ -33,14 +35,14 @@ namespace ClientCode.Gameplay
             var speed = 5f;
 
             if (Input.GetKey(KeyCode.A))
-                transform.position += Vector3.left * (speed * Time.deltaTime);
+                _camera.transform.position += Vector3.left * (speed * Time.deltaTime);
             if (Input.GetKey(KeyCode.D))
-                transform.position += Vector3.right * (speed * Time.deltaTime);
+                _camera.transform.position += Vector3.right * (speed * Time.deltaTime);
 
             if (Input.GetKey(KeyCode.W))
-                transform.position += Vector3.up * (speed * Time.deltaTime);
+                _camera.transform.position += Vector3.up * (speed * Time.deltaTime);
             if (Input.GetKey(KeyCode.S))
-                transform.position += Vector3.down * (speed * Time.deltaTime);
+                _camera.transform.position += Vector3.down * (speed * Time.deltaTime);
         }
     }
 }
