@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ClientCode.Data.Progress;
@@ -17,7 +18,11 @@ namespace ClientCode.Services.Progress
         private ProgressData _progress;
 
         public ProgressDataSaveLoader(ProjectLoadData projectLoadData) => _projectLoadData = projectLoadData;
+        
+        public void RegisterActor(IProgressActor actor) => _actors.Add(actor);
 
+        public void UnRegisterActor(IProgressActor actor) => _actors.Remove(actor);
+        
         public void Load()
         {
             _progress ??= new ProgressData { Project = { Load = _projectLoadData } };
@@ -43,10 +48,6 @@ namespace ClientCode.Services.Progress
             SaveMap(_progress.Player.Map);
         }
 
-        public void RegisterActor(IProgressActor actor) => _actors.Add(actor);
-
-        public void UnRegisterActor(IProgressActor actor) => _actors.Remove(actor);
-
         public MapProgressData LoadMap(string key)
         {
             var defaultData = new MapProgressData();
@@ -62,7 +63,7 @@ namespace ClientCode.Services.Progress
                 Height = data.Height
             };
         }
-
+        
         private void SaveMap(MapProgressData progress)
         {
             var data = new MapSavedData

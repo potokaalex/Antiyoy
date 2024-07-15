@@ -1,4 +1,5 @@
 using ClientCode.Data.Static.Config;
+using ClientCode.Services.Logger.Base;
 using ClientCode.Services.Progress;
 using ClientCode.Services.SceneLoader;
 using ClientCode.Services.StateMachine;
@@ -16,7 +17,8 @@ namespace ClientCode.Infrastructure.Installers
         public override void InstallBindings()
         {
             BindStateMachine();
-
+            
+            Container.Bind<ILogReceiver>().To<LogReceiver>().AsSingle();
             Container.Bind<IStaticDataProvider>().To<StaticDataProvider>().AsSingle();
             Container.Bind<IProgressDataSaveLoader>().To<ProgressDataSaveLoader>().AsSingle().WithArguments(_loadDataConfig.Data);
             Container.Bind<ISceneLoader>().To<SceneLoader>().AsSingle();
