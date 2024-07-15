@@ -8,7 +8,6 @@ namespace ClientCode.Data.Const
         public const string MapSubPath = "Maps";
         public const string FilesExtension = "data";
 
-        public const string ProjectProgressKey = "ProjectProgressData";
         public const string MapEditorKey = "MapEditorData";
     }
 }

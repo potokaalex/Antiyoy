@@ -1,6 +1,7 @@
 using ClientCode.Data.Static;
 using ClientCode.Services.ProgressDataProvider;
 using ClientCode.Services.SaveLoader;
+using ClientCode.Services.SaveLoader.Base;
 using ClientCode.Services.SaveLoader.Progress;
 using ClientCode.Services.SceneLoader;
 using ClientCode.Services.StateMachine;

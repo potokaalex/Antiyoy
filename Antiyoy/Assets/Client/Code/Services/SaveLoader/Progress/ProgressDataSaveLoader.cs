@@ -2,6 +2,7 @@ using System.IO;
 using ClientCode.Data.Const;
 using ClientCode.Data.Progress;
 using ClientCode.Data.Progress.Project;
+using ClientCode.Services.SaveLoader.Base;
 
 namespace ClientCode.Services.SaveLoader.Progress
 {
@@ -18,41 +19,57 @@ namespace ClientCode.Services.SaveLoader.Progress
 
         public ProjectProgressData LoadProject()
         {
-            //_saveLoader.Load(GetPath(StorageConstants.ProjectProgressKey), CreateDefaultProjectProgress(), out var data);
-            return CreateDefaultProjectProgress();
+            return new ProjectProgressData
+            {
+                Load = _projectLoadData
+            };
         }
 
-        public MainMenuProgressData LoadMainMenu() => new();
+        public MainMenuProgressData LoadMainMenu()
+        {
+            return new MainMenuProgressData
+            {
+                MapKeys = _saveLoader.GetFileNames(GetPath(StorageConstants.MapSubPath), StorageConstants.FilesExtension)
+            };
+        }
 
         public MapEditorProgressData LoadMapEditor(string mapKey)
         {
             return new MapEditorProgressData
             {
-                Map = LoadMapProgress(mapKey, new MapProgressData())
+                Map = LoadMap(mapKey)
             };
         }
 
-        public bool SaveMapEditor(MapProgressData progress)
+        public bool SaveMapEditor(MapEditorProgressData progress)
         {
-            return _saveLoader.Save(GetFilePath(StorageConstants.MapEditorKey), progress);
+            return SaveMap(progress.Map);
         }
 
-        private ProjectProgressData CreateDefaultProjectProgress()
+        private MapProgressData LoadMap(string key)
         {
-            return new ProjectProgressData
-            {
-                Load = _projectLoadData,
-                MapKeys = _saveLoader.GetFileNames(GetPath(StorageConstants.MapSubPath), StorageConstants.FilesExtension)
-            };
-        }
-
-        private MapProgressData LoadMapProgress(string key, MapProgressData defaultData)
-        {
+            var defaultData = new MapProgressData(); 
+            
             if (string.IsNullOrEmpty(key))
                 return defaultData;
 
-            _saveLoader.Load(GetFilePath(key, StorageConstants.MapSubPath), defaultData, out var data);
-            return data;
+            _saveLoader.Load(GetFilePath(key, StorageConstants.MapSubPath), new MapSavedData(), out var data);
+            return new MapProgressData
+            {
+                Key = key,
+                Width = data.Width,
+                Height = data.Height
+            };
+        }
+
+        private bool SaveMap(MapProgressData progress)
+        {
+            var data = new MapSavedData
+            {
+                Width = progress.Width,
+                Height = progress.Height
+            };
+            return _saveLoader.Save(GetFilePath(progress.Key, StorageConstants.MapSubPath), data);
         }
 
         private string GetFilePath(string key, string subPath = null) =>

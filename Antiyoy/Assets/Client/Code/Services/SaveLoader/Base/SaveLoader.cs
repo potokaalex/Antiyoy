@@ -2,14 +2,16 @@ using System;
 using System.IO;
 using UnityEngine;
 
-namespace ClientCode.Services.SaveLoader
+namespace ClientCode.Services.SaveLoader.Base
 {
     public class SaveLoader : ISaveLoader
     {
-        public bool Save<T>(string path, T data)
+        public bool Save<T>(string path, T data) where T : ISavedData
         {
-            var directory = Path.GetDirectoryName(path);
+            if (File.Exists(path))
+                return false;
 
+            var directory = Path.GetDirectoryName(path);
             if (directory != null)
                 Directory.CreateDirectory(directory);
 
@@ -18,16 +20,15 @@ namespace ClientCode.Services.SaveLoader
                 using var streamWriter = new StreamWriter(path, false);
                 streamWriter.Write(JsonUtility.ToJson(data));
             }
-            catch(Exception exc)
+            catch
             {
-                Debug.Log(exc);
                 return false;
             }
 
             return true;
         }
 
-        public bool Load<T>(string path, T defaultData, out T result) //where T : ISavedData
+        public bool Load<T>(string path, T defaultData, out T result) where T : ISavedData
         {
             if (!File.Exists(path))
             {

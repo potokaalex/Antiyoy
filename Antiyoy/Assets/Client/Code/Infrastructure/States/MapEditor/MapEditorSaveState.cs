@@ -32,9 +32,9 @@ namespace ClientCode.Infrastructure.States.MapEditor
 
         private async Task SaveProgress()
         {
-            var progress = _progressDataProvider.MapEditor.Map;
+            var progress = _progressDataProvider.MapEditor;
 
-            if (string.IsNullOrEmpty(progress.Key))
+            if (string.IsNullOrEmpty(progress.Map.Key))
             {
                 await SaveWithNewMapKey(progress);
                 return;
@@ -43,14 +43,14 @@ namespace ClientCode.Infrastructure.States.MapEditor
             _progressDataSaveLoader.SaveMapEditor(progress);
         }
 
-        private async Task SaveWithNewMapKey(MapProgressData progress)
+        private async Task SaveWithNewMapKey(MapEditorProgressData progress)
         {
             var window = (WritingWindow)_windowsHandler.Get(WindowType.Writing);
 
             while (true)
             {
                 var mapKey = await window.GetString();
-                progress.Key = mapKey;
+                progress.Map.Key = mapKey;
                     
                 if (_progressDataSaveLoader.SaveMapEditor(progress))
                     break;

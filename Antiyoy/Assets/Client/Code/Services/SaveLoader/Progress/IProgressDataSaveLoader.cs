@@ -8,6 +8,6 @@ namespace ClientCode.Services.SaveLoader.Progress
         ProjectProgressData LoadProject();
         MainMenuProgressData LoadMainMenu();
         MapEditorProgressData LoadMapEditor(string mapKey);
-        bool SaveMapEditor(MapProgressData progress);
+        bool SaveMapEditor(MapEditorProgressData progress);
     }
 }

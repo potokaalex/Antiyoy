@@ -16,7 +16,7 @@ namespace ClientCode.UI.Handlers
         public override void OnBeforeOpen(WindowBase window)
         {
             if (window is MapEditorPreloadWindow preloadWindow)
-                preloadWindow.Initialize(_progressDataProvider.Project.MapKeys);
+                preloadWindow.Initialize(_progressDataProvider.MainMenu.MapKeys);
         }
     }
 }
