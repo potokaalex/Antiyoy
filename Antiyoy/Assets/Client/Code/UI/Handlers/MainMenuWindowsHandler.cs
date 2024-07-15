@@ -9,7 +9,7 @@ namespace ClientCode.UI.Handlers
 {
     public class MainMenuWindowsHandler : WindowsHandlerBase, IProgressReader
     {
-        private PlayerProgressData _progress;
+        private ProgressData _progress;
 
         public MainMenuWindowsHandler(UIFactory factory, MainMenuSceneData sceneData) : base(factory, sceneData.UIRoot)
         {
@@ -18,10 +18,10 @@ namespace ClientCode.UI.Handlers
         public override void OnBeforeOpen(WindowBase window)
         {
             if (window is MapEditorPreloadWindow preloadWindow)
-                preloadWindow.Initialize(_progress.MapKeys);
+                preloadWindow.Initialize(_progress.Player.MapKeys);
         }
 
-        public Task OnLoad(PlayerProgressData progress)
+        public Task OnLoad(ProgressData progress)
         {
             _progress = progress;
             return Task.CompletedTask;

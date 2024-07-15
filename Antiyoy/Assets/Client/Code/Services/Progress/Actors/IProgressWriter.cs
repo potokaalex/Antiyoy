@@ -5,6 +5,6 @@ namespace ClientCode.Services.Progress.Actors
 {
     public interface IProgressWriter : IProgressActor
     {
-        Task OnSave(PlayerProgressData progress);
+        Task OnSave(ProgressData progress);
     }
 }

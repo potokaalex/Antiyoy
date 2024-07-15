@@ -11,9 +11,9 @@ namespace ClientCode.Services.Progress.Map
 
         public MapLoader(CellFactory cellFactory) => _cellFactory = cellFactory;
 
-        public Task OnLoad(PlayerProgressData progress)
+        public Task OnLoad(ProgressData progress)
         {
-            _cellFactory.Create(progress.Map);
+            _cellFactory.Create(progress.Player.Map);
             return Task.CompletedTask;
         }
     }

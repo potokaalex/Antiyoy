@@ -9,8 +9,8 @@ namespace ClientCode.Infrastructure.States.MainMenu
 
         public MainMenuEnterState(IProgressDataSaveLoader saveLoader) => _saveLoader = saveLoader;
 
-        public void Enter() => _saveLoader.LoadPlayer();
+        public void Enter() => _saveLoader.Load();
 
-        public void Exit() => _saveLoader.SavePlayer();
+        public void Exit() => _saveLoader.Save();
     }
 }

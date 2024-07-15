@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using ClientCode.Data.Progress;
+using ClientCode.Data.Progress.Player;
 using ClientCode.Infrastructure.States.MapEditor;
 using ClientCode.Services.Progress;
 using ClientCode.Services.Progress.Actors;
@@ -33,9 +34,9 @@ namespace ClientCode.UI.Handlers
             _stateMachine.SwitchTo<MapEditorLoadState>();
         }
 
-        public Task OnSave(PlayerProgressData progress)
+        public Task OnSave(ProgressData progress)
         {
-            progress.Map = _saveLoader.LoadMap(_selectedMapKey);
+            progress.Player.Map = _saveLoader.LoadMap(_selectedMapKey);
             return Task.CompletedTask;
         }
     }

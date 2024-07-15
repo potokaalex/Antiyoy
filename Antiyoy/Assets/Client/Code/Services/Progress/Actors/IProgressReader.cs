@@ -5,6 +5,6 @@ namespace ClientCode.Services.Progress.Actors
 {
     public interface IProgressReader : IProgressActor
     {
-        Task OnLoad(PlayerProgressData progress);
+        Task OnLoad(ProgressData progress);
     }
 }

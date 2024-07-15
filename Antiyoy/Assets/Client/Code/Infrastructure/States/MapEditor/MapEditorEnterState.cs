@@ -32,7 +32,7 @@ namespace ClientCode.Infrastructure.States.MapEditor
             _cellFactory.Initialize();
             _tileFactory.Initialize();
 
-            _saveLoader.LoadPlayer();
+            _saveLoader.Load();
             _ecsProvider.GetSystems().Init();
             _stateMachine.SwitchTo<MapEditorUpdateState>();
         }

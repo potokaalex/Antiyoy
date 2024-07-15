@@ -1,6 +1,6 @@
 using System;
 
-namespace ClientCode.Data.Progress
+namespace ClientCode.Data.Progress.Player
 {
     public class PlayerProgressData
     {

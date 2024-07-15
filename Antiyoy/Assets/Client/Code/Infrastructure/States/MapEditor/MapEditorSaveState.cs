@@ -16,7 +16,7 @@ namespace ClientCode.Infrastructure.States.MapEditor
 
         public async void Enter()
         {
-            await _saveLoader.SavePlayer();
+            await _saveLoader.Save();
             _stateMachine.SwitchTo<MapEditorUpdateState>();
         }
     }

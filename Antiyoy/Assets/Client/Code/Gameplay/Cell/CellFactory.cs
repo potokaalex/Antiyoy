@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ClientCode.Data.Progress;
+using ClientCode.Data.Progress.Player;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Hex;
 using ClientCode.Services.StaticDataProvider;

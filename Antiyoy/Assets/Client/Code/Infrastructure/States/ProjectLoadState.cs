@@ -1,11 +1,14 @@
+using System.Threading.Tasks;
+using ClientCode.Data.Progress;
 using ClientCode.Infrastructure.States.MainMenu;
 using ClientCode.Services.Progress;
+using ClientCode.Services.Progress.Actors;
 using ClientCode.Services.StateMachine;
 using ClientCode.Services.StaticDataProvider;
 
 namespace ClientCode.Infrastructure.States
 {
-    public class ProjectLoadState : IState
+    public class ProjectLoadState : IState, IProgressReader
     {
         private readonly IProgressDataSaveLoader _saveLoader;
         private readonly IStateMachine _stateMachine;
@@ -20,14 +23,18 @@ namespace ClientCode.Infrastructure.States
 
         public void Enter()
         {
-            LoadProgress();
+            _saveLoader.RegisterActor(this);
+            _saveLoader.Load();
             _stateMachine.SwitchTo<MainMenuLoadState>();
         }
 
-        private void LoadProgress()
+        public void Exit() => _saveLoader.UnRegisterActor(this);
+
+        public Task OnLoad(ProgressData progress)
         {
-            var projectData = _saveLoader.LoadProject();
-            _staticDataProvider.Initialize(projectData.Load.Configs, projectData.Load.Prefabs);
+            var load = progress.Project.Load;
+            _staticDataProvider.Initialize(load.Configs, load.Prefabs);
+            return Task.CompletedTask;
         }
     }
 }

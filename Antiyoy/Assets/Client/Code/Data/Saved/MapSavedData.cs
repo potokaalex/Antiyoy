@@ -1,7 +1,7 @@
 using System;
 using ClientCode.Services.SaveLoad;
 
-namespace ClientCode.Data
+namespace ClientCode.Data.Saved
 {
     [Serializable]
     public class MapSavedData : ISavedData

@@ -12,14 +12,14 @@ namespace ClientCode.Services.Progress.Map
 
         public MapKeySaver(IWindowsHandler windowsHandler) => _windowsHandler = windowsHandler;
 
-        public async Task OnSave(PlayerProgressData progress)
+        public async Task OnSave(ProgressData progress)
         {
-            var mapKey = progress.Map.Key;
+            var mapKey = progress.Player.Map.Key;
 
             if (string.IsNullOrEmpty(mapKey)) 
                 mapKey = await GetNewKey();
 
-            progress.Map.Key = mapKey;
+            progress.Player.Map.Key = mapKey;
         }
 
         private async Task<string> GetNewKey()

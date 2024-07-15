@@ -3,7 +3,9 @@ using System.Threading.Tasks;
 using ClientCode.Data;
 using ClientCode.Data.Const;
 using ClientCode.Data.Progress;
+using ClientCode.Data.Progress.Player;
 using ClientCode.Data.Progress.Project;
+using ClientCode.Data.Saved;
 using ClientCode.Services.Progress.Actors;
 using ClientCode.Services.SaveLoad;
 
@@ -12,45 +14,35 @@ namespace ClientCode.Services.Progress
     public class ProgressDataSaveLoader : IProgressDataSaveLoader
     {
         private readonly ProjectLoadData _projectLoadData;
-        private PlayerProgressData _player;
+        private readonly List<IProgressActor> _actors = new();
+        private ProgressData _progress;
 
-        public ProgressDataSaveLoader(ProjectLoadData projectLoadData)
-        {
-            _projectLoadData = projectLoadData;
-        }
+        public ProgressDataSaveLoader(ProjectLoadData projectLoadData) => _projectLoadData = projectLoadData;
 
-        public ProjectProgressData LoadProject()
+        public void Load()
         {
-            return new ProjectProgressData
-            {
-                Load = _projectLoadData
-            };
-        }
+            _progress ??= new ProgressData { Project = { Load = _projectLoadData } };
 
-        public void LoadPlayer()
-        {
-            _player ??= new PlayerProgressData();
-            _player.MapKeys = SaveLoader.GetFileNames(ProgressPathTool.GetPath(StorageConstants.MapSubPath), StorageConstants.FilesExtension);
-            
+            _progress.Player.MapKeys =
+                SaveLoader.GetFileNames(ProgressPathTool.GetPath(StorageConstants.MapSubPath), StorageConstants.FilesExtension);
+
             foreach (var actor in _actors)
             {
                 if (actor is IProgressReader reader)
-                    reader.OnLoad(_player);
+                    reader.OnLoad(_progress);
             }
         }
 
-        public async Task SavePlayer()
+        public async Task Save()
         {
             foreach (var actor in _actors)
             {
                 if (actor is IProgressWriter writer)
-                    await writer.OnSave(_player);
+                    await writer.OnSave(_progress);
             }
 
-            SaveMap(_player.Map);
+            SaveMap(_progress.Player.Map);
         }
-
-        private readonly List<IProgressActor> _actors = new();
 
         public void RegisterActor(IProgressActor actor) => _actors.Add(actor);
 
