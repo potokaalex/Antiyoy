@@ -1,15 +1,17 @@
 using ClientCode.Infrastructure.States.MapEditor;
 using ClientCode.Services.StateMachine;
+using UnityEngine;
 using Zenject;
 
 namespace ClientCode.Infrastructure.Startup
 {
-    public class MapEditorStartup : IInitializable
+    public class MapEditorStartup : MonoBehaviour
     {
-        private readonly IStateMachine _stateMachine;
+        private IStateMachine _stateMachine;
 
-        public MapEditorStartup(IStateMachine stateMachine) => _stateMachine = stateMachine;
+        [Inject]
+        public void Construct(IStateMachine stateMachine) => _stateMachine = stateMachine;
 
-        public void Initialize() => _stateMachine.SwitchTo<MapEditorEnterState>();
+        private void Start() => _stateMachine.SwitchTo<MapEditorEnterState>();
     }
 }

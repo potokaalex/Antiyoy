@@ -1,6 +1,7 @@
+using System.Threading.Tasks;
 using ClientCode.Data.Progress;
 using ClientCode.Data.Scene;
-using ClientCode.Services.SaveLoader.Progress.Actors;
+using ClientCode.Services.Progress.Actors;
 using ClientCode.UI.Windows;
 using ClientCode.UI.Windows.Base;
 
@@ -20,6 +21,10 @@ namespace ClientCode.UI.Handlers
                 preloadWindow.Initialize(_progress.MapKeys);
         }
 
-        public void OnLoad(PlayerProgressData progress) => _progress = progress;
+        public Task OnLoad(PlayerProgressData progress)
+        {
+            _progress = progress;
+            return Task.CompletedTask;
+        }
     }
 }

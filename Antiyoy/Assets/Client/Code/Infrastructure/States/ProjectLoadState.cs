@@ -1,5 +1,5 @@
 using ClientCode.Infrastructure.States.MainMenu;
-using ClientCode.Services.SaveLoader.Progress;
+using ClientCode.Services.Progress;
 using ClientCode.Services.StateMachine;
 using ClientCode.Services.StaticDataProvider;
 

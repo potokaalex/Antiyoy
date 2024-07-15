@@ -1,5 +1,5 @@
 using ClientCode.Data.Scene;
-using ClientCode.Services.SaveLoader.Progress;
+using ClientCode.Services.Progress.Actors;
 using ClientCode.UI;
 using ClientCode.UI.Handlers;
 using UnityEngine;
@@ -14,8 +14,8 @@ namespace ClientCode.Infrastructure.Installers
         public override void InstallBindings()
         {
             BindUI();
-            
-            Container.BindInterfacesTo<ProgressRegister>().AsSingle();
+
+            Container.BindInterfacesTo<ProgressActorsRegister>().AsSingle();
             Container.Bind<MainMenuSceneData>().FromInstance(_sceneData).AsSingle();
             //Container.Bind<MainMenuStartup>().fromNewCo.AsSingle();
         }

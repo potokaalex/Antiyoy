@@ -16,8 +16,8 @@ namespace ClientCode.UI.Buttons
         private protected override void OnClick()
         {
             var window = _handler.Get(_windowType);
-            
-            if(window.IsOpen)
+
+            if (window.IsOpen)
                 window.Close();
             else
                 window.Open();

@@ -1,22 +1,21 @@
 using System.Collections.Generic;
-using System.IO;
+using System.Threading.Tasks;
 using ClientCode.Data;
 using ClientCode.Data.Const;
 using ClientCode.Data.Progress;
 using ClientCode.Data.Progress.Project;
-using ClientCode.Services.SaveLoader.Base;
-using ClientCode.Services.SaveLoader.Progress.Actors;
+using ClientCode.Services.Progress.Actors;
+using ClientCode.Services.SaveLoad;
 
-namespace ClientCode.Services.SaveLoader.Progress
+namespace ClientCode.Services.Progress
 {
     public class ProgressDataSaveLoader : IProgressDataSaveLoader
     {
         private readonly ProjectLoadData _projectLoadData;
-        private readonly ISaveLoader _saveLoader;
+        private PlayerProgressData _player;
 
-        public ProgressDataSaveLoader(ISaveLoader saveLoader, ProjectLoadData projectLoadData)
+        public ProgressDataSaveLoader(ProjectLoadData projectLoadData)
         {
-            _saveLoader = saveLoader;
             _projectLoadData = projectLoadData;
         }
 
@@ -28,36 +27,27 @@ namespace ClientCode.Services.SaveLoader.Progress
             };
         }
 
-        private PlayerProgressData _player;
-
-        public PlayerProgressData LoadPlayer()
+        public void LoadPlayer()
         {
-            if (_player == null)
-            {
-                _player = new PlayerProgressData
-                {
-                    MapKeys = _saveLoader.GetFileNames(GetPath(StorageConstants.MapSubPath), StorageConstants.FilesExtension)
-                };
-            }
-
+            _player ??= new PlayerProgressData();
+            _player.MapKeys = SaveLoader.GetFileNames(ProgressPathTool.GetPath(StorageConstants.MapSubPath), StorageConstants.FilesExtension);
+            
             foreach (var actor in _actors)
             {
                 if (actor is IProgressReader reader)
                     reader.OnLoad(_player);
             }
-
-            return _player;
         }
 
-        public bool SavePlayer()
+        public async Task SavePlayer()
         {
             foreach (var actor in _actors)
             {
                 if (actor is IProgressWriter writer)
-                    writer.OnSave(_player);
+                    await writer.OnSave(_player);
             }
-            
-            return SaveMap(_player.Map);
+
+            SaveMap(_player.Map);
         }
 
         private readonly List<IProgressActor> _actors = new();
@@ -73,7 +63,7 @@ namespace ClientCode.Services.SaveLoader.Progress
             if (string.IsNullOrEmpty(key))
                 return defaultData;
 
-            _saveLoader.Load(GetFilePath(key, StorageConstants.MapSubPath), new MapSavedData(), out var data);
+            SaveLoader.Load(ProgressPathTool.GetFilePath(key, StorageConstants.MapSubPath), new MapSavedData(), out var data);
             return new MapProgressData
             {
                 Key = key,
@@ -82,27 +72,14 @@ namespace ClientCode.Services.SaveLoader.Progress
             };
         }
 
-        private bool SaveMap(MapProgressData progress)
+        private void SaveMap(MapProgressData progress)
         {
             var data = new MapSavedData
             {
                 Width = progress.Width,
                 Height = progress.Height
             };
-            return _saveLoader.Save(GetFilePath(progress.Key, StorageConstants.MapSubPath), data);
-        }
-
-        private string GetFilePath(string key, string subPath = null) =>
-            Path.ChangeExtension(Path.Combine(GetPath(subPath), key), StorageConstants.FilesExtension);
-
-        private string GetPath(string subPath)
-        {
-            var path = StorageConstants.BasePath;
-
-            if (subPath != null)
-                path = Path.Combine(StorageConstants.BasePath, subPath);
-
-            return path;
+            SaveLoader.Save(ProgressPathTool.GetFilePath(progress.Key, StorageConstants.MapSubPath), data);
         }
     }
 }

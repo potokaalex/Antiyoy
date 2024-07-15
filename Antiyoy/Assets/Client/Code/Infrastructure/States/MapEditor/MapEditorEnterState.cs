@@ -1,7 +1,7 @@
 using ClientCode.Gameplay.Cell;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Tile;
-using ClientCode.Services.SaveLoader.Progress;
+using ClientCode.Services.Progress;
 using ClientCode.Services.StateMachine;
 
 namespace ClientCode.Infrastructure.States.MapEditor
@@ -28,17 +28,12 @@ namespace ClientCode.Infrastructure.States.MapEditor
 
         public void Enter()
         {
-            var progress = _saveLoader.LoadPlayer();
-
             _ecsFactory.Create();
-
             _cellFactory.Initialize();
-            _cellFactory.Create(progress.Map);
-
             _tileFactory.Initialize();
 
+            _saveLoader.LoadPlayer();
             _ecsProvider.GetSystems().Init();
-
             _stateMachine.SwitchTo<MapEditorUpdateState>();
         }
     }

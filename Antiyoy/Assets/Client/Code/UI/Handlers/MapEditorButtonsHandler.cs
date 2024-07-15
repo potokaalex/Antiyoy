@@ -21,7 +21,7 @@ namespace ClientCode.UI.Handlers
 
         public void Handle(MapSaveLoadButtonType type)
         {
-            if (type == MapSaveLoadButtonType.Save) 
+            if (type == MapSaveLoadButtonType.Save)
                 _stateMachine.SwitchTo<MapEditorSaveState>();
         }
     }

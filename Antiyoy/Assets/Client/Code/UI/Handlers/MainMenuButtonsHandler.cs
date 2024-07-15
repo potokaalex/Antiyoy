@@ -1,8 +1,8 @@
+using System.Threading.Tasks;
 using ClientCode.Data.Progress;
 using ClientCode.Infrastructure.States.MapEditor;
-using ClientCode.Services.SaveLoader.Base;
-using ClientCode.Services.SaveLoader.Progress;
-using ClientCode.Services.SaveLoader.Progress.Actors;
+using ClientCode.Services.Progress;
+using ClientCode.Services.Progress.Actors;
 using ClientCode.Services.StateMachine;
 using ClientCode.UI.Buttons.Load;
 using ClientCode.UI.Buttons.Map.Select;
@@ -33,6 +33,10 @@ namespace ClientCode.UI.Handlers
             _stateMachine.SwitchTo<MapEditorLoadState>();
         }
 
-        public void OnSave(PlayerProgressData progress) => progress.Map = _saveLoader.LoadMap(_selectedMapKey);
+        public Task OnSave(PlayerProgressData progress)
+        {
+            progress.Map = _saveLoader.LoadMap(_selectedMapKey);
+            return Task.CompletedTask;
+        }
     }
 }

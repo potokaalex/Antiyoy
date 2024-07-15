@@ -23,7 +23,6 @@ namespace ClientCode.Gameplay.Tile
         public void Initialize()
         {
             var world = _ecsProvider.GetWorld();
-
             _eventsBus = _ecsProvider.GetEventsBus();
             _pool = world.GetPool<TileComponent>();
             _createRequestFilter = _eventsBus.GetEventBodies(out _createRequestPool);

@@ -1,9 +1,9 @@
-using ClientCode.Services.SaveLoader.Progress;
+using ClientCode.Services.Progress;
 using ClientCode.Services.StateMachine;
 
 namespace ClientCode.Infrastructure.States.MainMenu
 {
-    public class MainMenuEnterState: IState
+    public class MainMenuEnterState : IState
     {
         private readonly IProgressDataSaveLoader _saveLoader;
 

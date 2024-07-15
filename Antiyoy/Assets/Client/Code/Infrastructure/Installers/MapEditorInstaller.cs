@@ -2,7 +2,8 @@ using ClientCode.Data.Scene;
 using ClientCode.Gameplay.Cell;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Tile;
-using ClientCode.Infrastructure.Startup;
+using ClientCode.Services.Progress.Actors;
+using ClientCode.Services.Progress.Map;
 using ClientCode.Services.StateMachine;
 using ClientCode.UI;
 using ClientCode.UI.Buttons.Load;
@@ -24,8 +25,16 @@ namespace ClientCode.Infrastructure.Installers
             BindFactories();
             BindProviders();
             BindUI();
-            
-            Container.BindInterfacesTo<MapEditorStartup>().AsSingle();
+            BindProgress();
+
+            //Container.BindInterfacesTo<MapEditorStartup>().AsSingle();
+        }
+
+        private void BindProgress()
+        {
+            Container.BindInterfacesTo<ProgressActorsRegister>().AsSingle();
+            Container.BindInterfacesTo<MapLoader>().AsSingle();
+            Container.BindInterfacesTo<MapKeySaver>().AsSingle();
         }
 
         private void BindUI()

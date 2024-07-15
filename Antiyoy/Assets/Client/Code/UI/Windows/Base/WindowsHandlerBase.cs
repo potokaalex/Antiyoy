@@ -23,7 +23,7 @@ namespace ClientCode.UI.Windows.Base
         }
 
         public abstract void OnBeforeOpen(WindowBase window);
-        
+
         private void Create(WindowType type)
         {
             var window = _factory.CreateWindow(type, _windowsRoot);

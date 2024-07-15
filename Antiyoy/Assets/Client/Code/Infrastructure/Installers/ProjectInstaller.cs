@@ -1,8 +1,6 @@
 using ClientCode.Data.Static;
+using ClientCode.Services.Progress;
 using ClientCode.Services.ProgressDataProvider;
-using ClientCode.Services.SaveLoader;
-using ClientCode.Services.SaveLoader.Base;
-using ClientCode.Services.SaveLoader.Progress;
 using ClientCode.Services.SceneLoader;
 using ClientCode.Services.StateMachine;
 using ClientCode.Services.StaticDataProvider;
@@ -20,16 +18,10 @@ namespace ClientCode.Infrastructure.Installers
         {
             BindStateMachine();
             BindProviders();
-            BindSaveLoaders();
 
+            Container.Bind<IProgressDataSaveLoader>().To<ProgressDataSaveLoader>().AsSingle().WithArguments(_loadDataConfig.Data);
             Container.Bind<ISceneLoader>().To<SceneLoader>().AsSingle();
             Container.Bind<IUpdater>().To<Updater>().FromNewComponentOnNewGameObject().AsSingle();
-        }
-
-        private void BindSaveLoaders()
-        {
-            Container.Bind<ISaveLoader>().To<SaveLoader>().AsSingle();
-            Container.Bind<IProgressDataSaveLoader>().To<ProgressDataSaveLoader>().AsSingle().WithArguments(_loadDataConfig.Data);
         }
 
         private void BindProviders()

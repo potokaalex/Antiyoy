@@ -1,4 +1,4 @@
-namespace ClientCode.Services.SaveLoader.Base
+namespace ClientCode.Services.SaveLoad
 {
     public interface ISavedData
     {

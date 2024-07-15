@@ -8,15 +8,15 @@ namespace ClientCode.UI.Windows
     public class WritingWindow : WindowBase
     {
         [SerializeField] private TMP_InputField _field;
-        
+
         public Task<string> GetString()
         {
             var taskSource = new TaskCompletionSource<string>();
-            
+
             _field.onEndEdit.AddListener(OnEndEdit);
-            
+
             return taskSource.Task;
-            
+
             void OnEndEdit(string result)
             {
                 _field.onEndEdit.RemoveListener(OnEndEdit);
