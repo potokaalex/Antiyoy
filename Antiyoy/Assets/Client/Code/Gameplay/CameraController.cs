@@ -7,7 +7,7 @@ namespace ClientCode.Gameplay
         private readonly Camera _camera;
 
         public CameraController(Camera camera) => _camera = camera;
-        
+
         public void Update()
         {
             Move();

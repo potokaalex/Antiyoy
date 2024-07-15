@@ -1,4 +1,4 @@
-using ClientCode.Data.Static;
+using ClientCode.Data.Static.Config;
 using ClientCode.Services.Progress;
 using ClientCode.Services.SceneLoader;
 using ClientCode.Services.StateMachine;

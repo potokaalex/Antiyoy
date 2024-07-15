@@ -1,3 +1,5 @@
+// ReSharper disable UnusedMember.Global
+
 namespace ClientCode.UI.Buttons.Load
 {
     public enum LoadButtonType

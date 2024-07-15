@@ -5,7 +5,7 @@ namespace ClientCode.Data.Progress
 {
     public class ProgressData
     {
-        public ProjectProgressData Project = new();
-        public PlayerProgressData Player = new();
+        public readonly ProjectProgressData Project = new();
+        public readonly PlayerProgressData Player = new();
     }
 }

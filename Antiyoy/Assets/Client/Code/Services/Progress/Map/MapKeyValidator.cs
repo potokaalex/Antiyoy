@@ -1,5 +1,5 @@
-using ClientCode.Data.Const;
-using ClientCode.Services.SaveLoad;
+using ClientCode.Data.Static.Const;
+using ClientCode.Services.Progress.Base;
 
 namespace ClientCode.Services.Progress.Map
 {

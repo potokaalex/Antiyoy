@@ -1,5 +1,5 @@
 using System.IO;
-using ClientCode.Data.Const;
+using ClientCode.Data.Static.Const;
 
 namespace ClientCode.Services.Progress
 {

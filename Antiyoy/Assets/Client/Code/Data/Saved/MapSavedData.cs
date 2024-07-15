@@ -1,5 +1,5 @@
 using System;
-using ClientCode.Services.SaveLoad;
+using ClientCode.Services.Progress.Base;
 
 namespace ClientCode.Data.Saved
 {

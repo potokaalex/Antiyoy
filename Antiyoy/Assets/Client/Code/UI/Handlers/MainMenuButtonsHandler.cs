@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using ClientCode.Data.Progress;
-using ClientCode.Data.Progress.Player;
 using ClientCode.Infrastructure.States.MapEditor;
 using ClientCode.Services.Progress;
 using ClientCode.Services.Progress.Actors;

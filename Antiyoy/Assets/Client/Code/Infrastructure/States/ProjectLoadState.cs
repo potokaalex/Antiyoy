@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using ClientCode.Data.Progress;
 using ClientCode.Infrastructure.States.MainMenu;
 using ClientCode.Services.Progress;
@@ -30,11 +29,10 @@ namespace ClientCode.Infrastructure.States
 
         public void Exit() => _saveLoader.UnRegisterActor(this);
 
-        public Task OnLoad(ProgressData progress)
+        public void OnLoad(ProgressData progress)
         {
             var load = progress.Project.Load;
             _staticDataProvider.Initialize(load.Configs, load.Prefabs);
-            return Task.CompletedTask;
         }
     }
 }

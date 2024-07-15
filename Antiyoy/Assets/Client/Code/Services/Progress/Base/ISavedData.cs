@@ -1,4 +1,4 @@
-namespace ClientCode.Services.SaveLoad
+namespace ClientCode.Services.Progress.Base
 {
     public interface ISavedData
     {

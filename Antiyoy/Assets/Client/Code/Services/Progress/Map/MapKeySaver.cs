@@ -16,7 +16,7 @@ namespace ClientCode.Services.Progress.Map
         {
             var mapKey = progress.Player.Map.Key;
 
-            if (string.IsNullOrEmpty(mapKey)) 
+            if (string.IsNullOrEmpty(mapKey))
                 mapKey = await GetNewKey();
 
             progress.Player.Map.Key = mapKey;

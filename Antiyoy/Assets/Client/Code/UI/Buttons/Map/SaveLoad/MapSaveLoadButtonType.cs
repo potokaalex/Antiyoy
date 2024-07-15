@@ -1,3 +1,5 @@
+// ReSharper disable UnusedMember.Global
+
 namespace ClientCode.UI.Buttons.Map.SaveLoad
 {
     public enum MapSaveLoadButtonType

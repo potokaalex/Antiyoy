@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ClientCode.Data.Static
+namespace ClientCode.Data.Static.Config
 {
     [CreateAssetMenu(menuName = "Configs/Scene", fileName = "SceneConfig", order = 0)]
     public class SceneConfig : ScriptableObject

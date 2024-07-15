@@ -1,3 +1,5 @@
+// ReSharper disable UnusedMember.Global
+
 namespace ClientCode.UI.Windows.Base
 {
     public enum WindowType

@@ -1,10 +1,9 @@
-using System.Threading.Tasks;
 using ClientCode.Data.Progress;
 
 namespace ClientCode.Services.Progress.Actors
 {
     public interface IProgressReader : IProgressActor
     {
-        Task OnLoad(ProgressData progress);
+        void OnLoad(ProgressData progress);
     }
 }
