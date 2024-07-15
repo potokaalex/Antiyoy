@@ -6,7 +6,6 @@ namespace ClientCode.Services.ProgressDataProvider
     public interface IProgressDataProvider
     {
         ProjectProgressData Project { get; set; }
-        MapEditorProgressData MapEditor { get; set; }
-        MainMenuProgressData MainMenu { get; set; }
+        PlayerProgressData Player { get; set; }
     }
 }

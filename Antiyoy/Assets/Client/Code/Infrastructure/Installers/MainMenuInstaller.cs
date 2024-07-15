@@ -1,10 +1,7 @@
 using ClientCode.Data.Scene;
+using ClientCode.Services.SaveLoader.Progress;
 using ClientCode.UI;
-using ClientCode.UI.Buttons.Load;
-using ClientCode.UI.Buttons.Map;
-using ClientCode.UI.Buttons.Map.Select;
 using ClientCode.UI.Handlers;
-using ClientCode.UI.Windows.Base;
 using UnityEngine;
 using Zenject;
 
@@ -17,15 +14,17 @@ namespace ClientCode.Infrastructure.Installers
         public override void InstallBindings()
         {
             BindUI();
+            
+            Container.BindInterfacesTo<ProgressRegister>().AsSingle();
             Container.Bind<MainMenuSceneData>().FromInstance(_sceneData).AsSingle();
+            //Container.Bind<MainMenuStartup>().fromNewCo.AsSingle();
         }
 
         private void BindUI()
         {
             Container.Bind<UIFactory>().AsSingle();
-            Container.Bind<IWindowsHandler>().To<MainMenuWindowsHandler>().AsSingle();
-            Container.Bind<ILoadButtonHandler>().To<MainMenuButtonsHandler>().AsCached();
-            Container.Bind<IMapSelectButtonHandler>().To<MainMenuButtonsHandler>().AsCached();
+            Container.BindInterfacesTo<MainMenuWindowsHandler>().AsSingle();
+            Container.BindInterfacesTo<MainMenuButtonsHandler>().AsSingle();
         }
     }
 }

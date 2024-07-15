@@ -1,22 +1,25 @@
+using ClientCode.Data.Progress;
 using ClientCode.Data.Scene;
-using ClientCode.Services.ProgressDataProvider;
+using ClientCode.Services.SaveLoader.Progress.Actors;
 using ClientCode.UI.Windows;
 using ClientCode.UI.Windows.Base;
 
 namespace ClientCode.UI.Handlers
 {
-    public class MainMenuWindowsHandler : WindowsHandlerBase
+    public class MainMenuWindowsHandler : WindowsHandlerBase, IProgressReader
     {
-        private readonly IProgressDataProvider _progressDataProvider;
+        private PlayerProgressData _progress;
 
-        public MainMenuWindowsHandler(UIFactory factory, MainMenuSceneData sceneData, IProgressDataProvider progressDataProvider)
-            : base(factory, sceneData.UIRoot) =>
-            _progressDataProvider = progressDataProvider;
+        public MainMenuWindowsHandler(UIFactory factory, MainMenuSceneData sceneData) : base(factory, sceneData.UIRoot)
+        {
+        }
 
         public override void OnBeforeOpen(WindowBase window)
         {
             if (window is MapEditorPreloadWindow preloadWindow)
-                preloadWindow.Initialize(_progressDataProvider.MainMenu.MapKeys);
+                preloadWindow.Initialize(_progress.MapKeys);
         }
+
+        public void OnLoad(PlayerProgressData progress) => _progress = progress;
     }
 }

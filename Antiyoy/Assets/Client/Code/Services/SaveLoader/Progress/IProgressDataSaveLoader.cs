@@ -1,13 +1,16 @@
 using ClientCode.Data.Progress;
 using ClientCode.Data.Progress.Project;
+using ClientCode.Services.SaveLoader.Progress.Actors;
 
 namespace ClientCode.Services.SaveLoader.Progress
 {
     public interface IProgressDataSaveLoader
     {
         ProjectProgressData LoadProject();
-        MainMenuProgressData LoadMainMenu();
-        MapEditorProgressData LoadMapEditor(string mapKey);
-        bool SaveMapEditor(MapEditorProgressData progress);
+        PlayerProgressData LoadPlayer();
+        bool SavePlayer();
+        MapProgressData LoadMap(string key);
+        void RegisterActor(IProgressActor actor);
+        void UnRegisterActor(IProgressActor actor);
     }
 }

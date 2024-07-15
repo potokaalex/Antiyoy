@@ -1,7 +1,7 @@
 using System;
 using ClientCode.Services.SaveLoader.Base;
 
-namespace ClientCode.Services.SaveLoader.Progress
+namespace ClientCode.Data
 {
     [Serializable]
     public class MapSavedData : ISavedData

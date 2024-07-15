@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using ClientCode.Data.Progress;
-using ClientCode.Services.ProgressDataProvider;
 using ClientCode.Services.SaveLoader.Progress;
 using ClientCode.Services.StateMachine;
 using ClientCode.UI.Windows;
@@ -10,18 +9,15 @@ namespace ClientCode.Infrastructure.States.MapEditor
 {
     public class MapEditorSaveState : IState
     {
-        private readonly IProgressDataProvider _progressDataProvider;
         private readonly IWindowsHandler _windowsHandler;
-        private readonly IProgressDataSaveLoader _progressDataSaveLoader;
         private readonly IStateMachine _stateMachine;
+        private readonly IProgressDataSaveLoader _saveLoader;
 
-        public MapEditorSaveState(IProgressDataProvider progressDataProvider, IWindowsHandler windowsHandler,
-            IProgressDataSaveLoader progressDataSaveLoader, IStateMachine stateMachine)
+        public MapEditorSaveState(IWindowsHandler windowsHandler,  IStateMachine stateMachine, IProgressDataSaveLoader saveLoader)
         {
-            _progressDataProvider = progressDataProvider;
             _windowsHandler = windowsHandler;
-            _progressDataSaveLoader = progressDataSaveLoader;
             _stateMachine = stateMachine;
+            _saveLoader = saveLoader;
         }
 
         public async void Enter()
@@ -32,7 +28,7 @@ namespace ClientCode.Infrastructure.States.MapEditor
 
         private async Task SaveProgress()
         {
-            var progress = _progressDataProvider.MapEditor;
+            var progress = _saveLoader.LoadPlayer();
 
             if (string.IsNullOrEmpty(progress.Map.Key))
             {
@@ -40,10 +36,10 @@ namespace ClientCode.Infrastructure.States.MapEditor
                 return;
             }
 
-            _progressDataSaveLoader.SaveMapEditor(progress);
+            _saveLoader.SavePlayer();
         }
 
-        private async Task SaveWithNewMapKey(MapEditorProgressData progress)
+        private async Task SaveWithNewMapKey(PlayerProgressData progress)
         {
             var window = (WritingWindow)_windowsHandler.Get(WindowType.Writing);
 
@@ -52,7 +48,7 @@ namespace ClientCode.Infrastructure.States.MapEditor
                 var mapKey = await window.GetString();
                 progress.Map.Key = mapKey;
                     
-                if (_progressDataSaveLoader.SaveMapEditor(progress))
+                if ( _saveLoader.SavePlayer())
                     break;
                     
                 window.Clear();

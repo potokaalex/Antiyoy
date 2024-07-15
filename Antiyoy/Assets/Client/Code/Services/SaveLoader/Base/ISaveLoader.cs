@@ -1,3 +1,5 @@
+using ClientCode.Data.Progress;
+
 namespace ClientCode.Services.SaveLoader.Base
 {
     public interface ISaveLoader

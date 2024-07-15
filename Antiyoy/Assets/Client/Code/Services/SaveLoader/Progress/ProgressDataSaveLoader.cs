@@ -1,8 +1,11 @@
+using System.Collections.Generic;
 using System.IO;
+using ClientCode.Data;
 using ClientCode.Data.Const;
 using ClientCode.Data.Progress;
 using ClientCode.Data.Progress.Project;
 using ClientCode.Services.SaveLoader.Base;
+using ClientCode.Services.SaveLoader.Progress.Actors;
 
 namespace ClientCode.Services.SaveLoader.Progress
 {
@@ -25,31 +28,48 @@ namespace ClientCode.Services.SaveLoader.Progress
             };
         }
 
-        public MainMenuProgressData LoadMainMenu()
+        private PlayerProgressData _player;
+
+        public PlayerProgressData LoadPlayer()
         {
-            return new MainMenuProgressData
+            if (_player == null)
             {
-                MapKeys = _saveLoader.GetFileNames(GetPath(StorageConstants.MapSubPath), StorageConstants.FilesExtension)
-            };
-        }
+                _player = new PlayerProgressData
+                {
+                    MapKeys = _saveLoader.GetFileNames(GetPath(StorageConstants.MapSubPath), StorageConstants.FilesExtension)
+                };
+            }
 
-        public MapEditorProgressData LoadMapEditor(string mapKey)
-        {
-            return new MapEditorProgressData
+            foreach (var actor in _actors)
             {
-                Map = LoadMap(mapKey)
-            };
+                if (actor is IProgressReader reader)
+                    reader.OnLoad(_player);
+            }
+
+            return _player;
         }
 
-        public bool SaveMapEditor(MapEditorProgressData progress)
+        public bool SavePlayer()
         {
-            return SaveMap(progress.Map);
-        }
-
-        private MapProgressData LoadMap(string key)
-        {
-            var defaultData = new MapProgressData(); 
+            foreach (var actor in _actors)
+            {
+                if (actor is IProgressWriter writer)
+                    writer.OnSave(_player);
+            }
             
+            return SaveMap(_player.Map);
+        }
+
+        private readonly List<IProgressActor> _actors = new();
+
+        public void RegisterActor(IProgressActor actor) => _actors.Add(actor);
+
+        public void UnRegisterActor(IProgressActor actor) => _actors.Remove(actor);
+
+        public MapProgressData LoadMap(string key)
+        {
+            var defaultData = new MapProgressData();
+
             if (string.IsNullOrEmpty(key))
                 return defaultData;
 
