@@ -24,6 +24,6 @@ namespace ClientCode.UI
         public ButtonBase CreateButton(ButtonType type, Transform root) =>
             _instantiator.InstantiateMonoBehaviour(_staticDataProvider.Prefabs.Buttons[type], root);
 
-        public void Destroy<T>(T element) where T : MonoBehaviour, IUIElement => Object.Destroy(element);
+        public void Destroy<T>(T element) where T : MonoBehaviour, IUIElement => Object.Destroy(element.gameObject);
     }
 }
