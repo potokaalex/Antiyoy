@@ -50,7 +50,8 @@ namespace ClientCode.Services.Progress
                     await writer.OnSave(_progress);
             }
 
-            SaveMap(_progress.Player.Map);
+            if (!string.IsNullOrEmpty(_progress.Player.Map.Key))
+                SaveMap(_progress.Player.Map);
         }
 
         public SaveLoaderResultType IsMapKeyValidToSaveWithoutOverwrite(string key)
