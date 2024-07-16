@@ -22,7 +22,7 @@ namespace ClientCode.Services.Progress.Map
             _cellPool = world.GetPool<CellComponent>();
             _regionPool = world.GetPool<RegionComponent>();
         }
-        
+
         public TileSavedData CreateTileData(int entity, int mapHeight)
         {
             var id = GetCellId(entity, mapHeight);
@@ -32,7 +32,7 @@ namespace ClientCode.Services.Progress.Map
             };
             return savedData;
         }
-        
+
         public RegionSavedData CreateRegionData(int entity, int mapHeight)
         {
             var region = _regionPool.Get(entity);
@@ -47,7 +47,7 @@ namespace ClientCode.Services.Progress.Map
 
             return regionSavedData;
         }
-        
+
         private int GetCellId(int entity, int mapHeight)
         {
             var cell = _cellPool.Get(entity);

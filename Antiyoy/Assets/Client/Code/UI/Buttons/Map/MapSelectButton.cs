@@ -7,7 +7,7 @@ namespace ClientCode.UI.Buttons.Map
     public class MapSelectButton : ButtonBase
     {
         [SerializeField] private TextMeshProUGUI _text;
-        
+
         public string MapKey { get; private set; }
 
         public void Initialize(string mapKey)

@@ -40,7 +40,7 @@ namespace ClientCode.Infrastructure.States.MapEditor
             _ecsFactory.Create();
             _cellFactory.Initialize();
             _tileFactory.Initialize();
-            
+
             Load();
 
             _ecsProvider.GetSystems().Init();
@@ -52,7 +52,7 @@ namespace ClientCode.Infrastructure.States.MapEditor
             _mapSaver.Initialize();
             _mapLoader.Initialize();
             _mapDataFactory.Initialize();
-            
+
             _saveLoader.Load();
         }
     }

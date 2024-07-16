@@ -27,10 +27,10 @@ namespace ClientCode.Infrastructure.Installers
             BindProviders();
             BindUI();
             BindProgress();
-            
+
             Container.Bind<CameraController>().AsSingle().WithArguments(_sceneData.Camera);
         }
-        
+
         private void BindProgress()
         {
             Container.BindInterfacesTo<ProgressActorsRegister>().AsSingle();

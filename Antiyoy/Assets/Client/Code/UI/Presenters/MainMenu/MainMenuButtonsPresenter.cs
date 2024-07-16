@@ -62,7 +62,7 @@ namespace ClientCode.UI.Presenters.MainMenu
 
             writingWindow.Close();
         }
-        
+
         private void HandleLoadButton(LoadButton button)
         {
             if (button.Type == LoadButtonType.MapEditor)

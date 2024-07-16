@@ -25,7 +25,7 @@ namespace ClientCode.Infrastructure.States.MapEditor
             _saveLoader.RegisterActor(this);
             _saveLoader.Load();
             _saveLoader.UnRegisterActor(this);
-            
+
             LoadScene();
         }
 

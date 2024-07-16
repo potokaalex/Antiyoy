@@ -2,7 +2,6 @@ using ClientCode.Infrastructure.States.MainMenu;
 using ClientCode.Services.CanvasService;
 using ClientCode.Services.StateMachine;
 using ClientCode.Services.Updater;
-using ClientCode.UI;
 using ClientCode.UI.Factory;
 
 namespace ClientCode.Infrastructure.States.Project

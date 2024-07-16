@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ClientCode.Data.Progress;
-using ClientCode.Data.Progress.Player;
 using ClientCode.Data.Progress.Player.Map;
 using ClientCode.Data.Saved;
 using ClientCode.Gameplay.Ecs;
@@ -31,14 +30,14 @@ namespace ClientCode.Services.Progress.Map.Save
             _tileFilter = world.Filter<TileComponent>().End();
             _regionFiler = world.Filter<RegionComponent>().End();
         }
-        
+
         public Task OnSave(ProgressData progress)
         {
             SaveCells(progress.Player.Map);
             SaveRegions(progress.Player.Map);
             return Task.CompletedTask;
         }
-        
+
         private void SaveCells(MapProgressData data)
         {
             data.Tiles = new List<TileSavedData>();

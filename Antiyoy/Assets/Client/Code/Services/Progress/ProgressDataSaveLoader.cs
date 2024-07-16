@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ClientCode.Data.Progress;
-using ClientCode.Data.Progress.Player;
 using ClientCode.Data.Progress.Player.Map;
 using ClientCode.Data.Progress.Project;
 using ClientCode.Data.Saved;
@@ -58,10 +57,10 @@ namespace ClientCode.Services.Progress
         public SaveLoaderResultType IsMapKeyValidToSaveWithoutOverwrite(string key)
         {
             var path = ProgressPathTool.GetFilePath(key, StorageConstants.MapSubPath);
-            
+
             if (string.IsNullOrEmpty(key))
                 return SaveLoaderResultType.ErrorInvalidFileName;
-            
+
             return SaveLoader.IsValidSavePath(path);
         }
 

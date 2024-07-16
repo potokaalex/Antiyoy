@@ -5,10 +5,10 @@ namespace ClientCode.Services.Logger.Base
     public class LogReceiver : ILogReceiver
     {
         private readonly List<ILogHandler> _handlers = new();
-        
+
         public void Log(LogData log)
         {
-            foreach (var handler in _handlers) 
+            foreach (var handler in _handlers)
                 handler.Handle(log);
         }
 

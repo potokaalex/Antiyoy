@@ -4,7 +4,7 @@ namespace ClientCode.Services.Progress.Base
     {
         Normal,
         Error,
-        
+
         ErrorFileIsExist,
         ErrorFileIsNotExist,
         ErrorFileIsDamaged,

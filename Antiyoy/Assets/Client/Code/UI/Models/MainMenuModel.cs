@@ -6,12 +6,12 @@ using ClientCode.Utilities;
 
 namespace ClientCode.UI.Models
 {
-    public class MainMenuModel : IProgressReader,IProgressWriter
+    public class MainMenuModel : IProgressReader, IProgressWriter
     {
         private ProgressData _progress;
-        
+
         public string SelectedMapKey { get; set; }
-        
+
         public EventedList<string> MapKeys { get; private set; }
 
         public void OnLoad(ProgressData progress) => MapKeys = new EventedList<string>(progress.Player.MapKeys.ToList());

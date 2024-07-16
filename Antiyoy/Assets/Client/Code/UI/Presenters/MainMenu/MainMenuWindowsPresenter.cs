@@ -22,9 +22,9 @@ namespace ClientCode.UI.Presenters.MainMenu
             if (window.BaseType == WindowType.MapEditorPreload)
             {
                 var w = (MapEditorPreloadWindow)window;
-                
+
                 w.Initialize(_mapSelectButtonsPresenter);
-                
+
                 foreach (var key in _model.MapKeys)
                     w.CreateButton(key);
 

@@ -8,7 +8,7 @@ namespace ClientCode.UI.Windows.Popup
     public class PopupWindow : WindowBase
     {
         [SerializeField] private TextMeshProUGUI _text;
-        
+
         public void Initialize(string message)
         {
             _text.text = message;

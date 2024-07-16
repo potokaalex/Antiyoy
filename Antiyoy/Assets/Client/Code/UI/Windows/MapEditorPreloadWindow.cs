@@ -26,7 +26,7 @@ namespace ClientCode.UI.Windows
             newButton.Initialize(mapKey);
             _selectMapButtons.Add(newButton);
         }
-        
+
         public void RemoveButton(string mapKey) => _buttonsFactory.Destroy(_selectMapButtons.Find(b => b.MapKey == mapKey));
     }
 }

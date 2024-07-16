@@ -10,7 +10,7 @@ namespace ClientCode.UI.Buttons
     {
         [SerializeField] private WindowType _windowType;
         private WindowsFactory _windowsFactory;
-        
+
         [Inject]
         public void Construct(WindowsFactory windowsFactory) => _windowsFactory = windowsFactory;
 

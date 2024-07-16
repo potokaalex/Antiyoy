@@ -16,11 +16,10 @@ namespace ClientCode.UI.Presenters.MapEditor
 
         public void Handle(ButtonBase button)
         {
-            if (button.GetBaseType() == ButtonType.Load) 
+            if (button.GetBaseType() == ButtonType.Load)
                 HandleLoadButton((LoadButton)button);
             else if (button.GetBaseType() == ButtonType.MapSaveLoad)
                 HandleMapSaveLoadButton((MapSaveLoadButton)button);
-                
         }
 
         private void HandleLoadButton(LoadButton button)

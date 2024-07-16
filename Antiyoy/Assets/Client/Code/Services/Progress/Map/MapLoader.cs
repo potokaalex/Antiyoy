@@ -1,5 +1,4 @@
 using ClientCode.Data.Progress;
-using ClientCode.Data.Progress.Player;
 using ClientCode.Data.Progress.Player.Map;
 using ClientCode.Gameplay.Cell;
 using ClientCode.Gameplay.Ecs;
@@ -34,13 +33,13 @@ namespace ClientCode.Services.Progress.Map
             _regionPool = _world.GetPool<RegionComponent>();
             _regionLinkPool = _world.GetPool<RegionLink>();
         }
-        
+
         public void OnLoad(ProgressData progress)
         {
             var cells = LoadCells(progress.Player.Map);
             LoadRegions(progress.Player.Map, cells);
         }
-        
+
         private CellObject[] LoadCells(MapProgressData data)
         {
             var cells = _cellFactory.Create(data.Width, data.Height);
