@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using ClientCode.Data.Progress;
 using ClientCode.Data.Scene;
 using ClientCode.Services.Progress.Actors;
@@ -9,6 +10,7 @@ namespace ClientCode.UI.Handlers
     public class MainMenuWindowsHandler : WindowsHandlerBase, IProgressReader
     {
         private ProgressData _progress;
+        private Dictionary<WindowType, WindowBase> _windows;
 
         public MainMenuWindowsHandler(UIFactory factory, MainMenuSceneData sceneData) : base(factory, sceneData.UIRoot)
         {
@@ -16,8 +18,8 @@ namespace ClientCode.UI.Handlers
 
         public override void OnBeforeOpen(WindowBase window)
         {
-            if (window is MapEditorPreloadWindow preloadWindow)
-                preloadWindow.Initialize(_progress.Player.MapKeys);
+            if (window.Type == WindowType.MapEditorPreload)
+                ((MapEditorPreloadWindow)window).Initialize(_progress.Player.MapKeys);
         }
 
         public void OnLoad(ProgressData progress) => _progress = progress;

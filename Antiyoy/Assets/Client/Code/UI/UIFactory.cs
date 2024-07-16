@@ -19,7 +19,7 @@ namespace ClientCode.UI
         }
 
         public WindowBase CreateWindow(WindowType type, Transform root) =>
-            _instantiator.InstantiateMonoBehaviour(_staticDataProvider.Prefabs.Windows[type], root);
+            _instantiator.InstantiateMonoBehaviour(_staticDataProvider.Prefabs.Windows[type], root, args: type);
 
         public ButtonBase CreateButton(ButtonType type, Transform root) =>
             _instantiator.InstantiateMonoBehaviour(_staticDataProvider.Prefabs.Buttons[type], root);

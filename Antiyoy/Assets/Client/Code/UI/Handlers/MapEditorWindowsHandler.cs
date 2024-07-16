@@ -8,9 +8,5 @@ namespace ClientCode.UI.Handlers
         public MapEditorWindowsHandler(UIFactory factory, MapEditorSceneData sceneData) : base(factory, sceneData.UIRoot)
         {
         }
-
-        public override void OnBeforeOpen(WindowBase window)
-        {
-        }
     }
 }

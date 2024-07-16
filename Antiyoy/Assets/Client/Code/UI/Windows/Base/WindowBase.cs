@@ -8,7 +8,13 @@ namespace ClientCode.UI.Windows.Base
         private IWindowsHandler _windowsHandler;
 
         [Inject]
-        public void BaseConstruct(IWindowsHandler windowsHandler) => _windowsHandler = windowsHandler;
+        public void BaseConstruct(IWindowsHandler windowsHandler, WindowType type)
+        {
+            _windowsHandler = windowsHandler;
+            Type = type;
+        }
+
+        public WindowType Type { get; private set; }
 
         public bool IsOpen { get; private set; }
 
@@ -18,7 +24,11 @@ namespace ClientCode.UI.Windows.Base
             OnOpen();
         }
 
-        public void Close() => OnClose();
+        public void Close()
+        {
+            OnClose();
+            _windowsHandler.OnAfterClose(this);
+        }
 
         private protected virtual void OnOpen()
         {
