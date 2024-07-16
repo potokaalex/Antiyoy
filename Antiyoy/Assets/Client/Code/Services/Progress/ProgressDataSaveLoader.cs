@@ -32,8 +32,8 @@ namespace ClientCode.Services.Progress
         {
             _progress ??= new ProgressData { Project = { Load = _projectLoadData } };
 
-            _progress.Player.MapKeys =
-                SaveLoader.GetFileNames(ProgressPathTool.GetPath(StorageConstants.MapSubPath), StorageConstants.FilesExtension);
+            var fileNames = SaveLoader.GetFileNames(ProgressPathTool.GetPath(StorageConstants.MapSubPath), StorageConstants.FilesExtension);
+            _progress.Player.MapKeys = fileNames;
 
             foreach (var actor in _actors)
             {
@@ -89,6 +89,8 @@ namespace ClientCode.Services.Progress
                 Height = data.Height
             };
         }
+
+        public SaveLoaderResultType RemoveMap(string key) => SaveLoader.Remove(ProgressPathTool.GetFilePath(key, StorageConstants.MapSubPath));
 
         private void SaveMap(MapProgressData progress)
         {

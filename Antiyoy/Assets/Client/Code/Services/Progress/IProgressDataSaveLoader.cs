@@ -12,6 +12,7 @@ namespace ClientCode.Services.Progress
         SaveLoaderResultType IsMapKeyValidToSaveWithoutOverwrite(string key);
         SaveLoaderResultType IsMapValidToLoad(string key);
         MapProgressData LoadMap(string key);
+        SaveLoaderResultType RemoveMap(string key);
         void RegisterActor(IProgressActor actor);
         void UnRegisterActor(IProgressActor actor);
     }

@@ -24,6 +24,7 @@ namespace ClientCode.Infrastructure.Installers
             Container.Bind<UIFactory>().AsSingle();
             Container.BindInterfacesTo<MainMenuWindowsHandler>().AsSingle();
             Container.BindInterfacesTo<MainMenuButtonsHandler>().AsSingle();
+            Container.BindInterfacesAndSelfTo<MainMenuModel>().AsSingle();
         }
     }
 }

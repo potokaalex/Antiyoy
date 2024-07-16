@@ -1,9 +1,10 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace ClientCode.UI.Windows.Base
 {
-    public abstract class WindowsHandlerBase : IWindowsHandler
+    public abstract class WindowsHandlerBase : IWindowsHandler, IDisposable
     {
         private protected Transform WindowsRoot;
         private readonly UIFactory _factory;
@@ -27,6 +28,13 @@ namespace ClientCode.UI.Windows.Base
         {
         }
 
+        public void Dispose()
+        {
+            foreach (var windows in _windows.Values)
+            foreach (var window in windows)
+                    OnDestroy(window);
+        }
+        
         private protected virtual void OnCreate(WindowBase window)
         {
             if (!_windows.TryGetValue(window.Type, out var windows))
@@ -35,6 +43,8 @@ namespace ClientCode.UI.Windows.Base
                 windows.Add(window);
         }
 
+        private protected virtual void OnDestroy(WindowBase window){}
+        
         private WindowBase Create(WindowType type)
         {
             var window = _factory.CreateWindow(type, WindowsRoot);

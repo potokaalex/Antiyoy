@@ -12,40 +12,20 @@ namespace ClientCode.UI.Windows
         [SerializeField] private Transform _selectMapButtonsRoot;
         private readonly List<MapSelectButton> _selectMapButtons = new();
         private UIFactory _uiFactory;
-        private string[] _mapKeys;
 
         [Inject]
         public void Construct(UIFactory uiFactory) => _uiFactory = uiFactory;
 
-        public void Initialize(string[] mapKeys) => _mapKeys = mapKeys;
-
-        private protected override void OnOpen()
+        public void CreateButton(string mapKey)
         {
-            CreateButtons();
-            base.OnOpen();
+            var newButton = (MapSelectButton)_uiFactory.CreateButton(ButtonType.SelectMapButton, _selectMapButtonsRoot);
+            newButton.Initialize(mapKey);
+            _selectMapButtons.Add(newButton);
         }
-
-        private protected override void OnClose()
+        
+        public void RemoveButton(string mapKey)
         {
-            RemoveButtons();
-            base.OnClose();
-        }
-
-        private void CreateButtons()
-        {
-            foreach (var mapKey in _mapKeys)
-            {
-                var newButton = (MapSelectButton)_uiFactory.CreateButton(ButtonType.SelectMapButton, _selectMapButtonsRoot);
-                newButton.Initialize(mapKey);
-                _selectMapButtons.Add(newButton);
-            }
-        }
-
-        private void RemoveButtons()
-        {
-            foreach (var button in _selectMapButtons)
-                _uiFactory.Destroy(button);
-            _selectMapButtons.Clear();
+            _uiFactory.Destroy(_selectMapButtons.Find(b => b.MapKey == mapKey));
         }
     }
 }
