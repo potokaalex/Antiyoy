@@ -7,7 +7,7 @@ using ClientCode.UI.Factory;
 using ClientCode.UI.Windows;
 using ClientCode.UI.Windows.Base;
 
-namespace ClientCode.Services.Progress.Map
+namespace ClientCode.Services.Progress.Map.Save
 {
     public class MapKeySaver : IProgressWriter
     {

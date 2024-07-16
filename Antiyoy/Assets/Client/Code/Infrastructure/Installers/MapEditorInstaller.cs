@@ -5,6 +5,7 @@ using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Tile;
 using ClientCode.Services.Progress.Actors;
 using ClientCode.Services.Progress.Map;
+using ClientCode.Services.Progress.Map.Save;
 using ClientCode.Services.StateMachine;
 using ClientCode.UI.Buttons.Base;
 using ClientCode.UI.Factory;
@@ -33,8 +34,10 @@ namespace ClientCode.Infrastructure.Installers
         private void BindProgress()
         {
             Container.BindInterfacesTo<ProgressActorsRegister>().AsSingle();
-            Container.BindInterfacesTo<MapLoader>().AsSingle();
-            Container.BindInterfacesTo<MapKeySaver>().AsSingle();
+            Container.BindInterfacesAndSelfTo<MapLoader>().AsSingle();
+            Container.BindInterfacesAndSelfTo<MapSaver>().AsSingle();
+            Container.BindInterfacesAndSelfTo<MapKeySaver>().AsSingle();
+            Container.Bind<MapDataFactory>().AsSingle();
         }
 
         private void BindUI()

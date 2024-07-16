@@ -1,12 +1,11 @@
-using System;
 using System.Collections.Generic;
-using ClientCode.Services.Progress.Base;
+using ClientCode.Data.Saved;
 
-namespace ClientCode.Data.Saved
+namespace ClientCode.Data.Progress.Player.Map
 {
-    [Serializable]
-    public class MapSavedData : ISavedData
+    public class MapProgressData
     {
+        public string Key = string.Empty;
         public int Width = 10;
         public int Height = 10;
         public List<TileSavedData> Tiles = new();

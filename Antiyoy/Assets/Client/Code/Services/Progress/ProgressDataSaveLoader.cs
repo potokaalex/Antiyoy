@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ClientCode.Data.Progress;
 using ClientCode.Data.Progress.Player;
+using ClientCode.Data.Progress.Player.Map;
 using ClientCode.Data.Progress.Project;
 using ClientCode.Data.Saved;
 using ClientCode.Data.Static.Const;
@@ -86,7 +87,9 @@ namespace ClientCode.Services.Progress
             {
                 Key = key,
                 Width = data.Width,
-                Height = data.Height
+                Height = data.Height,
+                Tiles = data.Tiles,
+                Regions = data.Regions
             };
         }
 
@@ -97,7 +100,9 @@ namespace ClientCode.Services.Progress
             var data = new MapSavedData
             {
                 Width = progress.Width,
-                Height = progress.Height
+                Height = progress.Height,
+                Tiles = progress.Tiles,
+                Regions = progress.Regions
             };
 
             var filePath = ProgressPathTool.GetFilePath(progress.Key, StorageConstants.MapSubPath);
