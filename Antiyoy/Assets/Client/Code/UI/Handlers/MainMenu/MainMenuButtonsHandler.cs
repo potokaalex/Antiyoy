@@ -7,10 +7,11 @@ using ClientCode.Services.StaticDataProvider;
 using ClientCode.UI.Buttons.Load;
 using ClientCode.UI.Buttons.Map.SaveLoad;
 using ClientCode.UI.Buttons.Map.Select;
+using ClientCode.UI.Models;
 using ClientCode.UI.Windows;
 using ClientCode.UI.Windows.Base;
 
-namespace ClientCode.UI.Handlers
+namespace ClientCode.UI.Handlers.MainMenu
 {
     public class MainMenuButtonsHandler : ILoadButtonHandler, IMapSelectButtonHandler, IMapSaveLoadButtonHandler
     {
@@ -18,17 +19,17 @@ namespace ClientCode.UI.Handlers
         private readonly IProgressDataSaveLoader _saveLoader;
         private readonly ILogReceiver _logReceiver;
         private readonly IStaticDataProvider _staticDataProvider;
-        private readonly IWindowsHandler _windowsHandler;
+        private readonly WindowsFactory _windowsFactory;
         private readonly MainMenuModel _model;
 
         public MainMenuButtonsHandler(IStateMachine stateMachine, IProgressDataSaveLoader saveLoader, ILogReceiver logReceiver,
-            IStaticDataProvider staticDataProvider, IWindowsHandler windowsHandler, MainMenuModel model)
+            IStaticDataProvider staticDataProvider, WindowsFactory windowsFactory, MainMenuModel model)
         {
             _stateMachine = stateMachine;
             _saveLoader = saveLoader;
             _logReceiver = logReceiver;
             _staticDataProvider = staticDataProvider;
-            _windowsHandler = windowsHandler;
+            _windowsFactory = windowsFactory;
             _model = model;
         }
 
@@ -64,7 +65,7 @@ namespace ClientCode.UI.Handlers
         {
             if (type == MapSaveLoadButtonType.Remove)
             {
-                var writingWindow = (WritingWindow)_windowsHandler.Get(WindowType.Writing);
+                var writingWindow = (WritingWindow)_windowsFactory.Get(WindowType.Writing);
                 writingWindow.Open();
 
                 var mapKey = await writingWindow.GetString();

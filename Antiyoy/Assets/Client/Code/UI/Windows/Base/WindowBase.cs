@@ -5,12 +5,12 @@ namespace ClientCode.UI.Windows.Base
 {
     public abstract class WindowBase : MonoBehaviour, IUIElement
     {
-        private protected IWindowsHandler WindowsHandler;
+        private IWindowsHandler _windowsHandler;
 
         [Inject]
         public void BaseConstruct(IWindowsHandler windowsHandler, WindowType type)
         {
-            WindowsHandler = windowsHandler;
+            _windowsHandler = windowsHandler;
             Type = type;
         }
 
@@ -20,11 +20,15 @@ namespace ClientCode.UI.Windows.Base
 
         public void Open()
         {
-            WindowsHandler.OnBeforeOpen(this);
+            _windowsHandler.OnOpen(this);
             OnOpen();
         }
 
-        public void Close() => OnClose();
+        public void Close()
+        {
+            _windowsHandler.OnClose(this);
+            OnClose();
+        }
 
         private protected virtual void OnOpen()
         {

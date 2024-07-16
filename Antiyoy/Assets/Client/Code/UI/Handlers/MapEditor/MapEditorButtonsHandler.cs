@@ -4,7 +4,7 @@ using ClientCode.UI.Buttons.Load;
 using ClientCode.UI.Buttons.Map.SaveLoad;
 using Zenject;
 
-namespace ClientCode.UI.Handlers
+namespace ClientCode.UI.Handlers.MapEditor
 {
     public class MapEditorButtonsHandler : ILoadButtonHandler, IMapSaveLoadButtonHandler
     {

@@ -4,7 +4,7 @@ using ClientCode.Data.Progress;
 using ClientCode.Services.Progress.Actors;
 using ClientCode.Utilities;
 
-namespace ClientCode.UI
+namespace ClientCode.UI.Models
 {
     public class MainMenuModel : IProgressReader,IProgressWriter
     {

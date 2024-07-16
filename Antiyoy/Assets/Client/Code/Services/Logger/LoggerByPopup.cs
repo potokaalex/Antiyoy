@@ -1,4 +1,5 @@
 using ClientCode.Services.Logger.Base;
+using ClientCode.UI.Windows;
 using ClientCode.UI.Windows.Base;
 using ClientCode.UI.Windows.Popup;
 
@@ -6,13 +7,13 @@ namespace ClientCode.Services.Logger
 {
     public class LoggerByPopup : ILogHandler
     {
-        private readonly IWindowsHandler _windowsHandler;
+        private readonly WindowsFactory _windowsFactory;
 
-        public LoggerByPopup(IWindowsHandler windowsHandler) => _windowsHandler = windowsHandler;
+        public LoggerByPopup(WindowsFactory windowsFactory) => _windowsFactory = windowsFactory;
 
         public void Handle(LogData log)
         {
-            var popups = (PopupsWindow)_windowsHandler.Get(WindowType.Popups);
+            var popups = (PopupsWindow)_windowsFactory.Get(WindowType.Popups);
             popups.Add(log.Message);
         }
     }

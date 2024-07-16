@@ -11,21 +11,25 @@ namespace ClientCode.UI
     {
         private readonly IStaticDataProvider _staticDataProvider;
         private readonly IInstantiator _instantiator;
+        private Transform _uiRoot;
 
-        public UIFactory(IStaticDataProvider staticDataProvider, IInstantiator instantiator)
+        public UIFactory(IStaticDataProvider staticDataProvider, IInstantiator instantiator, Transform uiRoot = null)
         {
             _staticDataProvider = staticDataProvider;
             _instantiator = instantiator;
+            _uiRoot = uiRoot;
         }
 
-        public WindowBase CreateWindow(WindowType type, Transform root) =>
-            _instantiator.InstantiateMonoBehaviour(_staticDataProvider.Prefabs.Windows[type], root, args: type);
+        public void Initialize(Transform uiRoot) => _uiRoot = uiRoot;
 
         public ButtonBase CreateButton(ButtonType type, Transform root) =>
-            _instantiator.InstantiateMonoBehaviour(_staticDataProvider.Prefabs.Buttons[type], root);
+            Create(_staticDataProvider.Prefabs.Buttons[type], root);
 
-        public T Create<T>(T prefab) where T : MonoBehaviour, IUIElement => 
-            _instantiator.InstantiateMonoBehaviour(prefab);
+        public WindowBase CreateWindow(WindowType type) =>
+            Create(_staticDataProvider.Prefabs.Windows[type], _uiRoot, args: type);
+
+        public T Create<T>(T prefab, Transform parent = null, bool instantiateInWorldSpace = false, params object[] args)
+            where T : MonoBehaviour, IUIElement => _instantiator.InstantiateMonoBehaviour(prefab, parent, instantiateInWorldSpace, args);
 
         public void Destroy<T>(T element) where T : MonoBehaviour, IUIElement => Object.Destroy(element.gameObject);
     }

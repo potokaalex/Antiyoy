@@ -10,6 +10,8 @@ using ClientCode.UI;
 using ClientCode.UI.Buttons.Load;
 using ClientCode.UI.Buttons.Map.SaveLoad;
 using ClientCode.UI.Handlers;
+using ClientCode.UI.Handlers.MapEditor;
+using ClientCode.UI.Windows;
 using ClientCode.UI.Windows.Base;
 using UnityEngine;
 using Zenject;
@@ -40,10 +42,11 @@ namespace ClientCode.Infrastructure.Installers
 
         private void BindUI()
         {
+            Container.Bind<UIFactory>().AsSingle().WithArguments(_sceneData.UIRoot);
+            Container.Bind<WindowsFactory>().AsSingle();
             Container.Bind<ILoadButtonHandler>().To<MapEditorButtonsHandler>().AsCached();
             Container.Bind<IMapSaveLoadButtonHandler>().To<MapEditorButtonsHandler>().AsCached();
             Container.Bind<IWindowsHandler>().To<MapEditorWindowsHandler>().AsSingle();
-            Container.Bind<UIFactory>().AsSingle();
         }
 
         private void BindStateMachine()

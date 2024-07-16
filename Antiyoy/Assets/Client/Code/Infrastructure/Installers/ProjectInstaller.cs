@@ -9,6 +9,7 @@ using ClientCode.Services.StaticDataProvider;
 using ClientCode.Services.Updater;
 using ClientCode.UI;
 using ClientCode.UI.Handlers;
+using ClientCode.UI.Windows;
 using ClientCode.UI.Windows.Base;
 using UnityEngine;
 using Zenject;
@@ -34,6 +35,7 @@ namespace ClientCode.Infrastructure.Installers
         private void BindUI()
         {
             Container.Bind<UIFactory>().AsSingle();
+            Container.Bind<WindowsFactory>().AsSingle();
             Container.Bind<ProjectCanvasController>().AsSingle();
             Container.Bind<IWindowsHandler>().To<ProjectWindowsHandler>().AsSingle();
         }
