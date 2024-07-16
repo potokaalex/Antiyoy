@@ -1,11 +1,10 @@
 using ClientCode.Data.Progress;
-using ClientCode.Infrastructure.States.MainMenu;
 using ClientCode.Services.Progress;
 using ClientCode.Services.Progress.Actors;
 using ClientCode.Services.StateMachine;
 using ClientCode.Services.StaticDataProvider;
 
-namespace ClientCode.Infrastructure.States
+namespace ClientCode.Infrastructure.States.Project
 {
     public class ProjectLoadState : IState, IProgressReader
     {
@@ -24,7 +23,7 @@ namespace ClientCode.Infrastructure.States
         {
             _saveLoader.RegisterActor(this);
             _saveLoader.Load();
-            _stateMachine.SwitchTo<MainMenuLoadState>();
+            _stateMachine.SwitchTo<ProjectEnterSate>();
         }
 
         public void Exit() => _saveLoader.UnRegisterActor(this);

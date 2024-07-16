@@ -1,7 +1,6 @@
 using ClientCode.Services.Logger.Base;
 using ClientCode.UI.Windows.Base;
 using ClientCode.UI.Windows.Popup;
-using ILogHandler = ClientCode.Services.Logger.Base.ILogHandler;
 
 namespace ClientCode.Services.Logger
 {

@@ -1,6 +1,6 @@
 using ClientCode.Infrastructure.States;
+using ClientCode.Infrastructure.States.Project;
 using ClientCode.Services.StateMachine;
-using ClientCode.Services.Updater;
 using Zenject;
 
 namespace ClientCode.Infrastructure.Startup
@@ -8,18 +8,9 @@ namespace ClientCode.Infrastructure.Startup
     public class Bootstrap : IInitializable
     {
         private readonly IStateMachine _stateMachine;
-        private readonly IUpdater _updater;
 
-        public Bootstrap(IStateMachine stateMachine, IUpdater updater)
-        {
-            _stateMachine = stateMachine;
-            _updater = updater;
-        }
+        public Bootstrap(IStateMachine stateMachine) => _stateMachine = stateMachine;
 
-        public void Initialize()
-        {
-            _updater.OnProjectExit += () => _stateMachine.SwitchTo<ProjectExitState>();
-            _stateMachine.SwitchTo<ProjectLoadState>();
-        }
+        public void Initialize() => _stateMachine.SwitchTo<ProjectLoadState>();
     }
 }

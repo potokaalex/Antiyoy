@@ -1,6 +1,6 @@
 using ClientCode.Services.StateMachine;
 
-namespace ClientCode.Infrastructure.States
+namespace ClientCode.Infrastructure.States.Project
 {
     public class ProjectExitState : IState
     {

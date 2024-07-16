@@ -5,14 +5,14 @@ namespace ClientCode.UI.Windows.Base
 {
     public abstract class WindowsHandlerBase : IWindowsHandler
     {
+        private protected Transform WindowsRoot;
         private readonly UIFactory _factory;
-        private readonly Transform _windowsRoot;
         private readonly Dictionary<WindowType, List<WindowBase>> _windows = new();
 
         private protected WindowsHandlerBase(UIFactory factory, Transform windowsRoot)
         {
             _factory = factory;
-            _windowsRoot = windowsRoot;
+            WindowsRoot = windowsRoot;
         }
 
         public WindowBase Get(WindowType type, bool isNew)
@@ -29,7 +29,7 @@ namespace ClientCode.UI.Windows.Base
 
         private WindowBase Create(WindowType type)
         {
-            var window = _factory.CreateWindow(type, _windowsRoot);
+            var window = _factory.CreateWindow(type, WindowsRoot);
 
             if (!_windows.TryGetValue(type, out var windows))
                 _windows.Add(type, new List<WindowBase> { window });
