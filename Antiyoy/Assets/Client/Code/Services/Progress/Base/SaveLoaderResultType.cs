@@ -8,5 +8,6 @@ namespace ClientCode.Services.Progress.Base
         ErrorFileIsExist,
         ErrorFileIsNotExist,
         ErrorFileIsDamaged,
+        ErrorInvalidFileName
     }
 }

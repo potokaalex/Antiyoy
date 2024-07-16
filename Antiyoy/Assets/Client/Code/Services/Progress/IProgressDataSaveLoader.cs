@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using ClientCode.Data.Progress.Player;
 using ClientCode.Data.Progress.Player.Map;
 using ClientCode.Services.Progress.Actors;
 using ClientCode.Services.Progress.Base;

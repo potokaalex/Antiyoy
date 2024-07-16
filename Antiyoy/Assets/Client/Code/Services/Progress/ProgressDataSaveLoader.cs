@@ -58,6 +58,10 @@ namespace ClientCode.Services.Progress
         public SaveLoaderResultType IsMapKeyValidToSaveWithoutOverwrite(string key)
         {
             var path = ProgressPathTool.GetFilePath(key, StorageConstants.MapSubPath);
+            
+            if (string.IsNullOrEmpty(key))
+                return SaveLoaderResultType.ErrorInvalidFileName;
+            
             return SaveLoader.IsValidSavePath(path);
         }
 

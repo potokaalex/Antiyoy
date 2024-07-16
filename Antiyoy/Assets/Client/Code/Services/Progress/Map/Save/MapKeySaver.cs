@@ -35,24 +35,19 @@ namespace ClientCode.Services.Progress.Map.Save
         private async Task<string> GetNewKey()
         {
             var window = (WritingWindow)_windowsFactory.Get(WindowType.Writing);
-            string key;
+            window.Open();
 
-            while (true)
-            {
-                key = await window.GetString();
-                var validatorResult = _saveLoader.IsMapKeyValidToSaveWithoutOverwrite(key);
+            var key = await window.GetString();
+            var validatorResult = _saveLoader.IsMapKeyValidToSaveWithoutOverwrite(key);
 
-                if (validatorResult == SaveLoaderResultType.Normal)
-                    break;
+            if (validatorResult == SaveLoaderResultType.ErrorFileIsExist)
+                _logReceiver.Log(new LogData(LogType.Error, "Not valid map key: this key is already exist!"));
+            else if (validatorResult == SaveLoaderResultType.ErrorInvalidFileName)
+                _logReceiver.Log(new LogData(LogType.Error, "Not valid map key: this key is invalid!"));
+            else if (validatorResult == SaveLoaderResultType.Error)
+                _logReceiver.Log(new LogData(LogType.Error, "Not valid map key: unknown reason!"));
 
-                if (validatorResult == SaveLoaderResultType.ErrorFileIsExist)
-                    _logReceiver.Log(new LogData(LogType.Error, "Not valid map key: this key is already exist!"));
-                else if (validatorResult == SaveLoaderResultType.Error)
-                    _logReceiver.Log(new LogData(LogType.Error, "Not valid map key: unknown reason!"));
-                
-                window.Clear();
-            }
-
+            window.Clear();
             window.Close();
             return key;
         }
