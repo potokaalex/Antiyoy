@@ -2,6 +2,8 @@ namespace ClientCode.UI.Buttons.Base
 {
     public enum ButtonType
     {
-        SelectMapButton = 1
+        MapSelect = 1,
+        Load = 2,
+        MapSaveLoad = 3
     }
 }

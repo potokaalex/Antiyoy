@@ -1,10 +1,8 @@
 using ClientCode.Data.Scene;
 using ClientCode.Services.Progress.Actors;
-using ClientCode.UI;
-using ClientCode.UI.Handlers;
-using ClientCode.UI.Handlers.MainMenu;
+using ClientCode.UI.Factory;
 using ClientCode.UI.Models;
-using ClientCode.UI.Windows;
+using ClientCode.UI.Presenters.MainMenu;
 using UnityEngine;
 using Zenject;
 
@@ -26,9 +24,11 @@ namespace ClientCode.Infrastructure.Installers
         {
             Container.Bind<UIFactory>().AsSingle().WithArguments(_sceneData.UIRoot);
             Container.Bind<WindowsFactory>().AsSingle();
-            Container.BindInterfacesTo<MainMenuWindowsHandler>().AsSingle();
-            Container.BindInterfacesTo<MainMenuButtonsHandler>().AsSingle();
+            Container.Bind<ButtonsFactory>().AsSingle();
             Container.BindInterfacesAndSelfTo<MainMenuModel>().AsSingle();
+            Container.BindInterfacesTo<MainMenuWindowsPresenter>().AsSingle();
+            Container.BindInterfacesTo<MainMenuButtonsPresenter>().AsSingle();
+            Container.Bind<MainMenuMapSelectButtonsPresenter>().AsSingle();
         }
     }
 }

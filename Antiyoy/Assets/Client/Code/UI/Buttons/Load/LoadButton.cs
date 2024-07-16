@@ -1,17 +1,11 @@
 using ClientCode.UI.Buttons.Base;
-using UnityEngine;
-using Zenject;
 
 namespace ClientCode.UI.Buttons.Load
 {
     public class LoadButton : ButtonBase
     {
-        [SerializeField] private LoadButtonType _loadButtonType;
-        private ILoadButtonHandler _handler;
+        public LoadButtonType Type;
 
-        [Inject]
-        public void Construct(ILoadButtonHandler handler) => _handler = handler;
-
-        private protected override void OnClick() => _handler?.Handle(_loadButtonType);
+        public override ButtonType GetBaseType() => ButtonType.Load;
     }
 }

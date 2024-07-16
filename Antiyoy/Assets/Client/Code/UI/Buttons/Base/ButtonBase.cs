@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace ClientCode.UI.Buttons.Base
 {
@@ -7,6 +8,12 @@ namespace ClientCode.UI.Buttons.Base
     public abstract class ButtonBase : MonoBehaviour, IUIElement
     {
         private Button _button;
+        private IButtonsHandler _handler;
+
+        [Inject]
+        public void BaseConstruct(IButtonsHandler handler) => _handler = handler;
+
+        public virtual ButtonType GetBaseType() => 0;
 
         private void Awake()
         {
@@ -16,6 +23,6 @@ namespace ClientCode.UI.Buttons.Base
 
         private void OnDestroy() => _button.onClick.RemoveListener(OnClick);
 
-        private protected abstract void OnClick();
+        private protected virtual void OnClick() => _handler.Handle(this);
     }
 }

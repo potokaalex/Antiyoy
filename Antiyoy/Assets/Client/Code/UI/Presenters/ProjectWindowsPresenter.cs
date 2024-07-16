@@ -1,17 +1,17 @@
 using ClientCode.Services.CanvasService;
 using ClientCode.UI.Windows.Base;
 
-namespace ClientCode.UI.Handlers
+namespace ClientCode.UI.Presenters
 {
-    public class ProjectWindowsHandler : IWindowsHandler
+    public class ProjectWindowsPresenter : IWindowsHandler
     {
         private readonly ProjectCanvasController _canvasController;
 
-        public ProjectWindowsHandler(ProjectCanvasController canvasController) => _canvasController = canvasController;
+        public ProjectWindowsPresenter(ProjectCanvasController canvasController) => _canvasController = canvasController;
 
         public void OnCreate(WindowBase window)
         {
-            if (window.Type == WindowType.Popups)
+            if (window.BaseType == WindowType.Popups)
                 window.transform.SetParent(_canvasController.TopElementsRoot, false);
         }
     }

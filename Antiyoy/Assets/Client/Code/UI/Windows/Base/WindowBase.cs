@@ -8,13 +8,13 @@ namespace ClientCode.UI.Windows.Base
         private IWindowsHandler _windowsHandler;
 
         [Inject]
-        public void BaseConstruct(IWindowsHandler windowsHandler, WindowType type)
+        public void BaseConstruct(IWindowsHandler windowsHandler, WindowType baseType)
         {
             _windowsHandler = windowsHandler;
-            Type = type;
+            BaseType = baseType;
         }
 
-        public WindowType Type { get; private set; }
+        public WindowType BaseType { get; private set; }
 
         public bool IsOpen { get; private set; }
 

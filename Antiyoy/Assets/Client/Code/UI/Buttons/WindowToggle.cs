@@ -1,5 +1,5 @@
 using ClientCode.UI.Buttons.Base;
-using ClientCode.UI.Windows;
+using ClientCode.UI.Factory;
 using ClientCode.UI.Windows.Base;
 using UnityEngine;
 using Zenject;
@@ -10,7 +10,7 @@ namespace ClientCode.UI.Buttons
     {
         [SerializeField] private WindowType _windowType;
         private WindowsFactory _windowsFactory;
-
+        
         [Inject]
         public void Construct(WindowsFactory windowsFactory) => _windowsFactory = windowsFactory;
 

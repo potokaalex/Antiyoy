@@ -5,7 +5,7 @@ using ClientCode.Utilities.Extensions;
 using UnityEngine;
 using Zenject;
 
-namespace ClientCode.UI
+namespace ClientCode.UI.Factory
 {
     public class UIFactory
     {
@@ -22,8 +22,8 @@ namespace ClientCode.UI
 
         public void Initialize(Transform uiRoot) => _uiRoot = uiRoot;
 
-        public ButtonBase CreateButton(ButtonType type, Transform root) =>
-            Create(_staticDataProvider.Prefabs.Buttons[type], root);
+        public ButtonBase CreateButton(ButtonType type, Transform root, params object[] args) =>
+            Create(_staticDataProvider.Prefabs.Buttons[type], root, args: args);
 
         public WindowBase CreateWindow(WindowType type) =>
             Create(_staticDataProvider.Prefabs.Windows[type], _uiRoot, args: type);

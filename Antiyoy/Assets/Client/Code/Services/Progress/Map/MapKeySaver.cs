@@ -3,6 +3,7 @@ using ClientCode.Data.Progress;
 using ClientCode.Services.Logger.Base;
 using ClientCode.Services.Progress.Actors;
 using ClientCode.Services.Progress.Base;
+using ClientCode.UI.Factory;
 using ClientCode.UI.Windows;
 using ClientCode.UI.Windows.Base;
 

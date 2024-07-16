@@ -3,21 +3,28 @@ using ClientCode.UI.Models;
 using ClientCode.UI.Windows;
 using ClientCode.UI.Windows.Base;
 
-namespace ClientCode.UI.Handlers.MainMenu
+namespace ClientCode.UI.Presenters.MainMenu
 {
-    public class MainMenuWindowsHandler : IWindowsHandler
+    public class MainMenuWindowsPresenter : IWindowsHandler
     {
         private readonly MainMenuModel _model;
+        private readonly MainMenuMapSelectButtonsPresenter _mapSelectButtonsPresenter;
         private Dictionary<WindowType, WindowBase> _windows;
 
-        public MainMenuWindowsHandler(MainMenuModel model) => _model = model;
+        public MainMenuWindowsPresenter(MainMenuModel model, MainMenuMapSelectButtonsPresenter mapSelectButtonsPresenter)
+        {
+            _model = model;
+            _mapSelectButtonsPresenter = mapSelectButtonsPresenter;
+        }
 
         public void OnCreate(WindowBase window)
         {
-            if (window.Type == WindowType.MapEditorPreload)
+            if (window.BaseType == WindowType.MapEditorPreload)
             {
                 var w = (MapEditorPreloadWindow)window;
-
+                
+                w.Initialize(_mapSelectButtonsPresenter);
+                
                 foreach (var key in _model.MapKeys)
                     w.CreateButton(key);
 
@@ -26,9 +33,9 @@ namespace ClientCode.UI.Handlers.MainMenu
             }
         }
 
-        public  void OnDestroy(WindowBase window)
+        public void OnDestroy(WindowBase window)
         {
-            if (window.Type == WindowType.MapEditorPreload)
+            if (window.BaseType == WindowType.MapEditorPreload)
             {
                 var w = (MapEditorPreloadWindow)window;
                 _model.MapKeys.OnAdded -= w.CreateButton;

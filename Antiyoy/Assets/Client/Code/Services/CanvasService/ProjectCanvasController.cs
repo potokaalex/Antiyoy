@@ -1,5 +1,6 @@
 using ClientCode.Services.StaticDataProvider;
 using ClientCode.UI;
+using ClientCode.UI.Factory;
 using UnityEngine;
 
 namespace ClientCode.Services.CanvasService

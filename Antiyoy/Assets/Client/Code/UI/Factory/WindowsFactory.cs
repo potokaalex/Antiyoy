@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using ClientCode.UI.Windows.Base;
 
-namespace ClientCode.UI.Windows
+namespace ClientCode.UI.Factory
 {
     public class WindowsFactory : IDisposable
     {

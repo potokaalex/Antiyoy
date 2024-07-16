@@ -6,12 +6,9 @@ using ClientCode.Gameplay.Tile;
 using ClientCode.Services.Progress.Actors;
 using ClientCode.Services.Progress.Map;
 using ClientCode.Services.StateMachine;
-using ClientCode.UI;
-using ClientCode.UI.Buttons.Load;
-using ClientCode.UI.Buttons.Map.SaveLoad;
-using ClientCode.UI.Handlers;
-using ClientCode.UI.Handlers.MapEditor;
-using ClientCode.UI.Windows;
+using ClientCode.UI.Buttons.Base;
+using ClientCode.UI.Factory;
+using ClientCode.UI.Presenters.MapEditor;
 using ClientCode.UI.Windows.Base;
 using UnityEngine;
 using Zenject;
@@ -44,9 +41,8 @@ namespace ClientCode.Infrastructure.Installers
         {
             Container.Bind<UIFactory>().AsSingle().WithArguments(_sceneData.UIRoot);
             Container.Bind<WindowsFactory>().AsSingle();
-            Container.Bind<ILoadButtonHandler>().To<MapEditorButtonsHandler>().AsCached();
-            Container.Bind<IMapSaveLoadButtonHandler>().To<MapEditorButtonsHandler>().AsCached();
-            Container.Bind<IWindowsHandler>().To<MapEditorWindowsHandler>().AsSingle();
+            Container.Bind<IButtonsHandler>().To<MapEditorButtonsPresenter>().AsSingle();
+            Container.Bind<IWindowsHandler>().To<MapEditorWindowsPresenter>().AsSingle();
         }
 
         private void BindStateMachine()
