@@ -50,10 +50,7 @@ namespace ClientCode.UI.Handlers
 
         public Task OnSave(ProgressData progress)
         {
-            //TODO!
-            //почему я при выходе из mainMenu загружаю карту ? 
-            //да, самый лучший вариант - загружать карту в стейте загрузки mapEditor!
-            progress.Player.Map = _saveLoader.LoadMap(_selectedMapKey);
+            progress.Player.SelectedMapKey = _selectedMapKey;
             return Task.CompletedTask;
         }
     }
