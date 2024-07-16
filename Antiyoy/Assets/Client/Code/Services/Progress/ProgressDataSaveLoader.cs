@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ClientCode.Data.Progress;
@@ -6,6 +5,7 @@ using ClientCode.Data.Progress.Player;
 using ClientCode.Data.Progress.Project;
 using ClientCode.Data.Saved;
 using ClientCode.Data.Static.Const;
+using ClientCode.Services.Logger.Base;
 using ClientCode.Services.Progress.Actors;
 using ClientCode.Services.Progress.Base;
 
@@ -14,15 +14,20 @@ namespace ClientCode.Services.Progress
     public class ProgressDataSaveLoader : IProgressDataSaveLoader
     {
         private readonly ProjectLoadData _projectLoadData;
+        private readonly ILogReceiver _logReceiver;
         private readonly List<IProgressActor> _actors = new();
         private ProgressData _progress;
 
-        public ProgressDataSaveLoader(ProjectLoadData projectLoadData) => _projectLoadData = projectLoadData;
-        
+        public ProgressDataSaveLoader(ProjectLoadData projectLoadData, ILogReceiver logReceiver)
+        {
+            _projectLoadData = projectLoadData;
+            _logReceiver = logReceiver;
+        }
+
         public void RegisterActor(IProgressActor actor) => _actors.Add(actor);
 
         public void UnRegisterActor(IProgressActor actor) => _actors.Remove(actor);
-        
+
         public void Load()
         {
             _progress ??= new ProgressData { Project = { Load = _projectLoadData } };
@@ -48,6 +53,12 @@ namespace ClientCode.Services.Progress
             SaveMap(_progress.Player.Map);
         }
 
+        public SaveLoaderResultType IsValidMapKeyToSaveWithoutOverwrite(string key)
+        {
+            var path = ProgressPathTool.GetFilePath(key, StorageConstants.MapSubPath);
+            return SaveLoader.IsValidSavePath(path);
+        }
+
         public MapProgressData LoadMap(string key)
         {
             var defaultData = new MapProgressData();
@@ -55,7 +66,15 @@ namespace ClientCode.Services.Progress
             if (string.IsNullOrEmpty(key))
                 return defaultData;
 
-            SaveLoader.Load(ProgressPathTool.GetFilePath(key, StorageConstants.MapSubPath), new MapSavedData(), out var data);
+            var result = SaveLoader.Load(ProgressPathTool.GetFilePath(key, StorageConstants.MapSubPath), new MapSavedData(), out var data);
+
+            if (result == SaveLoaderResultType.ErrorFileIsNotExist)
+                _logReceiver.Log(new LogData(LogType.Error, "Impossible to load: file is not exits!"));
+            else if (result == SaveLoaderResultType.ErrorFileIsDamaged)
+                _logReceiver.Log(new LogData(LogType.Error, "Impossible to load: file is damaged!"));
+            else if (result == SaveLoaderResultType.Error)
+                _logReceiver.Log(new LogData(LogType.Error, "Impossible to load: unknown reason!"));
+
             return new MapProgressData
             {
                 Key = key,
@@ -63,7 +82,7 @@ namespace ClientCode.Services.Progress
                 Height = data.Height
             };
         }
-        
+
         private void SaveMap(MapProgressData progress)
         {
             var data = new MapSavedData
@@ -71,7 +90,19 @@ namespace ClientCode.Services.Progress
                 Width = progress.Width,
                 Height = progress.Height
             };
-            SaveLoader.Save(ProgressPathTool.GetFilePath(progress.Key, StorageConstants.MapSubPath), data);
+
+            var filePath = ProgressPathTool.GetFilePath(progress.Key, StorageConstants.MapSubPath);
+
+            if (SaveLoader.IsFileExist(filePath))
+            {
+                if (SaveLoader.Overwrite(filePath, data) == SaveLoaderResultType.Error)
+                    _logReceiver.Log(new LogData(LogType.Error, "Impossible to overwrite: unknown reason!"));
+                return;
+            }
+
+            var result = SaveLoader.Save(ProgressPathTool.GetFilePath(progress.Key, StorageConstants.MapSubPath), data);
+            if (result == SaveLoaderResultType.Error)
+                _logReceiver.Log(new LogData(LogType.Error, "Impossible to save: unknown reason!"));
         }
     }
 }

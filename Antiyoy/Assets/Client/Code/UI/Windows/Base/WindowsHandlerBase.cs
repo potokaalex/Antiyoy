@@ -27,15 +27,18 @@ namespace ClientCode.UI.Windows.Base
         {
         }
 
+        private protected virtual void OnCreate(WindowBase window)
+        {
+            if (!_windows.TryGetValue(window.Type, out var windows))
+                _windows.Add(window.Type, new List<WindowBase> { window });
+            else
+                windows.Add(window);
+        }
+
         private WindowBase Create(WindowType type)
         {
             var window = _factory.CreateWindow(type, WindowsRoot);
-
-            if (!_windows.TryGetValue(type, out var windows))
-                _windows.Add(type, new List<WindowBase> { window });
-            else
-                windows.Add(window);
-
+            OnCreate(window);
             return window;
         }
     }

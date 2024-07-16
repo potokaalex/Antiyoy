@@ -19,7 +19,7 @@ namespace ClientCode.UI.Windows.Popup
 
         private IEnumerator Hide()
         {
-            yield return new WaitForSeconds(3);
+            yield return new WaitForSeconds(5);
             Close();
         }
     }

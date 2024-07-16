@@ -6,37 +6,74 @@ namespace ClientCode.Services.Progress.Base
 {
     public static class SaveLoader
     {
-        public static bool Save<T>(string path, T data) where T : ISavedData
+        public static SaveLoaderResultType Save<T>(string path, T data) where T : ISavedData
         {
-            if (!IsValidSavePath(path))
-                return false;
+            var isPathValid = IsValidSavePath(path);
+
+            if (isPathValid != SaveLoaderResultType.Normal)
+                return isPathValid;
 
             using var writer = new StreamWriter(path, false);
             writer.Write(JsonUtility.ToJson(data));
-            return true;
+
+            return SaveLoaderResultType.Normal;
         }
 
-        public static bool Load<T>(string path, T defaultData, out T result) where T : ISavedData
+        public static SaveLoaderResultType Overwrite<T>(string path, T data)
+        {
+            var directory = Path.GetDirectoryName(path);
+            if (directory != null)
+                Directory.CreateDirectory(directory);
+
+            try
+            {
+                using var writer = new StreamWriter(path, false);
+                writer.Write(JsonUtility.ToJson(data));
+            }
+            catch
+            {
+                return SaveLoaderResultType.Error;
+            }
+
+            return SaveLoaderResultType.Normal;
+        }
+
+        public static SaveLoaderResultType Load<T>(string path, T defaultData, out T result) where T : ISavedData
+        {
+            result = defaultData;
+
+            if (!File.Exists(path))
+                return SaveLoaderResultType.ErrorFileIsNotExist;
+
+            try
+            {
+                using var reader = new StreamReader(path, false);
+                result = JsonUtility.FromJson<T>(reader.ReadToEnd());
+            }
+            catch
+            {
+                return SaveLoaderResultType.Error;
+            }
+
+            return result == null ? SaveLoaderResultType.ErrorFileIsDamaged : SaveLoaderResultType.Normal;
+        }
+
+        public static SaveLoaderResultType Remove(string path)
         {
             if (!File.Exists(path))
+                return SaveLoaderResultType.ErrorFileIsNotExist;
+
+            try
             {
-                result = defaultData;
-                return false;
+                File.Delete(path);
+            }
+            catch
+            {
+                return SaveLoaderResultType.Error;
             }
 
-            using var reader = new StreamReader(path, false);
-            result = JsonUtility.FromJson<T>(reader.ReadToEnd());
-
-            if (result == null)
-            {
-                result = defaultData;
-                return false;
-            }
-
-            return true;
+            return SaveLoaderResultType.Normal;
         }
-
-        public static void Remove(string path) => File.Delete(path);
 
         public static string[] GetFileNames(string path, string extension = "*")
         {
@@ -51,10 +88,10 @@ namespace ClientCode.Services.Progress.Base
             return files;
         }
 
-        public static bool IsValidSavePath(string path)
+        public static SaveLoaderResultType IsValidSavePath(string path)
         {
             if (File.Exists(path))
-                return false;
+                return SaveLoaderResultType.ErrorFileIsExist;
 
             var directory = Path.GetDirectoryName(path);
             if (directory != null)
@@ -65,12 +102,14 @@ namespace ClientCode.Services.Progress.Base
                 using var stream = File.Create(path);
                 stream.Close();
                 File.Delete(path);
-                return true;
+                return SaveLoaderResultType.Normal;
             }
             catch
             {
-                return false;
+                return SaveLoaderResultType.Error;
             }
         }
+
+        public static bool IsFileExist(string path) => File.Exists(path);
     }
 }

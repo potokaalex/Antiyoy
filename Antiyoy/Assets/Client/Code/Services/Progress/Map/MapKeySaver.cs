@@ -1,6 +1,8 @@
 using System.Threading.Tasks;
 using ClientCode.Data.Progress;
+using ClientCode.Services.Logger.Base;
 using ClientCode.Services.Progress.Actors;
+using ClientCode.Services.Progress.Base;
 using ClientCode.UI.Windows;
 using ClientCode.UI.Windows.Base;
 
@@ -9,8 +11,15 @@ namespace ClientCode.Services.Progress.Map
     public class MapKeySaver : IProgressWriter
     {
         private readonly IWindowsHandler _windowsHandler;
+        private readonly IProgressDataSaveLoader _saveLoader;
+        private readonly ILogReceiver _logReceiver;
 
-        public MapKeySaver(IWindowsHandler windowsHandler) => _windowsHandler = windowsHandler;
+        public MapKeySaver(IWindowsHandler windowsHandler, IProgressDataSaveLoader saveLoader, ILogReceiver logReceiver)
+        {
+            _windowsHandler = windowsHandler;
+            _saveLoader = saveLoader;
+            _logReceiver = logReceiver;
+        }
 
         public async Task OnSave(ProgressData progress)
         {
@@ -30,10 +39,16 @@ namespace ClientCode.Services.Progress.Map
             while (true)
             {
                 key = await window.GetString();
+                var validatorResult = _saveLoader.IsValidMapKeyToSaveWithoutOverwrite(key);
 
-                if (MapKeyValidator.IsValid(key))
+                if (validatorResult == SaveLoaderResultType.Normal)
                     break;
 
+                if (validatorResult == SaveLoaderResultType.ErrorFileIsExist)
+                    _logReceiver.Log(new LogData(LogType.Error, "Not valid map key: this key is already exist!"));
+                else if (validatorResult == SaveLoaderResultType.Error)
+                    _logReceiver.Log(new LogData(LogType.Error, "Not valid map key: unknown reason!"));
+                
                 window.Clear();
             }
 

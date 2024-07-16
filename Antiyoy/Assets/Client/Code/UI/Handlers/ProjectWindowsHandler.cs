@@ -13,10 +13,12 @@ namespace ClientCode.UI.Handlers
 
         public void Initialize() => WindowsRoot = _canvasController.DefaultElementsRoot;
 
-        public override void OnBeforeOpen(WindowBase window)
+        private protected override void OnCreate(WindowBase window)
         {
             if (window.Type == WindowType.Popups)
                 window.transform.SetParent(_canvasController.TopElementsRoot, false);
+            
+            base.OnCreate(window);
         }
     }
 }
