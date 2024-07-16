@@ -17,6 +17,7 @@ MonoBehaviour:
     SerializedBytes: 
     ReferencedUnityObjects:
     - {fileID: 11400000, guid: 2c9cb30022f8bdb4a81ae32ff34e15d6, type: 2}
+    - {fileID: 11400000, guid: 31808c1727db5b54ba87e6b49528d4d5, type: 2}
     - {fileID: 2510216717212271286, guid: 6eb3e4bec3209af4fa64a7ba0f05300b, type: 3}
     - {fileID: 2607808945404735523, guid: 2ae7bdce6aedb214f8f1c63886f14673, type: 3}
     - {fileID: 5398685322357457025, guid: bd51b8ab9f7ae1249b8b6cd32333ee10, type: 3}
@@ -38,6 +39,9 @@ MonoBehaviour:
     - Name: Scene
       Entry: 10
       Data: 0
+    - Name: Progress
+      Entry: 10
+      Data: 1
     - Name: 
       Entry: 8
       Data: 
@@ -46,10 +50,10 @@ MonoBehaviour:
       Data: 2|ClientCode.Data.Static.Prefabs, Code
     - Name: CellObject
       Entry: 10
-      Data: 1
+      Data: 2
     - Name: ProjectCanvasObject
       Entry: 10
-      Data: 2
+      Data: 3
     - Name: Buttons
       Entry: 7
       Data: 3|System.Collections.Generic.Dictionary`2[[ClientCode.UI.Buttons.Base.ButtonType,
@@ -78,7 +82,7 @@ MonoBehaviour:
       Data: 1
     - Name: $v
       Entry: 10
-      Data: 3
+      Data: 4
     - Name: 
       Entry: 8
       Data: 
@@ -116,7 +120,7 @@ MonoBehaviour:
       Data: 1
     - Name: $v
       Entry: 10
-      Data: 4
+      Data: 5
     - Name: 
       Entry: 8
       Data: 
@@ -128,7 +132,7 @@ MonoBehaviour:
       Data: 2
     - Name: $v
       Entry: 10
-      Data: 5
+      Data: 6
     - Name: 
       Entry: 8
       Data: 
@@ -140,7 +144,7 @@ MonoBehaviour:
       Data: 3
     - Name: $v
       Entry: 10
-      Data: 6
+      Data: 7
     - Name: 
       Entry: 8
       Data: 
@@ -152,7 +156,7 @@ MonoBehaviour:
       Data: 4
     - Name: $v
       Entry: 10
-      Data: 7
+      Data: 8
     - Name: 
       Entry: 8
       Data: 
