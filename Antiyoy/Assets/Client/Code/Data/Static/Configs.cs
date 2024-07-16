@@ -1,4 +1,5 @@
 using System;
+using ClientCode.Data.Static.Config;
 
 namespace ClientCode.Data.Static
 {
@@ -6,5 +7,6 @@ namespace ClientCode.Data.Static
     public class Configs
     {
         public SceneConfig Scene;
+        public ProgressConfig Progress;
     }
 }

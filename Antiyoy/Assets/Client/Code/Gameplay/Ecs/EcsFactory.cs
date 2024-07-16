@@ -13,10 +13,10 @@ namespace ClientCode.Gameplay.Ecs
     {
         private readonly IInstantiator _instantiator;
         private readonly IEcsProvider _provider;
-        private EventsBus _eventBus;
-        private IEcsSystems _systems;
 
         private EcsWorld _world;
+        private IEcsSystems _systems;
+        private EventsBus _eventBus;
 
         public EcsFactory(IInstantiator instantiator, IEcsProvider provider)
         {

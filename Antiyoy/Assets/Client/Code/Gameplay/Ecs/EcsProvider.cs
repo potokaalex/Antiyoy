@@ -5,9 +5,9 @@ namespace ClientCode.Gameplay.Ecs
 {
     public class EcsProvider : IEcsProvider
     {
+        private EcsWorld _world;
         private EventsBus _eventBus;
         private IEcsSystems _systems;
-        private EcsWorld _world;
 
         public void Initialize(EcsWorld world, EventsBus eventBus, IEcsSystems systems)
         {

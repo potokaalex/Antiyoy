@@ -1,12 +1,16 @@
 using ClientCode.Data.Scene;
+using ClientCode.Gameplay;
 using ClientCode.Gameplay.Cell;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Tile;
-using ClientCode.Infrastructure.Startup;
-using ClientCode.Services.SceneDataProvider;
+using ClientCode.Services.Progress.Actors;
+using ClientCode.Services.Progress.Map;
+using ClientCode.Services.Progress.Map.Save;
 using ClientCode.Services.StateMachine;
-using ClientCode.UI.Buttons;
-using ClientCode.UI.Presenters;
+using ClientCode.UI.Buttons.Base;
+using ClientCode.UI.Factory;
+using ClientCode.UI.Presenters.MapEditor;
+using ClientCode.UI.Windows.Base;
 using UnityEngine;
 using Zenject;
 
@@ -21,9 +25,27 @@ namespace ClientCode.Infrastructure.Installers
             BindStateMachine();
             BindFactories();
             BindProviders();
+            BindUI();
+            BindProgress();
 
-            Container.Bind<ILoadSceneButtonHandler>().To<MapEditorPresenter>().AsSingle();
-            Container.BindInterfacesTo<MapEditorStartup>().AsSingle();
+            Container.Bind<CameraController>().AsSingle().WithArguments(_sceneData.Camera);
+        }
+
+        private void BindProgress()
+        {
+            Container.BindInterfacesTo<ProgressActorsRegister>().AsSingle();
+            Container.BindInterfacesAndSelfTo<MapLoader>().AsSingle();
+            Container.BindInterfacesAndSelfTo<MapSaver>().AsSingle();
+            Container.BindInterfacesAndSelfTo<MapKeySaver>().AsSingle();
+            Container.Bind<MapDataFactory>().AsSingle();
+        }
+
+        private void BindUI()
+        {
+            Container.Bind<UIFactory>().AsSingle().WithArguments(_sceneData.UIRoot);
+            Container.Bind<WindowsFactory>().AsSingle();
+            Container.Bind<IButtonsHandler>().To<MapEditorButtonsPresenter>().AsSingle();
+            Container.Bind<IWindowsHandler>().To<MapEditorWindowsPresenter>().AsSingle();
         }
 
         private void BindStateMachine()
@@ -34,8 +56,7 @@ namespace ClientCode.Infrastructure.Installers
 
         private void BindProviders()
         {
-            Container.Bind<ISceneDataProvider<MapEditorSceneData>>().To<SceneDataProvider<MapEditorSceneData>>().AsSingle()
-                .WithArguments(_sceneData);
+            Container.Bind<MapEditorSceneData>().FromInstance(_sceneData).AsSingle();
             Container.Bind<IEcsProvider>().To<EcsProvider>().AsSingle();
         }
 

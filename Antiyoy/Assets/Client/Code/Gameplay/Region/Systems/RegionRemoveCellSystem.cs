@@ -9,12 +9,12 @@ namespace ClientCode.Gameplay.Region.Systems
     public class RegionRemoveCellSystem : IEcsInitSystem, IEcsRunSystem
     {
         private readonly IEcsProvider _ecsProvider;
-        private EcsPool<CellComponent> _cellPool;
-        private EcsPool<RegionLink> _linkPool;
-        private EcsPool<RegionComponent> _pool;
-        private EcsFilter _tileRequestFilter;
-        private EcsPool<RegionRemoveCellRequest> _tileRequestPool;
         private EcsWorld _world;
+        private EcsPool<RegionRemoveCellRequest> _tileRequestPool;
+        private EcsFilter _tileRequestFilter;
+        private EcsPool<RegionComponent> _pool;
+        private EcsPool<RegionLink> _linkPool;
+        private EcsPool<CellComponent> _cellPool;
 
         public RegionRemoveCellSystem(IEcsProvider ecsProvider) => _ecsProvider = ecsProvider;
 

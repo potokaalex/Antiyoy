@@ -425,7 +425,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 55
 --- !u!114 &594483636
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -691,7 +691,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47660fbde379df84d9e687804bf4b1b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sceneType: 3
+  _baseType: 2
+  Type: 3
 --- !u!1 &1113668339
 GameObject:
   m_ObjectHideFlags: 0
@@ -894,6 +895,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6681e3650d254534ab818e3c5f07cd96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _baseType: 0
 --- !u!1 &1594451701
 GameObject:
   m_ObjectHideFlags: 0
@@ -1025,10 +1027,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1594451701}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47660fbde379df84d9e687804bf4b1b3, type: 3}
+  m_Script: {fileID: 11500000, guid: 58722dbec197457192fd85718200e308, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sceneType: 2
+  _baseType: 0
+  _windowType: 1
 --- !u!1 &1643174515
 GameObject:
   m_ObjectHideFlags: 0
@@ -1039,7 +1042,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1643174518}
   - component: {fileID: 1643174517}
-  - component: {fileID: 1643174516}
   m_Layer: 0
   m_Name: MainCamera
   m_TagString: MainCamera
@@ -1047,19 +1049,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1643174516
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1643174515}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e8b096bbfe354f47ad84d5701994e3a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _camera: {fileID: 1643174517}
 --- !u!20 &1643174517
 Camera:
   m_ObjectHideFlags: 0
@@ -1271,6 +1260,7 @@ GameObject:
   - component: {fileID: 2140980175}
   - component: {fileID: 2140980176}
   - component: {fileID: 2140980177}
+  - component: {fileID: 2140980178}
   m_Layer: 0
   m_Name: Startup
   m_TagString: Untagged
@@ -1335,6 +1325,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fdfcf6680d4441b6b0343f2e8e8dda89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _sceneData:
+    UIRoot: {fileID: 594483638}
+--- !u!114 &2140980178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2140980174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 298ad7505c954e93b23a6f8223c67c9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807

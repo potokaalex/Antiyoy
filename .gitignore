@@ -73,3 +73,7 @@ crashlytics-build.properties
 
 # RiderIDE files
 /Antiyoy/.idea/
+
+# Don't sync folder
+Antiyoy/Assets/Client/_DontSync
+Antiyoy/Assets/Client/_DontSync.meta
