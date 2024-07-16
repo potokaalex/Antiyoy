@@ -3,7 +3,7 @@ using ClientCode.UI.Windows.Base;
 using TMPro;
 using UnityEngine;
 
-namespace ClientCode.UI.Windows
+namespace ClientCode.UI.Windows.Popup
 {
     public class PopupWindow : WindowBase
     {

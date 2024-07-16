@@ -6,6 +6,7 @@ namespace ClientCode.UI.Windows.Base
     {
         MapEditorPreload = 1,
         Writing = 2,
-        Popup = 3
+        Popup = 3,
+        Popups = 4
     }
 }

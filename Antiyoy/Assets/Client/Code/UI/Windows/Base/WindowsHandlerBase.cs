@@ -15,28 +15,28 @@ namespace ClientCode.UI.Windows.Base
             _windowsRoot = windowsRoot;
         }
 
-        public WindowBase Get(WindowType type)
+        public WindowBase Get(WindowType type, bool isNew)
         {
-            if (!_windows.TryGetValue(type, out var windows) || windows.Count == 0)
+            if (!_windows.TryGetValue(type, out var windows) || windows.Count == 0 || isNew)
                 return Create(type);
 
-            var window = windows[^1];
-            windows.RemoveAt(windows.Count - 1);
-            return window;
+            return windows[0];
         }
 
         public virtual void OnBeforeOpen(WindowBase window)
         {
         }
 
-        public virtual void OnAfterClose(WindowBase window)
+        private WindowBase Create(WindowType type)
         {
-            if (!_windows.TryGetValue(window.Type, out var windows))
-                _windows.Add(window.Type, new List<WindowBase> { window });
+            var window = _factory.CreateWindow(type, _windowsRoot);
+
+            if (!_windows.TryGetValue(type, out var windows))
+                _windows.Add(type, new List<WindowBase> { window });
             else
                 windows.Add(window);
-        }
 
-        private WindowBase Create(WindowType type) => _factory.CreateWindow(type, _windowsRoot);
+            return window;
+        }
     }
 }
