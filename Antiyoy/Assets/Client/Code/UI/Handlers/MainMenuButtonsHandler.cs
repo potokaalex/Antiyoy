@@ -1,8 +1,10 @@
 using System.Threading.Tasks;
 using ClientCode.Data.Progress;
 using ClientCode.Infrastructure.States.MapEditor;
+using ClientCode.Services.Logger.Base;
 using ClientCode.Services.Progress;
 using ClientCode.Services.Progress.Actors;
+using ClientCode.Services.Progress.Base;
 using ClientCode.Services.StateMachine;
 using ClientCode.UI.Buttons.Load;
 using ClientCode.UI.Buttons.Map.Select;
@@ -14,11 +16,13 @@ namespace ClientCode.UI.Handlers
         private readonly IStateMachine _stateMachine;
         private readonly IProgressDataSaveLoader _saveLoader;
         private string _selectedMapKey;
+        private readonly ILogReceiver _logReceiver;
 
-        public MainMenuButtonsHandler(IStateMachine stateMachine, IProgressDataSaveLoader saveLoader)
+        public MainMenuButtonsHandler(IStateMachine stateMachine, IProgressDataSaveLoader saveLoader, ILogReceiver logReceiver)
         {
             _stateMachine = stateMachine;
             _saveLoader = saveLoader;
+            _logReceiver = logReceiver;
         }
 
         void ILoadButtonHandler.Handle(LoadButtonType loadButtonType)
@@ -29,12 +33,26 @@ namespace ClientCode.UI.Handlers
 
         void IMapSelectButtonHandler.Handle(string mapKey)
         {
-            _selectedMapKey = mapKey;
-            _stateMachine.SwitchTo<MapEditorLoadState>();
+            var validatorResult = _saveLoader.IsMapValidToLoad(mapKey);
+            
+            if (validatorResult == SaveLoaderResultType.ErrorFileIsNotExist)
+                _logReceiver.Log(new LogData(LogType.Error, "Map error: file is not exits!"));
+            else if (validatorResult == SaveLoaderResultType.ErrorFileIsDamaged)
+                _logReceiver.Log(new LogData(LogType.Error, "Map error: file is damaged!"));
+            else if (validatorResult == SaveLoaderResultType.Error)
+                _logReceiver.Log(new LogData(LogType.Error, "Map error: unknown reason!"));
+            else
+            {
+                _selectedMapKey = mapKey;
+                _stateMachine.SwitchTo<MapEditorLoadState>();
+            }
         }
 
         public Task OnSave(ProgressData progress)
         {
+            //TODO!
+            //почему я при выходе из mainMenu загружаю карту ? 
+            //да, самый лучший вариант - загружать карту в стейте загрузки mapEditor!
             progress.Player.Map = _saveLoader.LoadMap(_selectedMapKey);
             return Task.CompletedTask;
         }

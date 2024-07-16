@@ -39,7 +39,7 @@ namespace ClientCode.Services.Progress.Map
             while (true)
             {
                 key = await window.GetString();
-                var validatorResult = _saveLoader.IsValidMapKeyToSaveWithoutOverwrite(key);
+                var validatorResult = _saveLoader.IsMapKeyValidToSaveWithoutOverwrite(key);
 
                 if (validatorResult == SaveLoaderResultType.Normal)
                     break;

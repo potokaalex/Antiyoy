@@ -53,10 +53,16 @@ namespace ClientCode.Services.Progress
             SaveMap(_progress.Player.Map);
         }
 
-        public SaveLoaderResultType IsValidMapKeyToSaveWithoutOverwrite(string key)
+        public SaveLoaderResultType IsMapKeyValidToSaveWithoutOverwrite(string key)
         {
             var path = ProgressPathTool.GetFilePath(key, StorageConstants.MapSubPath);
             return SaveLoader.IsValidSavePath(path);
+        }
+
+        public SaveLoaderResultType IsMapValidToLoad(string key)
+        {
+            var result = SaveLoader.Load<MapSavedData>(ProgressPathTool.GetFilePath(key, StorageConstants.MapSubPath), null, out _);
+            return result;
         }
 
         public MapProgressData LoadMap(string key)
