@@ -24,10 +24,11 @@ namespace ClientCode.Infrastructure.States.MapEditor
         {
             _saveLoader.RegisterActor(this);
             _saveLoader.Load();
-            _saveLoader.UnRegisterActor(this);
 
             LoadScene();
         }
+
+        public void Exit() => _saveLoader.UnRegisterActor(this);
 
         private void LoadScene()
         {

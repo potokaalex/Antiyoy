@@ -14,5 +14,12 @@ namespace ClientCode.Services.Updater
         private void FixedUpdate() => OnFixedUpdate?.Invoke();
 
         private void OnDestroy() => OnProjectExit?.Invoke();
+        
+        public void ClearAllListeners()
+        {
+            OnUpdate = null;
+            OnFixedUpdate = null;
+            OnProjectExit = null;
+        }
     }
 }

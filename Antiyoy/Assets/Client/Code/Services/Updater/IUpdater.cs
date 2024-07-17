@@ -7,5 +7,7 @@ namespace ClientCode.Services.Updater
         event Action OnUpdate;
         event Action OnFixedUpdate;
         event Action OnProjectExit;
+
+        public void ClearAllListeners();
     }
 }

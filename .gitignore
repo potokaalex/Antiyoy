@@ -77,3 +77,6 @@ crashlytics-build.properties
 # Don't sync folder
 Antiyoy/Assets/Client/_DontSync
 Antiyoy/Assets/Client/_DontSync.meta
+
+#Odin config editor
+Antiyoy/Assets/Plugins/Sirenix/Odin Inspector/Config/Editor
