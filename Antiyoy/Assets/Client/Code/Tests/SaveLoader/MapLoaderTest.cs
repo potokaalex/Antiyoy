@@ -22,7 +22,6 @@ namespace Tests.SaveLoader
             var world = new EcsWorld();
             var eventBus = new EventsBus();
             var ecsProvider = Create.EcsProvider(world, eventBus);
-            var systems = new EcsSystems(world);
             
             var staticDataProvider = Create.StaticDataProvider();
             var cellFactory = Create.CellFactory(ecsProvider, staticDataProvider);
@@ -35,6 +34,7 @@ namespace Tests.SaveLoader
                 Regions = new List<RegionSavedData> { new() { CellsId = new List<int> { 1 } } }
             };
 
+            var systems = new EcsSystems(world);
             systems.Add(new TileCreateSystem(ecsProvider));
             systems.Init();
             

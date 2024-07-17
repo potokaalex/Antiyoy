@@ -40,7 +40,7 @@ namespace ClientCode.UI.Presenters.MainMenu
                 _logReceiver.Log(new LogData(LogType.Error, "Map select error: unknown reason!"));
             else
             {
-                _model.SelectedMapKey = mapKey;
+                _model.MapEditorPreload.SelectedMapKey = mapKey;
                 _stateMachine.SwitchTo<MapEditorLoadState>();
             }
         }

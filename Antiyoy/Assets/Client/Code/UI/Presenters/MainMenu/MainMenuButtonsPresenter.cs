@@ -71,7 +71,9 @@ namespace ClientCode.UI.Presenters.MainMenu
                     _logReceiver.Log(new LogData(LogType.Error, "Map create error: Reached the maximum maps cout, please remove one!"));
                 else
                 {
-                    _model.SelectedMapKey = null;
+                    _model.MapEditorPreload.SelectedMapKey = null;
+                    _model.MapEditorPreload.MapHeight = 10;
+                    _model.MapEditorPreload.MapWidth = 10;
                     _stateMachine.SwitchTo<MapEditorLoadState>();
                 }
             }

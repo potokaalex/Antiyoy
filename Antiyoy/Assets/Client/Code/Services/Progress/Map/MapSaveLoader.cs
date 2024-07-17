@@ -16,11 +16,11 @@ namespace ClientCode.Services.Progress.Map
 
         public string CurrentKey => _progress.Key;
 
-        public async Task<SaveLoaderResultType> Load(string key)
+        public async Task<SaveLoaderResultType> Load(string key, MapProgressData defaultData = null)
         {
             if (_progress == null || key != _progress.Key)
             {
-                var result = LoadProgress(key, out _progress);
+                var result = LoadProgress(key, defaultData, out _progress);
 
                 if (result != SaveLoaderResultType.Normal)
                     return result;
@@ -72,12 +72,15 @@ namespace ClientCode.Services.Progress.Map
 
         public void UnRegisterActor(IProgressActor actor) => _actors.Remove(actor);
 
-        private SaveLoaderResultType LoadProgress(string key, out MapProgressData data)
+        private SaveLoaderResultType LoadProgress(string key, MapProgressData defaultData, out MapProgressData data)
         {
             var result = SaveLoaderResultType.Normal;
 
             if (string.IsNullOrEmpty(key))
-                data = new MapProgressData();
+            {
+                defaultData ??= new MapProgressData();
+                data = defaultData;
+            }
             else
             {
                 result = SaveLoader.Load(ProgressPathTool.GetFilePath(key, StorageConstants.MapSubPath), new MapSavedData(),

@@ -1,6 +1,8 @@
 using System.Linq;
 using System.Threading.Tasks;
+using ClientCode.Data.Progress.Map;
 using ClientCode.Data.Progress.Project;
+using ClientCode.Data.Scene;
 using ClientCode.Services.Progress.Actors;
 using ClientCode.Utilities;
 
@@ -10,7 +12,7 @@ namespace ClientCode.UI.Models
     {
         private ProjectProgressData _progress;
 
-        public string SelectedMapKey { get; set; }
+        public MapEditorPreloadData MapEditorPreload { get; } = new();
 
         public EventedList<string> MapKeys { get; private set; }
 
@@ -22,7 +24,7 @@ namespace ClientCode.UI.Models
 
         public Task OnSave(ProjectProgressData progress)
         {
-            progress.SelectedMapKey = SelectedMapKey;
+            progress.MapEditorPreload = MapEditorPreload;
             progress.MapKeys = MapKeys.ToArray();
             return Task.CompletedTask;
         }

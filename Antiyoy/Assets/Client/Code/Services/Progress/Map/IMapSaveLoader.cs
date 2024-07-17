@@ -7,7 +7,7 @@ namespace ClientCode.Services.Progress.Map
     public interface IMapSaveLoader : IProgressSaveLoader<MapProgressData>
     {
         string CurrentKey { get; }
-        Task<SaveLoaderResultType> Load(string key);
+        Task<SaveLoaderResultType> Load(string key, MapProgressData defaultData = null);
         Task<SaveLoaderResultType> Save();
         SaveLoaderResultType Remove(string key);
         SaveLoaderResultType IsKeyValidToSaveWithoutOverwrite(string key);

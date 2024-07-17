@@ -1,3 +1,4 @@
+using ClientCode.Data.Progress.Map;
 using ClientCode.Services.Logger.Base;
 using ClientCode.Services.Progress.Base;
 using ClientCode.Services.Progress.Map;
@@ -28,7 +29,9 @@ namespace ClientCode.Infrastructure.States.MapEditor
 
         public async void Enter()
         {
-            var result = await _saveLoader.Load(_projectSaveLoader.Current.SelectedMapKey);
+            var preload = _projectSaveLoader.Current.MapEditorPreload;
+            var defaultMap = new MapProgressData { Key = preload.SelectedMapKey, Height = preload.MapHeight, Width = preload.MapWidth };
+            var result = await _saveLoader.Load(preload.SelectedMapKey, defaultMap);
 
             if (result == SaveLoaderResultType.ErrorFileIsNotExist)
                 _logReceiver.Log(new LogData(LogType.Error, "Impossible to load: file is not exits!"));
