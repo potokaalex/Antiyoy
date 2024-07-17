@@ -8,10 +8,10 @@ namespace ClientCode.UI.Windows.Popup
     public class PopupsWindow : WindowBase
     {
         [SerializeField] private Transform _popupsRoot;
-        private WindowsFactory _factory;
+        private IWindowsFactory _factory;
 
         [Inject]
-        public void Construct(WindowsFactory factory) => _factory = factory;
+        public void Construct(IWindowsFactory factory) => _factory = factory;
 
         public void Add(string message)
         {

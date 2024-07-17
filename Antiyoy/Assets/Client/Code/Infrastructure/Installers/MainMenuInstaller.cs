@@ -34,7 +34,7 @@ namespace ClientCode.Infrastructure.Installers
         private void BindUI()
         {
             Container.Bind<UIFactory>().AsSingle().WithArguments(_sceneData.UIRoot);
-            Container.Bind<WindowsFactory>().AsSingle();
+            Container.Bind<IWindowsFactory>().To<WindowsFactory>().AsSingle();
             Container.Bind<ButtonsFactory>().AsSingle();
             Container.BindInterfacesAndSelfTo<MainMenuModel>().AsSingle();
             Container.BindInterfacesTo<MainMenuWindowsPresenter>().AsSingle();

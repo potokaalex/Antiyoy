@@ -7,8 +7,8 @@ namespace ClientCode.Data.Progress.Map
     public class MapProgressData : IProgressData
     {
         public string Key = string.Empty;
-        public int Width = 10;
-        public int Height = 10;
+        public int Width = 0;
+        public int Height = 0;
         public List<TileSavedData> Tiles = new();
         public List<RegionSavedData> Regions = new();
     }

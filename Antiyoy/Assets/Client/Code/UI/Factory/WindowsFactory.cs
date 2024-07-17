@@ -4,7 +4,7 @@ using ClientCode.UI.Windows.Base;
 
 namespace ClientCode.UI.Factory
 {
-    public class WindowsFactory : IDisposable
+    public class WindowsFactory : IDisposable, IWindowsFactory
     {
         private readonly Dictionary<WindowType, List<WindowBase>> _windows = new();
         private readonly UIFactory _factory;
@@ -16,7 +16,7 @@ namespace ClientCode.UI.Factory
             _handler = handler;
         }
 
-        public WindowBase Get(WindowType type, bool isNew = false)
+        public IWindow Get(WindowType type, bool isNew = false)
         {
             if (!_windows.TryGetValue(type, out var windows) || windows.Count == 0 || isNew)
                 return Create(type);

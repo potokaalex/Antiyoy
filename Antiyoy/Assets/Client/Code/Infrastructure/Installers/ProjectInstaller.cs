@@ -41,7 +41,7 @@ namespace ClientCode.Infrastructure.Installers
         private void BindUI()
         {
             Container.Bind<UIFactory>().AsSingle();
-            Container.Bind<WindowsFactory>().AsSingle();
+            Container.Bind<IWindowsFactory>().To<WindowsFactory>().AsSingle();
             Container.Bind<ProjectCanvasController>().AsSingle();
             Container.Bind<IWindowsHandler>().To<ProjectWindowsPresenter>().AsSingle();
         }

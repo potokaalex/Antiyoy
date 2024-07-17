@@ -3,7 +3,7 @@ using Zenject;
 
 namespace ClientCode.UI.Windows.Base
 {
-    public abstract class WindowBase : MonoBehaviour, IUIElement
+    public abstract class WindowBase : MonoBehaviour, IUIElement, IWindow
     {
         private IWindowsHandler _windowsHandler;
 

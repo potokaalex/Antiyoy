@@ -11,11 +11,11 @@ namespace ClientCode.Services.Progress.Map.Save
 {
     public class MapKeySaver : IProgressWriter<MapProgressData>
     {
-        private readonly WindowsFactory _windowsFactory;
+        private readonly IWindowsFactory _windowsFactory;
         private readonly IMapSaveLoader _saveLoader;
         private readonly ILogReceiver _logReceiver;
 
-        public MapKeySaver(WindowsFactory windowsFactory, IMapSaveLoader saveLoader, ILogReceiver logReceiver)
+        public MapKeySaver(IWindowsFactory windowsFactory, IMapSaveLoader saveLoader, ILogReceiver logReceiver)
         {
             _windowsFactory = windowsFactory;
             _saveLoader = saveLoader;
@@ -34,7 +34,7 @@ namespace ClientCode.Services.Progress.Map.Save
 
         private async Task<string> GetNewKey()
         {
-            var window = (WritingWindow)_windowsFactory.Get(WindowType.Writing);
+            var window = (IWritingWindow)_windowsFactory.Get(WindowType.Writing);
             window.Open();
 
             var key = await window.GetString();

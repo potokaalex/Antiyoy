@@ -7,9 +7,9 @@ namespace ClientCode.Services.Logger
 {
     public class LoggerByPopup : ILogHandler
     {
-        private readonly WindowsFactory _windowsFactory;
+        private readonly IWindowsFactory _windowsFactory;
 
-        public LoggerByPopup(WindowsFactory windowsFactory) => _windowsFactory = windowsFactory;
+        public LoggerByPopup(IWindowsFactory windowsFactory) => _windowsFactory = windowsFactory;
 
         public void Handle(LogData log)
         {

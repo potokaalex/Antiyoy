@@ -9,10 +9,10 @@ namespace ClientCode.UI.Buttons
     public class WindowToggle : ButtonBase
     {
         [SerializeField] private WindowType _windowType;
-        private WindowsFactory _windowsFactory;
+        private IWindowsFactory _windowsFactory;
 
         [Inject]
-        public void Construct(WindowsFactory windowsFactory) => _windowsFactory = windowsFactory;
+        public void Construct(IWindowsFactory windowsFactory) => _windowsFactory = windowsFactory;
 
         private protected override void OnClick()
         {

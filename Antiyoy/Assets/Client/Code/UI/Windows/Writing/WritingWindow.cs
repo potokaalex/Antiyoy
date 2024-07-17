@@ -3,9 +3,9 @@ using ClientCode.UI.Windows.Base;
 using TMPro;
 using UnityEngine;
 
-namespace ClientCode.UI.Windows
+namespace ClientCode.UI.Windows.Writing
 {
-    public class WritingWindow : WindowBase
+    public class WritingWindow : WindowBase, IWritingWindow
     {
         [SerializeField] private TMP_InputField _field;
 

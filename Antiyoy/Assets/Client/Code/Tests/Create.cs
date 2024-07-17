@@ -1,12 +1,16 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using ClientCode.Gameplay.Cell;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Region.Components;
+using ClientCode.Services.StaticDataProvider;
+using ClientCode.UI.Windows;
 using Leopotam.EcsLite;
 using NSubstitute;
 using SevenBoldPencil.EasyEvents;
+using UnityEngine;
 
-namespace Tests.Region
+namespace Tests
 {
     public class Create
     {
@@ -50,6 +54,35 @@ namespace Tests.Region
             var regionEntity = world.NewEntity();
             world.GetPool<RegionComponent>().Add(regionEntity).CellEntities = new List<int>();
             return regionEntity;
+        }
+
+        public static IWritingWindow WritingWindow(string getStringValue = "1")
+        {
+            var writingWindow = Substitute.For<IWritingWindow>();
+            writingWindow.GetString().Returns(Task.FromResult(getStringValue));
+            return writingWindow;
+        }
+
+        public static IStaticDataProvider StaticDataProvider()
+        {
+            var staticDataProvider = Substitute.For<IStaticDataProvider>();
+            var cellObject = CellObject();
+            staticDataProvider.Prefabs.CellObject = cellObject;
+            return staticDataProvider;
+        }
+
+        public static CellFactory CellFactory(IEcsProvider ecsProvider, IStaticDataProvider staticDataProvider)
+        {
+            var cellFactory = new CellFactory(ecsProvider, staticDataProvider);
+            cellFactory.Initialize();
+            return cellFactory;
+        }
+        
+        private static CellObject CellObject()
+        {
+            var cellObject = new GameObject().AddComponent<CellObject>();
+            cellObject.SpriteRenderer = cellObject.gameObject.AddComponent<SpriteRenderer>();
+            return cellObject;
         }
     }
 }

@@ -30,5 +30,13 @@ namespace ClientCode.Utilities.Extensions
 
             return ref pool.Add(entity);
         }
+
+        public static int GetFirstOrDefault(this EcsFilter filter)
+        {
+            foreach (var entity in filter)
+                return entity;
+
+            return default;
+        }
     }
 }

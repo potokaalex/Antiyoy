@@ -6,7 +6,7 @@ using ClientCode.UI.Windows.Base;
 using UnityEngine;
 using Zenject;
 
-namespace ClientCode.UI.Windows
+namespace ClientCode.UI.Windows.Writing
 {
     public class MapEditorPreloadWindow : WindowBase
     {
