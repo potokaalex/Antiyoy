@@ -1,18 +1,17 @@
-using ClientCode.Data.Progress;
-using ClientCode.Services.Progress;
-using ClientCode.Services.Progress.Actors;
+using ClientCode.Data.Progress.Project;
+using ClientCode.Services.Progress.Project;
 using ClientCode.Services.StateMachine;
 using ClientCode.Services.StaticDataProvider;
 
 namespace ClientCode.Infrastructure.States.Project
 {
-    public class ProjectLoadState : IState, IProgressReader
+    public class ProjectLoadState : IState
     {
-        private readonly IProgressDataSaveLoader _saveLoader;
+        private readonly IProjectSaveLoader _saveLoader;
         private readonly IStateMachine _stateMachine;
         private readonly IStaticDataProvider _staticDataProvider;
 
-        public ProjectLoadState(IStaticDataProvider staticDataProvider, IProgressDataSaveLoader saveLoader, IStateMachine stateMachine)
+        public ProjectLoadState(IStaticDataProvider staticDataProvider, IProjectSaveLoader saveLoader, IStateMachine stateMachine)
         {
             _staticDataProvider = staticDataProvider;
             _saveLoader = saveLoader;
@@ -21,16 +20,14 @@ namespace ClientCode.Infrastructure.States.Project
 
         public void Enter()
         {
-            _saveLoader.RegisterActor(this);
             _saveLoader.Load();
+            InitializeStaticData(_saveLoader.Current);
             _stateMachine.SwitchTo<ProjectEnterSate>();
         }
 
-        public void Exit() => _saveLoader.UnRegisterActor(this);
-
-        public void OnLoad(ProgressData progress)
+        private void InitializeStaticData(ProjectProgressData progress)
         {
-            var load = progress.Project.Load;
+            var load = progress.Load;
             _staticDataProvider.Initialize(load.Configs, load.Prefabs);
         }
     }

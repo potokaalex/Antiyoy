@@ -1,7 +1,7 @@
 using ClientCode.Infrastructure.States.MapEditor;
 using ClientCode.Services.Logger.Base;
-using ClientCode.Services.Progress;
 using ClientCode.Services.Progress.Base;
+using ClientCode.Services.Progress.Map;
 using ClientCode.Services.StateMachine;
 using ClientCode.Services.StaticDataProvider;
 using ClientCode.UI.Buttons.Base;
@@ -17,13 +17,13 @@ namespace ClientCode.UI.Presenters.MainMenu
     public class MainMenuButtonsPresenter : IButtonsHandler
     {
         private readonly IStateMachine _stateMachine;
-        private readonly IProgressDataSaveLoader _saveLoader;
+        private readonly IMapSaveLoader _saveLoader;
         private readonly ILogReceiver _logReceiver;
         private readonly IStaticDataProvider _staticDataProvider;
         private readonly WindowsFactory _windowsFactory;
         private readonly MainMenuModel _model;
 
-        public MainMenuButtonsPresenter(IStateMachine stateMachine, IProgressDataSaveLoader saveLoader, ILogReceiver logReceiver,
+        public MainMenuButtonsPresenter(IStateMachine stateMachine, IMapSaveLoader saveLoader, ILogReceiver logReceiver,
             IStaticDataProvider staticDataProvider, WindowsFactory windowsFactory, MainMenuModel model)
         {
             _stateMachine = stateMachine;
@@ -51,7 +51,7 @@ namespace ClientCode.UI.Presenters.MainMenu
             writingWindow.Open();
 
             var mapKey = await writingWindow.GetString();
-            var result = _saveLoader.RemoveMap(mapKey);
+            var result = _saveLoader.Remove(mapKey);
 
             if (result == SaveLoaderResultType.ErrorFileIsNotExist)
                 _logReceiver.Log(new LogData(LogType.Error, "Map remove error: map doesnt exist!"));
@@ -70,7 +70,10 @@ namespace ClientCode.UI.Presenters.MainMenu
                 if (_model.MapKeys.Count >= _staticDataProvider.Configs.Progress.MaxMapsSavesCount)
                     _logReceiver.Log(new LogData(LogType.Error, "Map create error: Reached the maximum maps cout, please remove one!"));
                 else
+                {
+                    _model.SelectedMapKey = null;
                     _stateMachine.SwitchTo<MapEditorLoadState>();
+                }
             }
         }
     }

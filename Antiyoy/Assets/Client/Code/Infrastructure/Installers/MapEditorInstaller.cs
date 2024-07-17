@@ -1,3 +1,5 @@
+using ClientCode.Data.Progress.Map;
+using ClientCode.Data.Progress.Project;
 using ClientCode.Data.Scene;
 using ClientCode.Gameplay;
 using ClientCode.Gameplay.Cell;
@@ -31,16 +33,17 @@ namespace ClientCode.Infrastructure.Installers
 
             Container.Bind<CameraController>().AsSingle().WithArguments(_sceneData.Camera);
             Container.BindInterfacesTo<StateStartuper<MapEditorEnterState>>().AsSingle();
-
         }
 
         private void BindProgress()
         {
-            Container.BindInterfacesTo<ProgressActorsRegister>().AsSingle();
+            Container.BindInterfacesTo<ProgressActorsRegister<ProjectProgressData>>().AsSingle();
+            Container.BindInterfacesTo<ProgressActorsRegister<MapProgressData>>().AsSingle();
+
+            Container.Bind<MapDataFactory>().AsSingle();
             Container.BindInterfacesAndSelfTo<MapLoader>().AsSingle();
             Container.BindInterfacesAndSelfTo<MapSaver>().AsSingle();
             Container.BindInterfacesAndSelfTo<MapKeySaver>().AsSingle();
-            Container.Bind<MapDataFactory>().AsSingle();
         }
 
         private void BindUI()

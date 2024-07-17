@@ -2,8 +2,8 @@
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Region.Components;
 using ClientCode.Gameplay.Tile.Components;
+using ClientCode.Utilities.Extensions;
 using Leopotam.EcsLite;
-using Plugins.EcsLite;
 using SevenBoldPencil.EasyEvents;
 
 namespace ClientCode.Gameplay.Tile

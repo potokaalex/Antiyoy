@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using ClientCode.Data.Saved;
+using ClientCode.Services.Progress.Base;
 
-namespace ClientCode.Data.Progress.Player.Map
+namespace ClientCode.Data.Progress.Map
 {
-    public class MapProgressData
+    public class MapProgressData : IProgressData
     {
         public string Key = string.Empty;
         public int Width = 10;

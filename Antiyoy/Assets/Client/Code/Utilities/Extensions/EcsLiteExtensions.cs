@@ -1,7 +1,7 @@
 ﻿using System;
 using Leopotam.EcsLite;
 
-namespace Plugins.EcsLite
+namespace ClientCode.Utilities.Extensions
 {
     public static class EcsLiteExtensions
     {

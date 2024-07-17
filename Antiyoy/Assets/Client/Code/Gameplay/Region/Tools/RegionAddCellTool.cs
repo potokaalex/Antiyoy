@@ -1,6 +1,6 @@
 using ClientCode.Gameplay.Region.Components;
+using ClientCode.Utilities.Extensions;
 using Leopotam.EcsLite;
-using Plugins.EcsLite;
 
 namespace ClientCode.Gameplay.Region.Tools
 {

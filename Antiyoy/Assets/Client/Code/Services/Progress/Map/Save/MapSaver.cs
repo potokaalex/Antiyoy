@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ClientCode.Data.Progress;
-using ClientCode.Data.Progress.Player.Map;
+using ClientCode.Data.Progress.Map;
 using ClientCode.Data.Saved;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Region.Components;
@@ -11,7 +10,7 @@ using Leopotam.EcsLite;
 
 namespace ClientCode.Services.Progress.Map.Save
 {
-    public class MapSaver : IProgressWriter
+    public class MapSaver : IProgressWriter<MapProgressData>
     {
         private readonly MapDataFactory _dataFactory;
         private readonly IEcsProvider _ecsProvider;
@@ -31,10 +30,10 @@ namespace ClientCode.Services.Progress.Map.Save
             _regionFiler = world.Filter<RegionComponent>().End();
         }
 
-        public Task OnSave(ProgressData progress)
+        public Task OnSave(MapProgressData progress)
         {
-            SaveCells(progress.Player.Map);
-            SaveRegions(progress.Player.Map);
+            SaveCells(progress);
+            SaveRegions(progress);
             return Task.CompletedTask;
         }
 

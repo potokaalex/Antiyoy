@@ -1,7 +1,7 @@
 using System.IO;
 using ClientCode.Data.Static.Const;
 
-namespace ClientCode.Services.Progress
+namespace ClientCode.Services.Progress.Base
 {
     public static class ProgressPathTool
     {

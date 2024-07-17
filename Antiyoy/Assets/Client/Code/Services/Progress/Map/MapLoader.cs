@@ -1,5 +1,5 @@
-using ClientCode.Data.Progress;
-using ClientCode.Data.Progress.Player.Map;
+using System.Threading.Tasks;
+using ClientCode.Data.Progress.Map;
 using ClientCode.Gameplay.Cell;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Region.Components;
@@ -11,7 +11,7 @@ using SevenBoldPencil.EasyEvents;
 
 namespace ClientCode.Services.Progress.Map
 {
-    public class MapLoader : IProgressReader
+    public class MapLoader : IProgressReader<MapProgressData>
     {
         private readonly CellFactory _cellFactory;
         private readonly IEcsProvider _ecsProvider;
@@ -34,10 +34,11 @@ namespace ClientCode.Services.Progress.Map
             _regionLinkPool = _world.GetPool<RegionLink>();
         }
 
-        public void OnLoad(ProgressData progress)
+        public Task OnLoad(MapProgressData progress)
         {
-            var cells = LoadCells(progress.Player.Map);
-            LoadRegions(progress.Player.Map, cells);
+            var cells = LoadCells(progress);
+            LoadRegions(progress, cells);
+            return Task.CompletedTask;
         }
 
         private CellObject[] LoadCells(MapProgressData data)

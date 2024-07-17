@@ -2,8 +2,8 @@
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Hex;
 using ClientCode.Services.StaticDataProvider;
+using ClientCode.Utilities.Extensions;
 using Leopotam.EcsLite;
-using Plugins.EcsLite;
 using UnityEngine;
 
 namespace ClientCode.Gameplay.Cell

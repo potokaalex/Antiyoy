@@ -1,15 +1,16 @@
 using System;
 using System.Collections.Generic;
+using ClientCode.Services.Progress.Base;
 using Zenject;
 
 namespace ClientCode.Services.Progress.Actors
 {
-    public class ProgressActorsRegister : IInitializable, IDisposable
+    public class ProgressActorsRegister<T> : IInitializable, IDisposable where T : IProgressData
     {
-        private readonly IProgressDataSaveLoader _saveLoader;
+        private readonly IProgressSaveLoader<T> _saveLoader;
         private readonly List<IProgressActor> _readers;
 
-        public ProgressActorsRegister(IProgressDataSaveLoader saveLoader, List<IProgressActor> readers)
+        public ProgressActorsRegister(IProgressSaveLoader<T> saveLoader, List<IProgressActor> readers)
         {
             _saveLoader = saveLoader;
             _readers = readers;

@@ -2,7 +2,8 @@ using ClientCode.Data.Static.Config;
 using ClientCode.Services.CanvasService;
 using ClientCode.Services.Logger;
 using ClientCode.Services.Logger.Base;
-using ClientCode.Services.Progress;
+using ClientCode.Services.Progress.Map;
+using ClientCode.Services.Progress.Project;
 using ClientCode.Services.SceneLoader;
 using ClientCode.Services.StateMachine;
 using ClientCode.Services.StaticDataProvider;
@@ -24,11 +25,17 @@ namespace ClientCode.Infrastructure.Installers
             BindStateMachine();
             BindLog();
             BindUI();
+            BindProgress();
 
             Container.Bind<IStaticDataProvider>().To<StaticDataProvider>().AsSingle();
-            Container.Bind<IProgressDataSaveLoader>().To<ProgressDataSaveLoader>().AsSingle().WithArguments(_loadDataConfig.Data);
             Container.Bind<ISceneLoader>().To<SceneLoader>().AsSingle();
             Container.Bind<IUpdater>().To<Updater>().FromNewComponentOnNewGameObject().AsSingle();
+        }
+
+        private void BindProgress()
+        {
+            Container.BindInterfacesTo<ProjectSaveLoader>().AsSingle().WithArguments(_loadDataConfig.Data);
+            Container.BindInterfacesTo<MapSaveLoader>().AsSingle();
         }
 
         private void BindUI()
