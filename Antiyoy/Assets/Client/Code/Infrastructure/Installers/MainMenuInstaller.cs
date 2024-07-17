@@ -1,5 +1,7 @@
 using ClientCode.Data.Scene;
+using ClientCode.Infrastructure.States.MainMenu;
 using ClientCode.Services.Progress.Actors;
+using ClientCode.Services.StateMachine;
 using ClientCode.UI.Factory;
 using ClientCode.UI.Models;
 using ClientCode.UI.Presenters.MainMenu;
@@ -18,6 +20,7 @@ namespace ClientCode.Infrastructure.Installers
 
             Container.BindInterfacesTo<ProgressActorsRegister>().AsSingle();
             Container.Bind<MainMenuSceneData>().FromInstance(_sceneData).AsSingle();
+            Container.BindInterfacesTo<StateStartuper<MainMenuEnterState>>().AsSingle();
         }
 
         private void BindUI()

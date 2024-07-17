@@ -3,6 +3,7 @@ using ClientCode.Gameplay;
 using ClientCode.Gameplay.Cell;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Tile;
+using ClientCode.Infrastructure.States.MapEditor;
 using ClientCode.Services.Progress.Actors;
 using ClientCode.Services.Progress.Map;
 using ClientCode.Services.Progress.Map.Save;
@@ -29,6 +30,8 @@ namespace ClientCode.Infrastructure.Installers
             BindProgress();
 
             Container.Bind<CameraController>().AsSingle().WithArguments(_sceneData.Camera);
+            Container.BindInterfacesTo<StateStartuper<MapEditorEnterState>>().AsSingle();
+
         }
 
         private void BindProgress()
