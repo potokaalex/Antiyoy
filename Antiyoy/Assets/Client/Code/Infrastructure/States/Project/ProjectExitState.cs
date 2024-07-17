@@ -1,6 +1,7 @@
 using ClientCode.Services.Progress;
 using ClientCode.Services.StateMachine;
 using ClientCode.Services.Updater;
+using UnityEditor;
 
 namespace ClientCode.Infrastructure.States.Project
 {
@@ -15,10 +16,18 @@ namespace ClientCode.Infrastructure.States.Project
             _updater = updater;
         }
 
-        public void Enter()
+        public async void Enter()
         {
             _updater.ClearAllListeners();
-            _progressDataSaveLoader.Save();
+            await _progressDataSaveLoader.Save();
+            Quit();
         }
+
+        private void Quit()
+#if UNITY_EDITOR
+            => EditorApplication.isPlaying = false;
+#else
+            => UnityEngine.Application.Quit();
+#endif
     }
 }
