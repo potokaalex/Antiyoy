@@ -1,5 +1,3 @@
-using ClientCode.Data.Progress.Map;
-using ClientCode.Data.Progress.Project;
 using ClientCode.Data.Scene;
 using ClientCode.Infrastructure.States.MainMenu;
 using ClientCode.Services.Progress.Actors;
@@ -19,16 +17,10 @@ namespace ClientCode.Infrastructure.Installers
         public override void InstallBindings()
         {
             BindUI();
-            BindProgress();
-
+         
+            Container.BindInterfacesTo<ProgressActorsRegister>().AsSingle();
             Container.Bind<MainMenuSceneData>().FromInstance(_sceneData).AsSingle();
             Container.BindInterfacesTo<StateStartuper<MainMenuEnterState>>().AsSingle();
-        }
-
-        private void BindProgress()
-        {
-            Container.BindInterfacesTo<ProgressActorsRegister<ProjectProgressData>>().AsSingle();
-            Container.BindInterfacesTo<ProgressActorsRegister<MapProgressData>>().AsSingle();
         }
 
         private void BindUI()

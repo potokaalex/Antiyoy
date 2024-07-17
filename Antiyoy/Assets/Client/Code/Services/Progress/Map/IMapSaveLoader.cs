@@ -4,7 +4,7 @@ using ClientCode.Services.Progress.Base;
 
 namespace ClientCode.Services.Progress.Map
 {
-    public interface IMapSaveLoader : IProgressSaveLoader<MapProgressData>
+    public interface IMapSaveLoader : IProgressSaveLoader
     {
         string CurrentKey { get; }
         Task<SaveLoaderResultType> Load(string key, MapProgressData defaultData = null);

@@ -1,5 +1,3 @@
-using ClientCode.Data.Progress.Map;
-using ClientCode.Data.Progress.Project;
 using ClientCode.Data.Scene;
 using ClientCode.Gameplay;
 using ClientCode.Gameplay.Cell;
@@ -37,9 +35,7 @@ namespace ClientCode.Infrastructure.Installers
 
         private void BindProgress()
         {
-            Container.BindInterfacesTo<ProgressActorsRegister<ProjectProgressData>>().AsSingle();
-            Container.BindInterfacesTo<ProgressActorsRegister<MapProgressData>>().AsSingle();
-
+            Container.BindInterfacesTo<ProgressActorsRegister>().AsSingle();
             Container.Bind<MapDataFactory>().AsSingle();
             Container.BindInterfacesAndSelfTo<MapLoader>().AsSingle();
             Container.BindInterfacesAndSelfTo<MapSaver>().AsSingle();

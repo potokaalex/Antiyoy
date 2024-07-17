@@ -5,27 +5,29 @@ using Zenject;
 
 namespace ClientCode.Services.Progress.Actors
 {
-    public class ProgressActorsRegister<T> : IInitializable, IDisposable where T : IProgressData
+    public class ProgressActorsRegister : IInitializable, IDisposable
     {
-        private readonly IProgressSaveLoader<T> _saveLoader;
+        private readonly List<IProgressSaveLoader> _saveLoaders;
         private readonly List<IProgressActor> _readers;
 
-        public ProgressActorsRegister(IProgressSaveLoader<T> saveLoader, List<IProgressActor> readers)
+        public ProgressActorsRegister(List<IProgressSaveLoader> saveLoaders, List<IProgressActor> readers)
         {
-            _saveLoader = saveLoader;
+            _saveLoaders = saveLoaders;
             _readers = readers;
         }
 
         public void Initialize()
         {
+            foreach (var saveLoader in _saveLoaders)
             foreach (var reader in _readers)
-                _saveLoader.RegisterActor(reader);
+                saveLoader.RegisterActor(reader);
         }
 
         public void Dispose()
         {
+            foreach (var saveLoader in _saveLoaders)
             foreach (var reader in _readers)
-                _saveLoader.UnRegisterActor(reader);
+                saveLoader.UnRegisterActor(reader);
         }
     }
 }
