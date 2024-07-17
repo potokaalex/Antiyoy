@@ -1,22 +1,21 @@
 {
-  "name": "Code",
-  "rootNamespace": "ClientCode",
-  "references": [
-    "GUID:e59bf9fc7d5a44b18a819a92edd46163",
-    "GUID:206779980ac58453ea65e900299ccf71",
-    "GUID:a22362b82293644e1bbe51356c008d63",
-    "GUID:5b61e92524f66f5499e71c03c16a61c5",
-    "GUID:a82adb1cbafb5e54496524befaffe47a",
-    "GUID:0d8beb7f090555447a6cf5ce9e54dbb4",
-    "GUID:6055be8ebefd69e48b49212b09b47b2f"
-  ],
-  "includePlatforms": [],
-  "excludePlatforms": [],
-  "allowUnsafeCode": false,
-  "overrideReferences": false,
-  "precompiledReferences": [],
-  "autoReferenced": true,
-  "defineConstraints": [],
-  "versionDefines": [],
-  "noEngineReferences": false
+    "name": "Code",
+    "rootNamespace": "ClientCode",
+    "references": [
+        "GUID:e59bf9fc7d5a44b18a819a92edd46163",
+        "GUID:206779980ac58453ea65e900299ccf71",
+        "GUID:a22362b82293644e1bbe51356c008d63",
+        "GUID:5b61e92524f66f5499e71c03c16a61c5",
+        "GUID:0d8beb7f090555447a6cf5ce9e54dbb4",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }
