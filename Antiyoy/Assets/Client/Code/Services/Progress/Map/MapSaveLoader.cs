@@ -5,6 +5,7 @@ using ClientCode.Data.Saved;
 using ClientCode.Data.Static.Const;
 using ClientCode.Services.Progress.Actors;
 using ClientCode.Services.Progress.Base;
+using Cysharp.Threading.Tasks;
 
 namespace ClientCode.Services.Progress.Map
 {
@@ -12,49 +13,64 @@ namespace ClientCode.Services.Progress.Map
     {
         private readonly List<IProgressActor> _actors = new();
         private Task<SaveLoaderResultType> _normalTask;
-        private MapProgressData _progress;
+        private MapProgressData _current;
 
-        public string CurrentKey => _progress.Key;
-
-        public async Task<SaveLoaderResultType> Load(string key, MapProgressData defaultData = null)
+        public SaveLoaderResultType Load(string key, MapProgressData defaultData = null)
         {
-            if (_progress == null || key != _progress.Key)
+            SaveLoaderDebugger.DebugLoadMap(key);
+            if (_current == null || _current.Key != key || string.IsNullOrEmpty(key))
             {
-                var result = LoadProgress(key, defaultData, out _progress);
+                var result = LoadProgress(key, defaultData, out _current);
 
                 if (result != SaveLoaderResultType.Normal)
                     return result;
             }
 
+            _current.Key = key;
+            
             foreach (var actor in _actors)
                 if (actor is IProgressReader<MapProgressData> reader)
-                    await reader.OnLoad(_progress);
+                    reader.OnLoad(_current);
 
-            return await CreateNormalTask();
+            return SaveLoaderResultType.Normal;
         }
 
-        public async Task<SaveLoaderResultType> Save()
+        public async UniTask<SaveLoaderResultType> Save(string key = null)
         {
             foreach (var actor in _actors)
-                if (actor is IProgressWriter<MapProgressData> reader)
-                    await reader.OnSave(_progress);
+                if (actor is IProgressWriter<MapProgressData> writer)
+                    await writer.OnSave(_current);
+
+            if (key == null)
+                key = _current.Key;
+            else
+                _current.Key = key;
+            
+            SaveLoaderDebugger.DebugSaveMap(key);
 
             var data = new MapSavedData
             {
-                Width = _progress.Width,
-                Height = _progress.Height,
-                Tiles = _progress.Tiles,
-                Regions = _progress.Regions
+                Width = _current.Width,
+                Height = _current.Height,
+                Tiles = _current.Tiles,
+                Regions = _current.Regions
             };
 
-            var filePath = ProgressPathTool.GetFilePath(_progress.Key, StorageConstants.MapSubPath);
+            if (string.IsNullOrEmpty(key))
+                return SaveLoaderResultType.ErrorFileNameIsEmptyOrNull;
+
+            var filePath = ProgressPathTool.GetFilePath(key, StorageConstants.MapSubPath);
 
             return SaveLoader.IsFileExist(filePath)
                 ? SaveLoader.Overwrite(filePath, data)
-                : SaveLoader.Save(ProgressPathTool.GetFilePath(_progress.Key, StorageConstants.MapSubPath), data);
+                : SaveLoader.Save(ProgressPathTool.GetFilePath(key, StorageConstants.MapSubPath), data);
         }
 
-        public SaveLoaderResultType Remove(string key) => SaveLoader.Remove(ProgressPathTool.GetFilePath(key, StorageConstants.MapSubPath));
+        public SaveLoaderResultType Remove(string key)
+        {
+            SaveLoaderDebugger.DebugRemoveMap(key);
+            return SaveLoader.Remove(ProgressPathTool.GetFilePath(key, StorageConstants.MapSubPath));
+        }
 
         public SaveLoaderResultType IsKeyValidToSaveWithoutOverwrite(string key)
         {
@@ -87,7 +103,6 @@ namespace ClientCode.Services.Progress.Map
                     out var savedData);
                 data = new MapProgressData
                 {
-                    Key = key,
                     Width = savedData.Width,
                     Height = savedData.Height,
                     Tiles = savedData.Tiles,
@@ -97,7 +112,5 @@ namespace ClientCode.Services.Progress.Map
 
             return result;
         }
-
-        private Task<SaveLoaderResultType> CreateNormalTask() => _normalTask ??= Task.FromResult(SaveLoaderResultType.Normal);
     }
 }

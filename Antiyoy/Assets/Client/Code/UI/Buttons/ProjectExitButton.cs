@@ -7,10 +7,10 @@ namespace ClientCode.UI.Buttons
 {
     public class ProjectExitButton : ButtonBase
     {
-        private IStateMachine _stateMachine;
+        private IProjectStateMachine _stateMachine;
 
         [Inject]
-        public void Construct(IStateMachine stateMachine) => _stateMachine = stateMachine;
+        public void Construct(IProjectStateMachine stateMachine) => _stateMachine = stateMachine;
 
         private protected override void OnClick() => _stateMachine.SwitchTo<ProjectExitState>();
     }

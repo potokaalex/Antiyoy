@@ -1,5 +1,5 @@
-using System.Threading.Tasks;
 using ClientCode.UI.Windows.Base;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 
@@ -9,9 +9,9 @@ namespace ClientCode.UI.Windows.Writing
     {
         [SerializeField] private TMP_InputField _field;
 
-        public Task<string> GetString()
+        public UniTask<string> GetString()
         {
-            var taskSource = new TaskCompletionSource<string>();
+            var taskSource = new UniTaskCompletionSource<string>();
 
             _field.onEndEdit.AddListener(OnEndEdit);
 
@@ -20,7 +20,7 @@ namespace ClientCode.UI.Windows.Writing
             void OnEndEdit(string result)
             {
                 _field.onEndEdit.RemoveListener(OnEndEdit);
-                taskSource.SetResult(result);
+                taskSource.TrySetResult(result);
             }
         }
 

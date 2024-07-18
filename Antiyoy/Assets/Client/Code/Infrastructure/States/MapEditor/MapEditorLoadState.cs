@@ -1,9 +1,11 @@
 using ClientCode.Data.Progress.Map;
+using ClientCode.Data.Progress.Project;
 using ClientCode.Services.Logger.Base;
 using ClientCode.Services.Progress.Base;
 using ClientCode.Services.Progress.Map;
 using ClientCode.Services.Progress.Project;
 using ClientCode.Services.SceneLoader;
+using ClientCode.Services.Startup;
 using ClientCode.Services.StateMachine;
 using ClientCode.Services.StaticDataProvider;
 
@@ -29,9 +31,20 @@ namespace ClientCode.Infrastructure.States.MapEditor
 
         public async void Enter()
         {
-            var preload = _projectSaveLoader.Current.MapEditorPreload;
-            var defaultMap = new MapProgressData { Key = preload.SelectedMapKey, Height = preload.MapHeight, Width = preload.MapWidth };
-            var result = await _saveLoader.Load(preload.SelectedMapKey, defaultMap);
+            _projectSaveLoader.Load(out var progress);
+            
+            var scenesConfig = _staticDataProvider.Configs.Scene;
+            await _sceneLoader.LoadSceneAsync(scenesConfig.MapEditorSceneName);
+            
+            LoadMap(progress.MapEditorPreload);
+
+            _sceneLoader.FindInScene<IStartuper>(scenesConfig.MapEditorSceneName).Startup();
+        }
+
+        private void LoadMap(MapEditorPreloadData preload)
+        {
+            var defaultMap = new MapProgressData { Key = preload.MapKey, Height = preload.MapHeight, Width = preload.MapWidth };
+            var result = _saveLoader.Load(preload.MapKey, defaultMap);
 
             if (result == SaveLoaderResultType.ErrorFileIsNotExist)
                 _logReceiver.Log(new LogData(LogType.Error, "Impossible to load: file is not exits!"));
@@ -39,14 +52,6 @@ namespace ClientCode.Infrastructure.States.MapEditor
                 _logReceiver.Log(new LogData(LogType.Error, "Impossible to load: file is damaged!"));
             else if (result == SaveLoaderResultType.Error)
                 _logReceiver.Log(new LogData(LogType.Error, "Impossible to load: unknown reason!"));
-            else
-                LoadScene();
-        }
-
-        private void LoadScene()
-        {
-            var scenesConfig = _staticDataProvider.Configs.Scene;
-            _sceneLoader.LoadSceneAsync(scenesConfig.MapEditorSceneName);
         }
     }
 }

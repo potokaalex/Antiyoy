@@ -55,7 +55,11 @@ namespace ClientCode.Infrastructure.Installers
 
         private void BindStateMachine()
         {
-            Container.Bind<IStateMachine>().To<StateMachine>().AsSingle();
+#if DEBUG_STATE_MACHINE
+            Container.Bind<IProjectStateMachine>().To<StateMachine>().AsSingle().WithArguments(true);
+#else
+            Container.Bind<IProjectStateMachine>().To<StateMachine>().AsSingle();
+#endif
             Container.Bind<StateFactory>().AsSingle();
         }
     }

@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using ClientCode.Data.Progress.Map;
 using ClientCode.Services.Logger.Base;
 using ClientCode.Services.Progress.Actors;
@@ -6,33 +5,35 @@ using ClientCode.Services.Progress.Base;
 using ClientCode.UI.Factory;
 using ClientCode.UI.Windows;
 using ClientCode.UI.Windows.Base;
+using Cysharp.Threading.Tasks;
 
-namespace ClientCode.Services.Progress.Map.Save
+namespace ClientCode.Services.Progress.Map
 {
-    public class MapKeySaver : IProgressWriter<MapProgressData>
+    public class MapKeyFactory : IProgressReader<MapProgressData>
     {
-        private readonly IWindowsFactory _windowsFactory;
         private readonly IMapSaveLoader _saveLoader;
         private readonly ILogReceiver _logReceiver;
+        private readonly IWindowsFactory _windowsFactory;
+        private MapProgressData _progress;
 
-        public MapKeySaver(IWindowsFactory windowsFactory, IMapSaveLoader saveLoader, ILogReceiver logReceiver)
+        public MapKeyFactory(IMapSaveLoader saveLoader, ILogReceiver logReceiver, IWindowsFactory windowsFactory)
         {
-            _windowsFactory = windowsFactory;
             _saveLoader = saveLoader;
             _logReceiver = logReceiver;
+            _windowsFactory = windowsFactory;
         }
 
-        public async Task OnSave(MapProgressData progress)
+        public async UniTask<(bool, string)> Create()
         {
-            var mapKey = progress.Key;
+            if (string.IsNullOrEmpty(_progress.Key))
+                return await GetNewKey();
 
-            if (string.IsNullOrEmpty(mapKey))
-                mapKey = await GetNewKey();
-
-            progress.Key = mapKey;
+            return (true, _progress.Key);
         }
 
-        private async Task<string> GetNewKey()
+        public void OnLoad(MapProgressData progress) => _progress = progress;
+
+        private async UniTask<(bool, string)> GetNewKey()
         {
             var window = (IWritingWindow)_windowsFactory.Get(WindowType.Writing);
             window.Open();
@@ -47,9 +48,8 @@ namespace ClientCode.Services.Progress.Map.Save
             else if (validatorResult == SaveLoaderResultType.Error)
                 _logReceiver.Log(new LogData(LogType.Error, "Not valid map key: unknown reason!"));
 
-            window.Clear();
             window.Close();
-            return key;
+            return (validatorResult == SaveLoaderResultType.Normal, key);
         }
     }
 }

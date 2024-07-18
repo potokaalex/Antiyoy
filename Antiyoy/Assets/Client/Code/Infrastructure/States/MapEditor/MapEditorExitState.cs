@@ -7,9 +7,9 @@ namespace ClientCode.Infrastructure.States.MapEditor
     public class MapEditorExitState : IState
     {
         private readonly EcsFactory _ecsFactory;
-        private readonly IStateMachine _stateMachine;
+        private readonly IProjectStateMachine _stateMachine;
 
-        public MapEditorExitState(EcsFactory ecsFactory, IStateMachine stateMachine)
+        public MapEditorExitState(EcsFactory ecsFactory, IProjectStateMachine stateMachine)
         {
             _ecsFactory = ecsFactory;
             _stateMachine = stateMachine;

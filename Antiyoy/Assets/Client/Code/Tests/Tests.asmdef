@@ -8,7 +8,8 @@
         "BoundfoxStudios.FluentAssertions",
         "Code",
         "Leopotam.EcsLite",
-        "EcsLiteEasyEvents"
+        "EcsLiteEasyEvents",
+        "UniTask"
     ],
     "includePlatforms": [
         "Editor"

@@ -6,7 +6,7 @@ using ClientCode.Gameplay.Tile;
 using ClientCode.Infrastructure.States.MapEditor;
 using ClientCode.Services.Progress.Actors;
 using ClientCode.Services.Progress.Map;
-using ClientCode.Services.Progress.Map.Save;
+using ClientCode.Services.Startup;
 using ClientCode.Services.StateMachine;
 using ClientCode.UI.Buttons.Base;
 using ClientCode.UI.Factory;
@@ -30,7 +30,7 @@ namespace ClientCode.Infrastructure.Installers
             BindProgress();
 
             Container.Bind<CameraController>().AsSingle().WithArguments(_sceneData.Camera);
-            Container.BindInterfacesTo<StateStartuper<MapEditorEnterState>>().AsSingle();
+            Container.BindInterfacesTo<DelayStartupper<MapEditorEnterState>>().AsSingle();
         }
 
         private void BindProgress()
@@ -39,7 +39,7 @@ namespace ClientCode.Infrastructure.Installers
             Container.Bind<MapDataFactory>().AsSingle();
             Container.BindInterfacesAndSelfTo<MapLoader>().AsSingle();
             Container.BindInterfacesAndSelfTo<MapSaver>().AsSingle();
-            Container.BindInterfacesAndSelfTo<MapKeySaver>().AsSingle();
+            Container.BindInterfacesAndSelfTo<MapKeyFactory>().AsSingle();
         }
 
         private void BindUI()

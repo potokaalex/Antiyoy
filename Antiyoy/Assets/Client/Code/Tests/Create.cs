@@ -1,10 +1,8 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using ClientCode.Gameplay.Cell;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Region.Components;
 using ClientCode.Services.StaticDataProvider;
-using ClientCode.UI.Windows;
 using Leopotam.EcsLite;
 using NSubstitute;
 using SevenBoldPencil.EasyEvents;
@@ -54,13 +52,6 @@ namespace Tests
             var regionEntity = world.NewEntity();
             world.GetPool<RegionComponent>().Add(regionEntity).CellEntities = new List<int>();
             return regionEntity;
-        }
-
-        public static IWritingWindow WritingWindow(string getStringValue = "1")
-        {
-            var writingWindow = Substitute.For<IWritingWindow>();
-            writingWindow.GetString().Returns(Task.FromResult(getStringValue));
-            return writingWindow;
         }
 
         public static IStaticDataProvider StaticDataProvider()

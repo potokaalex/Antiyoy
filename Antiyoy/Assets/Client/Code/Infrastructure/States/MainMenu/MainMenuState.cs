@@ -3,13 +3,15 @@ using ClientCode.Services.StateMachine;
 
 namespace ClientCode.Infrastructure.States.MainMenu
 {
-    public class MainMenuEnterState : IState
+    public class MainMenuState : IState
     {
         private readonly IProjectSaveLoader _saveLoader;
 
-        public MainMenuEnterState(IProjectSaveLoader saveLoader) => _saveLoader = saveLoader;
+        public MainMenuState(IProjectSaveLoader saveLoader) => _saveLoader = saveLoader;
 
-        public void Enter() => _saveLoader.Load();
+        public void Enter()
+        {
+        }
 
         public void Exit() => _saveLoader.Save();
     }

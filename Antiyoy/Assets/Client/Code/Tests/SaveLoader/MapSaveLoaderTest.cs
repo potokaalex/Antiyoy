@@ -10,6 +10,7 @@ namespace Tests.SaveLoader
 {
     public class MapSaveLoaderTest : IProgressReader<MapProgressData>
     {
+        private const string TestMapKey = "Test";
         private MapProgressData _map;
         private MapSaveLoader _saveLoader;
 
@@ -21,11 +22,11 @@ namespace Tests.SaveLoader
         }
 
         [Test]
-        public async Task WhenLoadMap_AndMapKeyIsNull_ThenMapShouldBeEmpty()
+        public void WhenLoadMap_AndMapKeyIsNull_ThenMapShouldBeEmpty()
         {
             // Arrange.
             // Act.
-            await _saveLoader.Load(null);
+            _saveLoader.Load(null);
 
             // Assert.
             var isMapEmpty = _map.Height == 0 && _map.Width == 0;
@@ -33,11 +34,11 @@ namespace Tests.SaveLoader
         }
 
         [Test]
-        public async Task WhenLoadMap_AndMapKeyIsNull_ThenResultShouldBeNormal()
+        public void WhenLoadMap_AndMapKeyIsNull_ThenResultShouldBeNormal()
         {
             // Arrange.
             // Act.
-            var result = await _saveLoader.Load(null);
+            var result = _saveLoader.Load(null);
 
             // Assert.
             result.Should().Be(SaveLoaderResultType.Normal);
@@ -47,13 +48,12 @@ namespace Tests.SaveLoader
         public async Task WhenLoadMap_AndMapSavedWithKeyTestAndHasWidth1_ThenMapWidthShouldBe1()
         {
             // Arrange.
-            await _saveLoader.Load(null);
-            _map.Key = "Test";
+            _saveLoader.Load(null);
             _map.Width = 1;
-            await _saveLoader.Save();
+            await _saveLoader.Save(TestMapKey);
 
             // Act.
-            await _saveLoader.Load(_map.Key);
+            _saveLoader.Load(TestMapKey);
 
             // Assert.
             _map.Width.Should().Be(1);
@@ -63,22 +63,22 @@ namespace Tests.SaveLoader
         public async Task WhenSaveMap_AndMapLoaded_ThenResultShouldBeNormal()
         {
             //Arrange.
-            await _saveLoader.Load(null);
+            _saveLoader.Load(TestMapKey, new MapProgressData());
 
             //Act.
-            var result = await _saveLoader.Save();
+            var result = await _saveLoader.Save(TestMapKey);
 
             //Assert.
             result.Should().Be(SaveLoaderResultType.Normal);
         }
 
         [TearDown]
-        public void TearDown() => _saveLoader.UnRegisterActor(this);
-
-        public Task OnLoad(MapProgressData progress)
+        public void TearDown()
         {
-            _map = progress;
-            return Task.CompletedTask;
+            _saveLoader.UnRegisterActor(this);
+            _saveLoader.Remove(TestMapKey);
         }
+
+        public void OnLoad(MapProgressData progress) => _map = progress;
     }
 }

@@ -10,20 +10,26 @@ namespace ClientCode.Infrastructure.States.MapEditor
         private readonly IStateMachine _stateMachine;
         private readonly IMapSaveLoader _saveLoader;
         private readonly ILogReceiver _logReceiver;
+        private readonly MapKeyFactory _mapKeyFactory;
 
-        public MapEditorSaveState(IStateMachine stateMachine, IMapSaveLoader saveLoader, ILogReceiver logReceiver)
+        public MapEditorSaveState(IStateMachine stateMachine, IMapSaveLoader saveLoader, ILogReceiver logReceiver, MapKeyFactory mapKeyFactory)
         {
             _stateMachine = stateMachine;
             _saveLoader = saveLoader;
             _logReceiver = logReceiver;
+            _mapKeyFactory = mapKeyFactory;
         }
 
         public async void Enter()
         {
-            var result = await _saveLoader.Save();
+            var mapKey = await _mapKeyFactory.Create();
+            if (mapKey.Item1)
+            {
+                var result = await _saveLoader.Save(mapKey.Item2);
 
-            if (result == SaveLoaderResultType.Error)
-                _logReceiver.Log(new LogData(LogType.Error, "Impossible to save: unknown reason!"));
+                if (result == SaveLoaderResultType.Error)
+                    _logReceiver.Log(new LogData(LogType.Error, "Impossible to save: unknown reason!"));
+            }
 
             _stateMachine.SwitchTo<MapEditorUpdateState>();
         }

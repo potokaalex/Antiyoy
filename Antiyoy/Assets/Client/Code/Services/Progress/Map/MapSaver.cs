@@ -1,14 +1,14 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using ClientCode.Data.Progress.Map;
 using ClientCode.Data.Saved;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Region.Components;
 using ClientCode.Gameplay.Tile.Components;
 using ClientCode.Services.Progress.Actors;
+using Cysharp.Threading.Tasks;
 using Leopotam.EcsLite;
 
-namespace ClientCode.Services.Progress.Map.Save
+namespace ClientCode.Services.Progress.Map
 {
     public class MapSaver : IProgressWriter<MapProgressData>
     {
@@ -30,11 +30,11 @@ namespace ClientCode.Services.Progress.Map.Save
             _regionFiler = world.Filter<RegionComponent>().End();
         }
 
-        public Task OnSave(MapProgressData progress)
+        public UniTask OnSave(MapProgressData progress)
         {
             SaveCells(progress);
             SaveRegions(progress);
-            return Task.CompletedTask;
+            return UniTask.CompletedTask;
         }
 
         private void SaveCells(MapProgressData data)

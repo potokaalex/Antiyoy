@@ -2,7 +2,6 @@ using ClientCode.Gameplay.Cell;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Tile;
 using ClientCode.Services.Progress.Map;
-using ClientCode.Services.Progress.Map.Save;
 using ClientCode.Services.StateMachine;
 
 namespace ClientCode.Infrastructure.States.MapEditor
@@ -12,7 +11,6 @@ namespace ClientCode.Infrastructure.States.MapEditor
         private readonly CellFactory _cellFactory;
         private readonly EcsFactory _ecsFactory;
         private readonly IEcsProvider _ecsProvider;
-        private readonly IMapSaveLoader _saveLoader;
         private readonly IStateMachine _stateMachine;
         private readonly TileFactory _tileFactory;
         private readonly MapSaver _mapSaver;
@@ -20,14 +18,13 @@ namespace ClientCode.Infrastructure.States.MapEditor
         private readonly MapDataFactory _mapDataFactory;
 
         public MapEditorEnterState(CellFactory cellFactory, EcsFactory ecsFactory, TileFactory tileFactory, IStateMachine stateMachine,
-            IEcsProvider ecsProvider, IMapSaveLoader saveLoader, MapSaver mapSaver, MapLoader mapLoader, MapDataFactory mapDataFactory)
+            IEcsProvider ecsProvider, MapSaver mapSaver, MapLoader mapLoader, MapDataFactory mapDataFactory)
         {
             _cellFactory = cellFactory;
             _ecsFactory = ecsFactory;
             _tileFactory = tileFactory;
             _stateMachine = stateMachine;
             _ecsProvider = ecsProvider;
-            _saveLoader = saveLoader;
             _mapSaver = mapSaver;
             _mapLoader = mapLoader;
             _mapDataFactory = mapDataFactory;
@@ -39,19 +36,12 @@ namespace ClientCode.Infrastructure.States.MapEditor
             _cellFactory.Initialize();
             _tileFactory.Initialize();
 
-            Load();
+            _mapDataFactory.Initialize();
+            _mapSaver.Initialize();
+            _mapLoader.Initialize();
 
             _ecsProvider.GetSystems().Init();
             _stateMachine.SwitchTo<MapEditorUpdateState>();
-        }
-
-        private void Load()
-        {
-            _mapSaver.Initialize();
-            _mapLoader.Initialize();
-            _mapDataFactory.Initialize();
-
-            _saveLoader.Load(_saveLoader.CurrentKey);
         }
     }
 }

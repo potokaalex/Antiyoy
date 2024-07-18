@@ -1,7 +1,10 @@
-﻿namespace ClientCode.Services.StateMachine
+﻿using System;
+
+namespace ClientCode.Services.StateMachine
 {
     public interface IStateMachine
     {
-        public void SwitchTo<T>() where T : IState;
+        void SwitchTo<T>() where T : IState;
+        void SwitchTo(Type stateType);
     }
 }

@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using ClientCode.Data.Progress.Map;
 using ClientCode.Gameplay.Cell;
 using ClientCode.Gameplay.Ecs;
@@ -19,6 +18,7 @@ namespace ClientCode.Services.Progress.Map
         private EventsBus _eventBus;
         private EcsPool<RegionComponent> _regionPool;
         private EcsPool<RegionLink> _regionLinkPool;
+        private MapProgressData _progress;
 
         public MapLoader(CellFactory cellFactory, IEcsProvider ecsProvider)
         {
@@ -32,14 +32,12 @@ namespace ClientCode.Services.Progress.Map
             _eventBus = _ecsProvider.GetEventsBus();
             _regionPool = _world.GetPool<RegionComponent>();
             _regionLinkPool = _world.GetPool<RegionLink>();
+            
+            var cells = LoadCells(_progress);
+            LoadRegions(_progress, cells);
         }
 
-        public Task OnLoad(MapProgressData progress)
-        {
-            var cells = LoadCells(progress);
-            LoadRegions(progress, cells);
-            return Task.CompletedTask;
-        }
+        public void OnLoad(MapProgressData progress) => _progress = progress;
 
         private CellObject[] LoadCells(MapProgressData data)
         {

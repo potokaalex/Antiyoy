@@ -10,10 +10,10 @@ namespace ClientCode.Infrastructure.States.Project
     {
         private readonly ProjectCanvasController _projectCanvasController;
         private readonly UIFactory _uiFactory;
-        private readonly IStateMachine _stateMachine;
+        private readonly IProjectStateMachine _stateMachine;
         private readonly IUpdater _updater;
 
-        public ProjectEnterSate(ProjectCanvasController projectCanvasController, UIFactory uiFactory, IStateMachine stateMachine,
+        public ProjectEnterSate(ProjectCanvasController projectCanvasController, UIFactory uiFactory, IProjectStateMachine stateMachine,
             IUpdater updater)
         {
             _projectCanvasController = projectCanvasController;

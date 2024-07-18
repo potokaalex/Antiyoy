@@ -1,11 +1,11 @@
-using System.Threading.Tasks;
 using ClientCode.UI.Windows.Base;
+using Cysharp.Threading.Tasks;
 
 namespace ClientCode.UI.Windows
 {
     public interface IWritingWindow : IWindow
     {
-        Task<string> GetString();
+        UniTask<string> GetString();
         void Clear();
     }
 }

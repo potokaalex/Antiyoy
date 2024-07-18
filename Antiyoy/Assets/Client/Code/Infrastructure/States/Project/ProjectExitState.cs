@@ -16,10 +16,10 @@ namespace ClientCode.Infrastructure.States.Project
             _updater = updater;
         }
 
-        public async void Enter()
+        public void Enter()
         {
             _updater.ClearAllListeners();
-            await _progressDataSaveLoader.Save();
+            _progressDataSaveLoader.Save();
             Quit();
         }
 

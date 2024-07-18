@@ -14,10 +14,10 @@ namespace ClientCode.UI.Presenters.MainMenu
         private readonly IMapSaveLoader _saveLoader;
         private readonly ILogReceiver _logReceiver;
         private readonly MainMenuModel _model;
-        private readonly IStateMachine _stateMachine;
+        private readonly IProjectStateMachine _stateMachine;
 
         public MainMenuMapSelectButtonsPresenter(IMapSaveLoader saveLoader, ILogReceiver logReceiver, MainMenuModel model,
-            IStateMachine stateMachine)
+            IProjectStateMachine stateMachine)
         {
             _saveLoader = saveLoader;
             _logReceiver = logReceiver;
@@ -40,7 +40,7 @@ namespace ClientCode.UI.Presenters.MainMenu
                 _logReceiver.Log(new LogData(LogType.Error, "Map select error: unknown reason!"));
             else
             {
-                _model.MapEditorPreload.SelectedMapKey = mapKey;
+                _model.MapEditorPreload.MapKey = mapKey;
                 _stateMachine.SwitchTo<MapEditorLoadState>();
             }
         }

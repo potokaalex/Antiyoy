@@ -39,8 +39,8 @@ namespace Tests.SaveLoader
             systems.Init();
             
             //Act.
-            mapLoader.Initialize();
             mapLoader.OnLoad(map);
+            mapLoader.Initialize();
             systems.Run();
             
             //Assert.

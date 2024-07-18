@@ -16,14 +16,14 @@ namespace ClientCode.UI.Presenters.MainMenu
 {
     public class MainMenuButtonsPresenter : IButtonsHandler
     {
-        private readonly IStateMachine _stateMachine;
+        private readonly IProjectStateMachine _stateMachine;
         private readonly IMapSaveLoader _saveLoader;
         private readonly ILogReceiver _logReceiver;
         private readonly IStaticDataProvider _staticDataProvider;
         private readonly IWindowsFactory _windowsFactory;
         private readonly MainMenuModel _model;
 
-        public MainMenuButtonsPresenter(IStateMachine stateMachine, IMapSaveLoader saveLoader, ILogReceiver logReceiver,
+        public MainMenuButtonsPresenter(IProjectStateMachine stateMachine, IMapSaveLoader saveLoader, ILogReceiver logReceiver,
             IStaticDataProvider staticDataProvider, IWindowsFactory windowsFactory, MainMenuModel model)
         {
             _stateMachine = stateMachine;
@@ -71,7 +71,7 @@ namespace ClientCode.UI.Presenters.MainMenu
                     _logReceiver.Log(new LogData(LogType.Error, "Map create error: Reached the maximum maps cout, please remove one!"));
                 else
                 {
-                    _model.MapEditorPreload.SelectedMapKey = null;
+                    _model.MapEditorPreload.MapKey = null;
                     _model.MapEditorPreload.MapHeight = 10;
                     _model.MapEditorPreload.MapWidth = 10;
                     _stateMachine.SwitchTo<MapEditorLoadState>();

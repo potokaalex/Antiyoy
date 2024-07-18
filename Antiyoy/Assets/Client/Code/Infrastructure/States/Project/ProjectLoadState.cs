@@ -8,10 +8,10 @@ namespace ClientCode.Infrastructure.States.Project
     public class ProjectLoadState : IState
     {
         private readonly IProjectSaveLoader _saveLoader;
-        private readonly IStateMachine _stateMachine;
+        private readonly IProjectStateMachine _stateMachine;
         private readonly IStaticDataProvider _staticDataProvider;
 
-        public ProjectLoadState(IStaticDataProvider staticDataProvider, IProjectSaveLoader saveLoader, IStateMachine stateMachine)
+        public ProjectLoadState(IStaticDataProvider staticDataProvider, IProjectSaveLoader saveLoader, IProjectStateMachine stateMachine)
         {
             _staticDataProvider = staticDataProvider;
             _saveLoader = saveLoader;
@@ -20,8 +20,8 @@ namespace ClientCode.Infrastructure.States.Project
 
         public void Enter()
         {
-            _saveLoader.Load();
-            InitializeStaticData(_saveLoader.Current);
+            _saveLoader.Load(out var progress);
+            InitializeStaticData(progress);
             _stateMachine.SwitchTo<ProjectEnterSate>();
         }
 

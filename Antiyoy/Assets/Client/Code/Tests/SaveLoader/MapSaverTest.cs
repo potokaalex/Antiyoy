@@ -3,7 +3,6 @@ using ClientCode.Data.Progress.Map;
 using ClientCode.Gameplay.Region.Components;
 using ClientCode.Gameplay.Tile.Components;
 using ClientCode.Services.Progress.Map;
-using ClientCode.Services.Progress.Map.Save;
 using FluentAssertions;
 using Leopotam.EcsLite;
 using NUnit.Framework;
