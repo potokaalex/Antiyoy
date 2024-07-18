@@ -1,16 +1,14 @@
 using ClientCode.Services.StateMachine;
-using UnityEngine;
 using Zenject;
 
 namespace ClientCode.Services.Startup
 {
-    public class DelayStartupper : MonoBehaviour
+    public class DelayStartupper<T> : IInitializable where T : IState
     {
-        private IStateMachine _stateMachine;
+        private readonly IInstantiator _instantiator;
 
-        [Inject]
-        public void Construct(IStateMachine stateMachine) => _stateMachine = stateMachine;
+        public DelayStartupper(IInstantiator instantiator) => _instantiator = instantiator;
 
-        public void Startup<T>() where T : IState => _stateMachine.SwitchTo<T>();
+        public void Initialize() => _instantiator.InstantiateComponentOnNewGameObject<Startupper>(new[] { typeof(T) });
     }
 }
