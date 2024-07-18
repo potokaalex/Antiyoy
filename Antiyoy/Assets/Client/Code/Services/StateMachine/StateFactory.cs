@@ -1,18 +1,14 @@
-﻿using Zenject;
+﻿using System;
+using Zenject;
 
 namespace ClientCode.Services.StateMachine
 {
     public class StateFactory
     {
-        private readonly DiContainer _container;
+        private readonly IInstantiator _container;
 
-        public StateFactory(DiContainer container) => _container = container;
-
-        public T Create<T>() where T : IState
-        {
-            var state = _container.Instantiate<T>();
-            _container.Inject(state);
-            return state;
-        }
+        public StateFactory(IInstantiator container) => _container = container;
+        
+        public IState Create(Type stateType) => (IState)_container.Instantiate(stateType);
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace ClientCode.Services.StateMachine
+﻿using System;
+
+namespace ClientCode.Services.StateMachine
 {
     public class StateMachine : IStateMachine
     {
@@ -7,10 +9,12 @@
 
         public StateMachine(StateFactory factory) => _factory = factory;
 
-        public void SwitchTo<T>() where T : IState
+        public void SwitchTo<T>() where T : IState => SwitchTo(typeof(T));
+
+        private void SwitchTo(Type type)
         {
             _currentState?.Exit();
-            _currentState = _factory.Create<T>();
+            _currentState = _factory.Create(type);
             _currentState.Enter();
         }
     }
