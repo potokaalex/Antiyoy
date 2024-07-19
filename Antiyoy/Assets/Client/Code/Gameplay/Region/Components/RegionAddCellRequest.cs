@@ -1,3 +1,4 @@
+using ClientCode.UI.Controllers;
 using SevenBoldPencil.EasyEvents;
 
 namespace ClientCode.Gameplay.Region.Components
@@ -5,5 +6,6 @@ namespace ClientCode.Gameplay.Region.Components
     public struct RegionAddCellRequest : IEventReplicant
     {
         public int CellEntity;
+        public RegionType Type;
     }
 }

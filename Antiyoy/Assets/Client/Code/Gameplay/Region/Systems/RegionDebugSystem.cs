@@ -26,6 +26,8 @@ namespace ClientCode.Gameplay.Region.Systems
             _cellPool = world.GetPool<CellComponent>();
             _linkPool = world.GetPool<RegionLink>();
             _pool = world.GetPool<RegionComponent>();
+            
+            DrawDebugText();
         }
 
         public void Run(IEcsSystems systems)
@@ -33,14 +35,20 @@ namespace ClientCode.Gameplay.Region.Systems
             if (!_eventsBus.HasEvents<RegionRemoveCellRequest>() && !_eventsBus.HasEvents<RegionAddCellRequest>())
                 return;
 
+            DrawDebugText();
+        }
+
+        private void DrawDebugText()
+        {
             foreach (var cellEntity in _cellFilter)
             {
                 if (_linkPool.Has(cellEntity))
                 {
                     var link = _linkPool.Get(cellEntity);
-
-                    _cellPool.Get(cellEntity).Object.DebugText.text =
-                        $"{link.RegionEntity}\n{_pool.Get(link.RegionEntity).CellEntities.Count}".ToString();
+                    var region = _pool.Get(link.RegionEntity);
+                    var cell = _cellPool.Get(cellEntity).Object;
+                    
+                    cell.DebugText.text = $"{link.RegionEntity}\n{region.CellEntities.Count}".ToString();
                 }
                 else
                     _cellPool.Get(cellEntity).Object.DebugText.text = string.Empty;

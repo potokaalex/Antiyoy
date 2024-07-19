@@ -3,6 +3,7 @@ using ClientCode.Gameplay.Cell;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Region.Components;
 using ClientCode.Gameplay.Region.Tools;
+using ClientCode.UI.Controllers;
 using Leopotam.EcsLite;
 
 namespace ClientCode.Gameplay.Region.Systems
@@ -39,12 +40,12 @@ namespace ClientCode.Gameplay.Region.Systems
 
         private void Analyze(RegionAddCellRequest request)
         {
-            FillNeighboursRegionsBuffer(request.CellEntity);
+            FillNeighboursRegionsBuffer(request.CellEntity, request.Type);
 
             int regionEntity;
 
             if (_neighbourRegions.Count == 0)
-                regionEntity = RegionFactoryTool.Create(_world, _pool);
+                regionEntity = RegionFactoryTool.Create(_world, _pool, request.Type);
             else if (_neighbourRegions.Count == 1)
                 regionEntity = _neighbourRegions[0];
             else
@@ -54,7 +55,7 @@ namespace ClientCode.Gameplay.Region.Systems
         }
 
         //заполняет _regionEntities сущностями уникальных регионов которые располагаются по соседству.
-        private void FillNeighboursRegionsBuffer(int regionEntity)
+        private void FillNeighboursRegionsBuffer(int regionEntity, RegionType regionType)
         {
             var neighbours = _cellPool.Get(regionEntity).NeighbourCellEntities;
             _neighbourRegions.Clear();
@@ -65,6 +66,9 @@ namespace ClientCode.Gameplay.Region.Systems
                     continue;
 
                 var entity = _linkPool.Get(neighbour).RegionEntity;
+
+                if (_pool.Get(entity).Type != regionType)
+                    continue;
 
                 if (!_neighbourRegions.Contains(entity))
                     _neighbourRegions.Add(entity);

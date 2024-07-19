@@ -51,7 +51,7 @@ namespace ClientCode.Gameplay.Region.Systems
             var regionParts = RegionPartsTool.Get(baseRegion.CellEntities, _cellPool);
 
             if (regionParts[0].Cells.Count != baseRegion.CellEntities.Count)
-                RegionDivideTool.Divide(regionParts, baseRegion.CellEntities, _world, _pool, _linkPool);
+                RegionDivideTool.Divide(regionParts, baseRegion.CellEntities, _world, _pool, _linkPool, baseRegion.Type);
 
             RegionPartsTool.Release(regionParts);
         }
