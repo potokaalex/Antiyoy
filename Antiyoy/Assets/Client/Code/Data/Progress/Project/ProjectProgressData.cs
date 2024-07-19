@@ -1,6 +1,4 @@
 using System;
-using ClientCode.Data.Progress.Map;
-using ClientCode.Data.Scene;
 using ClientCode.Services.Progress.Base;
 
 namespace ClientCode.Data.Progress.Project

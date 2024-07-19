@@ -17,7 +17,7 @@ namespace ClientCode.Services.StateMachine
             _isProject = isProject;
         }
 #endif
-        
+
         public void SwitchTo<T>() where T : IState => SwitchTo(typeof(T));
 
         public void SwitchTo(Type type)
@@ -29,7 +29,7 @@ namespace ClientCode.Services.StateMachine
 
             _currentState.Enter();
         }
-        
+
         private void DebugOnExit()
         {
 #if DEBUG_STATE_MACHINE
@@ -38,7 +38,7 @@ namespace ClientCode.Services.StateMachine
                 UnityEngine.Debug.Log($"Exit: {_currentState.GetType().Name}{addition}");
 #endif
         }
-        
+
         private void DebugOnEnter()
         {
 #if DEBUG_STATE_MACHINE

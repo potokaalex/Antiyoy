@@ -1,4 +1,3 @@
-using ClientCode.Gameplay;
 using ClientCode.Gameplay.Cell;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -24,7 +23,7 @@ namespace ClientCode.UI.Controllers
             var ray = _camera.GetRayFromCurrentMousePosition();
             var hit = Physics2D.Raycast(ray.origin, ray.direction);
 
-            if (hit.transform && hit.transform.TryGetComponent<CellObject>(out var cell)) 
+            if (hit.transform && hit.transform.TryGetComponent<CellObject>(out var cell))
                 OnCellTouch(cell);
         }
 

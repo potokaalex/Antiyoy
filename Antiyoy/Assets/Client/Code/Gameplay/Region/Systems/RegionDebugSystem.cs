@@ -26,7 +26,7 @@ namespace ClientCode.Gameplay.Region.Systems
             _cellPool = world.GetPool<CellComponent>();
             _linkPool = world.GetPool<RegionLink>();
             _pool = world.GetPool<RegionComponent>();
-            
+
             DrawDebugText();
         }
 
@@ -47,7 +47,7 @@ namespace ClientCode.Gameplay.Region.Systems
                     var link = _linkPool.Get(cellEntity);
                     var region = _pool.Get(link.RegionEntity);
                     var cell = _cellPool.Get(cellEntity).Object;
-                    
+
                     cell.DebugText.text = $"{link.RegionEntity}\n{region.CellEntities.Count}".ToString();
                 }
                 else

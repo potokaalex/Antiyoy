@@ -8,7 +8,7 @@ namespace ClientCode.Services.StateMachine
         private readonly IInstantiator _container;
 
         public StateFactory(IInstantiator container) => _container = container;
-        
+
         public IState Create(Type stateType) => (IState)_container.Instantiate(stateType);
     }
 }

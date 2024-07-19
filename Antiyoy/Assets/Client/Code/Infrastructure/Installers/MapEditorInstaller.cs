@@ -1,13 +1,10 @@
 using ClientCode.Data.Scene;
-using ClientCode.Gameplay;
 using ClientCode.Gameplay.Cell;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Region;
 using ClientCode.Gameplay.Tile;
 using ClientCode.Infrastructure.States.MapEditor;
 using ClientCode.Services.Progress.Actors;
-using ClientCode.Services.Progress.Map;
-using ClientCode.Services.Progress.Map.Actors;
 using ClientCode.Services.Progress.Map.Factory;
 using ClientCode.Services.Startup;
 using ClientCode.Services.StateMachine;
@@ -41,9 +38,6 @@ namespace ClientCode.Infrastructure.Installers
         private void BindProgress()
         {
             Container.BindInterfacesTo<ProgressActorsRegister>().AsSingle();
-            Container.Bind<MapDataFactory>().AsSingle();
-            Container.BindInterfacesAndSelfTo<MapLoader>().AsSingle();
-            Container.BindInterfacesAndSelfTo<MapSaver>().AsSingle();
             Container.BindInterfacesAndSelfTo<MapKeyFactory>().AsSingle();
         }
 
@@ -72,9 +66,9 @@ namespace ClientCode.Infrastructure.Installers
         private void BindFactories()
         {
             Container.Bind<EcsFactory>().AsSingle();
-            Container.Bind<CellFactory>().AsSingle();
-            Container.Bind<TileFactory>().AsSingle();
-            Container.Bind<RegionFactory>().AsSingle();
+            Container.BindInterfacesAndSelfTo<CellFactory>().AsSingle();
+            Container.BindInterfacesAndSelfTo<TileFactory>().AsSingle();
+            Container.BindInterfacesAndSelfTo<RegionFactory>().AsSingle();
         }
     }
 }

@@ -32,10 +32,10 @@ namespace ClientCode.Infrastructure.States.MapEditor
         public async void Enter()
         {
             _projectSaveLoader.Load(out var progress);
-            
+
             var scenesConfig = _staticDataProvider.Configs.Scene;
             await _sceneLoader.LoadSceneAsync(scenesConfig.MapEditorSceneName);
-            
+
             LoadMap(progress.MapEditorPreload);
 
             _sceneLoader.FindInScene<IStartuper>(scenesConfig.MapEditorSceneName).Startup();

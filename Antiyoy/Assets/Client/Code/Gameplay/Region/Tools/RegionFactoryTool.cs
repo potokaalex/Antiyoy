@@ -1,5 +1,4 @@
 using ClientCode.Gameplay.Region.Components;
-using ClientCode.UI.Controllers;
 using ClientCode.Utilities;
 using Leopotam.EcsLite;
 

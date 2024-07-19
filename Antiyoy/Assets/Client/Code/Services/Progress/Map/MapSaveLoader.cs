@@ -27,7 +27,7 @@ namespace ClientCode.Services.Progress.Map
             }
 
             _current.Key = key;
-            
+
             foreach (var actor in _actors)
                 if (actor is IProgressReader<MapProgressData> reader)
                     reader.OnLoad(_current);
@@ -45,7 +45,7 @@ namespace ClientCode.Services.Progress.Map
                 key = _current.Key;
             else
                 _current.Key = key;
-            
+
             SaveLoaderDebugger.DebugSaveMap(key);
 
             var data = new MapSavedData

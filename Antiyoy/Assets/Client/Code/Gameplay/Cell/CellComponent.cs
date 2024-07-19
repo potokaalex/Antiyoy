@@ -8,5 +8,6 @@ namespace ClientCode.Gameplay.Cell
         public List<int> NeighbourCellEntities;
         public CellObject Object;
         public HexCoordinates Hex;
+        public int Id;
     }
 }

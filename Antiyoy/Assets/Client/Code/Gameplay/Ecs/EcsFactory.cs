@@ -25,7 +25,7 @@ namespace ClientCode.Gameplay.Ecs
             _provider = provider;
         }
 
-        public void Create()
+        public void Initialize()
         {
             _world = new EcsWorld();
             _eventBus = new EventsBus();

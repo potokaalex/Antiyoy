@@ -70,7 +70,7 @@ namespace Tests
             cellFactory.Initialize();
             return cellFactory;
         }
-        
+
         private static CellObject CellObject()
         {
             var cellObject = new GameObject().AddComponent<CellObject>();

@@ -16,7 +16,7 @@ namespace ClientCode.Services.Startup
             _stateMachine = stateMachine;
             _stateType = stateType;
         }
-        
+
         public void Startup() => _stateMachine.SwitchTo(_stateType);
     }
 }

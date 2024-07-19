@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using ClientCode.Gameplay.Region.Components;
 using ClientCode.Gameplay.Region.Systems;
-using ClientCode.UI.Controllers;
 using Leopotam.EcsLite;
 
 namespace ClientCode.Gameplay.Region.Tools

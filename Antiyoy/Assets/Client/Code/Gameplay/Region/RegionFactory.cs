@@ -1,15 +1,17 @@
-using System.Collections.Generic;
-using ClientCode.Data.Saved;
+using ClientCode.Data.Progress.Map;
 using ClientCode.Gameplay.Cell;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Region.Components;
+using ClientCode.Services.Progress.Actors;
+using ClientCode.Services.Progress.Map.Factory;
 using ClientCode.Utilities.Extensions;
+using Cysharp.Threading.Tasks;
 using Leopotam.EcsLite;
 using SevenBoldPencil.EasyEvents;
 
 namespace ClientCode.Gameplay.Region
 {
-    public class RegionFactory
+    public class RegionFactory : IProgressReader<MapProgressData>, IProgressWriter<MapProgressData>
     {
         private readonly IEcsProvider _ecsProvider;
         private EventsBus _eventsBus;
@@ -19,6 +21,10 @@ namespace ClientCode.Gameplay.Region
         private EcsFilter _removeRequestFilter;
         private EcsPool<RegionLink> _linkPool;
         private EcsWorld _world;
+        private MapProgressData _progress;
+        private EcsFilter _filter;
+        private EcsPool<RegionComponent> _pool;
+        private EcsPool<CellComponent> _cellPool;
 
         public RegionFactory(IEcsProvider ecsProvider) => _ecsProvider = ecsProvider;
 
@@ -29,12 +35,14 @@ namespace ClientCode.Gameplay.Region
             _addRequestFilter = _eventsBus.GetEventBodies(out _addRequestPool);
             _removeRequestFilter = _eventsBus.GetEventBodies(out _removeRequestPool);
             _linkPool = _world.GetPool<RegionLink>();
-            _world.GetPool<RegionComponent>();
+            _pool = _world.GetPool<RegionComponent>();
+            _filter = _world.Filter<RegionComponent>().End();
+            _cellPool = _world.GetPool<CellComponent>();
         }
 
-        public void Create(List<RegionSavedData> regions, CellObject[] cells)
+        public void Create(CellObject[] cells)
         {
-            foreach (var region in regions)
+            foreach (var region in _progress.Regions)
             foreach (var cellId in region.CellsId)
                 Create(cells[cellId].Entity, region.Type);
         }
@@ -61,6 +69,17 @@ namespace ClientCode.Gameplay.Region
 
             ref var regionRequest = ref _eventsBus.NewEvent<RegionRemoveCellRequest>();
             regionRequest.CellEntity = cell;
+        }
+
+        public void OnLoad(MapProgressData progress) => _progress = progress;
+
+        public UniTask OnSave(MapProgressData progress)
+        {
+            progress.Regions.Clear();
+
+            foreach (var entity in _filter)
+                progress.Regions.Add(ProgressDataFactory.CreateRegionData(entity, _pool, _cellPool));
+            return UniTask.CompletedTask;
         }
     }
 }

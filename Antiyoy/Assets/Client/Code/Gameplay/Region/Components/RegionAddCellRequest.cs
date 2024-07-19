@@ -1,4 +1,3 @@
-using ClientCode.UI.Controllers;
 using SevenBoldPencil.EasyEvents;
 
 namespace ClientCode.Gameplay.Region.Components

@@ -1,4 +1,3 @@
-using ClientCode.Gameplay;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Services.StateMachine;
 using ClientCode.Services.Updater;

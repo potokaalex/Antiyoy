@@ -3,7 +3,6 @@ using ClientCode.Gameplay.Cell;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Region.Components;
 using ClientCode.Gameplay.Region.Tools;
-using ClientCode.UI.Controllers;
 using Leopotam.EcsLite;
 
 namespace ClientCode.Gameplay.Region.Systems

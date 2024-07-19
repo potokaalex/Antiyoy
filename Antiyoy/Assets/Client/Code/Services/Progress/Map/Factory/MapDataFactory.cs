@@ -1,31 +1,16 @@
 using System.Collections.Generic;
 using ClientCode.Data.Saved;
 using ClientCode.Gameplay.Cell;
-using ClientCode.Gameplay.Ecs;
-using ClientCode.Gameplay.Hex;
 using ClientCode.Gameplay.Region.Components;
 using Leopotam.EcsLite;
 
 namespace ClientCode.Services.Progress.Map.Factory
 {
-    public class MapDataFactory
+    public static class ProgressDataFactory
     {
-        private readonly IEcsProvider _ecsProvider;
-        private EcsPool<RegionComponent> _regionPool;
-        private EcsPool<CellComponent> _cellPool;
-
-        public MapDataFactory(IEcsProvider ecsProvider) => _ecsProvider = ecsProvider;
-
-        public void Initialize()
+        public static TileSavedData CreateTileData(int entity, EcsPool<CellComponent> cellPool)
         {
-            var world = _ecsProvider.GetWorld();
-            _cellPool = world.GetPool<CellComponent>();
-            _regionPool = world.GetPool<RegionComponent>();
-        }
-
-        public TileSavedData CreateTileData(int entity, int mapHeight)
-        {
-            var id = GetCellId(entity, mapHeight);
+            var id = cellPool.Get(entity).Id;
             var savedData = new TileSavedData
             {
                 Id = id
@@ -33,9 +18,9 @@ namespace ClientCode.Services.Progress.Map.Factory
             return savedData;
         }
 
-        public RegionSavedData CreateRegionData(int entity, int mapHeight)
+        public static RegionSavedData CreateRegionData(int entity, EcsPool<RegionComponent> pool, EcsPool<CellComponent> cellPool)
         {
-            var region = _regionPool.Get(entity);
+            var region = pool.Get(entity);
 
             var regionSavedData = new RegionSavedData
             {
@@ -43,18 +28,13 @@ namespace ClientCode.Services.Progress.Map.Factory
                 Type = region.Type
             };
 
-            foreach (var cellEntity in region.CellEntities)
-                regionSavedData.CellsId.Add(GetCellId(cellEntity, mapHeight));
+            for (var i = 0; i < region.CellEntities.Count; i++)
+            {
+                var id = cellPool.Get(region.CellEntities[i]).Id;
+                regionSavedData.CellsId.Add(id);
+            }
 
             return regionSavedData;
-        }
-
-        private int GetCellId(int entity, int mapHeight)
-        {
-            var cell = _cellPool.Get(entity);
-            var arrayIndex = cell.Hex.ToArrayIndex();
-            var id = arrayIndex.x * mapHeight + arrayIndex.y;
-            return id;
         }
     }
 }
