@@ -1,6 +1,7 @@
 using ClientCode.Services.Logger.Base;
 using ClientCode.Services.Progress.Base;
 using ClientCode.Services.Progress.Map;
+using ClientCode.Services.Progress.Map.Factory;
 using ClientCode.Services.StateMachine;
 
 namespace ClientCode.Infrastructure.States.MapEditor

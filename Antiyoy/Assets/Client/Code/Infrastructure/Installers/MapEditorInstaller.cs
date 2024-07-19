@@ -2,14 +2,19 @@ using ClientCode.Data.Scene;
 using ClientCode.Gameplay;
 using ClientCode.Gameplay.Cell;
 using ClientCode.Gameplay.Ecs;
+using ClientCode.Gameplay.Region;
 using ClientCode.Gameplay.Tile;
 using ClientCode.Infrastructure.States.MapEditor;
 using ClientCode.Services.Progress.Actors;
 using ClientCode.Services.Progress.Map;
+using ClientCode.Services.Progress.Map.Actors;
+using ClientCode.Services.Progress.Map.Factory;
 using ClientCode.Services.Startup;
 using ClientCode.Services.StateMachine;
 using ClientCode.UI.Buttons.Base;
+using ClientCode.UI.Controllers;
 using ClientCode.UI.Factory;
+using ClientCode.UI.Models;
 using ClientCode.UI.Presenters.MapEditor;
 using ClientCode.UI.Windows.Base;
 using UnityEngine;
@@ -48,6 +53,8 @@ namespace ClientCode.Infrastructure.Installers
             Container.Bind<IWindowsFactory>().To<WindowsFactory>().AsSingle();
             Container.Bind<IButtonsHandler>().To<MapEditorButtonsPresenter>().AsSingle();
             Container.Bind<IWindowsHandler>().To<MapEditorWindowsPresenter>().AsSingle();
+            Container.Bind<MapEditorModel>().AsSingle();
+            Container.Bind<MapEditorTouchCellController>().AsSingle();
         }
 
         private void BindStateMachine()
@@ -67,6 +74,7 @@ namespace ClientCode.Infrastructure.Installers
             Container.Bind<EcsFactory>().AsSingle();
             Container.Bind<CellFactory>().AsSingle();
             Container.Bind<TileFactory>().AsSingle();
+            Container.Bind<RegionFactory>().AsSingle();
         }
     }
 }

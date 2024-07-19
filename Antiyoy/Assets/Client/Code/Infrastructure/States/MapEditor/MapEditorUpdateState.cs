@@ -1,12 +1,9 @@
-using ClientCode.Data.Scene;
 using ClientCode.Gameplay;
-using ClientCode.Gameplay.Cell;
 using ClientCode.Gameplay.Ecs;
-using ClientCode.Gameplay.Tile;
 using ClientCode.Services.StateMachine;
 using ClientCode.Services.Updater;
+using ClientCode.UI.Controllers;
 using Leopotam.EcsLite;
-using UnityEngine;
 
 namespace ClientCode.Infrastructure.States.MapEditor
 {
@@ -14,19 +11,17 @@ namespace ClientCode.Infrastructure.States.MapEditor
     {
         private readonly IUpdater _updater;
         private readonly IEcsProvider _ecsProvider;
-        private readonly TileFactory _tileFactory;
-        private readonly MapEditorSceneData _sceneData;
         private readonly CameraController _camera;
+        private readonly MapEditorTouchCellController _touchCellController;
         private IEcsSystems _ecsSystems;
 
-        public MapEditorUpdateState(IUpdater updater, IEcsProvider ecsProvider, TileFactory tileFactory, MapEditorSceneData sceneData,
-            CameraController camera)
+        public MapEditorUpdateState(IUpdater updater, IEcsProvider ecsProvider, CameraController camera,
+            MapEditorTouchCellController touchCellController)
         {
             _updater = updater;
             _ecsProvider = ecsProvider;
-            _tileFactory = tileFactory;
-            _sceneData = sceneData;
             _camera = camera;
+            _touchCellController = touchCellController;
         }
 
         public void Enter()
@@ -45,26 +40,9 @@ namespace ClientCode.Infrastructure.States.MapEditor
         private void Update()
         {
             _camera.Update();
-            TouchCell();
+            _touchCellController.Update();
         }
 
         private void FixedUpdate() => _ecsSystems.Run();
-
-        private void TouchCell()
-        {
-            if (_sceneData.EventSystem.IsPointerOverGameObject())
-                return;
-
-            var ray = _camera.GetRayFromCurrentMousePosition();
-            var hit = Physics2D.Raycast(ray.origin, ray.direction);
-
-            if (hit.transform && hit.transform.TryGetComponent<CellObject>(out var cell))
-            {
-                if (Input.GetMouseButton(0))
-                    _tileFactory.Create(cell);
-                else if (Input.GetMouseButton(1))
-                    _tileFactory.Destroy(cell);
-            }
-        }
     }
 }

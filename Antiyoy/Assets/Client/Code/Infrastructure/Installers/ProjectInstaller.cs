@@ -1,5 +1,6 @@
 using ClientCode.Data.Static.Config;
 using ClientCode.Services.CanvasService;
+using ClientCode.Services.InputService;
 using ClientCode.Services.Logger;
 using ClientCode.Services.Logger.Base;
 using ClientCode.Services.Progress.Map;
@@ -44,6 +45,7 @@ namespace ClientCode.Infrastructure.Installers
             Container.Bind<IWindowsFactory>().To<WindowsFactory>().AsSingle();
             Container.Bind<ProjectCanvasController>().AsSingle();
             Container.Bind<IWindowsHandler>().To<ProjectWindowsPresenter>().AsSingle();
+            Container.Bind<IInputService>().To<InputService>().FromNewComponentOnNewGameObject().AsSingle();
         }
 
         private void BindLog()

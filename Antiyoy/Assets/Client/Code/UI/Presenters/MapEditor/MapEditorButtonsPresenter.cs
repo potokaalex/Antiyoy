@@ -3,24 +3,35 @@ using ClientCode.Services.StateMachine;
 using ClientCode.UI.Buttons.Base;
 using ClientCode.UI.Buttons.Load;
 using ClientCode.UI.Buttons.Map.SaveLoad;
-using Zenject;
+using ClientCode.UI.Buttons.MapEditor;
+using ClientCode.UI.Models;
 
 namespace ClientCode.UI.Presenters.MapEditor
 {
     public class MapEditorButtonsPresenter : IButtonsHandler
     {
-        private IStateMachine _stateMachine;
+        private readonly IStateMachine _stateMachine;
+        private readonly MapEditorModel _model;
 
-        [Inject]
-        public void Construct(IStateMachine stateMachine) => _stateMachine = stateMachine;
+        public MapEditorButtonsPresenter(MapEditorModel model, IStateMachine stateMachine)
+        {
+            _model = model;
+            _stateMachine = stateMachine;
+        }
 
         public void Handle(ButtonBase button)
         {
-            if (button.GetBaseType() == ButtonType.Load)
+            var baseType = button.GetBaseType();
+
+            if (baseType == ButtonType.Load)
                 HandleLoadButton((LoadButton)button);
-            else if (button.GetBaseType() == ButtonType.MapSaveLoad)
+            else if (baseType == ButtonType.MapSaveLoad)
                 HandleMapSaveLoadButton((MapSaveLoadButton)button);
+            else if (baseType == ButtonType.MapEditorMode)
+                HandleMapEditorModeButton((MapEditorModeButton)button);
         }
+
+        private void HandleMapEditorModeButton(MapEditorModeButton button) => _model.ModeType = button.Type;
 
         private void HandleLoadButton(LoadButton button)
         {
