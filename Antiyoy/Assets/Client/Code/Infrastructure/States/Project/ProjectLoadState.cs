@@ -1,4 +1,5 @@
 using ClientCode.Data.Progress.Project;
+using ClientCode.Data.Static;
 using ClientCode.Services.Progress.Project;
 using ClientCode.Services.StateMachine;
 using ClientCode.Services.StaticDataProvider;
@@ -27,8 +28,15 @@ namespace ClientCode.Infrastructure.States.Project
 
         private void InitializeStaticData(ProjectProgressData progress)
         {
-            var load = progress.Load;
-            _staticData.Initialize(load.Configs, load.Prefabs);
+            var configs = progress.Load.Configs;
+            var prefabs = new Prefabs
+            {
+                CellObject = configs.Gameplay.CellObject,
+                ProjectCanvasObject = configs.UI.ProjectCanvasObject,
+                Buttons = configs.UI.Buttons,
+                Windows = configs.UI.Windows
+            };
+            _staticData.Initialize(configs, prefabs);
         }
     }
 }

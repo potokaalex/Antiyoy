@@ -3,7 +3,6 @@ using ClientCode.Gameplay.Region.Components;
 using ClientCode.Gameplay.Tile.Components;
 using ClientCode.Services.StaticDataProvider;
 using Leopotam.EcsLite;
-using UnityEngine;
 
 namespace ClientCode.Gameplay.Cell
 {
@@ -38,16 +37,16 @@ namespace ClientCode.Gameplay.Cell
         public void Run(IEcsSystems systems)
         {
             foreach (var entity in _createRequestFilter)
-                _createRequestPool.Get(entity).Cell.SpriteRenderer.color = Color.white;
+                _createRequestPool.Get(entity).Cell.SpriteRenderer.color = _staticData.Configs.Gameplay.TileColor;
 
             foreach (var entity in _destroyRequestFilter)
-                _destroyRequestPool.Get(entity).Cell.SpriteRenderer.color = Color.black;
+                _destroyRequestPool.Get(entity).Cell.SpriteRenderer.color = _staticData.Configs.Gameplay.CellColor;
 
             foreach (var entity in _regionAddCellRequestFilter)
             {
                 var request = _regionAddCellRequestPool.Get(entity);
                 var cell = _cellPool.Get(request.CellEntity);
-                cell.Object.SpriteRenderer.color = _staticData.Configs.Region.Colors[request.Type];
+                cell.Object.SpriteRenderer.color = _staticData.Configs.Gameplay.RegionColors[request.Type];
             }
         }
     }

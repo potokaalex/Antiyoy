@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c1a0eb8482b44a79b60624e0b0259faf, type: 3}
-  m_Name: RegionConfig
+  m_Name: GameplayConfig
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -101,3 +101,86 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: RegionColors
+      Entry: 7
+      Data: 2|System.Collections.Generic.Dictionary`2[[ClientCode.Gameplay.Region.RegionType,
+        Code],[UnityEngine.Color, UnityEngine.CoreModule]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 3|System.Collections.Generic.EnumEqualityComparer`1[[ClientCode.Gameplay.Region.RegionType,
+        Code]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.8301887
+    - Name: 
+      Entry: 4
+      Data: 0.410336733
+    - Name: 
+      Entry: 4
+      Data: 0.372018516
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.4764151
+    - Name: 
+      Entry: 4
+      Data: 0.5569607
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  CellObject: {fileID: 2510216717212271286, guid: 6eb3e4bec3209af4fa64a7ba0f05300b, type: 3}
+  CellColor: {r: 0, g: 0, b: 0, a: 1}
+  TileColor: {r: 1, g: 1, b: 1, a: 1}
