@@ -8,5 +8,6 @@ namespace ClientCode.Data.Static
     {
         public SceneConfig Scene;
         public ProgressConfig Progress;
+        public RegionConfig Region;
     }
 }

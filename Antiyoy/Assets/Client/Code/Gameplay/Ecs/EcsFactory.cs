@@ -1,3 +1,4 @@
+using ClientCode.Gameplay.Cell;
 using ClientCode.Gameplay.Region.Components;
 using ClientCode.Gameplay.Region.Systems;
 using ClientCode.Gameplay.Tile.Components;
@@ -47,13 +48,14 @@ namespace ClientCode.Gameplay.Ecs
 
             AddDebugSystems(systems);
             systems.Add(CreateSystem<TileCreateSystem>());
-            systems.Add(_eventBus.GetDestroyEventsSystem().IncReplicant<TileCreateRequest>());
             systems.Add(CreateSystem<TileDestroySystem>());
-            systems.Add(_eventBus.GetDestroyEventsSystem().IncReplicant<TileDestroyRequest>());
 
-            systems.Add(CreateSystem<RegionAddCellSystem>());
             systems.Add(CreateSystem<RegionRemoveCellSystem>());
+            systems.Add(CreateSystem<RegionAddCellSystem>());
             systems.Add(CreateSystem<RegionDebugSystem>());
+            systems.Add(CreateSystem<CellColorSystem>());
+            systems.Add(_eventBus.GetDestroyEventsSystem().IncReplicant<TileCreateRequest>());
+            systems.Add(_eventBus.GetDestroyEventsSystem().IncReplicant<TileDestroyRequest>());
             systems.Add(_eventBus.GetDestroyEventsSystem().IncReplicant<RegionAddCellRequest>());
             systems.Add(_eventBus.GetDestroyEventsSystem().IncReplicant<RegionRemoveCellRequest>());
 

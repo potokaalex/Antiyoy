@@ -8,7 +8,7 @@ using ClientCode.Services.Progress.Actors;
 using Leopotam.EcsLite;
 using SevenBoldPencil.EasyEvents;
 
-namespace ClientCode.Services.Progress.Map
+namespace ClientCode.Services.Progress.Map.Actors
 {
     public class MapLoader : IProgressReader<MapProgressData>
     {
@@ -32,7 +32,7 @@ namespace ClientCode.Services.Progress.Map
             _eventBus = _ecsProvider.GetEventsBus();
             _regionPool = _world.GetPool<RegionComponent>();
             _regionLinkPool = _world.GetPool<RegionLink>();
-            
+
             var cells = LoadCells(_progress);
             LoadRegions(_progress, cells);
         }
@@ -52,7 +52,7 @@ namespace ClientCode.Services.Progress.Map
         {
             foreach (var region in data.Regions)
             {
-                var regionEntity = RegionFactoryTool.Create(_world, _regionPool, region.CellsId.Count);
+                var regionEntity = RegionFactoryTool.Create(_world, _regionPool, region.Type, region.CellsId.Count);
 
                 foreach (var cellId in region.CellsId)
                     RegionAddCellTool.AddCell(cells[cellId].Entity, regionEntity, _regionLinkPool, _regionPool);

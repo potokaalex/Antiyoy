@@ -2,7 +2,6 @@
 using ClientCode.Gameplay.Tile.Components;
 using Leopotam.EcsLite;
 using SevenBoldPencil.EasyEvents;
-using UnityEngine;
 
 namespace ClientCode.Gameplay.Tile.Systems
 {
@@ -35,7 +34,6 @@ namespace ClientCode.Gameplay.Tile.Systems
         {
             var thisEntity = request.Cell.Entity;
             _pool.Add(thisEntity);
-            request.Cell.SpriteRenderer.color = Color.white;
         }
     }
 }

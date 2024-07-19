@@ -32,7 +32,7 @@ namespace Tests.Region
             };
 
             //Act.
-            RegionDivideTool.Divide(regionParts, baseRegionCells, world, pool, world.GetPool<RegionLink>());
+            RegionDivideTool.Divide(regionParts, baseRegionCells, world, pool, world.GetPool<RegionLink>(), 0);
 
             //Assert.
             var regionCount = world.Filter<RegionComponent>().End().GetEntitiesCount();

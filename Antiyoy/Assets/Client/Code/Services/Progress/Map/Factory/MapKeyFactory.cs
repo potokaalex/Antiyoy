@@ -7,7 +7,7 @@ using ClientCode.UI.Windows;
 using ClientCode.UI.Windows.Base;
 using Cysharp.Threading.Tasks;
 
-namespace ClientCode.Services.Progress.Map
+namespace ClientCode.Services.Progress.Map.Factory
 {
     public class MapKeyFactory : IProgressReader<MapProgressData>
     {

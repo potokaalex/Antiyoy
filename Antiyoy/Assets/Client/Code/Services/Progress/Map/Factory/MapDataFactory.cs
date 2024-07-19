@@ -6,7 +6,7 @@ using ClientCode.Gameplay.Hex;
 using ClientCode.Gameplay.Region.Components;
 using Leopotam.EcsLite;
 
-namespace ClientCode.Services.Progress.Map
+namespace ClientCode.Services.Progress.Map.Factory
 {
     public class MapDataFactory
     {
@@ -39,7 +39,8 @@ namespace ClientCode.Services.Progress.Map
 
             var regionSavedData = new RegionSavedData
             {
-                CellsId = new List<int>()
+                CellsId = new List<int>(),
+                Type = region.Type
             };
 
             foreach (var cellEntity in region.CellEntities)

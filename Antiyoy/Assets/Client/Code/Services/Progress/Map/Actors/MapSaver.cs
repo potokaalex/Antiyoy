@@ -5,10 +5,11 @@ using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Region.Components;
 using ClientCode.Gameplay.Tile.Components;
 using ClientCode.Services.Progress.Actors;
+using ClientCode.Services.Progress.Map.Factory;
 using Cysharp.Threading.Tasks;
 using Leopotam.EcsLite;
 
-namespace ClientCode.Services.Progress.Map
+namespace ClientCode.Services.Progress.Map.Actors
 {
     public class MapSaver : IProgressWriter<MapProgressData>
     {

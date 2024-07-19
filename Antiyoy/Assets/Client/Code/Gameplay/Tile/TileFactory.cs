@@ -1,6 +1,5 @@
 ﻿using ClientCode.Gameplay.Cell;
 using ClientCode.Gameplay.Ecs;
-using ClientCode.Gameplay.Region.Components;
 using ClientCode.Gameplay.Tile.Components;
 using ClientCode.Utilities.Extensions;
 using Leopotam.EcsLite;
@@ -39,9 +38,6 @@ namespace ClientCode.Gameplay.Tile
 
             ref var request = ref _eventsBus.NewEvent<TileCreateRequest>();
             request.Cell = cell;
-
-            ref var regionRequest = ref _eventsBus.NewEvent<RegionAddCellRequest>();
-            regionRequest.CellEntity = cell.Entity;
         }
 
         public void Destroy(CellObject cell)
@@ -54,9 +50,6 @@ namespace ClientCode.Gameplay.Tile
 
             ref var request = ref _eventsBus.NewEvent<TileDestroyRequest>();
             request.Cell = cell;
-
-            ref var regionRequest = ref _eventsBus.NewEvent<RegionRemoveCellRequest>();
-            regionRequest.CellEntity = cell.Entity;
         }
     }
 }

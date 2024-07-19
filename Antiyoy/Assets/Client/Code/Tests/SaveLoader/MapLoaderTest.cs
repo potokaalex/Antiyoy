@@ -5,6 +5,7 @@ using ClientCode.Gameplay.Region.Components;
 using ClientCode.Gameplay.Tile.Components;
 using ClientCode.Gameplay.Tile.Systems;
 using ClientCode.Services.Progress.Map;
+using ClientCode.Services.Progress.Map.Actors;
 using ClientCode.Utilities.Extensions;
 using FluentAssertions;
 using Leopotam.EcsLite;
