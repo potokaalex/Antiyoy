@@ -14,16 +14,16 @@ namespace ClientCode.Infrastructure.States.MapEditor
     public class MapEditorLoadState : IState
     {
         private readonly ISceneLoader _sceneLoader;
-        private readonly IStaticDataProvider _staticDataProvider;
+        private readonly IStaticDataProvider _staticData;
         private readonly IMapSaveLoader _saveLoader;
         private readonly ILogReceiver _logReceiver;
         private readonly IProjectSaveLoader _projectSaveLoader;
 
-        public MapEditorLoadState(ISceneLoader sceneLoader, IStaticDataProvider staticDataProvider, IMapSaveLoader saveLoader,
+        public MapEditorLoadState(ISceneLoader sceneLoader, IStaticDataProvider staticData, IMapSaveLoader saveLoader,
             ILogReceiver logReceiver, IProjectSaveLoader projectSaveLoader)
         {
             _sceneLoader = sceneLoader;
-            _staticDataProvider = staticDataProvider;
+            _staticData = staticData;
             _saveLoader = saveLoader;
             _logReceiver = logReceiver;
             _projectSaveLoader = projectSaveLoader;
@@ -33,7 +33,7 @@ namespace ClientCode.Infrastructure.States.MapEditor
         {
             _projectSaveLoader.Load(out var progress);
 
-            var scenesConfig = _staticDataProvider.Configs.Scene;
+            var scenesConfig = _staticData.Configs.Scene;
             await _sceneLoader.LoadSceneAsync(scenesConfig.MapEditorSceneName);
 
             LoadMap(progress.MapEditorPreload);

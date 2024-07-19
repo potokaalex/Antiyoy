@@ -8,10 +8,11 @@ using ClientCode.Utilities.Extensions;
 using Cysharp.Threading.Tasks;
 using Leopotam.EcsLite;
 using SevenBoldPencil.EasyEvents;
+using Zenject;
 
 namespace ClientCode.Gameplay.Region
 {
-    public class RegionFactory : IProgressReader<MapProgressData>, IProgressWriter<MapProgressData>
+    public class RegionFactory : IInitializable, IProgressReader<MapProgressData>, IProgressWriter<MapProgressData>
     {
         private readonly IEcsProvider _ecsProvider;
         private EventsBus _eventsBus;

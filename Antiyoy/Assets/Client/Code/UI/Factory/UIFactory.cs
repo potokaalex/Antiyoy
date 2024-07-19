@@ -9,13 +9,13 @@ namespace ClientCode.UI.Factory
 {
     public class UIFactory
     {
-        private readonly IStaticDataProvider _staticDataProvider;
+        private readonly IStaticDataProvider _staticData;
         private readonly IInstantiator _instantiator;
         private Transform _uiRoot;
 
-        public UIFactory(IStaticDataProvider staticDataProvider, IInstantiator instantiator, Transform uiRoot = null)
+        public UIFactory(IStaticDataProvider staticData, IInstantiator instantiator, Transform uiRoot = null)
         {
-            _staticDataProvider = staticDataProvider;
+            _staticData = staticData;
             _instantiator = instantiator;
             _uiRoot = uiRoot;
         }
@@ -23,10 +23,10 @@ namespace ClientCode.UI.Factory
         public void Initialize(Transform uiRoot) => _uiRoot = uiRoot;
 
         public ButtonBase CreateButton(ButtonType type, Transform root, params object[] args) =>
-            Create(_staticDataProvider.Prefabs.Buttons[type], root, args: args);
+            Create(_staticData.Prefabs.Buttons[type], root, args: args);
 
         public WindowBase CreateWindow(WindowType type) =>
-            Create(_staticDataProvider.Prefabs.Windows[type], _uiRoot, args: type);
+            Create(_staticData.Prefabs.Windows[type], _uiRoot, args: type);
 
         public T Create<T>(T prefab, Transform parent = null, bool instantiateInWorldSpace = false, params object[] args)
             where T : MonoBehaviour, IUIElement => _instantiator.InstantiateMonoBehaviour(prefab, parent, instantiateInWorldSpace, args);

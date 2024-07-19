@@ -64,9 +64,9 @@ namespace Tests
             return staticDataProvider;
         }
 
-        public static CellFactory CellFactory(IEcsProvider ecsProvider, IStaticDataProvider staticDataProvider)
+        public static CellFactory CellFactory(IEcsProvider ecsProvider, IStaticDataProvider staticData)
         {
-            var cellFactory = new CellFactory(ecsProvider, staticDataProvider);
+            var cellFactory = new CellFactory(ecsProvider, staticData);
             cellFactory.Initialize();
             return cellFactory;
         }

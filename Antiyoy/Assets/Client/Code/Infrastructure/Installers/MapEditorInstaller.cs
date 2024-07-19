@@ -65,7 +65,7 @@ namespace ClientCode.Infrastructure.Installers
 
         private void BindFactories()
         {
-            Container.Bind<EcsFactory>().AsSingle();
+            Container.BindInterfacesAndSelfTo<EcsFactory>().AsSingle();
             Container.BindInterfacesAndSelfTo<CellFactory>().AsSingle();
             Container.BindInterfacesAndSelfTo<TileFactory>().AsSingle();
             Container.BindInterfacesAndSelfTo<RegionFactory>().AsSingle();

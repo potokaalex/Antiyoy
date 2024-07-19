@@ -10,7 +10,7 @@ namespace ClientCode.Gameplay.Cell
     public class CellColorSystem : IEcsInitSystem, IEcsRunSystem
     {
         private readonly IEcsProvider _ecsProvider;
-        private readonly IStaticDataProvider _staticDataProvider;
+        private readonly IStaticDataProvider _staticData;
         private EcsPool<TileCreateRequest> _createRequestPool;
         private EcsFilter _createRequestFilter;
         private EcsPool<TileDestroyRequest> _destroyRequestPool;
@@ -19,10 +19,10 @@ namespace ClientCode.Gameplay.Cell
         private EcsFilter _regionAddCellRequestFilter;
         private EcsPool<CellComponent> _cellPool;
 
-        public CellColorSystem(IEcsProvider ecsProvider, IStaticDataProvider staticDataProvider)
+        public CellColorSystem(IEcsProvider ecsProvider, IStaticDataProvider staticData)
         {
             _ecsProvider = ecsProvider;
-            _staticDataProvider = staticDataProvider;
+            _staticData = staticData;
         }
 
         public void Init(IEcsSystems systems)
@@ -47,7 +47,7 @@ namespace ClientCode.Gameplay.Cell
             {
                 var request = _regionAddCellRequestPool.Get(entity);
                 var cell = _cellPool.Get(request.CellEntity);
-                cell.Object.SpriteRenderer.color = _staticDataProvider.Configs.Region.Colors[request.Type];
+                cell.Object.SpriteRenderer.color = _staticData.Configs.Region.Colors[request.Type];
             }
         }
     }

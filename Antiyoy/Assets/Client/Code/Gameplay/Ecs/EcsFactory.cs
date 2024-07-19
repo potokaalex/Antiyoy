@@ -10,7 +10,7 @@ using Zenject;
 
 namespace ClientCode.Gameplay.Ecs
 {
-    public class EcsFactory
+    public class EcsFactory : IInitializable
     {
         private readonly IInstantiator _instantiator;
         private readonly IEcsProvider _provider;

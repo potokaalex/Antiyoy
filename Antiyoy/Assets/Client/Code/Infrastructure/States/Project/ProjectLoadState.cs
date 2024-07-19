@@ -9,11 +9,11 @@ namespace ClientCode.Infrastructure.States.Project
     {
         private readonly IProjectSaveLoader _saveLoader;
         private readonly IProjectStateMachine _stateMachine;
-        private readonly IStaticDataProvider _staticDataProvider;
+        private readonly IStaticDataProvider _staticData;
 
-        public ProjectLoadState(IStaticDataProvider staticDataProvider, IProjectSaveLoader saveLoader, IProjectStateMachine stateMachine)
+        public ProjectLoadState(IStaticDataProvider staticData, IProjectSaveLoader saveLoader, IProjectStateMachine stateMachine)
         {
-            _staticDataProvider = staticDataProvider;
+            _staticData = staticData;
             _saveLoader = saveLoader;
             _stateMachine = stateMachine;
         }
@@ -28,7 +28,7 @@ namespace ClientCode.Infrastructure.States.Project
         private void InitializeStaticData(ProjectProgressData progress)
         {
             var load = progress.Load;
-            _staticDataProvider.Initialize(load.Configs, load.Prefabs);
+            _staticData.Initialize(load.Configs, load.Prefabs);
         }
     }
 }

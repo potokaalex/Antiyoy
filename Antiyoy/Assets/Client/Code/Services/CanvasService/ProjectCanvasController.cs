@@ -7,16 +7,16 @@ namespace ClientCode.Services.CanvasService
     public class ProjectCanvasController
     {
         private readonly UIFactory _factory;
-        private readonly IStaticDataProvider _staticDataProvider;
+        private readonly IStaticDataProvider _staticData;
         private ProjectCanvasObject _canvas;
 
-        public ProjectCanvasController(UIFactory factory, IStaticDataProvider staticDataProvider)
+        public ProjectCanvasController(UIFactory factory, IStaticDataProvider staticData)
         {
             _factory = factory;
-            _staticDataProvider = staticDataProvider;
+            _staticData = staticData;
         }
 
-        public void Initialize() => _canvas = _factory.Create(_staticDataProvider.Prefabs.ProjectCanvasObject);
+        public void Initialize() => _canvas = _factory.Create(_staticData.Prefabs.ProjectCanvasObject);
 
         public Transform DefaultElementsRoot => _canvas.DefaultElementsRoot;
 

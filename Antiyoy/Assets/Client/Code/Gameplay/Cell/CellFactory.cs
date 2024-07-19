@@ -8,13 +8,14 @@ using ClientCode.Utilities.Extensions;
 using Cysharp.Threading.Tasks;
 using Leopotam.EcsLite;
 using UnityEngine;
+using Zenject;
 
 namespace ClientCode.Gameplay.Cell
 {
-    public class CellFactory : IProgressReader<MapProgressData>, IProgressWriter<MapProgressData>
+    public class CellFactory : IInitializable, IProgressReader<MapProgressData>, IProgressWriter<MapProgressData>
     {
         private readonly IEcsProvider _ecsProvider;
-        private readonly IStaticDataProvider _staticDataProvider;
+        private readonly IStaticDataProvider _staticData;
         private Transform _cellsRoot;
         private EcsPool<CellComponent> _pool;
         private EcsFilter _filter;
@@ -22,10 +23,10 @@ namespace ClientCode.Gameplay.Cell
         private CellObject _cellPrefab;
         private MapProgressData _progress;
 
-        public CellFactory(IEcsProvider ecsProvider, IStaticDataProvider staticDataProvider)
+        public CellFactory(IEcsProvider ecsProvider, IStaticDataProvider staticData)
         {
             _ecsProvider = ecsProvider;
-            _staticDataProvider = staticDataProvider;
+            _staticData = staticData;
         }
 
         public void Initialize()
@@ -34,7 +35,7 @@ namespace ClientCode.Gameplay.Cell
             _pool = _world.GetPool<CellComponent>();
             _filter = _world.Filter<CellComponent>().End();
             _cellsRoot = new GameObject("CellsRoot").transform;
-            _cellPrefab = _staticDataProvider.Prefabs.CellObject;
+            _cellPrefab = _staticData.Prefabs.CellObject;
         }
 
         public CellObject[] Create()
