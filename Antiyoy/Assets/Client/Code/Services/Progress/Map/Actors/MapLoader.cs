@@ -1,8 +1,10 @@
 using ClientCode.Data.Progress.Map;
 using ClientCode.Gameplay.Cell;
 using ClientCode.Gameplay.Ecs;
+using ClientCode.Gameplay.Region;
 using ClientCode.Gameplay.Region.Components;
 using ClientCode.Gameplay.Region.Tools;
+using ClientCode.Gameplay.Tile;
 using ClientCode.Gameplay.Tile.Components;
 using ClientCode.Services.Progress.Actors;
 using Leopotam.EcsLite;
@@ -13,6 +15,8 @@ namespace ClientCode.Services.Progress.Map.Actors
     public class MapLoader : IProgressReader<MapProgressData>
     {
         private readonly CellFactory _cellFactory;
+        private readonly TileFactory _tileFactory;
+        private readonly RegionFactory _regionFactory;
         private readonly IEcsProvider _ecsProvider;
         private EcsWorld _world;
         private EventsBus _eventBus;
@@ -20,9 +24,11 @@ namespace ClientCode.Services.Progress.Map.Actors
         private EcsPool<RegionLink> _regionLinkPool;
         private MapProgressData _progress;
 
-        public MapLoader(CellFactory cellFactory, IEcsProvider ecsProvider)
+        public MapLoader(CellFactory cellFactory, TileFactory tileFactory, RegionFactory regionFactory, IEcsProvider ecsProvider)
         {
             _cellFactory = cellFactory;
+            _tileFactory = tileFactory;
+            _regionFactory = regionFactory;
             _ecsProvider = ecsProvider;
         }
 
@@ -34,7 +40,7 @@ namespace ClientCode.Services.Progress.Map.Actors
             _regionLinkPool = _world.GetPool<RegionLink>();
 
             var cells = LoadCells(_progress);
-            LoadRegions(_progress, cells);
+            _regionFactory.Create(_progress.Regions, cells);
         }
 
         public void OnLoad(MapProgressData progress) => _progress = progress;
@@ -42,21 +48,8 @@ namespace ClientCode.Services.Progress.Map.Actors
         private CellObject[] LoadCells(MapProgressData data)
         {
             var cells = _cellFactory.Create(data.Width, data.Height);
-
-            foreach (var tile in data.Tiles)
-                _eventBus.NewEvent<TileCreateRequest>().Cell = cells[tile.Id];
+            _tileFactory.Create(data.Tiles, cells);
             return cells;
-        }
-
-        private void LoadRegions(MapProgressData data, CellObject[] cells)
-        {
-            foreach (var region in data.Regions)
-            {
-                var regionEntity = RegionFactoryTool.Create(_world, _regionPool, region.Type, region.CellsId.Count);
-
-                foreach (var cellId in region.CellsId)
-                    RegionAddCellTool.AddCell(cells[cellId].Entity, regionEntity, _regionLinkPool, _regionPool);
-            }
         }
     }
 }

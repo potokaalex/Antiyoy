@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using ClientCode.Gameplay.Cell;
 using ClientCode.Gameplay.Ecs;
+using ClientCode.Gameplay.Region;
 using ClientCode.Gameplay.Region.Components;
+using ClientCode.Gameplay.Tile;
 using ClientCode.Services.StaticDataProvider;
 using Leopotam.EcsLite;
 using NSubstitute;
@@ -74,6 +76,20 @@ namespace Tests
             var cellObject = new GameObject().AddComponent<CellObject>();
             cellObject.SpriteRenderer = cellObject.gameObject.AddComponent<SpriteRenderer>();
             return cellObject;
+        }
+
+        public static RegionFactory RegionFactory(IEcsProvider ecsProvider)
+        {
+            var regionFactory = new RegionFactory(ecsProvider);
+            regionFactory.Initialize();
+            return regionFactory;
+        }
+
+        public static TileFactory TileFactory(IEcsProvider ecsProvider)
+        {
+            var tileFactory = new TileFactory(ecsProvider);
+            tileFactory.Initialize();
+            return tileFactory;
         }
     }
 }

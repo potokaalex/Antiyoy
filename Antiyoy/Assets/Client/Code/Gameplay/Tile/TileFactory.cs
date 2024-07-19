@@ -1,4 +1,6 @@
-﻿using ClientCode.Gameplay.Cell;
+﻿using System.Collections.Generic;
+using ClientCode.Data.Saved;
+using ClientCode.Gameplay.Cell;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Tile.Components;
 using ClientCode.Utilities.Extensions;
@@ -28,6 +30,12 @@ namespace ClientCode.Gameplay.Tile
             _destroyRequestFilter = _eventsBus.GetEventBodies(out _destroyRequestPool);
         }
 
+        public void Create(List<TileSavedData> tiles, CellObject[] cells)
+        {
+            foreach (var tile in tiles)
+                _eventsBus.NewEvent<TileCreateRequest>().Cell = cells[tile.Id];
+        }
+        
         public void Create(CellObject cell)
         {
             if (_createRequestPool.Has(_createRequestFilter, r => r.Cell == cell))
