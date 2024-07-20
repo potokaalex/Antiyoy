@@ -43,7 +43,7 @@ namespace ClientCode.Infrastructure.States.MapEditor
 
         private void LoadMap(MapEditorPreloadData preload)
         {
-            var defaultMap = new MapProgressData { Key = preload.MapKey, Height = preload.MapHeight, Width = preload.MapWidth };
+            var defaultMap = new MapProgressData { Key = preload.MapKey, Size = preload.MapSize};
             var result = _saveLoader.Load(preload.MapKey, defaultMap);
 
             if (result == SaveLoaderResultType.ErrorFileIsNotExist)

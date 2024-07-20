@@ -5,6 +5,7 @@ using ClientCode.Services.Progress.Base;
 using ClientCode.Services.Progress.Map;
 using FluentAssertions;
 using NUnit.Framework;
+using UnityEngine;
 
 namespace Tests.SaveLoader
 {
@@ -29,7 +30,7 @@ namespace Tests.SaveLoader
             _saveLoader.Load(null);
 
             // Assert.
-            var isMapEmpty = _map.Height == 0 && _map.Width == 0;
+            var isMapEmpty = _map.Size == new Vector2Int(0,0);
             isMapEmpty.Should().BeTrue();
         }
 
@@ -45,18 +46,18 @@ namespace Tests.SaveLoader
         }
 
         [Test]
-        public async Task WhenLoadMap_AndMapSavedWithKeyTestAndHasWidth1_ThenMapWidthShouldBe1()
+        public async Task WhenLoadMap_AndMapSavedWithKeyTestAndHasSizeOne_ThenMapWidthShouldBe1()
         {
             // Arrange.
             _saveLoader.Load(null);
-            _map.Width = 1;
+            _map.Size = Vector2Int.one;
             await _saveLoader.Save(TestMapKey);
 
             // Act.
             _saveLoader.Load(TestMapKey);
 
             // Assert.
-            _map.Width.Should().Be(1);
+            _map.Size.Should().Be(Vector2Int.one);
         }
 
         [Test]

@@ -30,7 +30,7 @@ namespace ClientCode.Infrastructure.States.MapEditor
             _tileFactory.Create(cells);
             _regionFactory.Create(cells);
 
-            _ecsProvider.GetSystems().Init();
+            _ecsProvider.GetSystems().Init();//!
             _stateMachine.SwitchTo<MapEditorUpdateState>();
         }
     }

@@ -11,6 +11,8 @@ using ClientCode.UI.Factory;
 using ClientCode.UI.Models;
 using ClientCode.UI.Windows;
 using ClientCode.UI.Windows.Base;
+using UnityEngine;
+using LogType = ClientCode.Services.Logger.Base.LogType;
 
 namespace ClientCode.UI.Presenters.MainMenu
 {
@@ -72,8 +74,7 @@ namespace ClientCode.UI.Presenters.MainMenu
                 else
                 {
                     _model.MapEditorPreload.MapKey = null;
-                    _model.MapEditorPreload.MapHeight = 10;
-                    _model.MapEditorPreload.MapWidth = 10;
+                    _model.MapEditorPreload.MapSize = new Vector2Int(10, 10);
                     _stateMachine.SwitchTo<MapEditorLoadState>();
                 }
             }

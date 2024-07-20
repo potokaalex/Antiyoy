@@ -1,5 +1,5 @@
 using ClientCode.Data.Scene;
-using ClientCode.Gameplay.Cell;
+using ClientCode.Gameplay;
 using ClientCode.Gameplay.Region;
 using ClientCode.Gameplay.Tile;
 using ClientCode.Services.InputService;
@@ -16,7 +16,7 @@ namespace ClientCode.UI.Controllers
         private readonly IInputService _input;
 
         public MapEditorTouchCellController(MapEditorSceneData sceneData, CameraController camera, MapEditorModel model, TileFactory tileFactory,
-            RegionFactory regionFactory, IInputService input) : base(sceneData.EventSystem, camera)
+            RegionFactory regionFactory, IInputService input, GridManager gridManager) : base(sceneData.EventSystem, camera, gridManager)
         {
             _model = model;
             _tileFactory = tileFactory;
@@ -24,7 +24,7 @@ namespace ClientCode.UI.Controllers
             _input = input;
         }
 
-        private protected override void OnCellTouch(CellObject cell)
+        private protected override void OnCellTouch(int cell)
         {
             if (_input.IsMouseButtonDown(MouseType.Left))
                 Create(cell);
@@ -32,29 +32,29 @@ namespace ClientCode.UI.Controllers
                 Destroy(cell);
         }
 
-        private void Create(CellObject cell)
+        private void Create(int cell)
         {
             switch (_model.ModeType)
             {
                 case MapEditorModeButtonType.CreateRegionNone:
                     _tileFactory.Create(cell);
-                    _regionFactory.Destroy(cell.Entity);
+                    _regionFactory.Destroy(cell);
                     break;
                 case MapEditorModeButtonType.CreateRegionRed:
                     _tileFactory.Create(cell);
-                    _regionFactory.Create(cell.Entity, RegionType.Red);
+                    _regionFactory.Create(cell, RegionType.Red);
                     break;
                 case MapEditorModeButtonType.CreateRegionBlue:
                     _tileFactory.Create(cell);
-                    _regionFactory.Create(cell.Entity, RegionType.Blue);
+                    _regionFactory.Create(cell, RegionType.Blue);
                     break;
             }
         }
 
-        private void Destroy(CellObject cell)
+        private void Destroy(int cell)
         {
             _tileFactory.Destroy(cell);
-            _regionFactory.Destroy(cell.Entity);
+            _regionFactory.Destroy(cell);
         }
     }
 }

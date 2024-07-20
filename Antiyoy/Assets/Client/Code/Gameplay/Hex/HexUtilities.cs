@@ -26,7 +26,7 @@ namespace ClientCode.Gameplay.Hex
             return new HexCoordinates
             {
                 Q = index.x,
-                R = index.y - (index.x - (index.x & 1)) / 2
+                R = index.y - (index.x + (index.x & 1)) / 2
             };
         }
 
@@ -35,7 +35,7 @@ namespace ClientCode.Gameplay.Hex
             return new Vector2Int
             {
                 x = hex.Q,
-                y = hex.R + (hex.Q - (hex.Q & 1)) / 2
+                y = hex.R + (hex.Q + (hex.Q & 1)) / 2
             };
         }
 

@@ -20,7 +20,6 @@ namespace ClientCode.Gameplay.Region.Systems
         public void Init(IEcsSystems systems)
         {
             var world = _ecsProvider.GetWorld();
-
             _eventsBus = _ecsProvider.GetEventsBus();
             _cellFilter = world.Filter<CellComponent>().End();
             _cellPool = world.GetPool<CellComponent>();
@@ -42,16 +41,17 @@ namespace ClientCode.Gameplay.Region.Systems
         {
             foreach (var cellEntity in _cellFilter)
             {
+                var cellDebug = _cellPool.Get(cellEntity).Debug;
+
                 if (_linkPool.Has(cellEntity))
                 {
                     var link = _linkPool.Get(cellEntity);
                     var region = _pool.Get(link.RegionEntity);
-                    var cell = _cellPool.Get(cellEntity).Object;
 
-                    cell.DebugText.text = $"{link.RegionEntity}\n{region.CellEntities.Count}".ToString();
+                    cellDebug.Text.text = $"{link.RegionEntity}\n{region.CellEntities.Count}".ToString();
                 }
                 else
-                    _cellPool.Get(cellEntity).Object.DebugText.text = string.Empty;
+                    cellDebug.Text.text = string.Empty;
             }
         }
     }
