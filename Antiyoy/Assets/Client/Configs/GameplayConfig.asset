@@ -21,7 +21,7 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: Colors
+    - Name: RegionColors
       Entry: 7
       Data: 0|System.Collections.Generic.Dictionary`2[[ClientCode.Gameplay.Region.RegionType,
         Code],[UnityEngine.Color, UnityEngine.CoreModule]], mscorlib
@@ -101,86 +101,6 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: RegionColors
-      Entry: 7
-      Data: 2|System.Collections.Generic.Dictionary`2[[ClientCode.Gameplay.Region.RegionType,
-        Code],[UnityEngine.Color, UnityEngine.CoreModule]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 3|System.Collections.Generic.EnumEqualityComparer`1[[ClientCode.Gameplay.Region.RegionType,
-        Code]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 2
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 1
-    - Name: $v
-      Entry: 7
-      Data: UnityEngine.Color, UnityEngine.CoreModule
-    - Name: 
-      Entry: 4
-      Data: 0.8301887
-    - Name: 
-      Entry: 4
-      Data: 0.410336733
-    - Name: 
-      Entry: 4
-      Data: 0.372018516
-    - Name: 
-      Entry: 4
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 2
-    - Name: $v
-      Entry: 7
-      Data: UnityEngine.Color, UnityEngine.CoreModule
-    - Name: 
-      Entry: 4
-      Data: 0.4764151
-    - Name: 
-      Entry: 4
-      Data: 0.5569607
-    - Name: 
-      Entry: 4
-      Data: 1
-    - Name: 
-      Entry: 4
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-  CellObject: {fileID: 2510216717212271286, guid: 6eb3e4bec3209af4fa64a7ba0f05300b, type: 3}
-  CellColor: {r: 0, g: 0, b: 0, a: 1}
-  TileColor: {r: 1, g: 1, b: 1, a: 1}
+  GridObject: {fileID: 1386563995804984276, guid: 50f97d7510916a9488e25c1466422370, type: 3}
+  EmptyTile: {fileID: 11400000, guid: b73d522c49b9e614ea47115ae5cf6afd, type: 2}
+  Tile: {fileID: 11400000, guid: 34cd2e8663182a2409debeeb0f285dbf, type: 2}

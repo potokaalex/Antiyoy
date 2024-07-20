@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using ClientCode.Data.Progress.Map;
 using ClientCode.Gameplay.Ecs;
-using ClientCode.Gameplay.Hex;
 using ClientCode.Services.Progress.Actors;
 using ClientCode.Services.StaticDataProvider;
 using ClientCode.Utilities.Extensions;
@@ -16,82 +15,92 @@ namespace ClientCode.Gameplay.Cell
     {
         private readonly IEcsProvider _ecsProvider;
         private readonly IStaticDataProvider _staticData;
-        private Transform _cellsRoot;
+        private readonly GridManager _gridManager;
         private EcsPool<CellComponent> _pool;
-        private EcsFilter _filter;
         private EcsWorld _world;
-        private CellObject _cellPrefab;
         private MapProgressData _progress;
 
-        public CellFactory(IEcsProvider ecsProvider, IStaticDataProvider staticData)
+        public CellFactory(IEcsProvider ecsProvider, IStaticDataProvider staticData, GridManager gridManager)
         {
             _ecsProvider = ecsProvider;
             _staticData = staticData;
+            _gridManager = gridManager;
         }
 
         public void Initialize()
         {
             _world = _ecsProvider.GetWorld();
             _pool = _world.GetPool<CellComponent>();
-            _filter = _world.Filter<CellComponent>().End();
-            _cellsRoot = new GameObject("CellsRoot").transform;
-            _cellPrefab = _staticData.Prefabs.CellObject;
+            _world.Filter<CellComponent>().End();
         }
 
-        public CellObject[] Create()
+        public int[] Create()
         {
-            var width = _progress.Width;
-            var height = _progress.Height;
-            var cells = new CellObject[width * height];
+            var gridPrefab = _staticData.Prefabs.GridObject;
+            var emptyTile = _staticData.Prefabs.EmptyTile;
+            var gridObject = Object.Instantiate(gridPrefab);
+            var cells = CreateCells();
 
-            for (var i = 0; i < width; i++)
-            for (var j = 0; j < height; j++)
-            {
-                var index = i * width + j;
-                cells[index] = CreateCell(new Vector2Int(i, j), index);
-            }
+            _gridManager.Initialize(gridObject, cells, _progress.Size);
+            _gridManager.FillByTile(_progress.Size, emptyTile);
 
-            ConnectCells(cells, width, height);
             return cells;
         }
 
+        private int[] CreateCells()
+        {
+            var width = _progress.Size.x;
+            var height = _progress.Size.y;
+            var cells = new int[width * height];
+
+            for (var i = 0; i < _progress.Size.y; i++)
+            for (var j = 0; j < _progress.Size.x; j++)
+            {
+                var gridPosition = new Vector2Int(i, j);
+                var arrayIndex = gridPosition.ToArrayIndex(width);
+                cells[arrayIndex] = CreateCell(arrayIndex, gridPosition);
+            }
+
+            return cells;
+        }
+
+        private int CreateCell(int index, Vector2Int gridPosition)
+        {
+            var entity = _world.NewEntity();
+            ref var cell = ref _pool.Add(entity);
+
+            cell.NeighbourCellEntities = new List<int>(6);
+            cell.Id = index;
+            cell.GridPosition = gridPosition;
+
+            return entity;
+        }
+
+        /*
         private void ConnectCells(CellObject[] cells, int width, int height)
         {
-            //TODO: попытаться оптимизировать используя hex.ArrayIndex и cells[]
-            foreach (var cellObject in cells)
-            foreach (var direction in HexUtilities.Directions)
+            //BUG!
+            for (var i = 0; i < width; i++)
+            for (var j = 0; j < height; j++)
             {
-                ref var cell = ref _pool.Get(cellObject.Entity);
-                var neighbourHex = cell.Hex + direction;
-                var arrayIndex = neighbourHex.ToArrayIndex();
+                var arrayIndex = new Vector2Int(i, j);
+                var index = GetIndex(i, j, width);
 
-                if (arrayIndex.x < 0 || arrayIndex.x >= width ||
-                    arrayIndex.y < 0 || arrayIndex.y >= height)
-                    continue;
+                foreach (var direction in HexUtilities.Directions)
+                {
+                    var neighbourArrayIndex = (HexUtilities.FromArrayIndex(arrayIndex) + direction).ToArrayIndex();
+                    var neighbourIndex = GetIndex(neighbourArrayIndex.x, neighbourArrayIndex.y, width);
 
-                cell.NeighbourCellEntities.Add(_pool.Find(_filter, c => c.Hex == neighbourHex));
+                    if (neighbourIndex >= 0 && neighbourIndex < width * height)
+                        cells[index].NeighbourCellEntities.Add(cells[neighbourIndex].Entity);
+                }
             }
         }
 
-        private CellObject CreateCell(Vector2Int arrayIndex, int index)
-        {
-            var hex = HexUtilities.FromArrayIndex(arrayIndex);
-
-            var entity = _world.NewEntity();
-            ref var cell = ref CreateCellComponent(index, entity, hex);
-            var cellObject = CreateObject(hex);
-
-            cellObject.Entity = entity;
-            cell.Object = cellObject;
-
-            return cellObject;
-        }
-
-        private ref CellComponent CreateCellComponent(int index, int entity, HexCoordinates hex)
+        private ref CellComponent CreateCellComponent(int index, int entity)
         {
             ref var cell = ref _pool.Add(entity);
-            cell.Hex = hex;
-            cell.NeighbourCellEntities = new List<int>();
+            cell.NeighbourCellEntities = new List<int>(6);
             cell.Id = index;
             return ref cell;
         }
@@ -104,13 +113,15 @@ namespace ClientCode.Gameplay.Cell
             cellObject.name = $"Cell({hex})";
             return cellObject;
         }
+*/
+
+        //private int GetIndex(int i, int j, int width) => i * width + j;
 
         public void OnLoad(MapProgressData progress) => _progress = progress;
 
         public UniTask OnSave(MapProgressData progress)
         {
-            progress.Width = _progress.Width;
-            progress.Height = _progress.Height;
+            progress.Size = _progress.Size;
             return UniTask.CompletedTask;
         }
     }

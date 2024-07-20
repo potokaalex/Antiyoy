@@ -41,11 +41,11 @@ namespace ClientCode.Gameplay.Region
             _cellPool = _world.GetPool<CellComponent>();
         }
 
-        public void Create(CellObject[] cells)
+        public void Create(int[] cellEntities)
         {
             foreach (var region in _progress.Regions)
             foreach (var cellId in region.CellsId)
-                Create(cells[cellId].Entity, region.Type);
+                Create(cellEntities[cellId], region.Type);
         }
 
         public void Create(int cell, RegionType type)

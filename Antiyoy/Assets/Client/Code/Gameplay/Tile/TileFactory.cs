@@ -38,34 +38,33 @@ namespace ClientCode.Gameplay.Tile
             _cellPool = world.GetPool<CellComponent>();
         }
 
-        public void Create(CellObject[] cells)
+        public void Create(int[] cellEntities)
         {
             foreach (var tile in _progress.Tiles)
-                _eventsBus.NewEvent<TileCreateRequest>().Cell = cells[tile.Id];
+                _eventsBus.NewEvent<TileCreateRequest>().CellEntity = cellEntities[tile.Id];
         }
 
-        public void Create(CellObject cell)
+        public void Create(int cellEntity)
         {
-            if (_createRequestPool.Has(_createRequestFilter, r => r.Cell == cell))
+            if (_createRequestPool.Has(_createRequestFilter, r => r.CellEntity == cellEntity))
                 return;
 
-            if (_pool.Has(cell.Entity))
-                return;
+            Destroy(cellEntity);
 
             ref var request = ref _eventsBus.NewEvent<TileCreateRequest>();
-            request.Cell = cell;
+            request.CellEntity = cellEntity;
         }
 
-        public void Destroy(CellObject cell)
+        public void Destroy(int cellEntity)
         {
-            if (_destroyRequestPool.Has(_destroyRequestFilter, r => r.Cell == cell))
+            if (_destroyRequestPool.Has(_destroyRequestFilter, r => r.CellEntity == cellEntity))
                 return;
 
-            if (!_pool.Has(cell.Entity))
+            if (!_pool.Has(cellEntity))
                 return;
 
             ref var request = ref _eventsBus.NewEvent<TileDestroyRequest>();
-            request.Cell = cell;
+            request.CellEntity = cellEntity;
         }
 
         public void OnLoad(MapProgressData progress) => _progress = progress;

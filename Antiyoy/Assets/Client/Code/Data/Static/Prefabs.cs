@@ -1,19 +1,19 @@
-using System;
 using System.Collections.Generic;
-using ClientCode.Gameplay.Cell;
+using ClientCode.Gameplay;
 using ClientCode.Services.CanvasService;
 using ClientCode.UI.Buttons.Base;
 using ClientCode.UI.Windows.Base;
-using Sirenix.Serialization;
+using UnityEngine.Tilemaps;
 
 namespace ClientCode.Data.Static
 {
-    [Serializable]
     public class Prefabs
     {
-        public CellObject CellObject;
+        public Dictionary<ButtonType, ButtonBase> Buttons;
+        public Dictionary<WindowType, WindowBase> Windows;
         public ProjectCanvasObject ProjectCanvasObject;
-        [OdinSerialize] public Dictionary<ButtonType, ButtonBase> Buttons;
-        [OdinSerialize] public Dictionary<WindowType, WindowBase> Windows;
+        public GridObject GridObject;
+        public TileBase EmptyTile;
+        public TileBase Tile;
     }
 }

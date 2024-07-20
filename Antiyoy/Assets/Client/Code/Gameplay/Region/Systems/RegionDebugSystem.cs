@@ -40,6 +40,8 @@ namespace ClientCode.Gameplay.Region.Systems
 
         private void DrawDebugText()
         {
+            //создавать объекты текста поверх тайлов как отдельные объекты.
+            /*
             foreach (var cellEntity in _cellFilter)
             {
                 if (_linkPool.Has(cellEntity))
@@ -53,6 +55,7 @@ namespace ClientCode.Gameplay.Region.Systems
                 else
                     _cellPool.Get(cellEntity).Object.DebugText.text = string.Empty;
             }
+            */
         }
     }
 }

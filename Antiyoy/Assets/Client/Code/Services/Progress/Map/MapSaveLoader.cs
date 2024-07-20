@@ -6,6 +6,7 @@ using ClientCode.Data.Static.Const;
 using ClientCode.Services.Progress.Actors;
 using ClientCode.Services.Progress.Base;
 using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 namespace ClientCode.Services.Progress.Map
 {
@@ -50,8 +51,8 @@ namespace ClientCode.Services.Progress.Map
 
             var data = new MapSavedData
             {
-                Width = _current.Width,
-                Height = _current.Height,
+                Width = _current.Size.x,
+                Height = _current.Size.y,
                 Tiles = _current.Tiles,
                 Regions = _current.Regions
             };
@@ -103,8 +104,7 @@ namespace ClientCode.Services.Progress.Map
                     out var savedData);
                 data = new MapProgressData
                 {
-                    Width = savedData.Width,
-                    Height = savedData.Height,
+                    Size = new Vector2Int(savedData.Width, savedData.Height),
                     Tiles = savedData.Tiles,
                     Regions = savedData.Regions
                 };

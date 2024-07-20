@@ -31,10 +31,12 @@ namespace ClientCode.Infrastructure.States.Project
             var configs = progress.Load.Configs;
             var prefabs = new Prefabs
             {
-                CellObject = configs.Gameplay.CellObject,
                 ProjectCanvasObject = configs.UI.ProjectCanvasObject,
                 Buttons = configs.UI.Buttons,
-                Windows = configs.UI.Windows
+                Windows = configs.UI.Windows,
+                GridObject = configs.Gameplay.GridObject,
+                EmptyTile = configs.Gameplay.EmptyTile,
+                Tile = configs.Gameplay.Tile
             };
             _staticData.Initialize(configs, prefabs);
         }

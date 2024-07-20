@@ -1,4 +1,5 @@
 using ClientCode.Data.Scene;
+using ClientCode.Gameplay;
 using ClientCode.Gameplay.Cell;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Region;
@@ -31,7 +32,7 @@ namespace ClientCode.Infrastructure.Installers
             BindUI();
             BindProgress();
 
-            Container.Bind<CameraController>().AsSingle().WithArguments(_sceneData.Camera);
+            Container.Bind<GridManager>().AsSingle();
             Container.BindInterfacesTo<DelayStartupper<MapEditorEnterState>>().AsSingle();
         }
 
@@ -49,6 +50,7 @@ namespace ClientCode.Infrastructure.Installers
             Container.Bind<IWindowsHandler>().To<MapEditorWindowsPresenter>().AsSingle();
             Container.Bind<MapEditorModel>().AsSingle();
             Container.Bind<MapEditorTouchCellController>().AsSingle();
+            Container.Bind<CameraController>().AsSingle().WithArguments(_sceneData.Camera);
         }
 
         private void BindStateMachine()
