@@ -3,7 +3,6 @@ using ClientCode.Gameplay.Region.Systems;
 using ClientCode.Gameplay.Tile.Components;
 using ClientCode.Gameplay.Tile.Systems;
 using Leopotam.EcsLite;
-using Leopotam.EcsLite.UnityEditor;
 using SevenBoldPencil.EasyEvents;
 using Zenject;
 
@@ -63,9 +62,9 @@ namespace ClientCode.Gameplay.Ecs
         private void AddDebugSystems(IEcsSystems systems)
         {
 #if UNITY_EDITOR
-            systems.Add(new EcsWorldDebugSystem(entityNameFormat: "D4"));
-            systems.Add(new EcsSystemsDebugSystem());
-            systems.Add(new EcsWorldDebugSystem("Events", true, "D4"));
+            systems.Add(new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem(entityNameFormat: "D4"));
+            systems.Add(new Leopotam.EcsLite.UnityEditor.EcsSystemsDebugSystem());
+            systems.Add(new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem("Events", true, "D4"));
 #elif DEBUG_PROJECT
             systems.Add(CreateSystem<RegionDebugSystem>());
 #endif
