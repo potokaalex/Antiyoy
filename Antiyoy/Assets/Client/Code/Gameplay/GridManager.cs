@@ -24,14 +24,14 @@ namespace ClientCode.Gameplay
             var worldPosition2Int = cellPosition.ToVector2Int();
             var arrayIndex = worldPosition2Int.ToArrayIndex(_mapSize.x);
 
-            if (arrayIndex >= 0 && arrayIndex < _mapSize.x * _mapSize.y)
+            if (worldPosition2Int.x < 0 || worldPosition2Int.y < 0 || worldPosition2Int.x >= _mapSize.x || worldPosition2Int.y >= _mapSize.y)
             {
-                cell = _cellEntities[arrayIndex];
-                return true;
+                cell = -1;
+                return false;
             }
-
-            cell = -1;
-            return false;
+            
+            cell = _cellEntities[arrayIndex];
+            return true;
         }
 
         public void SetTile(Vector2Int position, TileBase tile)
@@ -54,7 +54,7 @@ namespace ClientCode.Gameplay
             var position3Int = position.ToVector3Int();
             return _grid.Grid.GetCellCenterWorld(position3Int);
         }
-        
+
         private void SetSize(Vector2Int size)
         {
             _grid.Tilemap.origin = Vector3Int.zero;
