@@ -54,7 +54,6 @@ namespace ClientCode.Gameplay.Ecs
             systems.Add(CreateSystem<RegionRemoveCellSystem>());
             systems.Add(CreateSystem<RegionAddCellSystem>());
             systems.Add(CreateSystem<RegionSetColorSystem>());
-            systems.Add(CreateSystem<RegionDebugSystem>());
             systems.Add(_eventBus.GetDestroyEventsSystem().IncReplicant<RegionAddCellRequest>());
             systems.Add(_eventBus.GetDestroyEventsSystem().IncReplicant<RegionRemoveCellRequest>());
 
@@ -67,6 +66,8 @@ namespace ClientCode.Gameplay.Ecs
             systems.Add(new EcsWorldDebugSystem(entityNameFormat: "D4"));
             systems.Add(new EcsSystemsDebugSystem());
             systems.Add(new EcsWorldDebugSystem("Events", true, "D4"));
+#elif DEBUG_PROJECT
+            systems.Add(CreateSystem<RegionDebugSystem>());
 #endif
         }
 
