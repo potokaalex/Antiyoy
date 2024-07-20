@@ -3,6 +3,7 @@ using ClientCode.Data.Progress.Map;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Services.Progress.Actors;
 using ClientCode.Services.StaticDataProvider;
+using ClientCode.Utilities;
 using ClientCode.Utilities.Extensions;
 using Cysharp.Threading.Tasks;
 using Leopotam.EcsLite;
@@ -36,55 +37,67 @@ namespace ClientCode.Gameplay.Cell
 
         public int[] Create()
         {
-            var gridPrefab = _staticData.Prefabs.GridObject;
-            var emptyTile = _staticData.Prefabs.EmptyTile;
-            var gridObject = Object.Instantiate(gridPrefab);
             var cells = CreateCells();
-
-            _gridManager.Initialize(gridObject, cells, _progress.Size);
-            _gridManager.FillByTile(_progress.Size, emptyTile);
+            CreateGrid(cells);
+            ConnectCells(cells);
             CreateDebug(cells);
 
             return cells;
         }
 
+        private void CreateGrid(int[] cells)
+        {
+            var gridPrefab = _staticData.Prefabs.GridObject;
+            var emptyTile = _staticData.Prefabs.EmptyTile;
+            var gridObject = Object.Instantiate(gridPrefab);
+
+            _gridManager.Initialize(gridObject, cells, _progress.Size);
+            _gridManager.FillByTile(_progress.Size, emptyTile);
+        }
+
         private int[] CreateCells()
         {
-            var width = _progress.Size.x;
             var height = _progress.Size.y;
+            var width = _progress.Size.x;
             var cells = new int[width * height];
 
-            for (var i = 0; i < _progress.Size.y; i++)
-            for (var j = 0; j < _progress.Size.x; j++)
+            for (var i = 0; i < height; i++)
+            for (var j = 0; j < width; j++)
             {
-                var gridPosition = new Vector2Int(i, j);
-                var arrayIndex = gridPosition.ToArrayIndex(width);
-                cells[arrayIndex] = CreateCell(arrayIndex, gridPosition);
+                var position = new Vector2Int(i, j);
+                var arrayIndex = position.ToArrayIndex(width);
+                cells[arrayIndex] = CreateCell(arrayIndex, position);
             }
 
             return cells;
         }
 
-        private int CreateCell(int index, Vector2Int gridPosition)
+        private int CreateCell(int index, Vector2Int position)
         {
             var entity = _world.NewEntity();
             ref var cell = ref _pool.Add(entity);
 
             cell.NeighbourCellEntities = new List<int>(6);
             cell.Id = index;
-            cell.GridPosition = gridPosition;
+            cell.GridPosition = position;
 
             return entity;
         }
-        
+
         private void CreateDebug(int[] cells)
         {
 #if DEBUG_PROJECT
             var root = new GameObject("CellDebugRoot").transform;
             var prefab = _staticData.Prefabs.CellDebug;
 
-            foreach (var entity in cells)
+            var height = _progress.Size.y;
+            var width = _progress.Size.x;
+
+            for (var i = 0; i < height; i++)
+            for (var j = 0; j < width; j++)
             {
+                var arrayIndex = new Vector2Int(i, j).ToArrayIndex(width);
+                var entity = cells[arrayIndex];
                 ref var cell = ref _pool.Get(entity);
                 var position = _gridManager.GetCellWorldPosition(cell.GridPosition);
                 var instance = Object.Instantiate(prefab, position, Quaternion.identity);
@@ -96,29 +109,31 @@ namespace ClientCode.Gameplay.Cell
 #endif
         }
 
-        /*
-        private void ConnectCells(CellObject[] cells, int width, int height)
+        private void ConnectCells(int[] cells)
         {
-            //BUG!
-            for (var i = 0; i < width; i++)
-            for (var j = 0; j < height; j++)
+            var height = _progress.Size.y;
+            var width = _progress.Size.x;
+
+            for (var i = 0; i < height; i++)
+            for (var j = 0; j < width; j++)
             {
-                var arrayIndex = new Vector2Int(i, j);
-                var index = GetIndex(i, j, width);
+                var position = new Vector2Int(i, j);
+                var arrayIndex = position.ToArrayIndex(width);
+                ref var cell = ref _pool.Get(cells[arrayIndex]);
 
-                foreach (var direction in HexUtilities.Directions)
+                foreach (var direction in HexDirectionsUtilities.GetNeighbors(position))
                 {
-                    var neighbourArrayIndex = (HexUtilities.FromArrayIndex(arrayIndex) + direction).ToArrayIndex();
-                    var neighbourIndex = GetIndex(neighbourArrayIndex.x, neighbourArrayIndex.y, width);
+                    var neighborPosition = position + direction;
 
-                    if (neighbourIndex >= 0 && neighbourIndex < width * height)
-                        cells[index].NeighbourCellEntities.Add(cells[neighbourIndex].Entity);
+                    if (neighborPosition.x < 0 || neighborPosition.y < 0 || neighborPosition.x >= width || neighborPosition.y >= height)
+                        continue;
+
+                    var neighborArrayIndex = neighborPosition.ToArrayIndex(width);
+
+                    cell.NeighbourCellEntities.Add(cells[neighborArrayIndex]);
                 }
             }
         }
-*/
-
-        //private int GetIndex(int i, int j, int width) => i * width + j;
 
         public void OnLoad(MapProgressData progress) => _progress = progress;
 

@@ -69,7 +69,7 @@ namespace Zenject.ReflectionBaking
                 var dirtyAllScriptsMethod = compInterface.GetMethod(
                     "DirtyAllScripts", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
 
-                dirtyAllScriptsMethod.Invoke(null, null);
+                dirtyAllScriptsMethod?.Invoke(null, null);
             }
 
             UnityEditor.AssetDatabase.Refresh();
