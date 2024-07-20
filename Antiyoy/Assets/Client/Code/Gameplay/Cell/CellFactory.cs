@@ -88,6 +88,7 @@ namespace ClientCode.Gameplay.Cell
                 ref var cell = ref _pool.Get(entity);
                 var position = _gridManager.GetCellWorldPosition(cell.GridPosition);
                 var instance = Object.Instantiate(prefab, position, Quaternion.identity);
+                instance.name = entity.ToString();
                 instance.transform.SetParent(root);
                 instance.Neighbours = cell.NeighbourCellEntities;
                 cell.Debug = instance;
