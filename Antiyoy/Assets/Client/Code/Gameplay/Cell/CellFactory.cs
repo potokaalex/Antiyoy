@@ -43,7 +43,8 @@ namespace ClientCode.Gameplay.Cell
 
             _gridManager.Initialize(gridObject, cells, _progress.Size);
             _gridManager.FillByTile(_progress.Size, emptyTile);
-
+            CreateDebug(cells);
+            
             return cells;
         }
 
@@ -64,6 +65,7 @@ namespace ClientCode.Gameplay.Cell
             return cells;
         }
 
+        //only if DEBUG enabled!
         private int CreateCell(int index, Vector2Int gridPosition)
         {
             var entity = _world.NewEntity();
@@ -74,6 +76,23 @@ namespace ClientCode.Gameplay.Cell
             cell.GridPosition = gridPosition;
 
             return entity;
+        }
+
+        //only if DEBUG!
+        private void CreateDebug(int[] cells)
+        {
+            var root = new GameObject("CellDebugRoot").transform;
+            var prefab = _staticData.Prefabs.CellDebug;
+
+            foreach (var entity in cells)
+            {
+                ref var cell = ref _pool.Get(entity);
+                var position = _gridManager.GetCellWorldPosition(cell.GridPosition);
+                var instance = Object.Instantiate(prefab, position, Quaternion.identity);
+                instance.transform.SetParent(root);
+                instance.Neighbours = cell.NeighbourCellEntities;
+                cell.Debug = instance;
+            }
         }
 
         /*
@@ -95,23 +114,6 @@ namespace ClientCode.Gameplay.Cell
                         cells[index].NeighbourCellEntities.Add(cells[neighbourIndex].Entity);
                 }
             }
-        }
-
-        private ref CellComponent CreateCellComponent(int index, int entity)
-        {
-            ref var cell = ref _pool.Add(entity);
-            cell.NeighbourCellEntities = new List<int>(6);
-            cell.Id = index;
-            return ref cell;
-        }
-
-        private CellObject CreateObject(HexCoordinates hex)
-        {
-            var position = hex.ToWorldPosition();
-            var cellObject = Object.Instantiate(_cellPrefab, position, Quaternion.identity);
-            cellObject.transform.SetParent(_cellsRoot);
-            cellObject.name = $"Cell({hex})";
-            return cellObject;
         }
 */
 

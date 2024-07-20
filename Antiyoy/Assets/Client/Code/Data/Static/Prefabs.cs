@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using ClientCode.Gameplay;
+using ClientCode.Gameplay.Cell;
 using ClientCode.Services.CanvasService;
 using ClientCode.UI.Buttons.Base;
 using ClientCode.UI.Windows.Base;
@@ -15,5 +16,6 @@ namespace ClientCode.Data.Static
         public GridObject GridObject;
         public TileBase EmptyTile;
         public TileBase Tile;
+        public CellDebugObject CellDebug;
     }
 }

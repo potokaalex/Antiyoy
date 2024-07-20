@@ -104,3 +104,4 @@ MonoBehaviour:
   GridObject: {fileID: 1386563995804984276, guid: 50f97d7510916a9488e25c1466422370, type: 3}
   EmptyTile: {fileID: 11400000, guid: b73d522c49b9e614ea47115ae5cf6afd, type: 2}
   Tile: {fileID: 11400000, guid: 34cd2e8663182a2409debeeb0f285dbf, type: 2}
+  CellDebug: {fileID: -5042177610280518718, guid: b265878a0453e2942b530aa6b5fa60e7, type: 3}

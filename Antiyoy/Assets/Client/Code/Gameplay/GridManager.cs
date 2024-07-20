@@ -38,7 +38,6 @@ namespace ClientCode.Gameplay
         {
             var position3Int = position.ToVector3Int();
             _grid.Tilemap.SetTile(position3Int, tile);
-            //SetColor(position, color);
         }
 
         public void FillByTile(Vector2Int range, TileBase tile) => _grid.Tilemap.BoxFill(Vector3Int.zero, tile, 0, 0, range.x, range.y);
@@ -50,6 +49,12 @@ namespace ClientCode.Gameplay
             _grid.Tilemap.SetColor(position3Int, color);
         }
 
+        public Vector3 GetCellWorldPosition(Vector2Int position)
+        {
+            var position3Int = position.ToVector3Int();
+            return _grid.Grid.GetCellCenterWorld(position3Int);
+        }
+        
         private void SetSize(Vector2Int size)
         {
             _grid.Tilemap.origin = Vector3Int.zero;

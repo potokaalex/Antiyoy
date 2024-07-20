@@ -36,7 +36,8 @@ namespace ClientCode.Infrastructure.States.Project
                 Windows = configs.UI.Windows,
                 GridObject = configs.Gameplay.GridObject,
                 EmptyTile = configs.Gameplay.EmptyTile,
-                Tile = configs.Gameplay.Tile
+                Tile = configs.Gameplay.Tile,
+                CellDebug = configs.Gameplay.CellDebug
             };
             _staticData.Initialize(configs, prefabs);
         }
