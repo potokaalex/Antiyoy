@@ -44,7 +44,7 @@ namespace ClientCode.Gameplay.Cell
             _gridManager.Initialize(gridObject, cells, _progress.Size);
             _gridManager.FillByTile(_progress.Size, emptyTile);
             CreateDebug(cells);
-            
+
             return cells;
         }
 
@@ -65,7 +65,6 @@ namespace ClientCode.Gameplay.Cell
             return cells;
         }
 
-        //only if DEBUG enabled!
         private int CreateCell(int index, Vector2Int gridPosition)
         {
             var entity = _world.NewEntity();
@@ -77,10 +76,10 @@ namespace ClientCode.Gameplay.Cell
 
             return entity;
         }
-
-        //only if DEBUG!
+        
         private void CreateDebug(int[] cells)
         {
+#if DEBUG_PROJECT
             var root = new GameObject("CellDebugRoot").transform;
             var prefab = _staticData.Prefabs.CellDebug;
 
@@ -93,6 +92,7 @@ namespace ClientCode.Gameplay.Cell
                 instance.Neighbours = cell.NeighbourCellEntities;
                 cell.Debug = instance;
             }
+#endif
         }
 
         /*
