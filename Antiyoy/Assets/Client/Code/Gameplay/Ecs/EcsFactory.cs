@@ -44,7 +44,7 @@ namespace ClientCode.Gameplay.Ecs
             var systems = new EcsSystems(_world);
             systems.AddWorld(_eventBus.GetEventsWorld(), "Events");
 
-            AddDebugSystems(systems);
+            AddStandardDebugSystems(systems);
             systems.Add(CreateSystem<TileDestroySystem>());
             systems.Add(_eventBus.GetDestroyEventsSystem().IncReplicant<TileDestroyRequest>());
             systems.Add(CreateSystem<TileCreateSystem>());
@@ -53,23 +53,32 @@ namespace ClientCode.Gameplay.Ecs
             systems.Add(CreateSystem<RegionRemoveCellSystem>());
             systems.Add(CreateSystem<RegionAddCellSystem>());
             systems.Add(CreateSystem<RegionSetColorSystem>());
+            AddRegionDebugSystem(systems);
             systems.Add(_eventBus.GetDestroyEventsSystem().IncReplicant<RegionAddCellRequest>());
             systems.Add(_eventBus.GetDestroyEventsSystem().IncReplicant<RegionRemoveCellRequest>());
 
             return systems;
         }
 
-        private void AddDebugSystems(IEcsSystems systems)
+        private void AddStandardDebugSystems(IEcsSystems systems)
         {
 #if UNITY_EDITOR
             systems.Add(new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem(entityNameFormat: "D4"));
             systems.Add(new Leopotam.EcsLite.UnityEditor.EcsSystemsDebugSystem());
             systems.Add(new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem("Events", true, "D4"));
-#elif DEBUG_PROJECT
+#endif
+#if DEBUG_PROJECT
             systems.Add(CreateSystem<RegionDebugSystem>());
 #endif
         }
 
+        private void AddRegionDebugSystem(EcsSystems systems)
+        {
+#if DEBUG_PROJECT
+            systems.Add(CreateSystem<RegionDebugSystem>());
+#endif
+        }
+        
         private IEcsSystem CreateSystem<T>() where T : IEcsSystem => _instantiator.Instantiate<T>();
     }
 }

@@ -1,6 +1,6 @@
 using UnityEditor;
 
-namespace ClientCode.Utilities.Editor.Base
+namespace Client.Code.Utilities.Editor.Base
 {
     public static class DefineSymbolsToggleTool
     {

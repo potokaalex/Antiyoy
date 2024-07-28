@@ -1,7 +1,7 @@
-using ClientCode.Utilities.Editor.Base;
+using Client.Code.Utilities.Editor.Base;
 using UnityEditor;
 
-namespace ClientCode.Utilities.Editor
+namespace Client.Code.Utilities.Editor
 {
     public static class SaveLoaderDebugToggle
     {
