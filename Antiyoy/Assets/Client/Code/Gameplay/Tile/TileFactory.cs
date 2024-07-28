@@ -50,7 +50,6 @@ namespace ClientCode.Gameplay.Tile
                 return;
 
             Destroy(cellEntity);
-
             ref var request = ref _eventsBus.NewEvent<TileCreateRequest>();
             request.CellEntity = cellEntity;
         }

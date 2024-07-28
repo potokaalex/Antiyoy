@@ -48,11 +48,17 @@ namespace ClientCode.Gameplay.Region.Systems
                     var link = _linkPool.Get(cellEntity);
                     var region = _pool.Get(link.RegionEntity);
                     var text = $"{link.RegionEntity}\n{region.CellEntities.Count}";
-                    cellDebug.Text.SetText(text);
+                    SetText(cellDebug, text);
                 }
                 else
-                    cellDebug.Text.SetText(string.Empty);
+                    SetText(cellDebug, string.Empty);
             }
+        }
+
+        private static void SetText(CellDebugObject cellDebug, string text)
+        {
+            if (cellDebug.Text.text != text)
+                cellDebug.Text.SetText(text);
         }
     }
 }

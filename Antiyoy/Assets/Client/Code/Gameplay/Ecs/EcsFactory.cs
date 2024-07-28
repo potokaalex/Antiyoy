@@ -67,9 +67,6 @@ namespace ClientCode.Gameplay.Ecs
             systems.Add(new Leopotam.EcsLite.UnityEditor.EcsSystemsDebugSystem());
             systems.Add(new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem("Events", true, "D4"));
 #endif
-#if DEBUG_PROJECT
-            systems.Add(CreateSystem<RegionDebugSystem>());
-#endif
         }
 
         private void AddRegionDebugSystem(EcsSystems systems)
