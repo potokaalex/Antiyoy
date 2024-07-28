@@ -14,6 +14,8 @@ namespace ClientCode.UI.Buttons
         [Inject]
         public void Construct(IWindowsFactory windowsFactory) => _windowsFactory = windowsFactory;
 
+        public override ButtonType GetBaseType() => ButtonType.WindowToggle;
+
         private protected override void OnClick()
         {
             var window = _windowsFactory.Get(_windowType);

@@ -1,10 +1,13 @@
 using ClientCode.Infrastructure.States.MapEditor;
+using ClientCode.Infrastructure.States.Project;
 using ClientCode.Services.Logger.Base;
 using ClientCode.Services.Progress.Base;
 using ClientCode.Services.Progress.Map;
 using ClientCode.Services.StateMachine;
 using ClientCode.Services.StaticDataProvider;
+using ClientCode.UI.Buttons;
 using ClientCode.UI.Buttons.Base;
+using ClientCode.UI.Buttons.Exit;
 using ClientCode.UI.Buttons.Load;
 using ClientCode.UI.Buttons.Map.SaveLoad;
 using ClientCode.UI.Factory;
@@ -42,6 +45,14 @@ namespace ClientCode.UI.Presenters.MainMenu
                 HandleLoadButton((LoadButton)button);
             else if (button.GetBaseType() == ButtonType.MapSaveLoad)
                 HandleMapSaveLoadButton((MapSaveLoadButton)button);
+            else if (button.GetBaseType() == ButtonType.Exit)
+                HandleExitButton((ExitButton)button);
+        }
+
+        private void HandleExitButton(ExitButton button)
+        {
+            if (button.Type == ExitButtonType.Project)
+                _stateMachine.SwitchTo<ProjectExitState>();
         }
 
         private async void HandleMapSaveLoadButton(MapSaveLoadButton button)

@@ -13,7 +13,7 @@ namespace ClientCode.UI.Buttons.Base
         [Inject]
         public void BaseConstruct(IButtonsHandler handler) => _handler = handler;
 
-        public virtual ButtonType GetBaseType() => 0;
+        public abstract ButtonType GetBaseType();
 
         private void Awake()
         {
