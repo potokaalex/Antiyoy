@@ -27,7 +27,7 @@ namespace ClientCode.UI.Controllers
             if (Input.mouseScrollDelta.y < 0)
                 newSize += speed * Time.deltaTime;
 
-            _camera.orthographicSize = Mathf.Clamp(newSize, 1, 5);
+            _camera.orthographicSize = Mathf.Clamp(newSize, 2, 5);
         }
 
         private void Move()

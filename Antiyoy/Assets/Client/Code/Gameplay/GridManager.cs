@@ -15,7 +15,6 @@ namespace ClientCode.Gameplay
             _mapSize = mapSize;
             _cellEntities = cellEntities;
             _grid = grid;
-            SetSize(_mapSize);
         }
 
         public bool GetCellEntity(Vector2 position, out int cell)
@@ -29,7 +28,7 @@ namespace ClientCode.Gameplay
                 cell = -1;
                 return false;
             }
-            
+
             cell = _cellEntities[arrayIndex];
             return true;
         }
@@ -40,7 +39,13 @@ namespace ClientCode.Gameplay
             _grid.Tilemap.SetTile(position3Int, tile);
         }
 
-        public void FillByTile(Vector2Int range, TileBase tile) => _grid.Tilemap.BoxFill(Vector3Int.zero, tile, 0, 0, range.x, range.y);
+        public void FillByTile(Vector2Int range, TileBase tile)
+        {
+            for (var y = 0; y < range.y; y++)
+            for (var x = 0; x < range.x; x++)
+                _grid.Tilemap.SetTile(new Vector3Int(x, y), tile);
+            _grid.Tilemap.CompressBounds();
+        }
 
         public void SetColor(Vector2Int position, Color color)
         {
@@ -53,12 +58,6 @@ namespace ClientCode.Gameplay
         {
             var position3Int = position.ToVector3Int();
             return _grid.Grid.GetCellCenterWorld(position3Int);
-        }
-
-        private void SetSize(Vector2Int size)
-        {
-            _grid.Tilemap.origin = Vector3Int.zero;
-            _grid.Tilemap.size = new Vector3Int(size.x, size.y, 0);
         }
     }
 }
