@@ -12,13 +12,13 @@ namespace ClientCode.Infrastructure.States.MapEditor
 {
     public class MapEditorLoadState : IStateSimple
     {
-        private readonly ISceneLoader _sceneLoader;
+        private readonly SceneLoader _sceneLoader;
         private readonly IStaticDataProvider _staticData;
         private readonly IMapSaveLoader _saveLoader;
         private readonly ILogReceiver _logReceiver;
         private readonly IProjectSaveLoader _projectSaveLoader;
 
-        public MapEditorLoadState(ISceneLoader sceneLoader, IStaticDataProvider staticData, IMapSaveLoader saveLoader,
+        public MapEditorLoadState(SceneLoader sceneLoader, IStaticDataProvider staticData, IMapSaveLoader saveLoader,
             ILogReceiver logReceiver, IProjectSaveLoader projectSaveLoader)
         {
             _sceneLoader = sceneLoader;
@@ -33,7 +33,7 @@ namespace ClientCode.Infrastructure.States.MapEditor
             _projectSaveLoader.Load(out var progress);
 
             var scenesConfig = _staticData.Configs.Scene;
-            await _sceneLoader.LoadSceneAsync(scenesConfig.MapEditorSceneName);
+            await _sceneLoader.LoadSceneAsync(SceneName.MapEditor);
 
             LoadMap(progress.MapEditorPreload);
 

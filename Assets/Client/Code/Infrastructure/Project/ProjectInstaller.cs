@@ -1,4 +1,5 @@
 using Client.Code.Services.Config;
+using Client.Code.Services.UnityEvents;
 using ClientCode.Client.Code.Services.StateMachineCode;
 using ClientCode.Data.Static.Config;
 using ClientCode.Services.CanvasService;
@@ -23,15 +24,17 @@ namespace ClientCode.Infrastructure.Installers
 
         public override void InstallBindings()
         {
+            Container.Install<UnityEventsInstaller>();
             Container.BindInterfacesAndSelfTo<StateMachine>().AsSingle();
             Container.BindInterfacesAndSelfTo<ConfigsController>().AsSingle();
-            //
-            BindLog();//hmm. -will see
-            BindUI();
+            Container.BindInterfacesAndSelfTo<InputService>().AsSingle();
+            Container.Bind<SceneLoader>().AsSingle();
+
+            BindLog(); //hmm. -will see
             BindProgress();
 
-            Container.Bind<IStaticDataProvider>().To<StaticDataProvider>().AsSingle();
-            Container.Bind<ISceneLoader>().To<SceneLoader>().AsSingle();
+            
+            //remove
             Container.Bind<IUpdater>().To<Updater>().FromNewComponentOnNewGameObject().AsSingle();
         }
 
@@ -39,13 +42,6 @@ namespace ClientCode.Infrastructure.Installers
         {
             Container.BindInterfacesTo<ProjectSaveLoader>().AsSingle().WithArguments(_loadDataConfig.Data);
             Container.BindInterfacesTo<MapSaveLoader>().AsSingle();
-        }
-
-        private void BindUI()
-        {
-            Container.Bind<ProjectCanvasController>().AsSingle();
-            Container.Bind<IWindowsHandler>().To<ProjectWindowsPresenter>().AsSingle();
-            Container.Bind<IInputService>().To<InputService>().FromNewComponentOnNewGameObject().AsSingle();
         }
 
         private void BindLog()

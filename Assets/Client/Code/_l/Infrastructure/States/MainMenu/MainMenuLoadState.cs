@@ -8,12 +8,12 @@ namespace ClientCode.Infrastructure.States.MainMenu
 {
     public class MainMenuLoadState : IStateSimple
     {
-        private readonly ISceneLoader _sceneLoader;
+        private readonly SceneLoader _sceneLoader;
         private readonly IStaticDataProvider _staticData;
         private readonly IProjectSaveLoader _projectSaveLoader;
         private readonly IProjectStateMachine _projectStateMachine;
 
-        public MainMenuLoadState(ISceneLoader sceneLoader, IStaticDataProvider staticData, IProjectSaveLoader projectSaveLoader,
+        public MainMenuLoadState(SceneLoader sceneLoader, IStaticDataProvider staticData, IProjectSaveLoader projectSaveLoader,
             IProjectStateMachine projectStateMachine)
         {
             _sceneLoader = sceneLoader;
@@ -24,8 +24,7 @@ namespace ClientCode.Infrastructure.States.MainMenu
 
         public async void Enter()
         {
-            var scenesConfig = _staticData.Configs.Scene;
-            await _sceneLoader.LoadSceneAsync(scenesConfig.MainMenuSceneName);
+            await _sceneLoader.LoadSceneAsync(SceneName.MainMenu);
             _projectSaveLoader.Load();
             _projectStateMachine.SwitchTo<MainMenuState>();
         }
