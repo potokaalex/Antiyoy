@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using ClientCode.Gameplay.Region.Components;
 using ClientCode.Gameplay.Region.Systems;
 using Leopotam.EcsLite;
+using SevenBoldPencil.EasyEvents;
 
 namespace ClientCode.Gameplay.Region.Tools
 {
@@ -9,7 +10,7 @@ namespace ClientCode.Gameplay.Region.Tools
     {
         //separates non-major regionParts from baseRegionCells. Creates new regions from non-major parts.
         public static void Divide(List<RegionPart> regionParts, List<int> baseRegionCells, EcsWorld world,
-            EcsPool<RegionComponent> pool, EcsPool<RegionLink> linkPool, RegionType type)
+            EcsPool<RegionComponent> pool, EcsPool<RegionLink> linkPool, RegionType type, EventsBus events)
         {
             var majorPart = GetMajorPart(regionParts);
 
@@ -18,7 +19,7 @@ namespace ClientCode.Gameplay.Region.Tools
                 if (part.Cells == majorPart.Cells)
                     continue;
 
-                var newRegionEntity = RegionFactoryTool.Create(world, pool, type, part.Cells.Count);
+                var newRegionEntity = RegionFactoryTool.Create(world, pool, type, events, part.Cells.Count);
                 ref var newRegion = ref pool.Get(newRegionEntity);
 
                 MoveCells(part, newRegion, baseRegionCells, newRegionEntity, linkPool);

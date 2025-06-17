@@ -14,15 +14,6 @@ namespace ClientCode.Utilities.Extensions
             return false;
         }
 
-        public static int Find<T>(this EcsPool<T> pool, EcsFilter filter, Predicate<T> predicate) where T : struct
-        {
-            foreach (var entity in filter)
-                if (predicate.Invoke(pool.Get(entity)))
-                    return entity;
-
-            throw new Exception("It is impossible to find an entity!");
-        }
-
         public static ref T GetOrAdd<T>(this EcsPool<T> pool, int entity) where T : unmanaged
         {
             if (pool.Has(entity))
@@ -31,12 +22,43 @@ namespace ClientCode.Utilities.Extensions
             return ref pool.Add(entity);
         }
 
-        public static int GetFirstOrDefault(this EcsFilter filter)
+        public static int Get<T>(this EcsFilter filter, EcsPool<T> pool, Predicate<T> predicate) where T : struct
         {
             foreach (var entity in filter)
-                return entity;
+                if (predicate.Invoke(pool.Get(entity)))
+                    return entity;
 
-            return default;
+            throw new Exception("It is impossible to find an entity with this predicate!");
+        }
+
+        public static ref T Get<T>(this EcsPool<T> pool, EcsFilter filter, Predicate<T> predicate) where T : struct
+        {
+            foreach (var entity in filter)
+            {
+                ref var component = ref pool.Get(entity);
+
+                if (predicate.Invoke(component))
+                    return ref component;
+            }
+
+            throw new Exception("It is impossible to find an entity with this predicate!");
+        }
+
+        public static bool TryGet<T>(this EcsPool<T> pool, EcsFilter filter, Predicate<T> predicate, out T component) where T : struct
+        {
+            foreach (var entity in filter)
+            {
+                ref var c = ref pool.Get(entity);
+
+                if (predicate.Invoke(c))
+                {
+                    component = c;
+                    return true;
+                }
+            }
+
+            component = default;
+            return false;
         }
     }
 }
