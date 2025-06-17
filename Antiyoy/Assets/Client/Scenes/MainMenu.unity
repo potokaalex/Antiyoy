@@ -894,6 +894,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6681e3650d254534ab818e3c5f07cd96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Type: 0
 --- !u!1 &1594451701
 GameObject:
   m_ObjectHideFlags: 0
@@ -1256,6 +1257,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2140980175}
   - component: {fileID: 2140980176}
+  - component: {fileID: 2140980178}
   - component: {fileID: 2140980177}
   m_Layer: 0
   m_Name: Startup
@@ -1325,6 +1327,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _sceneData:
     UIRoot: {fileID: 594483638}
+--- !u!114 &2140980178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2140980174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: beda6361f1034480ab19390560da5e3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
