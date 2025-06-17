@@ -1,12 +1,13 @@
+using Client.Code.Services.StateMachineCode.State;
 using ClientCode.Data.Progress.Project;
 using ClientCode.Data.Static;
+using ClientCode.Infrastructure.States.MapEditor;
 using ClientCode.Services.Progress.Project;
-using ClientCode.Services.StateMachine;
 using ClientCode.Services.StaticDataProvider;
 
 namespace ClientCode.Infrastructure.States.Project
 {
-    public class ProjectLoadState : IState
+    public class ProjectLoadState : IStateSimple
     {
         private readonly IProjectSaveLoader _saveLoader;
         private readonly IProjectStateMachine _stateMachine;

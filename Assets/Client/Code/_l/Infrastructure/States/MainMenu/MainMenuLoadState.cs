@@ -1,11 +1,12 @@
+using Client.Code.Services.StateMachineCode.State;
+using ClientCode.Infrastructure.States.MapEditor;
 using ClientCode.Services.Progress.Project;
 using ClientCode.Services.SceneLoader;
-using ClientCode.Services.StateMachine;
 using ClientCode.Services.StaticDataProvider;
 
 namespace ClientCode.Infrastructure.States.MainMenu
 {
-    public class MainMenuLoadState : IState
+    public class MainMenuLoadState : IStateSimple
     {
         private readonly ISceneLoader _sceneLoader;
         private readonly IStaticDataProvider _staticData;

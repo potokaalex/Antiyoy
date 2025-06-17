@@ -1,16 +1,14 @@
+using ClientCode.Client.Code.Services.StateMachineCode;
 using ClientCode.Data.Scene;
 using ClientCode.Gameplay;
 using ClientCode.Gameplay.Cell;
 using ClientCode.Gameplay.Countries;
-using ClientCode.Gameplay.Countries.Systems;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Region;
 using ClientCode.Gameplay.Tile;
 using ClientCode.Infrastructure.States.MapEditor;
 using ClientCode.Services.Progress.Actors;
 using ClientCode.Services.Progress.Map.Factory;
-using ClientCode.Services.Startup;
-using ClientCode.Services.StateMachine;
 using ClientCode.UI.Buttons.Base;
 using ClientCode.UI.Controllers;
 using ClientCode.UI.Factory;
@@ -28,14 +26,14 @@ namespace ClientCode.Infrastructure.Installers
 
         public override void InstallBindings()
         {
-            BindStateMachine();
+            Container.BindInterfacesAndSelfTo<StateMachine>().AsSingle();
             BindFactories();
             BindProviders();
             BindUI();
             BindProgress();
 
             Container.Bind<GridManager>().AsSingle();
-            Container.BindInterfacesTo<DelayStartupper<MapEditorEnterState>>().AsSingle();
+            //Container.BindInterfacesTo<DelayStartupper<MapEditorEnterState>>().AsSingle(); TODO
         }
 
         private void BindProgress()
@@ -53,12 +51,6 @@ namespace ClientCode.Infrastructure.Installers
             Container.Bind<MapEditorModel>().AsSingle();
             Container.Bind<MapEditorTouchCellController>().AsSingle();
             Container.Bind<CameraController>().AsSingle().WithArguments(_sceneData.Camera);
-        }
-
-        private void BindStateMachine()
-        {
-            Container.Bind<IStateMachine>().To<StateMachine>().AsSingle();
-            Container.Bind<StateFactory>().AsSingle();
         }
 
         private void BindProviders()

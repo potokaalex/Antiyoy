@@ -1,20 +1,21 @@
+using Client.Code.Services.StateMachineCode.State;
+using ClientCode.Client.Code.Services.StateMachineCode;
 using ClientCode.Gameplay.Cell;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Region;
 using ClientCode.Gameplay.Tile;
-using ClientCode.Services.StateMachine;
 
 namespace ClientCode.Infrastructure.States.MapEditor
 {
-    public class MapEditorEnterState : IState
+    public class MapEditorEnterState : IStateSimple
     {
         private readonly CellFactory _cellFactory;
         private readonly IEcsProvider _ecsProvider;
-        private readonly IStateMachine _stateMachine;
+        private readonly StateMachine _stateMachine;
         private readonly TileFactory _tileFactory;
         private readonly RegionFactory _regionFactory;
 
-        public MapEditorEnterState(CellFactory cellFactory, TileFactory tileFactory, IStateMachine stateMachine, IEcsProvider ecsProvider,
+        public MapEditorEnterState(CellFactory cellFactory, TileFactory tileFactory, StateMachine stateMachine, IEcsProvider ecsProvider,
             RegionFactory regionFactory)
         {
             _cellFactory = cellFactory;

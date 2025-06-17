@@ -1,5 +1,5 @@
+using ClientCode.Client.Code.Services.StateMachineCode;
 using ClientCode.Infrastructure.States.MapEditor;
-using ClientCode.Services.StateMachine;
 using ClientCode.UI.Buttons.Base;
 using ClientCode.UI.Buttons.Load;
 using ClientCode.UI.Buttons.Map.SaveLoad;
@@ -10,10 +10,10 @@ namespace ClientCode.UI.Presenters.MapEditor
 {
     public class MapEditorButtonsPresenter : IButtonsHandler
     {
-        private readonly IStateMachine _stateMachine;
+        private readonly StateMachine _stateMachine;
         private readonly MapEditorModel _model;
 
-        public MapEditorButtonsPresenter(MapEditorModel model, IStateMachine stateMachine)
+        public MapEditorButtonsPresenter(MapEditorModel model, StateMachine stateMachine)
         {
             _model = model;
             _stateMachine = stateMachine;

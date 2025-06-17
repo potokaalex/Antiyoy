@@ -1,4 +1,5 @@
 using Client.Code.Services.Config;
+using ClientCode.Client.Code.Services.StateMachineCode;
 using ClientCode.Data.Static.Config;
 using ClientCode.Services.CanvasService;
 using ClientCode.Services.InputService;
@@ -7,7 +8,6 @@ using ClientCode.Services.Logger.Base;
 using ClientCode.Services.Progress.Map;
 using ClientCode.Services.Progress.Project;
 using ClientCode.Services.SceneLoader;
-using ClientCode.Services.StateMachine;
 using ClientCode.Services.StaticDataProvider;
 using ClientCode.Services.Updater;
 using ClientCode.UI.Factory;

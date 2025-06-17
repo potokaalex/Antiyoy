@@ -1,12 +1,13 @@
+using Client.Code.Services.StateMachineCode.State;
 using ClientCode.Infrastructure.States.MainMenu;
+using ClientCode.Infrastructure.States.MapEditor;
 using ClientCode.Services.CanvasService;
-using ClientCode.Services.StateMachine;
 using ClientCode.Services.Updater;
 using ClientCode.UI.Factory;
 
 namespace ClientCode.Infrastructure.States.Project
 {
-    public class ProjectEnterSate : IState
+    public class ProjectEnterSate : IStateSimple
     {
         private readonly ProjectCanvasController _projectCanvasController;
         private readonly UIFactory _uiFactory;

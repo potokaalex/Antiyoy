@@ -1,9 +1,9 @@
+using Client.Code.Services.StateMachineCode.State;
 using ClientCode.Services.Progress.Project;
-using ClientCode.Services.StateMachine;
 
 namespace ClientCode.Infrastructure.States.MainMenu
 {
-    public class MainMenuState : IState
+    public class MainMenuState : IStateSimple
     {
         private readonly IProjectSaveLoader _saveLoader;
 

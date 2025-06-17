@@ -3,7 +3,6 @@ using ClientCode.Infrastructure.States.Project;
 using ClientCode.Services.Logger.Base;
 using ClientCode.Services.Progress.Base;
 using ClientCode.Services.Progress.Map;
-using ClientCode.Services.StateMachine;
 using ClientCode.Services.StaticDataProvider;
 using ClientCode.UI.Buttons;
 using ClientCode.UI.Buttons.Base;

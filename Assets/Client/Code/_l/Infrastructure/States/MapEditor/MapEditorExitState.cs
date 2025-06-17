@@ -1,10 +1,10 @@
+using Client.Code.Services.StateMachineCode.State;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Infrastructure.States.MainMenu;
-using ClientCode.Services.StateMachine;
 
 namespace ClientCode.Infrastructure.States.MapEditor
 {
-    public class MapEditorExitState : IState
+    public class MapEditorExitState : IStateSimple
     {
         private readonly EcsFactory _ecsFactory;
         private readonly IProjectStateMachine _stateMachine;

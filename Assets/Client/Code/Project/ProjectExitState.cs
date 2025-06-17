@@ -1,11 +1,11 @@
+using Client.Code.Services.StateMachineCode.State;
 using ClientCode.Services.Progress.Project;
-using ClientCode.Services.StateMachine;
 using ClientCode.Services.Updater;
 using UnityEditor;
 
 namespace ClientCode.Infrastructure.States.Project
 {
-    public class ProjectExitState : IState
+    public class ProjectExitState : IStateSimple
     {
         private readonly IProjectSaveLoader _progressDataSaveLoader;
         private readonly IUpdater _updater;

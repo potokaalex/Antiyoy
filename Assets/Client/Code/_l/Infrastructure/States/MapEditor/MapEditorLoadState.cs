@@ -1,3 +1,4 @@
+using Client.Code.Services.StateMachineCode.State;
 using ClientCode.Data.Progress.Map;
 using ClientCode.Data.Progress.Project;
 using ClientCode.Services.Logger.Base;
@@ -5,13 +6,11 @@ using ClientCode.Services.Progress.Base;
 using ClientCode.Services.Progress.Map;
 using ClientCode.Services.Progress.Project;
 using ClientCode.Services.SceneLoader;
-using ClientCode.Services.Startup;
-using ClientCode.Services.StateMachine;
 using ClientCode.Services.StaticDataProvider;
 
 namespace ClientCode.Infrastructure.States.MapEditor
 {
-    public class MapEditorLoadState : IState
+    public class MapEditorLoadState : IStateSimple
     {
         private readonly ISceneLoader _sceneLoader;
         private readonly IStaticDataProvider _staticData;
@@ -38,7 +37,7 @@ namespace ClientCode.Infrastructure.States.MapEditor
 
             LoadMap(progress.MapEditorPreload);
 
-            _sceneLoader.FindInScene<IStartuper>(scenesConfig.MapEditorSceneName).Startup();
+            //_sceneLoader.FindInScene<IStartuper>(scenesConfig.MapEditorSceneName).Startup(); TODO
         }
 
         private void LoadMap(MapEditorPreloadData preload)

@@ -1,12 +1,12 @@
+using Client.Code.Services.StateMachineCode.State;
 using ClientCode.Gameplay.Ecs;
-using ClientCode.Services.StateMachine;
 using ClientCode.Services.Updater;
 using ClientCode.UI.Controllers;
 using Leopotam.EcsLite;
 
 namespace ClientCode.Infrastructure.States.MapEditor
 {
-    public class MapEditorUpdateState : IState
+    public class MapEditorUpdateState : IStateSimple
     {
         private readonly IUpdater _updater;
         private readonly IEcsProvider _ecsProvider;

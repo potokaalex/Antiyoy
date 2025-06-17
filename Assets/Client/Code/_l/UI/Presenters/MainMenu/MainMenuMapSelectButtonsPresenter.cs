@@ -2,7 +2,6 @@ using ClientCode.Infrastructure.States.MapEditor;
 using ClientCode.Services.Logger.Base;
 using ClientCode.Services.Progress.Base;
 using ClientCode.Services.Progress.Map;
-using ClientCode.Services.StateMachine;
 using ClientCode.UI.Buttons.Base;
 using ClientCode.UI.Buttons.Map;
 using ClientCode.UI.Models;
