@@ -5,6 +5,7 @@ using ClientCode.Gameplay.Region.Tools;
 using FluentAssertions;
 using Leopotam.EcsLite;
 using NUnit.Framework;
+using SevenBoldPencil.EasyEvents;
 
 namespace Tests.Region
 {
@@ -15,6 +16,7 @@ namespace Tests.Region
         {
             //Arrange.
             var world = new EcsWorld();
+            var events = new EventsBus();
             var regionEntity = world.NewEntity();
             var pool = world.GetPool<RegionComponent>();
 
@@ -32,7 +34,7 @@ namespace Tests.Region
             };
 
             //Act.
-            RegionDivideTool.Divide(regionParts, baseRegionCells, world, pool, world.GetPool<RegionLink>(), 0);
+            RegionDivideTool.Divide(regionParts, baseRegionCells, world, pool, world.GetPool<RegionLink>(), 0, events);
 
             //Assert.
             var regionCount = world.Filter<RegionComponent>().End().GetEntitiesCount();

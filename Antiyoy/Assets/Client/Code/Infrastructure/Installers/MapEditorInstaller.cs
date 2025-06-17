@@ -1,6 +1,8 @@
 using ClientCode.Data.Scene;
 using ClientCode.Gameplay;
 using ClientCode.Gameplay.Cell;
+using ClientCode.Gameplay.Countries;
+using ClientCode.Gameplay.Countries.Systems;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Region;
 using ClientCode.Gameplay.Tile;
@@ -71,6 +73,7 @@ namespace ClientCode.Infrastructure.Installers
             Container.BindInterfacesAndSelfTo<CellFactory>().AsSingle();
             Container.BindInterfacesAndSelfTo<TileFactory>().AsSingle();
             Container.BindInterfacesAndSelfTo<RegionFactory>().AsSingle();
+            Container.BindInterfacesAndSelfTo<CountryFactory>().AsSingle();
         }
     }
 }

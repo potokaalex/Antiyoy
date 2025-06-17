@@ -3,6 +3,7 @@ using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Region.Components;
 using ClientCode.Gameplay.Region.Tools;
 using Leopotam.EcsLite;
+using SevenBoldPencil.EasyEvents;
 
 namespace ClientCode.Gameplay.Region.Systems
 {
@@ -15,15 +16,15 @@ namespace ClientCode.Gameplay.Region.Systems
         private EcsPool<RegionComponent> _pool;
         private EcsPool<RegionLink> _linkPool;
         private EcsPool<CellComponent> _cellPool;
+        private EventsBus _events;
 
         public RegionRemoveCellSystem(IEcsProvider ecsProvider) => _ecsProvider = ecsProvider;
 
         public void Init(IEcsSystems systems)
         {
-            var eventsBus = _ecsProvider.GetEventsBus();
-
             _world = _ecsProvider.GetWorld();
-            _tileRequestFilter = eventsBus.GetEventBodies(out _tileRequestPool);
+            _events = _ecsProvider.GetEventsBus();
+            _tileRequestFilter = _events.GetEventBodies(out _tileRequestPool);
             _pool = _world.GetPool<RegionComponent>();
             _linkPool = _world.GetPool<RegionLink>();
             _cellPool = _world.GetPool<CellComponent>();
@@ -44,14 +45,14 @@ namespace ClientCode.Gameplay.Region.Systems
 
             if (baseRegion.CellEntities.Count == 0)
             {
-                RegionFactoryTool.Destroy(regionLink.RegionEntity, _pool);
+                RegionFactoryTool.Destroy(regionLink.RegionEntity, _pool, _events);
                 return;
             }
 
             var regionParts = RegionPartsTool.Get(baseRegion.CellEntities, _cellPool);
 
             if (regionParts[0].Cells.Count != baseRegion.CellEntities.Count)
-                RegionDivideTool.Divide(regionParts, baseRegion.CellEntities, _world, _pool, _linkPool, baseRegion.Type);
+                RegionDivideTool.Divide(regionParts, baseRegion.CellEntities, _world, _pool, _linkPool, baseRegion.Type, _events);
 
             RegionPartsTool.Release(regionParts);
         }

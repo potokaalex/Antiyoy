@@ -4,6 +4,7 @@ using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Region.Components;
 using ClientCode.Gameplay.Region.Tools;
 using Leopotam.EcsLite;
+using SevenBoldPencil.EasyEvents;
 
 namespace ClientCode.Gameplay.Region.Systems
 {
@@ -17,15 +18,16 @@ namespace ClientCode.Gameplay.Region.Systems
         private EcsPool<RegionComponent> _pool;
         private EcsPool<CellComponent> _cellPool;
         private EcsPool<RegionLink> _linkPool;
+        private EventsBus _events;
 
         public RegionAddCellSystem(IEcsProvider ecsProvider) => _ecsProvider = ecsProvider;
 
         public void Init(IEcsSystems systems)
         {
-            var eventsBus = _ecsProvider.GetEventsBus();
 
             _world = _ecsProvider.GetWorld();
-            _requestFilter = eventsBus.GetEventBodies(out _requestPool);
+            _events = _ecsProvider.GetEventsBus();
+            _requestFilter = _events.GetEventBodies(out _requestPool);
             _pool = _world.GetPool<RegionComponent>();
             _cellPool = _world.GetPool<CellComponent>();
             _linkPool = _world.GetPool<RegionLink>();
@@ -44,11 +46,11 @@ namespace ClientCode.Gameplay.Region.Systems
             int regionEntity;
 
             if (_neighbourRegions.Count == 0)
-                regionEntity = RegionFactoryTool.Create(_world, _pool, request.Type);
+                regionEntity = RegionFactoryTool.Create(_world, _pool, request.Type, _events);
             else if (_neighbourRegions.Count == 1)
                 regionEntity = _neighbourRegions[0];
             else
-                regionEntity = RegionJoinTool.Join(_neighbourRegions, _pool, _linkPool);
+                regionEntity = RegionJoinTool.Join(_neighbourRegions, _pool, _linkPool, _events);
 
             RegionAddCellTool.AddCell(request.CellEntity, regionEntity, _linkPool, _pool);
         }

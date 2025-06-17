@@ -1,3 +1,5 @@
+using ClientCode.Gameplay.Countries.Components;
+using ClientCode.Gameplay.Countries.Systems;
 using ClientCode.Gameplay.Region.Components;
 using ClientCode.Gameplay.Region.Systems;
 using ClientCode.Gameplay.Tile.Components;
@@ -45,19 +47,37 @@ namespace ClientCode.Gameplay.Ecs
             systems.AddWorld(_eventBus.GetEventsWorld(), "Events");
 
             AddStandardDebugSystems(systems);
+            CreateTiles(systems);
+            CreateRegions(systems);
+            CreateCountries(systems);
+
+            return systems;
+        }
+
+        private void CreateCountries(EcsSystems systems)
+        {
+            systems.Add(CreateSystem<CountryRemoveRegionSystem>());
+            systems.Add(CreateSystem<CountryAddRegionSystem>());
+            systems.Add(_eventBus.GetDestroyEventsSystem().IncReplicant<CountryAddRegionRequest>());
+            systems.Add(_eventBus.GetDestroyEventsSystem().IncReplicant<CountryRemoveRegionRequest>());
+        }
+
+        private void CreateTiles(EcsSystems systems)
+        {
             systems.Add(CreateSystem<TileDestroySystem>());
             systems.Add(_eventBus.GetDestroyEventsSystem().IncReplicant<TileDestroyRequest>());
             systems.Add(CreateSystem<TileCreateSystem>());
             systems.Add(_eventBus.GetDestroyEventsSystem().IncReplicant<TileCreateRequest>());
+        }
 
+        private void CreateRegions(EcsSystems systems)
+        {
             systems.Add(CreateSystem<RegionRemoveCellSystem>());
             systems.Add(CreateSystem<RegionAddCellSystem>());
             systems.Add(CreateSystem<RegionSetColorSystem>());
             AddRegionDebugSystem(systems);
             systems.Add(_eventBus.GetDestroyEventsSystem().IncReplicant<RegionAddCellRequest>());
             systems.Add(_eventBus.GetDestroyEventsSystem().IncReplicant<RegionRemoveCellRequest>());
-
-            return systems;
         }
 
         private void AddStandardDebugSystems(IEcsSystems systems)
