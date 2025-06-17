@@ -1,7 +1,7 @@
+using Client.Code.Services;
 using Client.Code.Services.Config;
 using Client.Code.Services.Progress;
 using Client.Code.Services.UnityEvents;
-using ClientCode.Client.Code.Services.StateMachineCode;
 using ClientCode.Services.InputService;
 using ClientCode.Services.Logger;
 using ClientCode.Services.Logger.Base;
@@ -15,12 +15,12 @@ namespace ClientCode.Infrastructure.Installers
         public override void InstallBindings()
         {
             Container.Install<UnityEventsInstaller>();
-            Container.BindInterfacesAndSelfTo<StateMachine>().AsSingle();
+            Container.Bind<Instantiator>().AsSingle().CopyIntoAllSubContainers();
             Container.BindInterfacesAndSelfTo<ConfigsController>().AsSingle();
             Container.BindInterfacesTo<ProgressController>().AsSingle();
             Container.BindInterfacesAndSelfTo<InputService>().AsSingle();
             Container.Bind<SceneLoader>().AsSingle();
-            Container.BindInterfacesTo<ProjectManager>().AsSingle();
+            Container.BindInterfacesAndSelfTo<ProjectManager>().AsSingle();
         }
 
         private void BindLog()

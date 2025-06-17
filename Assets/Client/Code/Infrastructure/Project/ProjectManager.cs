@@ -13,6 +13,13 @@ namespace ClientCode.Infrastructure.Installers
 
         public void LoadMenu() => _container.Resolve<SceneLoader>().LoadScene(SceneName.MainMenu);
 
+        public void LoadEditor() => _container.Resolve<SceneLoader>().LoadScene(SceneName.MapEditor);
+
+        public void LoadBattle()
+        {
+            //TODO
+        }
+
         public void Exit()
         {
 #if UNITY_EDITOR
