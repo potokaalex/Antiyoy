@@ -1,3 +1,4 @@
+using Client.Code.Services.Config;
 using ClientCode.Data.Static.Config;
 using ClientCode.Services.CanvasService;
 using ClientCode.Services.InputService;
@@ -24,7 +25,9 @@ namespace ClientCode.Infrastructure.Installers
         public override void InstallBindings()
         {
             Container.BindInterfacesAndSelfTo<StateMachine>().AsSingle();
-            BindLog();
+            Container.BindInterfacesAndSelfTo<ConfigsController>().AsSingle();
+            //
+            BindLog();//hmm.
             BindUI();
             BindProgress();
 
