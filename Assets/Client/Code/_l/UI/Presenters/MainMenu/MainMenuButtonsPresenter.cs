@@ -1,5 +1,4 @@
 using ClientCode.Infrastructure.States.MapEditor;
-using ClientCode.Infrastructure.States.Project;
 using ClientCode.Services.Logger.Base;
 using ClientCode.Services.Progress.Base;
 using ClientCode.Services.Progress.Map;
@@ -47,8 +46,8 @@ namespace ClientCode.UI.Presenters.MainMenu
 
         private void HandleExitButton(ExitButton button)
         {
-            if (button.Type == ExitButtonType.Project)
-                _stateMachine.SwitchTo<ProjectExitState>();
+            //if (button.Type == ExitButtonType.Project)
+            //    _stateMachine.SwitchTo<ProjectExitState>();
         }
 
         private async void HandleMapSaveLoadButton(MapSaveLoadButton button)

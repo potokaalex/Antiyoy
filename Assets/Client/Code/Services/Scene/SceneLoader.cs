@@ -11,6 +11,8 @@ namespace ClientCode.Services.SceneLoader
 
         public SceneLoader(IProvider<ConfigData> configData) => _configData = configData;
 
+        public void LoadScene(SceneName name) => LoadSceneAsync(name).Forget();
+
         public async UniTask LoadSceneAsync(SceneName name)
         {
             var nameStr = _configData.Value.Scenes[name];
