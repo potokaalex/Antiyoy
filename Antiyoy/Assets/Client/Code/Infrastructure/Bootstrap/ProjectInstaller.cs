@@ -23,7 +23,7 @@ namespace ClientCode.Infrastructure.Installers
 
         public override void InstallBindings()
         {
-            BindStateMachine();
+            Container.BindInterfacesAndSelfTo<StateMachine>().AsSingle();
             BindLog();
             BindUI();
             BindProgress();
@@ -53,16 +53,6 @@ namespace ClientCode.Infrastructure.Installers
             Container.Bind<ILogReceiver>().To<LogReceiver>().AsSingle();
             Container.BindInterfacesTo<LogHandlersRegister>().AsSingle();
             Container.BindInterfacesTo<LoggerByPopup>().AsSingle();
-        }
-
-        private void BindStateMachine()
-        {
-#if DEBUG_STATE_MACHINE
-            Container.Bind<IProjectStateMachine>().To<StateMachine>().AsSingle().WithArguments(true);
-#else
-            Container.Bind<IProjectStateMachine>().To<StateMachine>().AsSingle();
-#endif
-            Container.Bind<StateFactory>().AsSingle();
         }
     }
 }
