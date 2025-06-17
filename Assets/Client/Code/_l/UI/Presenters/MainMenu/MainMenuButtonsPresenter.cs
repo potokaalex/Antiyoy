@@ -9,7 +9,6 @@ using ClientCode.UI.Buttons.Base;
 using ClientCode.UI.Buttons.Exit;
 using ClientCode.UI.Buttons.Load;
 using ClientCode.UI.Buttons.Map.SaveLoad;
-using ClientCode.UI.Factory;
 using ClientCode.UI.Models;
 using ClientCode.UI.Windows;
 using ClientCode.UI.Windows.Base;
@@ -24,17 +23,15 @@ namespace ClientCode.UI.Presenters.MainMenu
         private readonly IMapSaveLoader _saveLoader;
         private readonly ILogReceiver _logReceiver;
         private readonly IStaticDataProvider _staticData;
-        private readonly IWindowsFactory _windowsFactory;
         private readonly MainMenuModel _model;
 
         public MainMenuButtonsPresenter(IProjectStateMachine stateMachine, IMapSaveLoader saveLoader, ILogReceiver logReceiver,
-            IStaticDataProvider staticData, IWindowsFactory windowsFactory, MainMenuModel model)
+            IStaticDataProvider staticData, MainMenuModel model)
         {
             _stateMachine = stateMachine;
             _saveLoader = saveLoader;
             _logReceiver = logReceiver;
             _staticData = staticData;
-            _windowsFactory = windowsFactory;
             _model = model;
         }
 
@@ -59,7 +56,8 @@ namespace ClientCode.UI.Presenters.MainMenu
             if (button.Type != MapSaveLoadButtonType.Remove)
                 return;
 
-            var writingWindow = (IWritingWindow)_windowsFactory.Get(WindowType.Writing);
+            //TODO
+            var writingWindow = (IWritingWindow)null;//_windowsFactory.Get(WindowType.Writing);
             writingWindow.Open();
 
             var mapKey = await writingWindow.GetString();

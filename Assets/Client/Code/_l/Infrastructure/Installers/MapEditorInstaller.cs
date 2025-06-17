@@ -6,12 +6,10 @@ using ClientCode.Gameplay.Countries;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Region;
 using ClientCode.Gameplay.Tile;
-using ClientCode.Infrastructure.States.MapEditor;
 using ClientCode.Services.Progress.Actors;
 using ClientCode.Services.Progress.Map.Factory;
 using ClientCode.UI.Buttons.Base;
 using ClientCode.UI.Controllers;
-using ClientCode.UI.Factory;
 using ClientCode.UI.Models;
 using ClientCode.UI.Presenters.MapEditor;
 using ClientCode.UI.Windows.Base;
@@ -44,8 +42,6 @@ namespace ClientCode.Infrastructure.Installers
 
         private void BindUI()
         {
-            Container.Bind<UIFactory>().AsSingle().WithArguments(_sceneData.UIRoot);
-            Container.Bind<IWindowsFactory>().To<WindowsFactory>().AsSingle();
             Container.Bind<IButtonsHandler>().To<MapEditorButtonsPresenter>().AsSingle();
             Container.Bind<IWindowsHandler>().To<MapEditorWindowsPresenter>().AsSingle();
             Container.Bind<MapEditorModel>().AsSingle();

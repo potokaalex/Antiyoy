@@ -10,7 +10,6 @@ using ClientCode.Services.Progress.Project;
 using ClientCode.Services.SceneLoader;
 using ClientCode.Services.StaticDataProvider;
 using ClientCode.Services.Updater;
-using ClientCode.UI.Factory;
 using ClientCode.UI.Presenters;
 using ClientCode.UI.Windows.Base;
 using UnityEngine;
@@ -27,7 +26,7 @@ namespace ClientCode.Infrastructure.Installers
             Container.BindInterfacesAndSelfTo<StateMachine>().AsSingle();
             Container.BindInterfacesAndSelfTo<ConfigsController>().AsSingle();
             //
-            BindLog();//hmm.
+            BindLog();//hmm. -will see
             BindUI();
             BindProgress();
 
@@ -44,8 +43,6 @@ namespace ClientCode.Infrastructure.Installers
 
         private void BindUI()
         {
-            Container.Bind<UIFactory>().AsSingle();
-            Container.Bind<IWindowsFactory>().To<WindowsFactory>().AsSingle();
             Container.Bind<ProjectCanvasController>().AsSingle();
             Container.Bind<IWindowsHandler>().To<ProjectWindowsPresenter>().AsSingle();
             Container.Bind<IInputService>().To<InputService>().FromNewComponentOnNewGameObject().AsSingle();

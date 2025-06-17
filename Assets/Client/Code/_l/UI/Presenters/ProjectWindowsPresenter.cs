@@ -11,8 +11,8 @@ namespace ClientCode.UI.Presenters
 
         public void OnCreate(WindowBase window)
         {
-            if (window.BaseType == WindowType.Popups)
-                window.transform.SetParent(_canvasController.TopElementsRoot, false);
+            //if (window.BaseType == WindowType.Popups)
+            //    window.transform.SetParent(_canvasController.TopElementsRoot, false);
         }
     }
 }
