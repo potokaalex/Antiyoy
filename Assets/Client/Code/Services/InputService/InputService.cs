@@ -1,8 +1,9 @@
 using UnityEngine;
+using Zenject;
 
 namespace ClientCode.Services.InputService
 {
-    public class InputService : MonoBehaviour, IInputService
+    public class InputService : ITickable
     {
         private bool _leftMouseButtonDown;
         private bool _rightMouseButtonDown;
@@ -13,11 +14,10 @@ namespace ClientCode.Services.InputService
                 return _leftMouseButtonDown;
             if (type == MouseType.Right)
                 return _rightMouseButtonDown;
-
             return false;
         }
 
-        private void Update()
+        public void Tick()
         {
             _leftMouseButtonDown = Input.GetMouseButton(0);
             _rightMouseButtonDown = Input.GetMouseButton(1);

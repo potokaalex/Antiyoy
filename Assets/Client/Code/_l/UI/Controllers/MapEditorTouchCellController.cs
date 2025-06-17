@@ -13,10 +13,10 @@ namespace ClientCode.UI.Controllers
         private readonly MapEditorModel _model;
         private readonly TileFactory _tileFactory;
         private readonly RegionFactory _regionFactory;
-        private readonly IInputService _input;
+        private readonly InputService _input;
 
         public MapEditorTouchCellController(MapEditorSceneData sceneData, CameraController camera, MapEditorModel model, TileFactory tileFactory,
-            RegionFactory regionFactory, IInputService input, GridManager gridManager) : base(sceneData.EventSystem, camera, gridManager)
+            RegionFactory regionFactory, InputService input, GridManager gridManager) : base(sceneData.EventSystem, camera, gridManager)
         {
             _model = model;
             _tileFactory = tileFactory;
