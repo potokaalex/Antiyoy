@@ -15,7 +15,7 @@ namespace ClientCode.Infrastructure.States.MapEditor.MainMenu
         public ButtonView BattleButton;
         public ButtonView EditorButton;
         public ButtonView ExitButton;
-        public MainMenuMapEditorPanel EditorPanel;
+        public MapEditorPanel EditorPanel;
         private readonly CompositeDisposable _disposables = new();
         private ProjectManager _projectManager;
 

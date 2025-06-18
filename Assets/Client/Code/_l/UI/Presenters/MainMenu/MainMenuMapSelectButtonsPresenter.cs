@@ -24,10 +24,14 @@ namespace ClientCode.UI.Presenters.MainMenu
             _stateMachine = stateMachine;
         }
 
-        public void Handle(ButtonBaseOld button) => HandleMapSelectButton((MapSelectButton)button);
-
-        private void HandleMapSelectButton(MapSelectButton button)
+        public void Handle(ButtonBaseOld button)
         {
+            //HandleMapSelectButton((MapEditorSelectButton)button);
+        }
+
+        private void HandleMapSelectButton(MapEditorSelectButton button)
+        {
+            /*
             var mapKey = button.MapKey;
             var validatorResult = _saveLoader.IsValidToLoad(mapKey);
 
@@ -42,6 +46,7 @@ namespace ClientCode.UI.Presenters.MainMenu
                 _model.MapEditorPreload.MapKey = mapKey;
                 _stateMachine.SwitchTo<MapEditorLoadState>();
             }
+            */
         }
     }
 }

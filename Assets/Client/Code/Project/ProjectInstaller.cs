@@ -6,6 +6,7 @@ using ClientCode.Services.InputService;
 using ClientCode.Services.Logger;
 using ClientCode.Services.Logger.Base;
 using ClientCode.Services.SceneLoader;
+using ClientCode.UI.Windows.Writing;
 using Zenject;
 
 namespace ClientCode.Infrastructure.Installers
@@ -21,14 +22,7 @@ namespace ClientCode.Infrastructure.Installers
             Container.BindInterfacesAndSelfTo<InputService>().AsSingle();
             Container.Bind<SceneLoader>().AsSingle();
             Container.BindInterfacesAndSelfTo<ProjectManager>().AsSingle();
-        }
-
-        private void BindLog()
-        {
-            //TODO will see
-            Container.Bind<ILogReceiver>().To<LogReceiver>().AsSingle();
-            Container.BindInterfacesTo<LogHandlersRegister>().AsSingle();
-            Container.BindInterfacesTo<LoggerByPopup>().AsSingle();
+            Container.Install<MapInstaller>();
         }
     }
 }

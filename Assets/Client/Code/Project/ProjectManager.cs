@@ -1,4 +1,5 @@
 ﻿using ClientCode.Services.SceneLoader;
+using ClientCode.UI.Windows.Writing;
 using Zenject;
 
 namespace ClientCode.Infrastructure.Installers
@@ -13,7 +14,11 @@ namespace ClientCode.Infrastructure.Installers
 
         public void LoadMenu() => _container.Resolve<SceneLoader>().LoadScene(SceneName.MainMenu);
 
-        public void LoadEditor() => _container.Resolve<SceneLoader>().LoadScene(SceneName.MapEditor);
+        public void LoadEditor(MapController map)
+        {
+            UnityEngine.Debug.Log($"Load: {map.Name}");
+            //_container.Resolve<SceneLoader>().LoadScene(SceneName.MapEditor);
+        }
 
         public void LoadBattle()
         {

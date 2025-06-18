@@ -1,0 +1,8 @@
+﻿//TODO: review feature
+    
+private void BindLog()
+{
+    Container.Bind<ILogReceiver>().To<LogReceiver>().AsSingle();
+    Container.BindInterfacesTo<LogHandlersRegister>().AsSingle();
+    Container.BindInterfacesTo<LoggerByPopup>().AsSingle();
+}
