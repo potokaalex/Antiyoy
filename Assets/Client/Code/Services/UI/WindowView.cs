@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Client.Code.Services.UI.Window
 {
-    public class WindowView : MonoBehaviour
+    public abstract class WindowView : MonoBehaviour
     {
         public bool ControlActive;
         

@@ -34,7 +34,7 @@ namespace ClientCode.Infrastructure.States.MapEditor.MainMenu
         private void InitializeEditor()
         {
             EditorButton.OnClickEvent.Subscribe(_ => EditorPanel.Open()).AddTo(_disposables);
-            EditorPanel.Initialize();
+            EditorPanel.AddTo(_disposables).Initialize();
             EditorPanel.OnOpenEvent.Subscribe(_ => Hide()).AddTo(_disposables);
             EditorPanel.OnCloseEvent.Subscribe(_ => Show()).AddTo(_disposables);
         }
