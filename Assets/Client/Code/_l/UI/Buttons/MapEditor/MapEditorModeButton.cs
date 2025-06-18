@@ -2,7 +2,7 @@ using ClientCode.UI.Buttons.Base;
 
 namespace ClientCode.UI.Buttons.MapEditor
 {
-    public class MapEditorModeButton : ButtonBase
+    public class MapEditorModeButton : ButtonBaseOld
     {
         public MapEditorModeButtonType Type;
 

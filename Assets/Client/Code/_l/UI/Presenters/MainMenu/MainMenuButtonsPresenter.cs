@@ -34,7 +34,7 @@ namespace ClientCode.UI.Presenters.MainMenu
             _model = model;
         }
 
-        public void Handle(ButtonBase button)
+        public void Handle(ButtonBaseOld button)
         {
             if (button.GetBaseType() == ButtonType.Load)
                 HandleLoadButton((LoadButton)button);

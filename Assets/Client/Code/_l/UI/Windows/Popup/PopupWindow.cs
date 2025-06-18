@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace ClientCode.UI.Windows.Popup
 {
-    public class PopupWindow : WindowBase
+    public class PopupWindow : WindowBaseOld
     {
         [SerializeField] private TextMeshProUGUI _text;
 

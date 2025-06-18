@@ -2,7 +2,7 @@ using ClientCode.UI.Buttons.Base;
 
 namespace ClientCode.UI.Buttons.Map.SaveLoad
 {
-    public class MapSaveLoadButton : ButtonBase
+    public class MapSaveLoadButton : ButtonBaseOld
     {
         public MapSaveLoadButtonType Type;
 

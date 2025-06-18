@@ -24,7 +24,7 @@ namespace ClientCode.UI.Presenters.MainMenu
             _stateMachine = stateMachine;
         }
 
-        public void Handle(ButtonBase button) => HandleMapSelectButton((MapSelectButton)button);
+        public void Handle(ButtonBaseOld button) => HandleMapSelectButton((MapSelectButton)button);
 
         private void HandleMapSelectButton(MapSelectButton button)
         {

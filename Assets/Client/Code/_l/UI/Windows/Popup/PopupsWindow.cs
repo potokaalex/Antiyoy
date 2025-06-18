@@ -4,7 +4,7 @@ using Zenject;
 
 namespace ClientCode.UI.Windows.Popup
 {
-    public class PopupsWindow : WindowBase
+    public class PopupsWindow : WindowBaseOld
     {
         [SerializeField] private Transform _popupsRoot;
         //private IWindowsFactory _factory;

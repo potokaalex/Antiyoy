@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ClientCode.UI.Buttons
 {
-    public class WindowToggle : ButtonBase
+    public class WindowToggle : ButtonBaseOld
     {
         [SerializeField] private WindowType _windowType;
        

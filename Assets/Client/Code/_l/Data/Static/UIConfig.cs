@@ -11,7 +11,7 @@ namespace ClientCode.Data.Static
     public class UIConfig : SerializedScriptableObject
     {
         public ProjectCanvasObject ProjectCanvasObject;
-        public Dictionary<ButtonType, ButtonBase> Buttons;
-        public Dictionary<WindowType, WindowBase> Windows;
+        public Dictionary<ButtonType, ButtonBaseOld> Buttons;
+        public Dictionary<WindowType, WindowBaseOld> Windows;
     }
 }

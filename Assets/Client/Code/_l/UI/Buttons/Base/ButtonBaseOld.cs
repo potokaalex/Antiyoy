@@ -5,7 +5,7 @@ using Zenject;
 namespace ClientCode.UI.Buttons.Base
 {
     [RequireComponent(typeof(Image), typeof(Button))]
-    public abstract class ButtonBase : MonoBehaviour, IUIElement
+    public abstract class ButtonBaseOld : MonoBehaviour, IUIElement
     {
         private Button _button;
         private IButtonsHandler _handler;

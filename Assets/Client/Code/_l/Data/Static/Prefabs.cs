@@ -10,8 +10,8 @@ namespace ClientCode.Data.Static
 {
     public class Prefabs
     {
-        public Dictionary<ButtonType, ButtonBase> Buttons;
-        public Dictionary<WindowType, WindowBase> Windows;
+        public Dictionary<ButtonType, ButtonBaseOld> Buttons;
+        public Dictionary<WindowType, WindowBaseOld> Windows;
         public ProjectCanvasObject ProjectCanvasObject;
         public GridObject GridObject;
         public TileBase EmptyTile;

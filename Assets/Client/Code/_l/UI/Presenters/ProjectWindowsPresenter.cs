@@ -9,7 +9,7 @@ namespace ClientCode.UI.Presenters
 
         public ProjectWindowsPresenter(ProjectCanvasController canvasController) => _canvasController = canvasController;
 
-        public void OnCreate(WindowBase window)
+        public void OnCreate(WindowBaseOld window)
         {
             //if (window.BaseType == WindowType.Popups)
             //    window.transform.SetParent(_canvasController.TopElementsRoot, false);

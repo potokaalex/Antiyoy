@@ -2,7 +2,7 @@ using ClientCode.UI.Buttons.Base;
 
 namespace ClientCode.UI.Buttons.Exit
 {
-    public class ExitButton : ButtonBase
+    public class ExitButton : ButtonBaseOld
     {
         public ExitButtonType Type;
         

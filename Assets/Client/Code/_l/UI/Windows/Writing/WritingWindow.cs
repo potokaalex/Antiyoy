@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace ClientCode.UI.Windows.Writing
 {
-    public class WritingWindow : WindowBase, IWritingWindow
+    public class WritingWindow : WindowBaseOld, IWritingWindow
     {
         [SerializeField] private TMP_InputField _field;
 

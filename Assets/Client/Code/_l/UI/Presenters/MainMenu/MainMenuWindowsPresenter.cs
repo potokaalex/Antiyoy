@@ -9,7 +9,7 @@ namespace ClientCode.UI.Presenters.MainMenu
     {
         private readonly MainMenuModel _model;
         private readonly MainMenuMapSelectButtonsPresenter _mapSelectButtonsPresenter;
-        private Dictionary<WindowType, WindowBase> _windows;
+        private Dictionary<WindowType, WindowBaseOld> _windows;
 
         public MainMenuWindowsPresenter(MainMenuModel model, MainMenuMapSelectButtonsPresenter mapSelectButtonsPresenter)
         {
@@ -17,7 +17,7 @@ namespace ClientCode.UI.Presenters.MainMenu
             _mapSelectButtonsPresenter = mapSelectButtonsPresenter;
         }
 
-        public void OnCreate(WindowBase window)
+        public void OnCreate(WindowBaseOld window)
         {
             /*
             if (window.BaseType == WindowType.MapEditorPreload)
@@ -35,7 +35,7 @@ namespace ClientCode.UI.Presenters.MainMenu
             */
         }
 
-        public void OnDestroy(WindowBase window)
+        public void OnDestroy(WindowBaseOld window)
         {
             /*
             if (window.BaseType == WindowType.MapEditorPreload)

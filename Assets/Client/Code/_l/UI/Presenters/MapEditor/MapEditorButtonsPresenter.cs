@@ -19,7 +19,7 @@ namespace ClientCode.UI.Presenters.MapEditor
             _stateMachine = stateMachine;
         }
 
-        public void Handle(ButtonBase button)
+        public void Handle(ButtonBaseOld button)
         {
             var baseType = button.GetBaseType();
 

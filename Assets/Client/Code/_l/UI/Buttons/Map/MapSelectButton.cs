@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ClientCode.UI.Buttons.Map
 {
-    public class MapSelectButton : ButtonBase
+    public class MapSelectButton : ButtonBaseOld
     {
         [SerializeField] private TextMeshProUGUI _text;
 
