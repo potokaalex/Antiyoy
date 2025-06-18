@@ -19,9 +19,10 @@ namespace ClientCode.UI.Presenters.MainMenu
 
         public void OnCreate(WindowBase window)
         {
+            /*
             if (window.BaseType == WindowType.MapEditorPreload)
             {
-                var w = (MapEditorPreloadWindow)window;
+                var w = (MapEditorPreloadPanel)window;
 
                 w.Initialize(_mapSelectButtonsPresenter);
 
@@ -31,16 +32,19 @@ namespace ClientCode.UI.Presenters.MainMenu
                 _model.MapKeys.OnAdded += w.CreateButton;
                 _model.MapKeys.OnRemoved += w.RemoveButton;
             }
+            */
         }
 
         public void OnDestroy(WindowBase window)
         {
+            /*
             if (window.BaseType == WindowType.MapEditorPreload)
             {
-                var w = (MapEditorPreloadWindow)window;
+                var w = (MapEditorPreloadPanel)window;
                 _model.MapKeys.OnAdded -= w.CreateButton;
                 _model.MapKeys.OnRemoved -= w.RemoveButton;
             }
+            */
         }
     }
 }
