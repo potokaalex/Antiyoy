@@ -11,7 +11,7 @@ namespace ClientCode.Client.Code.Bootstrap
             if (!FindObjectOfType<Bootstrapper>())
             {
                 foreach (var m in FindObjectsOfType<MonoBehaviour>())
-                    Destroy(m);
+                    DestroyImmediate(m);
                 SceneManager.LoadScene(0);
             }
         }
