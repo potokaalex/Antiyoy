@@ -12,7 +12,7 @@ using Zenject;
 
 namespace ClientCode.Gameplay.Cell
 {
-    public class CellFactory : IInitializable, IProgressReader<MapProgressData>, IProgressWriter<MapProgressData>
+    public class CellFactory : IInitializable
     {
         private readonly IEcsProvider _ecsProvider;
         private readonly IStaticDataProvider _staticData;
@@ -32,20 +32,19 @@ namespace ClientCode.Gameplay.Cell
         {
             _world = _ecsProvider.GetWorld();
             _pool = _world.GetPool<CellComponent>();
-            _world.Filter<CellComponent>().End();
         }
 
         public int[] Create()
         {
             var cells = CreateCells();
-            CreateGrid(cells);
+            CreateGrid(cells);//+
             ConnectCells(cells);
             CreateDebug(cells);
 
             return cells;
         }
 
-        private void CreateGrid(int[] cells)
+        private void CreateGrid(int[] cells)//почему это здесь? фактически тут я добавляю тайлы в грид.
         {
             var gridPrefab = _staticData.Prefabs.GridObject;
             var emptyTile = _staticData.Prefabs.EmptyTile;
@@ -69,7 +68,7 @@ namespace ClientCode.Gameplay.Cell
                 cells[arrayIndex] = CreateCell(arrayIndex, position);
             }
 
-            return cells;
+            return cells; //не совсем понятно что с этим делать? т.е. здесь должен быть не голый массив, а объект с методами.
         }
 
         private int CreateCell(int index, Vector2Int position)
@@ -109,7 +108,7 @@ namespace ClientCode.Gameplay.Cell
 #endif
         }
 
-        private void ConnectCells(int[] cells)
+        private void ConnectCells(int[] cells)//вот это самый сложный код, я тут соединяю клетки
         {
             var height = _progress.Size.y;
             var width = _progress.Size.x;
@@ -133,14 +132,6 @@ namespace ClientCode.Gameplay.Cell
                     cell.NeighbourCellEntities.Add(cells[neighborArrayIndex]);
                 }
             }
-        }
-
-        public void OnLoad(MapProgressData progress) => _progress = progress;
-
-        public UniTask OnSave(MapProgressData progress)
-        {
-            progress.Size = _progress.Size;
-            return UniTask.CompletedTask;
         }
     }
 }

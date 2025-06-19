@@ -1,3 +1,4 @@
+using Client.Code.Gameplay;
 using ClientCode.Client.Code.Services.StateMachineCode;
 using ClientCode.Data.Scene;
 using ClientCode.Gameplay;
@@ -20,11 +21,16 @@ namespace ClientCode.Infrastructure.Installers
     public class MapEditorInstaller : MonoInstaller
     {
         public CameraController Camera;
-        
+        public GridController Grid;
+
         public override void InstallBindings()
         {
             Container.BindInterfacesAndSelfTo<CameraController>().FromInstance(Camera).AsSingle();
-            //создать карту...
+            Container.BindInterfacesTo<GridController>().FromInstance(Grid).AsSingle();
+            
+            //1) создать грид с клетками.
+            //2) создать мир с клетками, регионами и т.д.
+            
             //Container.BindInterfacesAndSelfTo<StateMachine>().AsSingle();
             //BindFactories();
             //BindProviders();
@@ -32,7 +38,8 @@ namespace ClientCode.Infrastructure.Installers
             //BindProgress();
 
             //Container.Bind<GridManager>().AsSingle();
-            //Container.BindInterfacesTo<DelayStartupper<MapEditorEnterState>>().AsSingle(); TODO
+            //Container.BindInterfacesTo<DelayStartupper<MapEditorEnterState>>().AsSingle();
+            //Container.BindInterfacesTo<MapEditorInitializer>();
         }
 
         private void BindProgress()
