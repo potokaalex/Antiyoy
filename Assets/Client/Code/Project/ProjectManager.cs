@@ -7,8 +7,13 @@ namespace ClientCode.Infrastructure.Installers
     public class ProjectManager : IInitializable
     {
         private readonly DiContainer _container;
+        private readonly MapsContainer _mapsContainer;
 
-        public ProjectManager(DiContainer container) => _container = container;
+        public ProjectManager(DiContainer container, MapsContainer mapsContainer)
+        {
+            _mapsContainer = mapsContainer;
+            _container = container;
+        }
 
         public void Initialize() => LoadMenu();
 
@@ -16,9 +21,8 @@ namespace ClientCode.Infrastructure.Installers
 
         public void LoadEditor(MapController map)
         {
-            UnityEngine.Debug.Log($"Load: {map.Name}");
-            //goto state? -no, i need spacial logic here!
-            //_container.Resolve<SceneLoader>().LoadScene(SceneName.MapEditor);
+            _mapsContainer.CurrentMap = map;
+            _container.Resolve<SceneLoader>().LoadScene(SceneName.MapEditor);
         }
 
         public void LoadBattle()

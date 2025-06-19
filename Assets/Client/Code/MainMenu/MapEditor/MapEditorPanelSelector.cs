@@ -31,7 +31,8 @@ namespace ClientCode.UI.Windows.Writing
         
         public void Initialize()
         {
-            _mapsContainer.OnChangedEvent.Subscribe(_ => ReCreateSelectButtons()).AddTo(_disposables);
+            _mapsContainer.OnAddMap.Subscribe(_ => ReCreateSelectButtons()).AddTo(_disposables);
+            _mapsContainer.OnRemoveMap.Subscribe(_ => ReCreateSelectButtons()).AddTo(_disposables);
             ReCreateSelectButtons();
         }
         

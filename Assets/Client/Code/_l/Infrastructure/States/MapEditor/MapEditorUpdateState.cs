@@ -38,7 +38,7 @@ namespace ClientCode.Infrastructure.States.MapEditor
 
         private void Update()
         {
-            _camera.Update();
+            //_camera.Update();
             _touchCellController.Update();
         }
 

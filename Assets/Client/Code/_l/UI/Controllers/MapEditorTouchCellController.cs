@@ -2,9 +2,9 @@ using ClientCode.Data.Scene;
 using ClientCode.Gameplay;
 using ClientCode.Gameplay.Region;
 using ClientCode.Gameplay.Tile;
-using ClientCode.Services.InputService;
 using ClientCode.UI.Buttons.MapEditor;
 using ClientCode.UI.Models;
+using UnityEngine;
 
 namespace ClientCode.UI.Controllers
 {
@@ -13,22 +13,20 @@ namespace ClientCode.UI.Controllers
         private readonly MapEditorModel _model;
         private readonly TileFactory _tileFactory;
         private readonly RegionFactory _regionFactory;
-        private readonly InputService _input;
 
         public MapEditorTouchCellController(MapEditorSceneData sceneData, CameraController camera, MapEditorModel model, TileFactory tileFactory,
-            RegionFactory regionFactory, InputService input, GridManager gridManager) : base(sceneData.EventSystem, camera, gridManager)
+            RegionFactory regionFactory, GridManager gridManager) : base(sceneData.EventSystem, camera, gridManager)
         {
             _model = model;
             _tileFactory = tileFactory;
             _regionFactory = regionFactory;
-            _input = input;
         }
 
         private protected override void OnCellTouch(int cell)
         {
-            if (_input.IsMouseButtonDown(MouseType.Left))
+            if (Input.GetMouseButtonDown(0))
                 Create(cell);
-            else if (_input.IsMouseButtonDown(MouseType.Right))
+            else if (Input.GetMouseButtonDown(1))
                 Destroy(cell);
         }
 

@@ -13,24 +13,25 @@ using ClientCode.UI.Controllers;
 using ClientCode.UI.Models;
 using ClientCode.UI.Presenters.MapEditor;
 using ClientCode.UI.Windows.Base;
-using UnityEngine;
 using Zenject;
 
 namespace ClientCode.Infrastructure.Installers
 {
     public class MapEditorInstaller : MonoInstaller
     {
-        [SerializeField] private MapEditorSceneData _sceneData;
-
+        public CameraController Camera;
+        
         public override void InstallBindings()
         {
-            Container.BindInterfacesAndSelfTo<StateMachine>().AsSingle();
-            BindFactories();
-            BindProviders();
-            BindUI();
-            BindProgress();
+            Container.BindInterfacesAndSelfTo<CameraController>().FromInstance(Camera).AsSingle();
+            //создать карту...
+            //Container.BindInterfacesAndSelfTo<StateMachine>().AsSingle();
+            //BindFactories();
+            //BindProviders();
+            //BindUI();
+            //BindProgress();
 
-            Container.Bind<GridManager>().AsSingle();
+            //Container.Bind<GridManager>().AsSingle();
             //Container.BindInterfacesTo<DelayStartupper<MapEditorEnterState>>().AsSingle(); TODO
         }
 
@@ -46,17 +47,17 @@ namespace ClientCode.Infrastructure.Installers
             Container.Bind<IWindowsHandler>().To<MapEditorWindowsPresenter>().AsSingle();
             Container.Bind<MapEditorModel>().AsSingle();
             Container.Bind<MapEditorTouchCellController>().AsSingle();
-            Container.Bind<CameraController>().AsSingle().WithArguments(_sceneData.Camera);
         }
 
         private void BindProviders()
         {
-            Container.Bind<MapEditorSceneData>().FromInstance(_sceneData).AsSingle();
+            //Container.Bind<MapEditorSceneData>().FromInstance(_sceneData).AsSingle();
             Container.Bind<IEcsProvider>().To<EcsProvider>().AsSingle();
         }
 
         private void BindFactories()
         {
+            //hmm
             Container.BindInterfacesAndSelfTo<EcsFactory>().AsSingle();
             Container.BindInterfacesAndSelfTo<CellFactory>().AsSingle();
             Container.BindInterfacesAndSelfTo<TileFactory>().AsSingle();
