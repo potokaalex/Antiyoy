@@ -12,7 +12,7 @@ using Zenject;
 
 namespace ClientCode.Gameplay.Tile
 {
-    public class TileFactory : IInitializable, IProgressReader<MapProgressData>, IProgressWriter<MapProgressData>
+    public class TileFactoryOld : IInitializable, IProgressReader<MapProgressData>, IProgressWriter<MapProgressData>
     {
         private readonly IEcsProvider _ecsProvider;
         private EventsBus _eventsBus;
@@ -25,7 +25,7 @@ namespace ClientCode.Gameplay.Tile
         private EcsFilter _filter;
         private EcsPool<CellComponent> _cellPool;
 
-        public TileFactory(IEcsProvider ecsProvider) => _ecsProvider = ecsProvider;
+        public TileFactoryOld(IEcsProvider ecsProvider) => _ecsProvider = ecsProvider;
 
         public void Initialize()
         {

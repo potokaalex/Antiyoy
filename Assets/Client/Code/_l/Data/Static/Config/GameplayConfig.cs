@@ -15,6 +15,6 @@ namespace ClientCode.Data.Static.Config
         public GridObject GridObject;
         public TileBase EmptyTile;
         public TileBase Tile;
-        public CellDebugObject CellDebug;
+        public CellDebugBehaviour CellDebug;
     }
 }

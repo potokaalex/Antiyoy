@@ -20,7 +20,7 @@ namespace ClientCode.Gameplay
         public bool GetCellEntity(Vector2 position, out int cell)
         {
             var cellPosition = _grid.Grid.WorldToCell(position);
-            var worldPosition2Int = cellPosition.ToVector2Int();
+            var worldPosition2Int = new Vector2Int();//cellPosition.ToVector2Int());
             var arrayIndex = worldPosition2Int.ToArrayIndex(_mapSize.x);
 
             if (worldPosition2Int.x < 0 || worldPosition2Int.y < 0 || worldPosition2Int.x >= _mapSize.x || worldPosition2Int.y >= _mapSize.y)
@@ -54,10 +54,6 @@ namespace ClientCode.Gameplay
             _grid.Tilemap.SetColor(position3Int, color);
         }
 
-        public Vector3 GetCellWorldPosition(Vector2Int position)
-        {
-            var position3Int = position.ToVector3Int();
-            return _grid.Grid.GetCellCenterWorld(position3Int);
-        }
+        public Vector3 GetCellWorldPosition(Vector2Int position) => _grid.Grid.GetCellCenterWorld((Vector3Int)position);
     }
 }

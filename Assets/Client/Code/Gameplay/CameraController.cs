@@ -13,7 +13,11 @@ namespace ClientCode.UI.Controllers
             Scroll();
         }
         
-        public Ray GetRayFromCurrentMousePosition() => Camera.ScreenPointToRay(Input.mousePosition);
+        public RaycastHit2D GetHitFromMousePoint()
+        {
+            var ray = Camera.ScreenPointToRay(Input.mousePosition);
+            return Physics2D.Raycast(ray.origin, ray.direction);
+        }
 
         private void Scroll()
         {

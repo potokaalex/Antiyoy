@@ -22,15 +22,20 @@ namespace ClientCode.Infrastructure.Installers
     {
         public CameraController Camera;
         public GridController Grid;
+        public MapEditorWindow Window;
 
         public override void InstallBindings()
         {
             Container.BindInterfacesAndSelfTo<CameraController>().FromInstance(Camera).AsSingle();
-            Container.BindInterfacesTo<GridController>().FromInstance(Grid).AsSingle();
-            
+            Container.Bind<EcsController>().AsSingle(); //TODO
+            Container.BindInterfacesAndSelfTo<CellsFactory>().AsSingle();
+            Container.Bind<TileFactory>().AsSingle();
+            Container.BindInterfacesAndSelfTo<GridController>().FromInstance(Grid).AsSingle();
+            Container.BindInterfacesTo<MapEditorWindow>().FromInstance(Window).AsSingle();
+
             //1) создать грид с клетками.
             //2) создать мир с клетками, регионами и т.д.
-            
+
             //Container.BindInterfacesAndSelfTo<StateMachine>().AsSingle();
             //BindFactories();
             //BindProviders();
@@ -66,8 +71,8 @@ namespace ClientCode.Infrastructure.Installers
         {
             //hmm
             Container.BindInterfacesAndSelfTo<EcsFactory>().AsSingle();
-            Container.BindInterfacesAndSelfTo<CellFactory>().AsSingle();
-            Container.BindInterfacesAndSelfTo<TileFactory>().AsSingle();
+            //Container.BindInterfacesAndSelfTo<CellFactory>().AsSingle();
+            Container.BindInterfacesAndSelfTo<TileFactoryOld>().AsSingle();
             Container.BindInterfacesAndSelfTo<RegionFactory>().AsSingle();
             Container.BindInterfacesAndSelfTo<CountryFactory>().AsSingle();
         }

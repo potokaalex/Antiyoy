@@ -11,14 +11,14 @@ namespace ClientCode.UI.Controllers
     public class MapEditorTouchCellController : TouchCellController
     {
         private readonly MapEditorModel _model;
-        private readonly TileFactory _tileFactory;
+        private readonly TileFactoryOld _tileFactoryOld;
         private readonly RegionFactory _regionFactory;
 
-        public MapEditorTouchCellController(MapEditorSceneData sceneData, CameraController camera, MapEditorModel model, TileFactory tileFactory,
+        public MapEditorTouchCellController(MapEditorSceneData sceneData, CameraController camera, MapEditorModel model, TileFactoryOld tileFactoryOld,
             RegionFactory regionFactory, GridManager gridManager) : base(sceneData.EventSystem, camera, gridManager)
         {
             _model = model;
-            _tileFactory = tileFactory;
+            _tileFactoryOld = tileFactoryOld;
             _regionFactory = regionFactory;
         }
 
@@ -35,15 +35,15 @@ namespace ClientCode.UI.Controllers
             switch (_model.ModeType)
             {
                 case MapEditorModeButtonType.CreateRegionNone:
-                    _tileFactory.Create(cell);
+                    _tileFactoryOld.Create(cell);
                     _regionFactory.Destroy(cell);
                     break;
                 case MapEditorModeButtonType.CreateRegionRed:
-                    _tileFactory.Create(cell);
+                    _tileFactoryOld.Create(cell);
                     _regionFactory.Create(cell, RegionType.Red);
                     break;
                 case MapEditorModeButtonType.CreateRegionBlue:
-                    _tileFactory.Create(cell);
+                    _tileFactoryOld.Create(cell);
                     _regionFactory.Create(cell, RegionType.Blue);
                     break;
             }
@@ -51,7 +51,7 @@ namespace ClientCode.UI.Controllers
 
         private void Destroy(int cell)
         {
-            _tileFactory.Destroy(cell);
+            _tileFactoryOld.Destroy(cell);
             _regionFactory.Destroy(cell);
         }
     }

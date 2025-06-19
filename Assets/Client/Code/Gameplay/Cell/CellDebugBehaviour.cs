@@ -1,12 +1,13 @@
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 
 namespace ClientCode.Gameplay.Cell
 {
-    public class CellDebugObject : MonoBehaviour
+    public class CellDebugBehaviour : MonoBehaviour
     {
         public TextMeshPro Text;
-        public List<int> Neighbours;
+        [ReadOnly] public List<int> Neighbours;
     }
 }

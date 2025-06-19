@@ -182,7 +182,7 @@ GameObject:
   - component: {fileID: 5013339956242048887}
   - component: {fileID: -5042177610280518718}
   m_Layer: 0
-  m_Name: CellDebugObject
+  m_Name: CellDebug
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

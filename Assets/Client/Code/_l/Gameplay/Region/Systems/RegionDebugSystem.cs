@@ -55,7 +55,7 @@ namespace ClientCode.Gameplay.Region.Systems
             }
         }
 
-        private static void SetText(CellDebugObject cellDebug, string text)
+        private static void SetText(CellDebugBehaviour cellDebug, string text)
         {
             if (cellDebug.Text.text != text)
                 cellDebug.Text.SetText(text);

@@ -9,17 +9,15 @@ namespace ClientCode.Infrastructure.States.MapEditor
 {
     public class MapEditorEnterState : IStateSimple
     {
-        private readonly CellFactory _cellFactory;
         private readonly IEcsProvider _ecsProvider;
         private readonly StateMachine _stateMachine;
-        private readonly TileFactory _tileFactory;
+        private readonly TileFactoryOld _tileFactoryOld;
         private readonly RegionFactory _regionFactory;
 
-        public MapEditorEnterState(CellFactory cellFactory, TileFactory tileFactory, StateMachine stateMachine, IEcsProvider ecsProvider,
+        public MapEditorEnterState(TileFactoryOld tileFactoryOld, StateMachine stateMachine, IEcsProvider ecsProvider,
             RegionFactory regionFactory)
         {
-            _cellFactory = cellFactory;
-            _tileFactory = tileFactory;
+            _tileFactoryOld = tileFactoryOld;
             _stateMachine = stateMachine;
             _ecsProvider = ecsProvider;
             _regionFactory = regionFactory;
@@ -27,8 +25,8 @@ namespace ClientCode.Infrastructure.States.MapEditor
 
         public void Enter()
         {
-            var cells = _cellFactory.Create();
-            _tileFactory.Create(cells);
+            var cells = new int[0];// _cellFactory.Create();
+            _tileFactoryOld.Create(cells);
             _regionFactory.Create(cells);
 
             _ecsProvider.GetSystems().Init();//!
