@@ -17,6 +17,7 @@ namespace ClientCode.Infrastructure.Installers
         public void LoadEditor(MapController map)
         {
             UnityEngine.Debug.Log($"Load: {map.Name}");
+            //goto state? -no, i need spacial logic here!
             //_container.Resolve<SceneLoader>().LoadScene(SceneName.MapEditor);
         }
 

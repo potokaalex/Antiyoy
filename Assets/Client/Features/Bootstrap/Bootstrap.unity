@@ -282,6 +282,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GraphyDebugger
       objectReference: {fileID: 0}
+    - target: {fileID: 4692089831859540459, guid: 5aea6c3c6c8a792419bad89a53eeeabe, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

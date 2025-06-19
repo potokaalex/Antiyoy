@@ -12,13 +12,13 @@ namespace ClientCode.UI.Buttons.Map
         public Image Image;
         public Color Default;
         public Color Selected;
-        private MapEditorPanel _mapEditorPanel;
+        private MapEditorPanelSelector _selector;
 
         public MapController Map { get; private set; }
 
-        public void Initialize(MapController map, MapEditorPanel mapEditorPanel)
+        public void Initialize(MapController map, MapEditorPanelSelector mapEditorPanel)
         {
-            _mapEditorPanel = mapEditorPanel;
+            _selector = mapEditorPanel;
             Map = map;
             Text.SetText(map.Name);
         }
@@ -27,6 +27,6 @@ namespace ClientCode.UI.Buttons.Map
 
         public void UnSelect() => Image.color = Default;
 
-        protected override void OnClick() => _mapEditorPanel.Select(this);
+        protected override void OnClick() => _selector.Select(this);
     }
 }

@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 5398685322357457025}
   - component: {fileID: 6899830415585798132}
   m_Layer: 5
-  m_Name: MapSelectButton
+  m_Name: MapEditorSelectButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
