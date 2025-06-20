@@ -13,7 +13,7 @@ namespace ClientCode.UI.Windows.Writing
         public ButtonView CreateButton;
         public ButtonView RemoveButton;
         public ButtonView LoadButton;
-        public MapEditorPanelSelector Selector;
+        public MapEditorPanelMapSelector MapSelector;
         private readonly CompositeDisposable _disposables = new();
         private MapsFactory _mapsFactory;
         private ProjectManager _projectManager;
@@ -32,23 +32,24 @@ namespace ClientCode.UI.Windows.Writing
             CreateButton.OnClickEvent.Subscribe(_ => _mapsFactory.Create()).AddTo(_disposables);
             RemoveButton.OnClickEvent.Subscribe(_ => OnRemove()).AddTo(_disposables);
             LoadButton.OnClickEvent.Subscribe(_ => LoadEditor()).AddTo(_disposables);
-            Selector.AddTo(_disposables).Initialize();
+            MapSelector.Initialize();
+            MapSelector.AddTo(_disposables);
         }
 
         public void Dispose() => _disposables.Dispose();
 
-        protected override void OnClose(bool force) => Selector.UnSelect();
+        protected override void OnClose(bool force) => MapSelector.UnSelect();
 
         private void LoadEditor()
         {
-            if (Selector.HasSelection)
-                _projectManager.LoadEditor(Selector.SelectedMap);
+            if (MapSelector.HasSelection)
+                _projectManager.LoadEditor(MapSelector.SelectedValue);
         }
 
         private void OnRemove()
         {
-            if (Selector.HasSelection)
-                _mapsFactory.Destroy(Selector.SelectedMap);
+            if (MapSelector.HasSelection)
+                _mapsFactory.Destroy(MapSelector.SelectedValue);
         }
     }
 }

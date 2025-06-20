@@ -145,8 +145,9 @@ GameObject:
   - component: {fileID: 3205156288806465325}
   - component: {fileID: 5109661165409482981}
   - component: {fileID: 526657939898465591}
-  - component: {fileID: 5398685322357457025}
   - component: {fileID: 6899830415585798132}
+  - component: {fileID: 1610123635433979862}
+  - component: {fileID: 4734198701581580907}
   m_Layer: 5
   m_Name: MapEditorSelectButton
   m_TagString: Untagged
@@ -212,22 +213,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5398685322357457025
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6549729898600996179}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b3eb20be4f44916a692f3bb3cc80899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Text: {fileID: 9220675185909943465}
-  Image: {fileID: 526657939898465591}
-  Default: {r: 1, g: 1, b: 1, a: 1}
-  Selected: {r: 0.32551616, g: 0.89091104, b: 0.8962264, a: 1}
 --- !u!114 &6899830415585798132
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -248,3 +233,32 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &1610123635433979862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6549729898600996179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6699fb6fd7bd430f9d72882d9f71b493, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4734198701581580907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6549729898600996179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a52d257e3d0e46cd9e3faed62b0a7832, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Button: {fileID: 1610123635433979862}
+  Image: {fileID: 526657939898465591}
+  Default: {r: 1, g: 1, b: 1, a: 1}
+  Selected: {r: 0.32551616, g: 0.89091104, b: 0.8962264, a: 1}
+  Text: {fileID: 9220675185909943465}

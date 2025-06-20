@@ -2393,7 +2393,7 @@ MonoBehaviour:
   CreateButton: {fileID: 5710504863002534214}
   RemoveButton: {fileID: 7347137953090097086}
   LoadButton: {fileID: 1975143652}
-  Selector: {fileID: 7961568252348448052}
+  MapSelector: {fileID: 7961568252348448052}
 --- !u!1 &3867289129337443576
 GameObject:
   m_ObjectHideFlags: 0
@@ -2929,8 +2929,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7e7e9a70b9a4e93abc7a0944282b7ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SelectButtonsRoot: {fileID: 7335837309965746242}
-  SelectButtonPrefab: {fileID: 5398685322357457025, guid: bd51b8ab9f7ae1249b8b6cd32333ee10, type: 3}
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: Buttons
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[ClientCode.Infrastructure.Installers.SelectionButton,
+        Code],[ClientCode.UI.Windows.Writing.MapController, Code]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.ObjectEqualityComparer`1[[ClientCode.Infrastructure.Installers.SelectionButton,
+        Code]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  ButtonPrefab: {fileID: 4734198701581580907, guid: bd51b8ab9f7ae1249b8b6cd32333ee10, type: 3}
+  ButtonsRoot: {fileID: 7335837309965746242}
 --- !u!1 &8959886818166686727
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Client.Code.Gameplay;
-using ClientCode.Gameplay.Cell;
 using ClientCode.Gameplay.Region;
 using ClientCode.Infrastructure.States.MapEditor.MainMenu;
 using ClientCode.UI.Controllers;
+using Sirenix.OdinInspector;
 using UniRx;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -11,12 +13,9 @@ using Zenject;
 
 namespace ClientCode.Infrastructure.Installers
 {
-    public class MapEditorWindow : MonoBehaviour, IInitializable, IDisposable, ITickable
+    public class MapEditorWindow : SerializedMonoBehaviour, IInitializable, IDisposable, ITickable
     {
-        public ButtonView DestroyTile;
-        public ButtonView CreateTile;
-        public ButtonView CreateRedRegion;
-        public ButtonView CreateBlueRegion;
+        public MapEditorModeSelector ModeSelector;
         private MapEditorMode _mode;
         private readonly CompositeDisposable _disposable = new();
         private TileFactory _tileFactory;
@@ -33,10 +32,8 @@ namespace ClientCode.Infrastructure.Installers
 
         public void Initialize()
         {
-            CreateTile.OnClickEvent.Subscribe(_ => _mode = MapEditorMode.CreateTile).AddTo(_disposable);
-            DestroyTile.OnClickEvent.Subscribe(_ => _mode = MapEditorMode.DestroyTile).AddTo(_disposable);
-            CreateRedRegion.OnClickEvent.Subscribe(_ => _mode = MapEditorMode.CreateRedTile).AddTo(_disposable);
-            CreateBlueRegion.OnClickEvent.Subscribe(_ => _mode = MapEditorMode.CreateBlueTile).AddTo(_disposable);
+            ModeSelector.Initialize();
+            ModeSelector.AddTo(_disposable);
         }
 
         public void Dispose() => _disposable.Dispose();
@@ -46,7 +43,7 @@ namespace ClientCode.Infrastructure.Installers
             if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
             {
                 var hit = _cameraController.GetHitFromMousePoint();
-                
+
                 if (hit && _gridController.TryGetCell(hit.point, out var entity))
                 {
                     _tileFactory.Destroy(entity);
@@ -60,7 +57,7 @@ namespace ClientCode.Infrastructure.Installers
                     else if (_mode == MapEditorMode.CreateBlueTile)
                         _tileFactory.Create(entity, RegionType.Blue);
                 }
-            }    
+            }
         }
     }
 }

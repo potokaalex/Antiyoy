@@ -29,7 +29,7 @@ namespace ClientCode.UI.Presenters.MainMenu
             //HandleMapSelectButton((MapEditorSelectButton)button);
         }
 
-        private void HandleMapSelectButton(MapEditorSelectButton button)
+        private void HandleMapSelectButton()
         {
             /*
             var mapKey = button.MapKey;
