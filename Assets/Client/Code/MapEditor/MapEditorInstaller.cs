@@ -9,10 +9,7 @@ using ClientCode.Gameplay.Region;
 using ClientCode.Gameplay.Tile;
 using ClientCode.Services.Progress.Actors;
 using ClientCode.Services.Progress.Map.Factory;
-using ClientCode.UI.Buttons.Base;
 using ClientCode.UI.Controllers;
-using ClientCode.UI.Models;
-using ClientCode.UI.Presenters.MapEditor;
 using ClientCode.UI.Windows.Base;
 using Zenject;
 
@@ -55,10 +52,10 @@ namespace ClientCode.Infrastructure.Installers
 
         private void BindUI()
         {
-            Container.Bind<IButtonsHandler>().To<MapEditorButtonsPresenter>().AsSingle();
-            Container.Bind<IWindowsHandler>().To<MapEditorWindowsPresenter>().AsSingle();
-            Container.Bind<MapEditorModel>().AsSingle();
-            Container.Bind<MapEditorTouchCellController>().AsSingle();
+            //Container.Bind<IButtonsHandler>().To<MapEditorButtonsPresenter>().AsSingle();
+            //Container.Bind<IWindowsHandler>().To<MapEditorWindowsPresenter>().AsSingle();
+            //Container.Bind<MapEditorModel>().AsSingle();
+            //Container.Bind<MapEditorTouchCellController>().AsSingle();
         }
 
         private void BindProviders()

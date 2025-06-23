@@ -6,23 +6,20 @@ using ClientCode.Services.Progress.Base;
 using ClientCode.Services.Progress.Map;
 using ClientCode.Services.Progress.Project;
 using ClientCode.Services.SceneLoader;
-using ClientCode.Services.StaticDataProvider;
 
 namespace ClientCode.Infrastructure.States.MapEditor
 {
     public class MapEditorLoadState : IStateSimple
     {
         private readonly SceneLoader _sceneLoader;
-        private readonly IStaticDataProvider _staticData;
         private readonly IMapSaveLoader _saveLoader;
         private readonly ILogReceiver _logReceiver;
         private readonly IProjectSaveLoader _projectSaveLoader;
 
-        public MapEditorLoadState(SceneLoader sceneLoader, IStaticDataProvider staticData, IMapSaveLoader saveLoader,
+        public MapEditorLoadState(SceneLoader sceneLoader, IMapSaveLoader saveLoader,
             ILogReceiver logReceiver, IProjectSaveLoader projectSaveLoader)
         {
             _sceneLoader = sceneLoader;
-            _staticData = staticData;
             _saveLoader = saveLoader;
             _logReceiver = logReceiver;
             _projectSaveLoader = projectSaveLoader;
@@ -32,7 +29,7 @@ namespace ClientCode.Infrastructure.States.MapEditor
         {
             _projectSaveLoader.Load(out var progress);
 
-            var scenesConfig = _staticData.Configs.Scene;
+            //ыvar scenesConfig = _staticData.Configs.Scene;
             await _sceneLoader.LoadSceneAsync(SceneName.MapEditor);
 
             LoadMap(progress.MapEditorPreload);

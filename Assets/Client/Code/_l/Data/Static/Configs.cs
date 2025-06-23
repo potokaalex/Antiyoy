@@ -7,8 +7,6 @@ namespace ClientCode.Data.Static
     public class Configs
     {
         public SceneConfig Scene;
-        public ProgressConfig Progress;
         public GameplayConfig Gameplay;
-        public UIConfig UI;
     }
 }

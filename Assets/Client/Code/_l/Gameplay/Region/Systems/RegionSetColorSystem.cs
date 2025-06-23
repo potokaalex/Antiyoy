@@ -1,24 +1,23 @@
+using System.Collections.Generic;
 using ClientCode.Gameplay.Cell;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Region.Components;
-using ClientCode.Services.StaticDataProvider;
 using Leopotam.EcsLite;
+using UnityEngine;
 
 namespace ClientCode.Gameplay.Region.Systems
 {
     public class RegionSetColorSystem : IEcsInitSystem, IEcsRunSystem
     {
         private readonly IEcsProvider _ecsProvider;
-        private readonly IStaticDataProvider _staticData;
         private readonly GridManager _gridManager;
         private EcsPool<RegionAddCellRequest> _regionAddCellRequestPool;
         private EcsFilter _regionAddCellRequestFilter;
         private EcsPool<CellComponent> _cellPool;
 
-        public RegionSetColorSystem(IEcsProvider ecsProvider, IStaticDataProvider staticData, GridManager gridManager)
+        public RegionSetColorSystem(IEcsProvider ecsProvider, GridManager gridManager)
         {
             _ecsProvider = ecsProvider;
-            _staticData = staticData;
             _gridManager = gridManager;
         }
 
@@ -36,7 +35,7 @@ namespace ClientCode.Gameplay.Region.Systems
             {
                 var request = _regionAddCellRequestPool.Get(entity);
                 var cell = _cellPool.Get(request.CellEntity);
-                var colors = _staticData.Configs.Gameplay.RegionColors;
+                var colors = new Dictionary<RegionType, Color>(); // _staticData.Configs.Gameplay.RegionColors;
                 _gridManager.SetColor(cell.GridPosition, colors[request.Type]);
             }
         }

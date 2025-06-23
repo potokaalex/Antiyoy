@@ -11,16 +11,13 @@ namespace ClientCode.Infrastructure.States.MapEditor
         private readonly IUpdater _updater;
         private readonly IEcsProvider _ecsProvider;
         private readonly CameraController _camera;
-        private readonly MapEditorTouchCellController _touchCellController;
         private IEcsSystems _ecsSystems;
 
-        public MapEditorUpdateState(IUpdater updater, IEcsProvider ecsProvider, CameraController camera,
-            MapEditorTouchCellController touchCellController)
+        public MapEditorUpdateState(IUpdater updater, IEcsProvider ecsProvider, CameraController camera)
         {
             _updater = updater;
             _ecsProvider = ecsProvider;
             _camera = camera;
-            _touchCellController = touchCellController;
         }
 
         public void Enter()
@@ -39,7 +36,7 @@ namespace ClientCode.Infrastructure.States.MapEditor
         private void Update()
         {
             //_camera.Update();
-            _touchCellController.Update();
+            //_touchCellController.Update();
         }
 
         private void FixedUpdate() => _ecsSystems.Run();

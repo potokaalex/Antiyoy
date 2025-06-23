@@ -1,7 +1,6 @@
 ﻿using ClientCode.Gameplay.Cell;
 using ClientCode.Gameplay.Ecs;
 using ClientCode.Gameplay.Tile.Components;
-using ClientCode.Services.StaticDataProvider;
 using Leopotam.EcsLite;
 using SevenBoldPencil.EasyEvents;
 using UnityEngine;
@@ -12,18 +11,16 @@ namespace ClientCode.Gameplay.Tile.Systems
     {
         private readonly IEcsProvider _ecsProvider;
         private readonly GridManager _gridManager;
-        private readonly IStaticDataProvider _staticData;
         private EventsBus _eventsBus;
         private EcsPool<TileDestroyRequest> _requestPool;
         private EcsFilter _requestFilter;
         private EcsPool<TileComponent> _pool;
         private EcsPool<CellComponent> _cellPool;
 
-        public TileDestroySystem(IEcsProvider ecsProvider, GridManager gridManager, IStaticDataProvider staticData)
+        public TileDestroySystem(IEcsProvider ecsProvider, GridManager gridManager)
         {
             _ecsProvider = ecsProvider;
             _gridManager = gridManager;
-            _staticData = staticData;
         }
 
         public void Init(IEcsSystems systems)
@@ -42,7 +39,7 @@ namespace ClientCode.Gameplay.Tile.Systems
             {
                 var request = _requestPool.Get(requestEntity);
                 var cell = _cellPool.Get(request.CellEntity);
-                var emptyTile = _staticData.Prefabs.EmptyTile;
+                var emptyTile = new UnityEngine.Tilemaps.Tile();//_staticData.Prefabs.EmptyTile;
                 _pool.Del(request.CellEntity);
                 _gridManager.SetTile(cell.GridPosition, emptyTile);
             }
