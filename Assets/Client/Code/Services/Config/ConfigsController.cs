@@ -3,11 +3,11 @@ using Zenject;
 
 namespace Client.Code.Services.Config
 {
-    public class ConfigsController : IInitializable, IProvider<ConfigData>
+    public class ConfigsController : IInitializable, IConfigsProvider
     {
         private ConfigData _configData;
 
-        ConfigData IProvider<ConfigData>.Value => _configData;
+        ConfigData IConfigsProvider.Data => _configData;
         
         public void Initialize() => _configData = Resources.Load<ConfigData>("ConfigData");
     }

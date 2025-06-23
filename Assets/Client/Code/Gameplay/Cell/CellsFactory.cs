@@ -15,14 +15,14 @@ namespace Client.Code.Gameplay
     {
         private readonly MapsContainer _mapsContainer;
         private readonly EcsController _ecsController;
-        private readonly IProvider<ConfigData> _configData;
+        private readonly IConfigsProvider _configsProvider;
         private readonly Instantiator _instantiator;
         private EcsPool<CellComponent> _pool;
 
-        public CellsFactory(MapsContainer mapsContainer, EcsController ecsController, IProvider<ConfigData> configData, Instantiator instantiator)
+        public CellsFactory(MapsContainer mapsContainer, EcsController ecsController, IConfigsProvider configsProvider, Instantiator instantiator)
         {
             _instantiator = instantiator;
-            _configData = configData;
+            _configsProvider = configsProvider;
             _ecsController = ecsController;
             _mapsContainer = mapsContainer;
         }
@@ -47,7 +47,7 @@ namespace Client.Code.Gameplay
             for (var i = 0; i < size.y; i++)
             for (var j = 0; j < size.x; j++)
             {
-                var position = new Vector2Int(i, j);//?
+                var position = new Vector2Int(i, j);
                 var arrayIndex = position.ToArrayIndex(size.x);
                 cells[arrayIndex] = CreateCell(arrayIndex, position);
             }
@@ -93,7 +93,7 @@ namespace Client.Code.Gameplay
         private void CreateDebug(int[] cells, Vector2Int size, Grid grid)
         {
             var root = new GameObject("CellsDebugRoot").transform;
-            var prefab = _configData.Value.CellDebugPrefab;
+            var prefab = _configsProvider.Data.CellDebugPrefab;
 
             for (var i = 0; i < size.y; i++)
             for (var j = 0; j < size.x; j++)

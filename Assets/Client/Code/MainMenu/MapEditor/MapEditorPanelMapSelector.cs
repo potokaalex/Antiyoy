@@ -36,7 +36,7 @@ namespace ClientCode.UI.Windows.Writing
             base.Dispose();
         }
 
-        private void ReCreateSelectButtons() //TODO: pool ?
+        private void ReCreateSelectButtons()
         {
             UnSelect();
             foreach (var (button, _) in Buttons)

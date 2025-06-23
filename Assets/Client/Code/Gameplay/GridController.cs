@@ -6,7 +6,7 @@ using Zenject;
 
 namespace Client.Code.Gameplay
 {
-    public class GridController : MonoBehaviour, IInitializable //TODO: rename ?
+    public class GridController : MonoBehaviour, IInitializable
     {
         public Grid Grid;
         public Tilemap Tilemap;
@@ -26,7 +26,7 @@ namespace Client.Code.Gameplay
         public void Initialize()
         {
             _map = _mapsContainer.CurrentMap;
-            FillByTile(Tile); //?
+            FillByTile(Tile);
             _cells = _cellsFactory.CreateEntitiesWithCells(Grid);
         }
 

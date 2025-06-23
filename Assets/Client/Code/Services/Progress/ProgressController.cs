@@ -8,7 +8,7 @@ using Zenject;
 
 namespace Client.Code.Services.Progress
 {
-    public class ProgressController : IInitializable, IOnApplicationFocusReceiver, IProvider<ProgressData>
+    public class ProgressController : IInitializable, IOnApplicationFocusReceiver, IProgressProvider
     {
         private const string FilesExtension = "data";
         private const string SaveFolderName = "Saves";
@@ -17,7 +17,7 @@ namespace Client.Code.Services.Progress
         private string _directoryPath;
         private string _filePath;
 
-        ProgressData IProvider<ProgressData>.Value => _progressData;
+        ProgressData IProgressProvider.Data => _progressData;
 
         public void Initialize()
         {

@@ -24,7 +24,7 @@ namespace ClientCode.Infrastructure.Installers
         public override void InstallBindings()
         {
             Container.BindInterfacesAndSelfTo<CameraController>().FromInstance(Camera).AsSingle();
-            Container.Bind<EcsController>().AsSingle(); //TODO
+            Container.Bind<EcsController>().AsSingle();
             Container.BindInterfacesAndSelfTo<CellsFactory>().AsSingle();
             Container.Bind<RegionFactory>().AsSingle();
             Container.BindInterfacesAndSelfTo<GridController>().FromInstance(Grid).AsSingle();

@@ -2,7 +2,7 @@
 
 namespace Client.Code.Gameplay
 {
-    public class EcsController //TODO: rename to: ecs provider
+    public class EcsController
     {
         public EcsWorld World { get; private set; } = new();
     }
