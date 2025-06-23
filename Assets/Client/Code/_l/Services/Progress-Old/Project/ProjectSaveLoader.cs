@@ -33,7 +33,7 @@ namespace ClientCode.Services.Progress.Project
                     reader.OnLoad(_currentProgress);
         }
 
-        public async void Save() //TODO: try UniTaskVoid
+        public async void Save()
         {
             SaveLoaderDebugger.DebugSaveProject();
             foreach (var actor in _actors)

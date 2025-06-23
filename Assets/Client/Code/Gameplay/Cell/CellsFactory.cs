@@ -47,7 +47,7 @@ namespace Client.Code.Gameplay
             for (var i = 0; i < size.y; i++)
             for (var j = 0; j < size.x; j++)
             {
-                var position = new Vector2Int(i, j);
+                var position = new Vector2Int(i, j);//?
                 var arrayIndex = position.ToArrayIndex(size.x);
                 cells[arrayIndex] = CreateCell(arrayIndex, position);
             }

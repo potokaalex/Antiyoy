@@ -27,7 +27,6 @@ namespace ClientCode.Infrastructure.Installers
 
         public void LoadBattle()
         {
-            //TODO
         }
 
         public void Exit()

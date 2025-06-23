@@ -32,7 +32,6 @@ namespace ClientCode.Services.Progress.Map.Factory
 
         private async UniTask<(bool, string)> GetNewKey()
         {
-            //TODO
             var window = (IWritingWindow)null;//_windowsFactory.Get(WindowType.Writing);
             window.Open();
 

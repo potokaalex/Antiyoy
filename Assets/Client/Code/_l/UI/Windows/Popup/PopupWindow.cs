@@ -13,7 +13,6 @@ namespace ClientCode.UI.Windows.Popup
         {
             _text.text = message;
             Open();
-            //TODO: animation!
             StartCoroutine(Hide());
         }
 

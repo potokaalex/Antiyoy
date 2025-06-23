@@ -34,7 +34,7 @@ namespace ClientCode.Infrastructure.States.MapEditor
 
             LoadMap(progress.MapEditorPreload);
 
-            //_sceneLoader.FindInScene<IStartuper>(scenesConfig.MapEditorSceneName).Startup(); TODO
+            //_sceneLoader.FindInScene<IStartuper>(scenesConfig.MapEditorSceneName).Startup();
         }
 
         private void LoadMap(MapEditorPreloadData preload)
