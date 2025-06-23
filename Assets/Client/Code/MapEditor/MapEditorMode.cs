@@ -3,9 +3,9 @@
     public enum MapEditorMode
     {
         None = 0,
-        CreateTile = 1,
-        DestroyTile = 2,
-        CreateRedTile = 3,
-        CreateBlueTile = 4,
+        CreateNeutralRegion = 1,
+        DestroyRegion = 2,
+        CreateRedRegion = 3,
+        CreateBlueRegion = 4,
     }
 }

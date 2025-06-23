@@ -76,7 +76,7 @@ namespace Client.Code.Gameplay
                 var arrayIndex = position.ToArrayIndex(size.x);
                 ref var cell = ref _pool.Get(cells[arrayIndex]);
 
-                foreach (var direction in HexDirectionsUtilities.GetNeighbors(position))
+                foreach (var direction in HexDirectionsUtilities.GetNeighborsDirections(position))
                 {
                     var neighborPosition = position + direction;
 

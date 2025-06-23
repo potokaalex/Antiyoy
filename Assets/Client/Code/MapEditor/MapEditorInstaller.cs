@@ -29,7 +29,7 @@ namespace ClientCode.Infrastructure.Installers
             Container.BindInterfacesAndSelfTo<CameraController>().FromInstance(Camera).AsSingle();
             Container.Bind<EcsController>().AsSingle(); //TODO
             Container.BindInterfacesAndSelfTo<CellsFactory>().AsSingle();
-            Container.Bind<TileFactory>().AsSingle();
+            Container.Bind<RegionFactory>().AsSingle();
             Container.BindInterfacesAndSelfTo<GridController>().FromInstance(Grid).AsSingle();
             Container.BindInterfacesTo<MapEditorWindow>().FromInstance(Window).AsSingle();
 
@@ -73,7 +73,7 @@ namespace ClientCode.Infrastructure.Installers
             Container.BindInterfacesAndSelfTo<EcsFactory>().AsSingle();
             //Container.BindInterfacesAndSelfTo<CellFactory>().AsSingle();
             Container.BindInterfacesAndSelfTo<TileFactoryOld>().AsSingle();
-            Container.BindInterfacesAndSelfTo<RegionFactory>().AsSingle();
+            Container.BindInterfacesAndSelfTo<Gameplay.Region.RegionFactory>().AsSingle();
             Container.BindInterfacesAndSelfTo<CountryFactory>().AsSingle();
         }
     }
