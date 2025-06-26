@@ -2,7 +2,9 @@
     "name": "AssetUsageDetector.Editor",
     "rootNamespace": "",
     "references": [
-        "Unity.Addressables"
+        "Unity.Addressables",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
     ],
     "includePlatforms": [
         "Editor"
