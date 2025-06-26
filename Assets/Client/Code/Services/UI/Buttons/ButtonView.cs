@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace ClientCode.Infrastructure.States.MapEditor.MainMenu
+namespace Client.Code.Services.UI.Buttons
 {
     public class ButtonView : MonoBehaviour, IPointerClickHandler
     {

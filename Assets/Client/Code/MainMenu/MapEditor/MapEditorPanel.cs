@@ -1,11 +1,12 @@
 using System;
-using Client.Code.Services.UI.Window;
-using ClientCode.Infrastructure.Installers;
-using ClientCode.Infrastructure.States.MapEditor.MainMenu;
+using Client.Code.Gameplay.Map;
+using Client.Code.Project;
+using Client.Code.Services.UI;
+using Client.Code.Services.UI.Buttons;
 using UniRx;
 using Zenject;
 
-namespace ClientCode.UI.Windows.Writing
+namespace Client.Code.MainMenu.MapEditor
 {
     public class MapEditorPanel : WindowView, IDisposable
     {

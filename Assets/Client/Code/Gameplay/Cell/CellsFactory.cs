@@ -1,15 +1,14 @@
 ﻿using System.Collections.Generic;
+using Client.Code.Gameplay.Hex;
+using Client.Code.Gameplay.Map;
 using Client.Code.Services;
 using Client.Code.Services.Config;
-using ClientCode.Gameplay.Cell;
-using ClientCode.UI.Windows.Writing;
-using ClientCode.Utilities;
-using ClientCode.Utilities.Extensions;
+using Client.Code.Services.Extensions;
 using Leopotam.EcsLite;
 using UnityEngine;
 using Zenject;
 
-namespace Client.Code.Gameplay
+namespace Client.Code.Gameplay.Cell
 {
     public class CellsFactory : IInitializable
     {

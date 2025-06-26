@@ -1,8 +1,9 @@
-﻿using ClientCode.Services.SceneLoader;
-using ClientCode.UI.Windows.Writing;
+﻿using Client.Code.Gameplay.Map;
+using Client.Code.Services.Scene;
+using UnityEditor;
 using Zenject;
 
-namespace ClientCode.Infrastructure.Installers
+namespace Client.Code.Project
 {
     public class ProjectManager : IInitializable
     {
@@ -32,7 +33,7 @@ namespace ClientCode.Infrastructure.Installers
         public void Exit()
         {
 #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
+            EditorApplication.isPlaying = false;
 #else
             UnityEngine.Application.Quit();
 #endif

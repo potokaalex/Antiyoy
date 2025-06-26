@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Client.Code.Gameplay.Map;
 using Client.Code.Services;
-using ClientCode.Infrastructure.Installers;
+using Client.Code.Services.UI.Buttons.Select;
 using UniRx;
 using UnityEngine;
 using Zenject;
 
-namespace ClientCode.UI.Windows.Writing
+namespace Client.Code.MainMenu.MapEditor
 {
     public class MapEditorPanelMapSelector : SelectionButtonsController<MapController>
     {

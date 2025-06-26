@@ -1,18 +1,18 @@
 using UnityEngine;
 using Zenject;
 
-namespace ClientCode.UI.Controllers
+namespace Client.Code.Gameplay
 {
     public class CameraController : MonoBehaviour, ITickable
     {
         public Camera Camera;
-        
+
         public void Tick()
         {
             Move();
             Scroll();
         }
-        
+
         public RaycastHit2D GetHitFromMousePoint()
         {
             var ray = Camera.ScreenPointToRay(Input.mousePosition);
@@ -24,7 +24,7 @@ namespace ClientCode.UI.Controllers
             var speed = 100f;
             var newSize = Camera.orthographicSize;
             var delta = Input.mouseScrollDelta.y;
-            
+
             if (delta > 0)
                 newSize -= speed * Time.deltaTime;
             else if (delta < 0)
@@ -37,7 +37,7 @@ namespace ClientCode.UI.Controllers
         {
             var speed = 5f;
             var offset = speed * Time.deltaTime;
-            
+
             if (Input.GetKey(KeyCode.A))
                 Camera.transform.position += Vector3.left * offset;
             if (Input.GetKey(KeyCode.D))

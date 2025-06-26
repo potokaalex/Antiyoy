@@ -1,4 +1,4 @@
-namespace ClientCode.Gameplay.Region
+namespace Client.Code.Gameplay.Region
 {
     public enum RegionType
     {

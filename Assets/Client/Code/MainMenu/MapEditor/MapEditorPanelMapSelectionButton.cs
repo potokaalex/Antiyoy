@@ -1,7 +1,7 @@
-﻿using ClientCode.Infrastructure.Installers;
+﻿using Client.Code.Services.UI.Buttons.Select;
 using TMPro;
 
-namespace ClientCode.UI.Windows.Writing
+namespace Client.Code.MainMenu.MapEditor
 {
     public class MapEditorPanelMapSelectionButton : SelectionButton
     {

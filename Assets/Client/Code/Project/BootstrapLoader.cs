@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace ClientCode.Client.Code.Bootstrap
+namespace Client.Code.Project
 {
     public class BootstrapLoader : MonoBehaviour
     {

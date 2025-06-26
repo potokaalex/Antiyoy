@@ -1,12 +1,12 @@
 ﻿using UniRx;
 using UnityEngine;
 
-namespace Client.Code.Services.UI.Window
+namespace Client.Code.Services.UI
 {
     public abstract class WindowView : MonoBehaviour
     {
         public bool ControlActive;
-        
+
         public bool IsOpen { get; private set; } = true;
 
         public Subject<Unit> OnOpenEvent { get; } = new();
@@ -19,7 +19,7 @@ namespace Client.Code.Services.UI.Window
             {
                 IsOpen = true;
                 OnOpen(force);
-                if(ControlActive)
+                if (ControlActive)
                     gameObject.SetActive(true);
                 OnOpenEvent.OnNext(default);
             }
@@ -31,7 +31,7 @@ namespace Client.Code.Services.UI.Window
             {
                 IsOpen = false;
                 OnClose(force);
-                if(ControlActive)
+                if (ControlActive)
                     gameObject.SetActive(false);
                 OnCloseEvent.OnNext(default);
             }

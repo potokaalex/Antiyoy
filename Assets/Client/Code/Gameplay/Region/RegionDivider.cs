@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Client.Code.Gameplay;
-using ClientCode.Gameplay.Cell;
-using ClientCode.Gameplay.Region.Systems;
-using ClientCode.Gameplay.Region.Tools;
+using Client.Code.Gameplay.Cell;
 using Leopotam.EcsLite;
 using Sirenix.Utilities;
 using Zenject;
 
-namespace ClientCode.Infrastructure.Installers
+namespace Client.Code.Gameplay.Region
 {
     public class RegionDivider : IInitializable
     {
@@ -71,7 +68,7 @@ namespace ClientCode.Infrastructure.Installers
 
         private List<RegionPart> GetParts(List<int> baseRegionCells)
         {
-            var resultParts = Utilities.ListPool<RegionPart>.Get();
+            var resultParts = Services.ListPool<RegionPart>.Get();
             _remaining.AddRange(baseRegionCells);
 
             for (var i = 0; i < baseRegionCells.Count; i++)
@@ -91,10 +88,9 @@ namespace ClientCode.Infrastructure.Installers
 
         private void ReleaseParts(List<RegionPart> parts) //Use IDisposable
         {
-            foreach (var tilesPart in parts)
-                Utilities.ListPool<int>.Release(tilesPart.Cells);
+            foreach (var tilesPart in parts) Services.ListPool<int>.Release(tilesPart.Cells);
 
-            Utilities.ListPool<RegionPart>.Release(parts);
+            Services.ListPool<RegionPart>.Release(parts);
         }
 
         //passes the wave algorithm through noPassedCells and returns the cells that the algorithm has reached. Automatically remove cells from noPassedCells.
@@ -108,7 +104,7 @@ namespace ClientCode.Infrastructure.Installers
                 break;
             }
 
-            var resultCells = Utilities.ListPool<int>.Get(noPassedCells.Count);
+            var resultCells = Services.ListPool<int>.Get(noPassedCells.Count);
             var noPassedCellsInitialCount = noPassedCells.Count;
 
             _front.Push(firstItem);

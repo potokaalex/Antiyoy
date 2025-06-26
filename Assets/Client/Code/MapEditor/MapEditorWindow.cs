@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Client.Code.Gameplay;
-using ClientCode.Gameplay.Region;
-using ClientCode.Infrastructure.States.MapEditor.MainMenu;
-using ClientCode.UI.Controllers;
+using Client.Code.Gameplay.Region;
 using Sirenix.OdinInspector;
 using UniRx;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Zenject;
 
-namespace ClientCode.Infrastructure.Installers
+namespace Client.Code.MapEditor
 {
     public class MapEditorWindow : SerializedMonoBehaviour, IInitializable, IDisposable, ITickable
     {
@@ -47,7 +43,7 @@ namespace ClientCode.Infrastructure.Installers
                 {
                     _regionFactory.Destroy(entity);
                     var mode = ModeSelector.SelectedValue;
-                    
+
                     if (mode == MapEditorMode.CreateNeutralRegion)
                         _regionFactory.Create(entity, RegionType.Neutral);
                     else if (mode == MapEditorMode.DestroyRegion)

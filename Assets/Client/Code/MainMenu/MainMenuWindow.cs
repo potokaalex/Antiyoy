@@ -1,13 +1,12 @@
 ﻿using System;
-using ClientCode.Client.Code;
-using ClientCode.Infrastructure.Installers;
-using ClientCode.UI.Windows.Writing;
-using Cysharp.Threading.Tasks;
+using Client.Code.MainMenu.MapEditor;
+using Client.Code.Project;
+using Client.Code.Services.UI.Buttons;
 using UniRx;
 using UnityEngine;
 using Zenject;
 
-namespace ClientCode.Infrastructure.States.MapEditor.MainMenu
+namespace Client.Code.MainMenu
 {
     public class MainMenuWindow : MonoBehaviour, IInitializable, IDisposable
     {
@@ -40,7 +39,7 @@ namespace ClientCode.Infrastructure.States.MapEditor.MainMenu
         }
 
         private void Show() => BodyRoot.SetActive(true);
-        
+
         private void Hide() => BodyRoot.SetActive(false);
     }
 }

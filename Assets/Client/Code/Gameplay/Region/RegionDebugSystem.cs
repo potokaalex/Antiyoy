@@ -1,25 +1,20 @@
-﻿using ClientCode.Gameplay.Cell;
-using ClientCode.Gameplay.Ecs;
-using ClientCode.Gameplay.Region.Components;
+﻿using Client.Code.Gameplay.Cell;
 using Leopotam.EcsLite;
-using SevenBoldPencil.EasyEvents;
 
-namespace ClientCode.Gameplay.Region.Systems
+namespace Client.Code.Gameplay.Region
 {
     public class RegionDebugSystem : IEcsInitSystem, IEcsRunSystem
     {
         private EcsPool<CellComponent> _cellPool;
         private EcsFilter _cellFilter;
-        private EcsPool<Infrastructure.Installers.RegionLink> _linkPool;
-        private EcsPool<RegionComponent> _pool;
+        private EcsPool<RegionLink> _linkPool;
 
         public void Init(IEcsSystems systems)
         {
             var world = systems.GetWorld();
             _cellFilter = world.Filter<CellComponent>().End();
             _cellPool = world.GetPool<CellComponent>();
-            _linkPool = world.GetPool<Infrastructure.Installers.RegionLink>();
-            _pool = world.GetPool<RegionComponent>();
+            _linkPool = world.GetPool<RegionLink>();
             DrawDebugText();
         }
 

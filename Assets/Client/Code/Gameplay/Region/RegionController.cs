@@ -1,13 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Client.Code.Gameplay;
-using ClientCode.Gameplay.Region;
-using ClientCode.Utilities;
-using ClientCode.Utilities.Extensions;
+﻿using System.Collections.Generic;
+using Client.Code.Services;
+using Client.Code.Services.Extensions;
 using Leopotam.EcsLite;
 using UnityEngine;
 
-namespace ClientCode.Infrastructure.Installers
+namespace Client.Code.Gameplay.Region
 {
     public class RegionController
     {
@@ -30,15 +27,15 @@ namespace ClientCode.Infrastructure.Installers
             _linkPool = _ecsController.World.GetPool<RegionLink>();
             Type = type;
         }
-        
+
         public void Dispose()
         {
             var buffer = ListPool<int>.Get();
             buffer.AddRange(CellEntities);
-            
-            for (var i = 0; i < buffer.Count; i++) 
+
+            for (var i = 0; i < buffer.Count; i++)
                 Remove(buffer[i]);
-            
+
             ListPool<int>.Release(buffer);
         }
 
@@ -52,7 +49,7 @@ namespace ClientCode.Infrastructure.Installers
 
         public void Add(List<int> cellEntities)
         {
-            for (var i = 0; i < cellEntities.Count; i++) 
+            for (var i = 0; i < cellEntities.Count; i++)
                 Add(cellEntities[i]);
         }
 
@@ -65,15 +62,15 @@ namespace ClientCode.Infrastructure.Installers
 
         public void Remove(List<int> cellEntities)
         {
-            for (var i = 0; i < cellEntities.Count; i++) 
+            for (var i = 0; i < cellEntities.Count; i++)
                 Remove(cellEntities[i]);
         }
 
         private Color GetColor()
         {
-            if(Type == RegionType.Red)
+            if (Type == RegionType.Red)
                 return Color.red;
-            if(Type == RegionType.Blue)
+            if (Type == RegionType.Blue)
                 return Color.blue;
             return Color.gray;
         }

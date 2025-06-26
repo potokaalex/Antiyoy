@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ClientCode.Gameplay.Hex
+namespace Client.Code.Gameplay.Hex
 {
     public struct HexCoordinates : IEquatable<HexCoordinates>
     {

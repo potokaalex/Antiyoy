@@ -1,9 +1,8 @@
-﻿using ClientCode.Infrastructure.States.MapEditor.MainMenu;
-using UniRx;
+﻿using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ClientCode.Infrastructure.Installers
+namespace Client.Code.Services.UI.Buttons.Select
 {
     public class SelectionButton : MonoBehaviour
     {
@@ -13,7 +12,7 @@ namespace ClientCode.Infrastructure.Installers
         public Color Selected;
 
         public Subject<Unit> OnClickEvent => Button.OnClickEvent;
-        
+
         public void Select() => Image.color = Selected;
 
         public void UnSelect() => Image.color = Default;

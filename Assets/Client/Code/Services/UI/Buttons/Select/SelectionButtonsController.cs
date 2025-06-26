@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UniRx;
 
-namespace ClientCode.Infrastructure.Installers
+namespace Client.Code.Services.UI.Buttons.Select
 {
     public class SelectionButtonsController<T> : SerializedMonoBehaviour, IDisposable
     {
@@ -31,7 +31,7 @@ namespace ClientCode.Infrastructure.Installers
             Buttons[button] = value;
             Sub(button);
         }
-        
+
         public void Clear()
         {
             _disposables.Clear();
@@ -57,7 +57,7 @@ namespace ClientCode.Infrastructure.Installers
             Selected?.UnSelect();
             Selected = null;
         }
-        
+
         private void Sub(SelectionButton button) => button.OnClickEvent.Subscribe(_ => TrySelect(button)).AddTo(_disposables);
     }
 }

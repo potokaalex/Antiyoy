@@ -1,9 +1,8 @@
-﻿using Client.Code.Services;
-using Client.Code.Services.Config;
+﻿using Client.Code.Services.Config;
 using Cysharp.Threading.Tasks;
 using UnityEngine.SceneManagement;
 
-namespace ClientCode.Services.SceneLoader
+namespace Client.Code.Services.Scene
 {
     public class SceneLoader
     {

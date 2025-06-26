@@ -2,7 +2,7 @@
 using JetBrains.Annotations;
 using UnityEngine;
 
-namespace ClientCode.Gameplay.Cell
+namespace Client.Code.Gameplay.Cell
 {
     public struct CellComponent
     {

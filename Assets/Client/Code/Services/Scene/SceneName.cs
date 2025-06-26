@@ -1,4 +1,4 @@
-﻿namespace ClientCode.Services.SceneLoader
+﻿namespace Client.Code.Services.Scene
 {
     public enum SceneName
     {

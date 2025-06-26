@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using ClientCode.Gameplay.Cell;
-using ClientCode.Services.SceneLoader;
+using Client.Code.Gameplay.Cell;
+using Client.Code.Services.Scene;
 using Sirenix.OdinInspector;
 using UnityEngine;
 

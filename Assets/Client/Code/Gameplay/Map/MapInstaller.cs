@@ -1,6 +1,6 @@
 ﻿using Zenject;
 
-namespace ClientCode.UI.Windows.Writing
+namespace Client.Code.Gameplay.Map
 {
     public class MapInstaller : Installer
     {

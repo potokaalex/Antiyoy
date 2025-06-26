@@ -1,14 +1,9 @@
 ﻿using System.Collections.Generic;
-using Leopotam.EcsLite;
 
-namespace ClientCode.Infrastructure.Installers
+namespace Client.Code.Gameplay.Region
 {
     public class RegionJoiner
     {
-        private readonly RegionsContainer _container;
-
-        public RegionJoiner(RegionsContainer container) => _container = container;
-
         //moves data to a major region from non-major regions. Deletes non-major regions.
         public RegionController Join(List<RegionController> regions)
         {
@@ -20,7 +15,6 @@ namespace ClientCode.Infrastructure.Installers
                     continue;
 
                 majorRegion.Add(region.CellEntities);
-                _container.Remove(region);
             }
 
             return majorRegion;
@@ -33,7 +27,7 @@ namespace ClientCode.Infrastructure.Installers
             for (var i = 1; i < regions.Count; i++)
             {
                 var region = regions[i];
-                
+
                 if (region.CellEntities.Count > majorRegion.CellEntities.Count)
                     majorRegion = regions[i];
             }

@@ -1,19 +1,9 @@
 using Client.Code.Gameplay;
-using ClientCode.Client.Code.Services.StateMachineCode;
-using ClientCode.Data.Scene;
-using ClientCode.Gameplay;
-using ClientCode.Gameplay.Cell;
-using ClientCode.Gameplay.Countries;
-using ClientCode.Gameplay.Ecs;
-using ClientCode.Gameplay.Region;
-using ClientCode.Gameplay.Tile;
-using ClientCode.Services.Progress.Actors;
-using ClientCode.Services.Progress.Map.Factory;
-using ClientCode.UI.Controllers;
-using ClientCode.UI.Windows.Base;
+using Client.Code.Gameplay.Cell;
+using Client.Code.Gameplay.Region;
 using Zenject;
 
-namespace ClientCode.Infrastructure.Installers
+namespace Client.Code.MapEditor
 {
     public class MapEditorInstaller : MonoInstaller
     {
@@ -37,7 +27,6 @@ namespace ClientCode.Infrastructure.Installers
             Container.BindInterfacesAndSelfTo<RegionCreator>().AsSingle();
             Container.BindInterfacesAndSelfTo<RegionJoiner>().AsSingle();
             Container.BindInterfacesAndSelfTo<RegionDivider>().AsSingle();
-            Container.Bind<RegionsContainer>().AsSingle();
         }
     }
 }

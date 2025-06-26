@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Threading;
-using Client.Code.Services;
 using Client.Code.Services.StateMachineCode.State;
 using Cysharp.Threading.Tasks;
 
-namespace ClientCode.Client.Code.Services.StateMachineCode
+namespace Client.Code.Services.StateMachineCode
 {
     public class StateMachine : IDisposable
     {

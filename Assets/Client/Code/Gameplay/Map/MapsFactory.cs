@@ -1,4 +1,4 @@
-﻿namespace ClientCode.UI.Windows.Writing
+﻿namespace Client.Code.Gameplay.Map
 {
     public class MapsFactory
     {

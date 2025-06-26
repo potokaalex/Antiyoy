@@ -8,7 +8,7 @@ namespace Client.Code.Services.Config
         private ConfigData _configData;
 
         ConfigData IConfigsProvider.Data => _configData;
-        
+
         public void Initialize() => _configData = Resources.Load<ConfigData>("ConfigData");
     }
 }

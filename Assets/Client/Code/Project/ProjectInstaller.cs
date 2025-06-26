@@ -1,12 +1,12 @@
+using Client.Code.Gameplay.Map;
 using Client.Code.Services;
 using Client.Code.Services.Config;
 using Client.Code.Services.Progress;
+using Client.Code.Services.Scene;
 using Client.Code.Services.UnityEvents;
-using ClientCode.Services.SceneLoader;
-using ClientCode.UI.Windows.Writing;
 using Zenject;
 
-namespace ClientCode.Infrastructure.Installers
+namespace Client.Code.Project
 {
     public class ProjectInstaller : MonoInstaller
     {

@@ -1,7 +1,7 @@
 using UnityEngine;
 using Zenject;
 
-namespace ClientCode.Client.Code.Bootstrap
+namespace Client.Code.Project
 {
     public class Bootstrapper : MonoBehaviour
     {

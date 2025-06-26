@@ -1,6 +1,6 @@
-﻿using ClientCode.Gameplay.Cell;
-using ClientCode.UI.Windows.Writing;
-using ClientCode.Utilities.Extensions;
+﻿using Client.Code.Gameplay.Cell;
+using Client.Code.Gameplay.Map;
+using Client.Code.Services.Extensions;
 using Leopotam.EcsLite;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -58,7 +58,7 @@ namespace Client.Code.Gameplay
             Tilemap.SetTileFlags(position, TileFlags.None);
             Tilemap.SetColor(position, color);
         }
-        
+
         private void FillByTile(TileBase tile)
         {
             var size = _map.Size;

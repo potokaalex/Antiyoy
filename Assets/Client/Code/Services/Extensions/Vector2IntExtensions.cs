@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ClientCode.Utilities.Extensions
+namespace Client.Code.Services.Extensions
 {
     public static class Vector2IntExtensions
     {
