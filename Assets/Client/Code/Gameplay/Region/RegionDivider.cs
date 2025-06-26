@@ -31,7 +31,7 @@ namespace Client.Code.Gameplay.Region
         {
             var regionParts = GetParts(region.CellEntities);
 
-            if (regionParts[0].Cells.Count == region.CellEntities.Count)
+            if (regionParts.Count == 0 || regionParts[0].Cells.Count == region.CellEntities.Count)
             {
                 ReleaseParts(regionParts);
                 return;

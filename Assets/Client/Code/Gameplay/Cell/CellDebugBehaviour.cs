@@ -7,7 +7,7 @@ namespace Client.Code.Gameplay.Cell
 {
     public class CellDebugBehaviour : MonoBehaviour
     {
-        public TextMeshPro Text;
+        [ReadOnly] public TextMeshPro Text;
         [ReadOnly] public List<int> Neighbours;
     }
 }
