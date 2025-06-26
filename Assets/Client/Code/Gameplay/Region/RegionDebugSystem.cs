@@ -8,34 +8,22 @@ namespace ClientCode.Gameplay.Region.Systems
 {
     public class RegionDebugSystem : IEcsInitSystem, IEcsRunSystem
     {
-        private readonly IEcsProvider _ecsProvider;
-        private EventsBus _eventsBus;
         private EcsPool<CellComponent> _cellPool;
         private EcsFilter _cellFilter;
-        private EcsPool<RegionLink> _linkPool;
+        private EcsPool<Infrastructure.Installers.RegionLink> _linkPool;
         private EcsPool<RegionComponent> _pool;
-
-        public RegionDebugSystem(IEcsProvider ecsProvider) => _ecsProvider = ecsProvider;
 
         public void Init(IEcsSystems systems)
         {
-            var world = _ecsProvider.GetWorld();
-            _eventsBus = _ecsProvider.GetEventsBus();
+            var world = systems.GetWorld();
             _cellFilter = world.Filter<CellComponent>().End();
             _cellPool = world.GetPool<CellComponent>();
-            _linkPool = world.GetPool<RegionLink>();
+            _linkPool = world.GetPool<Infrastructure.Installers.RegionLink>();
             _pool = world.GetPool<RegionComponent>();
-
             DrawDebugText();
         }
 
-        public void Run(IEcsSystems systems)
-        {
-            if (!_eventsBus.HasEvents<RegionRemoveCellRequest>() && !_eventsBus.HasEvents<RegionAddCellRequest>())
-                return;
-
-            DrawDebugText();
-        }
+        public void Run(IEcsSystems systems) => DrawDebugText();
 
         private void DrawDebugText()
         {
@@ -45,9 +33,8 @@ namespace ClientCode.Gameplay.Region.Systems
 
                 if (_linkPool.Has(cellEntity))
                 {
-                    var link = _linkPool.Get(cellEntity);
-                    var region = _pool.Get(link.RegionEntity);
-                    var text = $"{link.RegionEntity}\n{region.CellEntities.Count}";
+                    var region = _linkPool.Get(cellEntity).Region;
+                    var text = $"{region.CellEntities.Count}";
                     SetText(cellDebug, text);
                 }
                 else
@@ -55,7 +42,7 @@ namespace ClientCode.Gameplay.Region.Systems
             }
         }
 
-        private static void SetText(CellDebugBehaviour cellDebug, string text)
+        private void SetText(CellDebugBehaviour cellDebug, string text)
         {
             if (cellDebug.Text.text != text)
                 cellDebug.Text.SetText(text);

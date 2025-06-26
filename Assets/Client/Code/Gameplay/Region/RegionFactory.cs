@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Client.Code.Gameplay;
 using Client.Code.Services;
 using ClientCode.Gameplay.Cell;
@@ -15,13 +14,16 @@ namespace ClientCode.Infrastructure.Installers
         private readonly EcsController _ecsController;
         private readonly RegionJoiner _joiner;
         private readonly RegionsContainer _container;
-        private readonly Instantiator _instantiator;
         private EcsPool<RegionLink> _linkPool;
         private EcsPool<CellComponent> _cellPool;
+        private readonly RegionDivider _divider;
+        private readonly RegionCreator _creator;
 
-        public RegionFactory(EcsController ecsController, RegionJoiner joiner, Instantiator instantiator, RegionsContainer container)
+        public RegionFactory(EcsController ecsController, RegionJoiner joiner, RegionsContainer container, RegionDivider divider,
+            RegionCreator creator)
         {
-            _instantiator = instantiator;
+            _creator = creator;
+            _divider = divider;
             _container = container;
             _joiner = joiner;
             _ecsController = ecsController;
@@ -35,40 +37,38 @@ namespace ClientCode.Infrastructure.Installers
 
         public void Create(int cellEntity, RegionType type)
         {
-            var region = FindRegionOrCreate(cellEntity, type);
-            region.Add(cellEntity);
+            var neighboursRegions = Utilities.ListPool<RegionController>.Get();
+            GetNeighboursRegionsWithType(cellEntity, type, neighboursRegions);
+
+            if (neighboursRegions.Count == 0)
+                _creator.Create(cellEntity, type);
+            else if (neighboursRegions.Count == 1)
+                neighboursRegions[0].Add(cellEntity);
+            else
+                _joiner.Join(neighboursRegions).Add(cellEntity);//тут должно быть также как с divide, т.е. я должен добавить рег а потом объединить (?)
         }
 
         public void Destroy(int cellEntity)
         {
-            //тут должна происходить магия.
-        }
-        
-        private RegionController FindRegionOrCreate(int entity, RegionType type)
-        {
-            var neighboursRegions = Utilities.ListPool<RegionController>.Get(); 
-            GetNeighboursRegionsWithType(entity, type, neighboursRegions);
+            if (!_linkPool.Has(cellEntity))
+                return;
 
-            if (neighboursRegions.Count == 0)
-                return CreateRegion(entity, type);
-            if (neighboursRegions.Count == 1)
-                return neighboursRegions[0];
+            var baseRegion = _linkPool.Get(cellEntity).Region;
+            baseRegion.Remove(cellEntity);
 
-            return _joiner.Join(neighboursRegions);
-        }
+            if (baseRegion.CellEntities.Count == 0)
+            {
+                _container.Remove(baseRegion);
+                return;
+            }
 
-        private RegionController CreateRegion(int entity, RegionType type)
-        {
-            var region = _instantiator.Instantiate<RegionController>();
-            region.Initialize(entity, type);
-            _container.Add(region);
-            return region;
+            _divider.Divide(baseRegion);
         }
 
-        private void GetNeighboursRegionsWithType(int entity, RegionType regionType, List<RegionController> outList)// move to container ?
+        private void GetNeighboursRegionsWithType(int entity, RegionType regionType, List<RegionController> outList) // move to container ?
         {
             outList.Clear();
-            
+
             foreach (var neighbourCell in _cellPool.Get(entity).NeighbourCellEntities)
             {
                 if (!_linkPool.Has(neighbourCell))

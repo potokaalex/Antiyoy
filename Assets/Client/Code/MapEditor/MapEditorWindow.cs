@@ -16,7 +16,6 @@ namespace ClientCode.Infrastructure.Installers
     public class MapEditorWindow : SerializedMonoBehaviour, IInitializable, IDisposable, ITickable
     {
         public MapEditorModeSelector ModeSelector;
-        private MapEditorMode _mode;
         private readonly CompositeDisposable _disposable = new();
         private RegionFactory _regionFactory;
         private CameraController _cameraController;
@@ -40,21 +39,22 @@ namespace ClientCode.Infrastructure.Installers
 
         public void Tick()
         {
-            if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
+            if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject() && ModeSelector.HasSelection)
             {
                 var hit = _cameraController.GetHitFromMousePoint();
 
                 if (hit && _gridController.TryGetCell(hit.point, out var entity))
                 {
                     _regionFactory.Destroy(entity);
-
-                    if (_mode == MapEditorMode.CreateNeutralRegion)
+                    var mode = ModeSelector.SelectedValue;
+                    
+                    if (mode == MapEditorMode.CreateNeutralRegion)
                         _regionFactory.Create(entity, RegionType.Neutral);
-                    else if (_mode == MapEditorMode.DestroyRegion)
+                    else if (mode == MapEditorMode.DestroyRegion)
                         _regionFactory.Destroy(entity);
-                    else if (_mode == MapEditorMode.CreateRedRegion)
+                    else if (mode == MapEditorMode.CreateRedRegion)
                         _regionFactory.Create(entity, RegionType.Red);
-                    else if (_mode == MapEditorMode.CreateBlueRegion)
+                    else if (mode == MapEditorMode.CreateBlueRegion)
                         _regionFactory.Create(entity, RegionType.Blue);
                 }
             }

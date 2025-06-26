@@ -24,54 +24,20 @@ namespace ClientCode.Infrastructure.Installers
         public override void InstallBindings()
         {
             Container.BindInterfacesAndSelfTo<CameraController>().FromInstance(Camera).AsSingle();
-            Container.Bind<EcsController>().AsSingle();
+            Container.BindInterfacesAndSelfTo<EcsController>().AsSingle();
             Container.BindInterfacesAndSelfTo<CellsFactory>().AsSingle();
-            Container.Bind<RegionFactory>().AsSingle();
+            BindRegion();
             Container.BindInterfacesAndSelfTo<GridController>().FromInstance(Grid).AsSingle();
             Container.BindInterfacesTo<MapEditorWindow>().FromInstance(Window).AsSingle();
-
-            //1) создать грид с клетками.
-            //2) создать мир с клетками, регионами и т.д.
-
-            //Container.BindInterfacesAndSelfTo<StateMachine>().AsSingle();
-            //BindFactories();
-            //BindProviders();
-            //BindUI();
-            //BindProgress();
-
-            //Container.Bind<GridManager>().AsSingle();
-            //Container.BindInterfacesTo<DelayStartupper<MapEditorEnterState>>().AsSingle();
-            //Container.BindInterfacesTo<MapEditorInitializer>();
         }
 
-        private void BindProgress()
+        private void BindRegion()
         {
-            Container.BindInterfacesTo<ProgressActorsRegister>().AsSingle();
-            Container.BindInterfacesAndSelfTo<MapKeyFactory>().AsSingle();
-        }
-
-        private void BindUI()
-        {
-            //Container.Bind<IButtonsHandler>().To<MapEditorButtonsPresenter>().AsSingle();
-            //Container.Bind<IWindowsHandler>().To<MapEditorWindowsPresenter>().AsSingle();
-            //Container.Bind<MapEditorModel>().AsSingle();
-            //Container.Bind<MapEditorTouchCellController>().AsSingle();
-        }
-
-        private void BindProviders()
-        {
-            //Container.Bind<MapEditorSceneData>().FromInstance(_sceneData).AsSingle();
-            Container.Bind<IEcsProvider>().To<EcsProvider>().AsSingle();
-        }
-
-        private void BindFactories()
-        {
-            //hmm
-            Container.BindInterfacesAndSelfTo<EcsFactory>().AsSingle();
-            //Container.BindInterfacesAndSelfTo<CellFactory>().AsSingle();
-            Container.BindInterfacesAndSelfTo<TileFactoryOld>().AsSingle();
-            Container.BindInterfacesAndSelfTo<Gameplay.Region.RegionFactory>().AsSingle();
-            Container.BindInterfacesAndSelfTo<CountryFactory>().AsSingle();
+            Container.BindInterfacesAndSelfTo<RegionFactory>().AsSingle();
+            Container.BindInterfacesAndSelfTo<RegionCreator>().AsSingle();
+            Container.BindInterfacesAndSelfTo<RegionJoiner>().AsSingle();
+            Container.BindInterfacesAndSelfTo<RegionDivider>().AsSingle();
+            Container.Bind<RegionsContainer>().AsSingle();
         }
     }
 }
