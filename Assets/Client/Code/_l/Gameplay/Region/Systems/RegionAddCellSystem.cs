@@ -24,7 +24,6 @@ namespace ClientCode.Gameplay.Region.Systems
 
         public void Init(IEcsSystems systems)
         {
-
             _world = _ecsProvider.GetWorld();
             _events = _ecsProvider.GetEventsBus();
             _requestFilter = _events.GetEventBodies(out _requestPool);

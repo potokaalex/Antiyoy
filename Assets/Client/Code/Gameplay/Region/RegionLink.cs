@@ -2,6 +2,6 @@
 {
     public struct RegionLink
     {
-        public RegionController Root;
+        public RegionController Region;
     }
 }

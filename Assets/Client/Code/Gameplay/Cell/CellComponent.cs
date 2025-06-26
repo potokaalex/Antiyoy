@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace ClientCode.Gameplay.Cell
@@ -8,6 +9,6 @@ namespace ClientCode.Gameplay.Cell
         public int Id;
         public List<int> NeighbourCellEntities;
         public Vector2Int GridPosition;
-        public CellDebugBehaviour Debug;
+        [CanBeNull] public CellDebugBehaviour Debug;
     }
 }

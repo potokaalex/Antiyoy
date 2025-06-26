@@ -14,7 +14,7 @@ namespace ClientCode.Utilities.Extensions
             return false;
         }
 
-        public static ref T GetOrAdd<T>(this EcsPool<T> pool, int entity) where T : unmanaged
+        public static ref T GetOrAdd<T>(this EcsPool<T> pool, int entity) where T : struct
         {
             if (pool.Has(entity))
                 return ref pool.Get(entity);
