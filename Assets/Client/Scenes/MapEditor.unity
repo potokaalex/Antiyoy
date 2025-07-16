@@ -1068,7 +1068,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 950199256}
-  - component: {fileID: 950199260}
   - component: {fileID: 950199259}
   - component: {fileID: 950199258}
   m_Layer: 0
@@ -1140,18 +1139,6 @@ MonoBehaviour:
   _parentNewObjectsUnderSceneContext: 0
   _contractNames: []
   _parentContractNames: []
---- !u!114 &950199260
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 950199255}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: beda6361f1034480ab19390560da5e3b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1099710931
 GameObject:
   m_ObjectHideFlags: 0
@@ -1652,11 +1639,11 @@ MonoBehaviour:
     SerializationNodes:
     - Name: Buttons
       Entry: 7
-      Data: 0|System.Collections.Generic.Dictionary`2[[ClientCode.Infrastructure.Installers.SelectionButton,
-        Code],[ClientCode.Infrastructure.Installers.MapEditorMode, Code]], mscorlib
+      Data: 0|System.Collections.Generic.Dictionary`2[[Client.Code.Core.UI.Buttons.Select.SelectionButton,
+        Code],[Client.Code.MapEditor.MapEditorMode, Code]], mscorlib
     - Name: comparer
       Entry: 7
-      Data: 1|System.Collections.Generic.ObjectEqualityComparer`1[[ClientCode.Infrastructure.Installers.SelectionButton,
+      Data: 1|System.Collections.Generic.ObjectEqualityComparer`1[[Client.Code.Core.UI.Buttons.Select.SelectionButton,
         Code]], mscorlib
     - Name: 
       Entry: 8
@@ -2310,6 +2297,63 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1001 &6547391864902720561
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3944895319083069030, guid: 904e664122f28024186917bf9f066fd8, type: 3}
+      propertyPath: m_Name
+      value: BootstrapLoader
+      objectReference: {fileID: 0}
+    - target: {fileID: 8679097991330331656, guid: 904e664122f28024186917bf9f066fd8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8679097991330331656, guid: 904e664122f28024186917bf9f066fd8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8679097991330331656, guid: 904e664122f28024186917bf9f066fd8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8679097991330331656, guid: 904e664122f28024186917bf9f066fd8, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8679097991330331656, guid: 904e664122f28024186917bf9f066fd8, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8679097991330331656, guid: 904e664122f28024186917bf9f066fd8, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8679097991330331656, guid: 904e664122f28024186917bf9f066fd8, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8679097991330331656, guid: 904e664122f28024186917bf9f066fd8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8679097991330331656, guid: 904e664122f28024186917bf9f066fd8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8679097991330331656, guid: 904e664122f28024186917bf9f066fd8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 904e664122f28024186917bf9f066fd8, type: 3}
 --- !u!1 &6680088791701868978
 GameObject:
   m_ObjectHideFlags: 0
@@ -2378,6 +2422,7 @@ GameObject:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 6547391864902720561}
   - {fileID: 950199256}
   - {fileID: 519420032}
   - {fileID: 1668685390}

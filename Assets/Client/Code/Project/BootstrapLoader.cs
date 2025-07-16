@@ -1,3 +1,5 @@
+using System.Linq;
+using ModestTree;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,11 +10,20 @@ namespace Client.Code.Project
 #if UNITY_EDITOR
         public void Awake()
         {
-            if (!FindObjectOfType<Bootstrapper>())
+            if (!FindObjectsOfType<BootstrapLoader>().Except(this).Any())
             {
-                foreach (var m in FindObjectsOfType<MonoBehaviour>())
-                    DestroyImmediate(m);
-                SceneManager.LoadScene(0);
+                var bootSceneBindIndex = 0;
+
+                if (SceneManager.GetActiveScene().buildIndex != bootSceneBindIndex)
+                {
+                    foreach (var m in FindObjectsOfType<Behaviour>())
+                        if (m != this)
+                            m.gameObject.SetActive(false);
+
+                    SceneManager.LoadScene(bootSceneBindIndex);
+                }
+
+                DontDestroyOnLoad(this);
             }
         }
 #endif
