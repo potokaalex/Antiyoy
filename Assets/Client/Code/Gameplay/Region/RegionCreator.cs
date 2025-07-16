@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Client.Code.Services;
+using Client.Code.Core;
 
 namespace Client.Code.Gameplay.Region
 {

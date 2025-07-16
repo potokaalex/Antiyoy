@@ -1,6 +1,6 @@
-﻿using Client.Code.Gameplay.Cell;
+﻿using Client.Code.Core.Extensions;
+using Client.Code.Gameplay.Cell;
 using Client.Code.Gameplay.Map;
-using Client.Code.Services.Extensions;
 using Leopotam.EcsLite;
 using UnityEngine;
 using UnityEngine.Tilemaps;

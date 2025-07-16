@@ -1,4 +1,4 @@
-﻿using Client.Code.Services.UI.Buttons.Select;
+﻿using Client.Code.Core.UI.Buttons.Select;
 using TMPro;
 
 namespace Client.Code.MainMenu.MapEditor

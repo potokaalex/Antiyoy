@@ -31,7 +31,7 @@ namespace Client.Code.Gameplay.Region
 
         public void Create(int cellEntity, RegionType type)
         {
-            var neighboursRegions = Services.ListPool<RegionController>.Get();
+            var neighboursRegions = Core.ListPool<RegionController>.Get();
             GetNeighboursRegionsWithType(cellEntity, type, neighboursRegions);
 
             if (neighboursRegions.Count == 0)

@@ -1,8 +1,8 @@
 using System;
+using Client.Code.Core.UI;
+using Client.Code.Core.UI.Buttons;
 using Client.Code.Gameplay.Map;
 using Client.Code.Project;
-using Client.Code.Services.UI;
-using Client.Code.Services.UI.Buttons;
 using UniRx;
 using Zenject;
 

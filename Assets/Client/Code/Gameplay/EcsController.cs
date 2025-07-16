@@ -1,5 +1,5 @@
-﻿using Client.Code.Gameplay.Region;
-using Client.Code.Services;
+﻿using Client.Code.Core;
+using Client.Code.Gameplay.Region;
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.UnityEditor;
 using SevenBoldPencil.EasyEvents;

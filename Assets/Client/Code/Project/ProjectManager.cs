@@ -1,5 +1,5 @@
-﻿using Client.Code.Gameplay.Map;
-using Client.Code.Services.Scene;
+﻿using Client.Code.Core.Scene;
+using Client.Code.Gameplay.Map;
 using UnityEditor;
 using Zenject;
 

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using Client.Code.Services;
-using Client.Code.Services.Extensions;
+using Client.Code.Core;
+using Client.Code.Core.Extensions;
 using Leopotam.EcsLite;
 using UnityEngine;
 

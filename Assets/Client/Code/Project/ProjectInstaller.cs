@@ -1,9 +1,9 @@
+using Client.Code.Core;
+using Client.Code.Core.Config;
+using Client.Code.Core.Progress;
+using Client.Code.Core.Scene;
+using Client.Code.Core.UnityEvents;
 using Client.Code.Gameplay.Map;
-using Client.Code.Services;
-using Client.Code.Services.Config;
-using Client.Code.Services.Progress;
-using Client.Code.Services.Scene;
-using Client.Code.Services.UnityEvents;
 using Zenject;
 
 namespace Client.Code.Project

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
+using Client.Code.Core;
+using Client.Code.Core.Config;
+using Client.Code.Core.Extensions;
 using Client.Code.Gameplay.Hex;
 using Client.Code.Gameplay.Map;
-using Client.Code.Services;
-using Client.Code.Services.Config;
-using Client.Code.Services.Extensions;
 using Leopotam.EcsLite;
 using UnityEngine;
 using Zenject;

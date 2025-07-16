@@ -68,7 +68,7 @@ namespace Client.Code.Gameplay.Region
 
         private List<RegionPart> GetParts(List<int> baseRegionCells)
         {
-            var resultParts = Services.ListPool<RegionPart>.Get();
+            var resultParts = Core.ListPool<RegionPart>.Get();
             _remaining.AddRange(baseRegionCells);
 
             for (var i = 0; i < baseRegionCells.Count; i++)
@@ -88,9 +88,9 @@ namespace Client.Code.Gameplay.Region
 
         private void ReleaseParts(List<RegionPart> parts) //Use IDisposable
         {
-            foreach (var tilesPart in parts) Services.ListPool<int>.Release(tilesPart.Cells);
+            foreach (var tilesPart in parts) Core.ListPool<int>.Release(tilesPart.Cells);
 
-            Services.ListPool<RegionPart>.Release(parts);
+            Core.ListPool<RegionPart>.Release(parts);
         }
 
         //passes the wave algorithm through noPassedCells and returns the cells that the algorithm has reached. Automatically remove cells from noPassedCells.
@@ -104,7 +104,7 @@ namespace Client.Code.Gameplay.Region
                 break;
             }
 
-            var resultCells = Services.ListPool<int>.Get(noPassedCells.Count);
+            var resultCells = Core.ListPool<int>.Get(noPassedCells.Count);
             var noPassedCellsInitialCount = noPassedCells.Count;
 
             _front.Push(firstItem);
