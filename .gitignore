@@ -77,8 +77,10 @@ crashlytics-build.properties
 # Saves
 /Saves
 
-# Don't sync folders
-/_DontSync
-
 #Odin config editor
 /Assets/Plugins/Sirenix/Odin Inspector/Config/Editor
+
+# Don't sync folders
+/_DontSync
+/Assets/_DontSync
+/Assets/_DontSync.meta

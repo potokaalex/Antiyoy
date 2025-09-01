@@ -23,6 +23,7 @@ namespace Client.Code.Project
                     SceneManager.LoadScene(bootSceneBindIndex);
                 }
 
+                transform.SetParent(null);
                 DontDestroyOnLoad(this);
             }
         }
