@@ -547,10 +547,12 @@ namespace Tayx.Graphy
             Init();
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
             G_IntString.Dispose();
             G_FloatString.Dispose();
+
+            base.OnDestroy();
         }
 
         private void Update()
@@ -575,6 +577,48 @@ namespace Tayx.Graphy
 
         #region Methods -> Public
 
+        public void Init()
+        {
+            if (m_initialized)
+            {
+                return;
+            }
+
+            if( m_keepAlive )
+            {
+                DontDestroyOnLoad( transform.root.gameObject );
+            }
+
+            m_fpsMonitor = GetComponentInChildren<G_FpsMonitor>( true );
+            m_ramMonitor = GetComponentInChildren<G_RamMonitor>( true );
+            m_audioMonitor = GetComponentInChildren<G_AudioMonitor>( true );
+
+            m_fpsManager = GetComponentInChildren<G_FpsManager>( true );
+            m_ramManager = GetComponentInChildren<G_RamManager>( true );
+            m_audioManager = GetComponentInChildren<G_AudioManager>( true );
+            m_advancedData = GetComponentInChildren<G_AdvancedData>( true );
+
+            m_fpsManager.SetPosition( m_graphModulePosition, m_graphModuleOffset );
+            m_ramManager.SetPosition( m_graphModulePosition, m_graphModuleOffset );
+            m_audioManager.SetPosition( m_graphModulePosition, m_graphModuleOffset );
+            m_advancedData.SetPosition( m_advancedModulePosition, m_advancedModuleOffset );
+
+            m_fpsManager.SetState( m_fpsModuleState );
+            m_ramManager.SetState( m_ramModuleState );
+            m_audioManager.SetState( m_audioModuleState );
+            m_advancedData.SetState( m_advancedModuleState );
+
+            if( !m_enableOnStartup )
+            {
+                ToggleActive();
+
+                // We need to enable this on startup because we disable it in GraphyManagerEditor
+                GetComponent<Canvas>().enabled = true;
+            }
+
+            m_initialized = true;
+        }
+        
         public void SetModulePosition( ModuleType moduleType, ModulePosition modulePosition )
         {
             switch( moduleType )
@@ -767,7 +811,7 @@ namespace Tayx.Graphy
                 m_ramManager.SetState( ModuleState.OFF );
                 m_audioManager.SetState( ModuleState.OFF );
                 m_advancedData.SetState( ModuleState.OFF );
-
+                m_fpsMonitor.ResetData();
                 m_active = false;
             }
         }
@@ -775,44 +819,6 @@ namespace Tayx.Graphy
         #endregion
 
         #region Methods -> Private
-
-        private void Init()
-        {
-            if( m_keepAlive )
-            {
-                DontDestroyOnLoad( transform.root.gameObject );
-            }
-
-            m_fpsMonitor = GetComponentInChildren<G_FpsMonitor>( true );
-            m_ramMonitor = GetComponentInChildren<G_RamMonitor>( true );
-            m_audioMonitor = GetComponentInChildren<G_AudioMonitor>( true );
-
-            m_fpsManager = GetComponentInChildren<G_FpsManager>( true );
-            m_ramManager = GetComponentInChildren<G_RamManager>( true );
-            m_audioManager = GetComponentInChildren<G_AudioManager>( true );
-            m_advancedData = GetComponentInChildren<G_AdvancedData>( true );
-
-            m_fpsManager.SetPosition( m_graphModulePosition, m_graphModuleOffset );
-            m_ramManager.SetPosition( m_graphModulePosition, m_graphModuleOffset );
-            m_audioManager.SetPosition( m_graphModulePosition, m_graphModuleOffset );
-            m_advancedData.SetPosition( m_advancedModulePosition, m_advancedModuleOffset );
-
-            m_fpsManager.SetState( m_fpsModuleState );
-            m_ramManager.SetState( m_ramModuleState );
-            m_audioManager.SetState( m_audioModuleState );
-            m_advancedData.SetState( m_advancedModuleState );
-
-            if( !m_enableOnStartup )
-            {
-                ToggleActive();
-
-                // We need to enable this on startup because we disable it in GraphyManagerEditor
-                GetComponent<Canvas>().enabled = true;
-            }
-
-            m_initialized = true;
-        }
-
         // AMW
         public void OnValidate()
         {

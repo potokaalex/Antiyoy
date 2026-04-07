@@ -3,7 +3,7 @@ guid: d523cde1d178d7c4ca6bb724b9d5213e
 labels:
 - font
 timeCreated: 1516718196
-licenseType: Store
+licenseType: Free
 TrueTypeFontImporter:
   serializedVersion: 4
   fontSize: 16
