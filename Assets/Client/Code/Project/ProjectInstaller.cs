@@ -8,17 +8,17 @@ using Zenject;
 
 namespace Client.Code.Project
 {
-    public class ProjectInstaller : MonoInstaller
+  public class ProjectInstaller : MonoInstaller
+  {
+    public override void InstallBindings()
     {
-        public override void InstallBindings()
-        {
-            Container.Install<UnityEventsInstaller>();
-            Container.Bind<Instantiator>().AsSingle().CopyIntoAllSubContainers();
-            Container.BindInterfacesAndSelfTo<ConfigsController>().AsSingle();
-            Container.BindInterfacesTo<ProgressController>().AsSingle();
-            Container.Bind<SceneLoader>().AsSingle();
-            Container.BindInterfacesAndSelfTo<ProjectManager>().AsSingle();
-            Container.Install<MapInstaller>();
-        }
+      Container.Install<UnityEventsInstaller>();
+      Container.Bind<Instantiator>().AsSingle().CopyIntoAllSubContainers();
+      Container.BindInterfacesAndSelfTo<ConfigsController>().AsSingle();
+      Container.BindInterfacesTo<ProgressController>().AsSingle();
+      Container.Bind<SceneLoader>().AsSingle();
+      Container.BindInterfacesAndSelfTo<ProjectManager>().AsSingle();
+      Container.Install<MapInstaller>();
     }
+  }
 }

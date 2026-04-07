@@ -4,19 +4,19 @@ using UnityEngine.SceneManagement;
 
 namespace Client.Code.Core.Scene
 {
-    public class SceneLoader
+  public class SceneLoader
+  {
+    private readonly IConfigsProvider _configsProvider;
+
+    public SceneLoader(IConfigsProvider configsProvider) => _configsProvider = configsProvider;
+
+    public void LoadScene(SceneName name) => LoadSceneAsync(name).Forget();
+
+    public async UniTask LoadSceneAsync(SceneName name)
     {
-        private readonly IConfigsProvider _configsProvider;
-
-        public SceneLoader(IConfigsProvider configsProvider) => _configsProvider = configsProvider;
-
-        public void LoadScene(SceneName name) => LoadSceneAsync(name).Forget();
-
-        public async UniTask LoadSceneAsync(SceneName name)
-        {
-            var nameStr = _configsProvider.Data.Scenes[name];
-            await SceneManager.LoadSceneAsync(nameStr, LoadSceneMode.Single).ToUniTask();
-            await UniTask.Yield();
-        }
+      var nameStr = _configsProvider.Data.Scenes[name];
+      await SceneManager.LoadSceneAsync(nameStr, LoadSceneMode.Single).ToUniTask();
+      await UniTask.Yield();
     }
+  }
 }

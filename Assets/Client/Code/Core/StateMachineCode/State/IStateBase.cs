@@ -1,9 +1,9 @@
 ﻿namespace Client.Code.Core.StateMachineCode.State
 {
-    public interface IStateBase
+  public interface IStateBase
+  {
+    void Exit()
     {
-        void Exit()
-        {
-        }
     }
+  }
 }

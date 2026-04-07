@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace Client.Code.Gameplay.Cell
 {
-    public struct CellComponent
-    {
-        public int Id;
-        public List<int> NeighbourCellEntities;
-        public Vector2Int GridPosition;
-        [CanBeNull] public CellDebugBehaviour Debug;
-    }
+  public struct CellComponent
+  {
+    public int Id;
+    public List<int> NeighbourCellEntities;
+    public Vector2Int GridPosition;
+    [CanBeNull] public CellDebugBehaviour Debug;
+  }
 }

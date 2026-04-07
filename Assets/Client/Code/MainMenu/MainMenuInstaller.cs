@@ -2,10 +2,10 @@
 
 namespace Client.Code.MainMenu
 {
-    public class MainMenuInstaller : MonoInstaller
-    {
-        public MainMenuWindow Window;
+  public class MainMenuInstaller : MonoInstaller
+  {
+    public MainMenuWindow Window;
 
-        public override void InstallBindings() => Container.BindInterfacesTo<MainMenuWindow>().FromInstance(Window).AsSingle();
-    }
+    public override void InstallBindings() => Container.BindInterfacesTo<MainMenuWindow>().FromInstance(Window).AsSingle();
+  }
 }

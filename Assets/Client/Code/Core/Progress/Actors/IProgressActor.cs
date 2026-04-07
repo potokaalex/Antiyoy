@@ -1,6 +1,6 @@
 namespace Client.Code.Core.Progress.Actors
 {
-    public interface IProgressActor
-    {
-    }
+  public interface IProgressActor
+  {
+  }
 }

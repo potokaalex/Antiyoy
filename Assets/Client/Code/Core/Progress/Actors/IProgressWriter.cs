@@ -1,7 +1,7 @@
 namespace Client.Code.Core.Progress.Actors
 {
-    public interface IProgressWriter : IProgressActor
-    {
-        void OnWrite(ProgressData progress);
-    }
+  public interface IProgressWriter : IProgressActor
+  {
+    void OnWrite(ProgressData progress);
+  }
 }

@@ -2,7 +2,7 @@
 
 namespace Client.Code.MapEditor
 {
-    public class MapEditorModeSelector : SelectionButtonsController<MapEditorMode>
-    {
-    }
+  public class MapEditorModeSelector : SelectionButtonsController<MapEditorMode>
+  {
+  }
 }

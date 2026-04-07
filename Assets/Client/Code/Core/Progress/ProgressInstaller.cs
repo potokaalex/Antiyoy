@@ -3,12 +3,12 @@ using Zenject;
 
 namespace Client.Code.Core.Progress
 {
-    public class ProgressInstaller : Installer
+  public class ProgressInstaller : Installer
+  {
+    public override void InstallBindings()
     {
-        public override void InstallBindings()
-        {
-            Container.BindInterfacesAndSelfTo<ProgressActorsRegister>().AsSingle().CopyIntoAllSubContainers();
-            Container.BindInterfacesAndSelfTo<ProgressController>().AsSingle();
-        }
+      Container.BindInterfacesAndSelfTo<ProgressActorsRegister>().AsSingle().CopyIntoAllSubContainers();
+      Container.BindInterfacesAndSelfTo<ProgressController>().AsSingle();
     }
+  }
 }

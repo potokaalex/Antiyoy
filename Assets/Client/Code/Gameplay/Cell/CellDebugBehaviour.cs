@@ -5,9 +5,9 @@ using UnityEngine;
 
 namespace Client.Code.Gameplay.Cell
 {
-    public class CellDebugBehaviour : MonoBehaviour
-    {
-        [ReadOnly] public TextMeshPro Text;
-        [ReadOnly] public List<int> Neighbours;
-    }
+  public class CellDebugBehaviour : MonoBehaviour
+  {
+    [ReadOnly] public TextMeshPro Text;
+    [ReadOnly] public List<int> Neighbours;
+  }
 }

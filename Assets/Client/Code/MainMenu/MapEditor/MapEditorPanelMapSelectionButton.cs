@@ -3,8 +3,8 @@ using TMPro;
 
 namespace Client.Code.MainMenu.MapEditor
 {
-    public class MapEditorPanelMapSelectionButton : SelectionButton
-    {
-        public TextMeshProUGUI Text;
-    }
+  public class MapEditorPanelMapSelectionButton : SelectionButton
+  {
+    public TextMeshProUGUI Text;
+  }
 }
