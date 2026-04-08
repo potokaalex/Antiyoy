@@ -13,7 +13,7 @@ namespace Client.New.Gameplay
       _gridController = gridController;
       _cameraController = cameraController;
     }
-    
+
     private void Update()
     {
       if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
@@ -22,7 +22,7 @@ namespace Client.New.Gameplay
         {
           c.ClearColor();
         }
-        
+
         var hit = _cameraController.GetHitFromMousePoint();
 
         if (hit && _gridController.TryGetCell(_gridController.WorldPositionToHex(hit.point), out var cell))
