@@ -6,6 +6,12 @@ namespace Client.New
   {
     [SerializeField] private Camera _camera;
 
+    public RaycastHit2D GetHitFromMousePoint()
+    {
+      var ray = _camera.ScreenPointToRay(Input.mousePosition);
+      return Physics2D.Raycast(ray.origin, ray.direction);
+    }
+
     private void Update()
     {
       Move();

@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Client.New
+namespace Client.New.Hex
 {
   public struct HexCoordinates : IEquatable<HexCoordinates>
   {
@@ -16,21 +16,21 @@ namespace Client.New
       R = r;
     }
 
-    public static HexCoordinates FromArrayIndex(Vector2Int index)
+    public static HexCoordinates FromArray2DIndex(Vector2Int index)
     {
       return new HexCoordinates
       {
         Q = index.x,
-        R = index.y - (index.x + (index.x & 1)) / 2
+        R = index.y - (index.x - (index.x & 1)) / 2
       };
     }
 
-    public Vector2Int ToArrayIndex()
+    public Vector2Int ToArray2DIndex()
     {
       return new Vector2Int
       {
         x = Q,
-        y = R + (Q + (Q & 1)) / 2
+        y = R + (Q - (Q & 1)) / 2
       };
     }
 
