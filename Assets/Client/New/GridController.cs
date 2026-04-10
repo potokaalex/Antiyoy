@@ -1,4 +1,5 @@
 using Client.New.Hex;
+using Client.New.Region;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -13,7 +14,8 @@ namespace Client.New
     [SerializeField] private TileBase _tile;
     [SerializeField] private CellController _cellPrefab;
     private MapController _mapController;
-    
+    private Transform _cellsRoot;
+
     public void Initialize(MapController mapController)
     {
       _mapController = mapController;
@@ -41,11 +43,33 @@ namespace Client.New
       if (_mapController.IsPositionOnMap(position))
       {
         cell = GetCell(position);
-        return true;
+        return cell;
       }
 
       cell = null;
       return false;
+    }
+
+    public bool HasCell(HexCoordinates position)
+    {
+      return TryGetCell(position, out _);
+    }
+
+    public void CreateCell(HexCoordinates position, RegionType type)
+    {
+      var worldPosition = HexPositionToWorld(position);
+      var cell = Instantiate(_cellPrefab, worldPosition, Quaternion.identity, _cellsRoot);
+      cell.Initialize(this, position, type);
+      var arrayIndex = MathUtilities.ToArrayIndex(position.ToArray2DIndex(), _mapController.Size.x);
+      cell.gameObject.name = $"Cell-{arrayIndex}";
+      Cells[arrayIndex] = cell;
+    }
+
+    public void DestroyCell(CellController cell)
+    {
+      cell.SetColor(Color.black);
+      Destroy(cell.gameObject);
+      Cells[GetCellIndex(cell.Position)] = null;
     }
 
     private void FillByTile(TileBase tile)
@@ -60,22 +84,13 @@ namespace Client.New
 
     private void CreateCells()
     {
-      var cellsRoot = new GameObject("CellsRoot").transform;
       var mapSize = _mapController.Size;
       Cells = new CellController[mapSize.x * mapSize.y];
+      _cellsRoot = new GameObject("CellsRoot").transform;
 
       for (var y = 0; y < mapSize.y; y++)
       for (var x = 0; x < mapSize.x; x++)
-      {
-        var array2DIndex = new Vector2Int(x, y);
-        var position = HexCoordinates.FromArray2DIndex(array2DIndex);
-        var worldPosition = HexPositionToWorld(position);
-        var cell = Instantiate(_cellPrefab, worldPosition, Quaternion.identity, cellsRoot);
-        cell.Initialize(this, position);
-        var arrayIndex = MathUtilities.ToArrayIndex(array2DIndex, mapSize.x);
-        cell.gameObject.name = $"Cell-{arrayIndex}";
-        Cells[arrayIndex] = cell;
-      }
+        CreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(x, y)), RegionType.Default);
 
       ConnectCells();
     }
@@ -96,7 +111,7 @@ namespace Client.New
 
     private CellController GetCell(HexCoordinates position)
     {
-      return Cells[MathUtilities.ToArrayIndex(position.ToArray2DIndex(), _mapController.Size.x)];
+      return Cells[GetCellIndex(position)];
     }
 
     private Vector3Int GridIndexFrom2DIndex(Vector2Int index)
@@ -107,6 +122,11 @@ namespace Client.New
     private Vector2Int GridIndexTo2DIndex(Vector3Int index)
     {
       return new Vector2Int(index.y, index.x);
+    }
+
+    private int GetCellIndex(HexCoordinates position)
+    {
+      return MathUtilities.ToArrayIndex(position.ToArray2DIndex(), _mapController.Size.x);
     }
   }
 }

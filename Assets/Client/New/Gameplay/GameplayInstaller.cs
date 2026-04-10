@@ -1,3 +1,4 @@
+using Client.New.Region;
 using UnityEngine;
 using Zenject;
 
@@ -12,6 +13,7 @@ namespace Client.New.Gameplay
     {
       Container.Bind<GridController>().FromInstance(_grid).AsSingle();
       Container.Bind<CameraController>().FromInstance(_camera).AsSingle();
+      Container.Bind<RegionsService>().AsSingle();
       Container.BindInterfacesAndSelfTo<MapController>().AsSingle();
     }
   }

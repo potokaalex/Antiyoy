@@ -1,5 +1,7 @@
+using Client.New.Region;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Zenject;
 
 namespace Client.New.Gameplay
 {
@@ -7,9 +9,12 @@ namespace Client.New.Gameplay
   {
     private CameraController _cameraController;
     private GridController _gridController;
+    private MapController _mapController;
 
-    public void Initialize(CameraController cameraController, GridController gridController)
+    [Inject]
+    private void Construct(CameraController cameraController, GridController gridController, MapController mapController)
     {
+      _mapController = mapController;
       _gridController = gridController;
       _cameraController = cameraController;
     }
@@ -18,19 +23,21 @@ namespace Client.New.Gameplay
     {
       if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
       {
-        foreach (var c in _gridController.Cells)
-        {
-          c.ClearColor();
-        }
-
         var hit = _cameraController.GetHitFromMousePoint();
-
-        if (hit && _gridController.TryGetCell(_gridController.WorldPositionToHex(hit.point), out var cell))
+        var point = _gridController.WorldPositionToHex(hit.point);
+        if (hit && !_gridController.HasCell(point))
         {
-          foreach (var neighbourCell in cell.NeighbourCells)
-          {
-            neighbourCell.SetColor(Color.blue);
-          }
+          _mapController.CreateCell(point, RegionType.Default);
+        }
+      }
+
+      if (Input.GetMouseButton(1) && !EventSystem.current.IsPointerOverGameObject())
+      {
+        var hit = _cameraController.GetHitFromMousePoint();
+        var point = _gridController.WorldPositionToHex(hit.point);
+        if (hit && _gridController.TryGetCell(point, out var cell))
+        {
+          _mapController.DestroyCell(cell);
         }
       }
     }

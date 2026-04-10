@@ -1,4 +1,5 @@
 using Client.New.Hex;
+using Client.New.Region;
 using UnityEngine;
 using Zenject;
 
@@ -9,10 +10,12 @@ namespace Client.New
     public Vector2Int Size { get; } = new(10, 10);
 
     private readonly GridController _gridController;
+    private readonly RegionsService _regionsService;
 
-    public MapController(GridController gridController)
+    public MapController(GridController gridController, RegionsService regionsService)
     {
       _gridController = gridController;
+      _regionsService = regionsService;
     }
 
     public bool IsPositionOnMap(HexCoordinates position)
@@ -24,6 +27,21 @@ namespace Client.New
     public void Initialize()
     {
       _gridController.Initialize(this);
+      _regionsService.CreateRegions();
+    }
+
+    public void CreateCell(HexCoordinates position, RegionType type)
+    {
+      _gridController.CreateCell(position, type);
+      _regionsService.TryJoinRegions(position, type);
+    }
+
+    public void DestroyCell(CellController cell)
+    {
+      _gridController.DestroyCell(cell);
+      var region = cell.Region;
+      cell.Region.Remove(cell);
+      _regionsService.TryDivideRegion(region);
     }
   }
 }
