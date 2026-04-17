@@ -9,12 +9,12 @@ namespace Client.New.Gameplay
   {
     private CameraController _cameraController;
     private GridController _gridController;
-    private MapController _mapController;
+    private GameController _gameController;
 
     [Inject]
-    private void Construct(CameraController cameraController, GridController gridController, MapController mapController)
+    private void Construct(CameraController cameraController, GridController gridController, GameController gameController)
     {
-      _mapController = mapController;
+      _gameController = gameController;
       _gridController = gridController;
       _cameraController = cameraController;
     }
@@ -27,7 +27,7 @@ namespace Client.New.Gameplay
         var point = _gridController.WorldPositionToHex(hit.point);
         if (hit && !_gridController.HasCell(point))
         {
-          _mapController.CreateCell(point, RegionType.Default);
+          _gameController.CreateCell(point, RegionType.Default);
         }
       }
 
@@ -37,7 +37,7 @@ namespace Client.New.Gameplay
         var point = _gridController.WorldPositionToHex(hit.point);
         if (hit && _gridController.TryGetCell(point, out var cell))
         {
-          _mapController.DestroyCell(cell);
+          _gameController.DestroyCell(cell);
         }
       }
     }

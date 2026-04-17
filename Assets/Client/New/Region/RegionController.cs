@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Client.New.Cell;
 
 namespace Client.New.Region
 {

@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using Client.New.Hex;
 using Client.New.Region;
+using Client.New.Tile;
 using TMPro;
 using UnityEngine;
-using Zenject;
 
-namespace Client.New
+namespace Client.New.Cell
 {
   public class CellController : MonoBehaviour
   {
@@ -15,14 +15,9 @@ namespace Client.New
     [SerializeField] private TextMeshPro _debugText;
     private TilemapController _tilemapController;
 
-    [Inject]
-    public void Construct(TilemapController tilemapController)
+    public void Initialize(TilemapController tilemapController, HexCoordinates position, RegionType type)
     {
       _tilemapController = tilemapController;
-    }
-    
-    public void Initialize(HexCoordinates position, RegionType type)
-    {
       Position = position;
       Region = new RegionController(new List<CellController> { this }, type); //todo: remove it. add to _regions!
       ClearColor();

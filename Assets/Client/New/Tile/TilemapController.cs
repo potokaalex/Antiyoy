@@ -2,19 +2,18 @@ using Client.New.Hex;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace Client.New
+namespace Client.New.Tile
 {
-  public class TilemapController
+  public class TilemapController : MonoBehaviour
   {
-    private Tilemap _tilemap;
+    [SerializeField] private Tilemap _tilemap;
+    [SerializeField] private TileBase _tile;
     private GridController _gridController;
-    private MapController _mapController;
 
-    public void Initialize(Tilemap tilemap, GridController gridController, MapController mapController)
+    public void Initialize(GridController gridController)
     {
       _gridController = gridController;
-      _tilemap = tilemap;
-      _mapController = mapController;
+      FillByTile(_tile);
     }
 
     public void SetColor(HexCoordinates position, Color color)
@@ -22,11 +21,11 @@ namespace Client.New
       _tilemap.SetColor(_gridController.GridIndexFrom2DIndex(position.ToArray2DIndex()), color);
     }
 
-    public void FillByTile(TileBase tile)
+    private void FillByTile(TileBase tile)
     {
-      var mapSize = _mapController.Size;
-      for (var y = 0; y < mapSize.y; y++)
-      for (var x = 0; x < mapSize.x; x++)
+      var size = _gridController.Size;
+      for (var y = 0; y < size.y; y++)
+      for (var x = 0; x < size.x; x++)
         _tilemap.SetTile(_gridController.GridIndexFrom2DIndex(new Vector2Int(x, y)), tile);
 
       _tilemap.CompressBounds();
