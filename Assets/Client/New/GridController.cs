@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using Client.New.Cell;
 using Client.New.Hex;
+using Client.New.Infrastructure;
 using Client.New.Region;
 using Client.New.Tile;
 using UnityEngine;
-using Zenject;
 
 namespace Client.New
 {
@@ -18,16 +18,14 @@ namespace Client.New
     public Vector2Int Size { get; } = new(10, 10);
     public CellController[] Cells { get; private set; }
 
-    [Inject]
-    public void Construct(TilemapController tilemapController)
+    private void Awake()
     {
-      _tilemapController = tilemapController;
+      _tilemapController = Locator.Get<TilemapController>();
     }
 
     public void Initialize()
     {
-      _tilemapController.Initialize(this);
-      CreateCells();
+
     }
 
     public HexCoordinates WorldPositionToHex(Vector3 worldPosition)
@@ -76,7 +74,7 @@ namespace Client.New
     {
       var worldPosition = HexPositionToWorld(position);
       var cell = Instantiate(_cellPrefab, worldPosition, Quaternion.identity, _cellsRoot);
-      cell.Initialize(_tilemapController, position, type);
+      cell.Initialize(position, type);
       var arrayIndex = MathUtilities.ToArrayIndex(position.ToArray2DIndex(), Size.x);
       cell.gameObject.name = $"Cell-{arrayIndex}";
       Cells[arrayIndex] = cell;
@@ -96,13 +94,7 @@ namespace Client.New
           yield return cell;
     }
 
-    private bool IsPositionInGrid(HexCoordinates position)
-    {
-      var array2DIndex = position.ToArray2DIndex();
-      return array2DIndex.x >= 0 && array2DIndex.y >= 0 && array2DIndex.x < Size.x && array2DIndex.y < Size.y;
-    }
-
-    private void CreateCells()
+    public void CreateCells()
     {
       Cells = new CellController[Size.x * Size.y];
       _cellsRoot = new GameObject("CellsRoot").transform;
@@ -110,6 +102,12 @@ namespace Client.New
       for (var y = 0; y < Size.y; y++)
       for (var x = 0; x < Size.x; x++)
         CreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(x, y)), RegionType.Default);
+    }
+
+    private bool IsPositionInGrid(HexCoordinates position)
+    {
+      var array2DIndex = position.ToArray2DIndex();
+      return array2DIndex.x >= 0 && array2DIndex.y >= 0 && array2DIndex.x < Size.x && array2DIndex.y < Size.y;
     }
 
     private int GetCellIndex(HexCoordinates position)

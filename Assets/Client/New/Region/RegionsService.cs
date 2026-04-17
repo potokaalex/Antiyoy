@@ -2,17 +2,18 @@ using System;
 using System.Collections.Generic;
 using Client.New.Cell;
 using Client.New.Hex;
+using Client.New.Infrastructure;
 
 namespace Client.New.Region
 {
-  public class RegionsService
+  public class RegionsService : IInitializable
   {
     private readonly List<RegionController> _regions = new();
-    private readonly GridController _gridController;
+    private GridController _gridController;
 
-    public RegionsService(GridController gridController)
+    public void Initialize()
     {
-      _gridController = gridController;
+      _gridController = Locator.Get<GridController>();
     }
 
     public void CreateRegions()

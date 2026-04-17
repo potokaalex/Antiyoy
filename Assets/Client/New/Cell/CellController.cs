@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Client.New.Hex;
+using Client.New.Infrastructure;
 using Client.New.Region;
 using Client.New.Tile;
 using TMPro;
@@ -15,9 +16,13 @@ namespace Client.New.Cell
     [SerializeField] private TextMeshPro _debugText;
     private TilemapController _tilemapController;
 
-    public void Initialize(TilemapController tilemapController, HexCoordinates position, RegionType type)
+    private void Awake()
     {
-      _tilemapController = tilemapController;
+      _tilemapController = Locator.Get<TilemapController>();
+    }
+
+    public void Initialize(HexCoordinates position, RegionType type)
+    {
       Position = position;
       Region = new RegionController(new List<CellController> { this }, type); //todo: remove it. add to _regions!
       ClearColor();

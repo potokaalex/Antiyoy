@@ -1,7 +1,7 @@
+using Client.New.Infrastructure;
 using Client.New.Region;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using Zenject;
 
 namespace Client.New.Gameplay
 {
@@ -11,12 +11,11 @@ namespace Client.New.Gameplay
     private GridController _gridController;
     private GameController _gameController;
 
-    [Inject]
-    private void Construct(CameraController cameraController, GridController gridController, GameController gameController)
+    private void Awake()
     {
-      _gameController = gameController;
-      _gridController = gridController;
-      _cameraController = cameraController;
+      _gameController = Locator.Get<GameController>();
+      _gridController = Locator.Get<GridController>();
+      _cameraController = Locator.Get<CameraController>();
     }
 
     private void Update()
