@@ -10,11 +10,28 @@ namespace Client.New.Cell
 {
   public class CellController : MonoBehaviour
   {
-    public HexCoordinates Position { get; private set; }
-    public RegionController Region { get; set; }
-
     [SerializeField] private TextMeshPro _debugText;
     private TilemapController _tilemapController;
+    private RegionController _region;
+    
+    public HexCoordinates Position { get; private set; }
+
+    public RegionController Region
+    {
+      get => _region;
+      set
+      {
+        _region = value;
+        if (_region == null)
+        {
+          ClearColor();
+        }
+        else if (_region.Type == RegionType.Default)
+        {
+          _tilemapController.SetColor(Position, Color.gray);
+        }
+      }
+    }
 
     private void Awake()
     {
@@ -25,18 +42,12 @@ namespace Client.New.Cell
     {
       Position = position;
       Region = new RegionController(new List<CellController> { this }, type); //todo: remove it. add to _regions!
-      ClearColor();
       _debugText.SetText(position.ToString());
     }
 
-    public void SetColor(Color color)
+    private void ClearColor()
     {
-      _tilemapController.SetColor(Position, color);
-    }
-
-    public void ClearColor()
-    {
-      _tilemapController.SetColor(Position, Color.gray);
+      _tilemapController.SetColor(Position, Color.black);
     }
 
     private void Update()

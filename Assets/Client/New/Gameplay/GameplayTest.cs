@@ -9,11 +9,9 @@ namespace Client.New.Gameplay
   {
     private CameraController _cameraController;
     private GridController _gridController;
-    private GameController _gameController;
 
     private void Awake()
     {
-      _gameController = Locator.Get<GameController>();
       _gridController = Locator.Get<GridController>();
       _cameraController = Locator.Get<CameraController>();
     }
@@ -26,7 +24,7 @@ namespace Client.New.Gameplay
         var point = _gridController.WorldPositionToHex(hit.point);
         if (hit && !_gridController.HasCell(point))
         {
-          _gameController.CreateCell(point, RegionType.Default);
+          _gridController.CreateCell(point, RegionType.Default);
         }
       }
 
@@ -36,7 +34,7 @@ namespace Client.New.Gameplay
         var point = _gridController.WorldPositionToHex(hit.point);
         if (hit && _gridController.TryGetCell(point, out var cell))
         {
-          _gameController.DestroyCell(cell);
+          _gridController.DestroyCell(cell);
         }
       }
     }

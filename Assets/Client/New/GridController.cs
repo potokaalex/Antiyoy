@@ -3,7 +3,6 @@ using Client.New.Cell;
 using Client.New.Hex;
 using Client.New.Infrastructure;
 using Client.New.Region;
-using Client.New.Tile;
 using UnityEngine;
 
 namespace Client.New
@@ -13,19 +12,15 @@ namespace Client.New
     [SerializeField] private Grid _grid;
     [SerializeField] private CellController _cellPrefab;
     private Transform _cellsRoot;
-    private TilemapController _tilemapController;
+    private RegionsService _regionsService;
 
     public Vector2Int Size { get; } = new(10, 10);
+
     public CellController[] Cells { get; private set; }
 
     private void Awake()
     {
-      _tilemapController = Locator.Get<TilemapController>();
-    }
-
-    public void Initialize()
-    {
-
+      _regionsService = Locator.Get<RegionsService>();
     }
 
     public HexCoordinates WorldPositionToHex(Vector3 worldPosition)
@@ -78,13 +73,14 @@ namespace Client.New
       var arrayIndex = MathUtilities.ToArrayIndex(position.ToArray2DIndex(), Size.x);
       cell.gameObject.name = $"Cell-{arrayIndex}";
       Cells[arrayIndex] = cell;
+      _regionsService.TryJoinRegions(position, type);
     }
 
     public void DestroyCell(CellController cell)
     {
-      cell.SetColor(Color.black);
       Destroy(cell.gameObject);
       Cells[GetCellIndex(cell.Position)] = null;
+      _regionsService.RemoveFromRegionAndTryDivideRegion(cell);
     }
 
     public IEnumerable<CellController> GetNeighbourCells(HexCoordinates aroundPosition)

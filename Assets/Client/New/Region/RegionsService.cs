@@ -57,6 +57,13 @@ namespace Client.New.Region
       DivideRegion(regionParts, region);
     }
 
+    public void RemoveFromRegionAndTryDivideRegion(CellController cell)
+    {
+      var region = cell.Region;
+      cell.Region.Remove(cell);
+      TryDivideRegion(region);
+    }
+
     private void FindRegionCells(List<CellController> front, List<CellController> regionCells, List<CellController> unPassed, bool byType = true)
     {
       while (front.Count > 0)
