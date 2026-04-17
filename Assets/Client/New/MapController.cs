@@ -18,16 +18,16 @@ namespace Client.New
       _regionsService = regionsService;
     }
 
-    public bool IsPositionOnMap(HexCoordinates position)
-    {
-      var array2DIndex = position.ToArray2DIndex();
-      return array2DIndex.x >= 0 && array2DIndex.y >= 0 && array2DIndex.x < Size.x && array2DIndex.y < Size.y;
-    }
-
     public void Initialize()
     {
       _gridController.Initialize(this);
       _regionsService.CreateRegions();
+    }
+
+    public bool IsPositionOnMap(HexCoordinates position)
+    {
+      var array2DIndex = position.ToArray2DIndex();
+      return array2DIndex.x >= 0 && array2DIndex.y >= 0 && array2DIndex.x < Size.x && array2DIndex.y < Size.y;
     }
 
     public void CreateCell(HexCoordinates position, RegionType type)

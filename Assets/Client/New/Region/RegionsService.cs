@@ -62,18 +62,15 @@ namespace Client.New.Region
         var cell = front[0];
         var position = cell.Position;
 
-        foreach (var direction in HexUtilities.Directions)
+        foreach (var neighbour in _gridController.GetNeighbourCells(position))
         {
-          if (_gridController.TryGetCell(position + direction, out var neighbour))
-          {
-            var isNiceRegion = byType ? neighbour.Region.Type == cell.Region.Type : neighbour.Region == cell.Region;
+          var isNiceRegion = byType ? neighbour.Region.Type == cell.Region.Type : neighbour.Region == cell.Region;
 
-            if (isNiceRegion && !front.Contains(neighbour) && !regionCells.Contains(neighbour))
-            {
-              front.Add(neighbour);
-              regionCells.Add(neighbour);
-            }
-          }
+          if (isNiceRegion && !front.Contains(neighbour) && !regionCells.Contains(neighbour))
+          {
+            front.Add(neighbour);
+            regionCells.Add(neighbour);
+          }          
         }
 
         front.RemoveAt(0);
@@ -144,10 +141,9 @@ namespace Client.New.Region
         if (cell.Region.Type == type)
           list.Add(cell.Region);
 
-      foreach (var direction in HexUtilities.Directions)
-        if (_gridController.TryGetCell(position + direction, out var neighbour))
-          if (neighbour.Region.Type == type && !list.Contains(neighbour.Region))
-            list.Add(neighbour.Region);
+      foreach (var neighbour in _gridController.GetNeighbourCells(position))
+        if (neighbour.Region.Type == type && !list.Contains(neighbour.Region))
+          list.Add(neighbour.Region);
     }
   }
 }

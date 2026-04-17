@@ -3,21 +3,26 @@ using Client.New.Hex;
 using Client.New.Region;
 using TMPro;
 using UnityEngine;
+using Zenject;
 
 namespace Client.New
 {
   public class CellController : MonoBehaviour
   {
     public HexCoordinates Position { get; private set; }
-    public List<CellController> NeighbourCells { get; } = new();
     public RegionController Region { get; set; }
 
     [SerializeField] private TextMeshPro _debugText;
-    private GridController _gridController;
+    private TilemapController _tilemapController;
 
-    public void Initialize(GridController gridController, HexCoordinates position, RegionType type)
+    [Inject]
+    public void Construct(TilemapController tilemapController)
     {
-      _gridController = gridController;
+      _tilemapController = tilemapController;
+    }
+    
+    public void Initialize(HexCoordinates position, RegionType type)
+    {
       Position = position;
       Region = new RegionController(new List<CellController> { this }, type); //todo: remove it. add to _regions!
       ClearColor();
@@ -26,12 +31,12 @@ namespace Client.New
 
     public void SetColor(Color color)
     {
-      _gridController.SetColor(Position, color);
+      _tilemapController.SetColor(Position, color);
     }
 
     public void ClearColor()
     {
-      _gridController.SetColor(Position, Color.gray);
+      _tilemapController.SetColor(Position, Color.gray);
     }
 
     private void Update()
