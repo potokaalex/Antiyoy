@@ -1,3 +1,4 @@
+using Client.New.Debug;
 using Client.New.Infrastructure;
 using Client.New.Region;
 using Client.New.Tile;
@@ -10,12 +11,14 @@ namespace Client.New.Gameplay
     [SerializeField] private TilemapController _tilemapController;
     [SerializeField] private GridController _gridController;
     [SerializeField] private CameraController _cameraController;
+    [SerializeField] private DebugController _debugController;
 
     protected override void Install()
     {
       Locator.Set(_cameraController);
       Locator.Set(_tilemapController);
       Locator.Set(_gridController);
+      Locator.Set(_debugController);
       Locator.Set(new RegionsService());
       Locator.Set(new GameController());
     }

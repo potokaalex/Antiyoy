@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Client.New.Cell;
 using Client.New.Hex;
 using Client.New.Infrastructure;
 using Client.New.Region;
@@ -10,8 +9,6 @@ namespace Client.New
   public class GridController : MonoBehaviour
   {
     [SerializeField] private Grid _grid;
-    [SerializeField] private CellController _cellPrefab;
-    private Transform _cellsRoot;
     private RegionsService _regionsService;
 
     public Vector2Int Size { get; } = new(10, 10);
@@ -58,27 +55,33 @@ namespace Client.New
       if (IsPositionInGrid(position))
       {
         cell = GetCell(position);
-        return cell;
+        return cell != null;
       }
 
       cell = null;
       return false;
     }
 
+    public void CreateCells()
+    {
+      Cells = new CellController[Size.x * Size.y];
+
+      for (var y = 0; y < Size.y; y++)
+      for (var x = 0; x < Size.x; x++)
+        CreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(x, y)), RegionType.Default);
+    }
+
     public void CreateCell(HexCoordinates position, RegionType type)
     {
-      var worldPosition = HexPositionToWorld(position);
-      var cell = Instantiate(_cellPrefab, worldPosition, Quaternion.identity, _cellsRoot);
+      var cell = new CellController();
       cell.Initialize(position, type);
       var arrayIndex = MathUtilities.ToArrayIndex(position.ToArray2DIndex(), Size.x);
-      cell.gameObject.name = $"Cell-{arrayIndex}";
       Cells[arrayIndex] = cell;
       _regionsService.TryJoinRegions(position, type);
     }
 
     public void DestroyCell(CellController cell)
     {
-      Destroy(cell.gameObject);
       Cells[GetCellIndex(cell.Position)] = null;
       _regionsService.RemoveFromRegionAndTryDivideRegion(cell);
     }
@@ -88,16 +91,6 @@ namespace Client.New
       foreach (var direction in HexUtilities.Directions)
         if (TryGetCell(aroundPosition + direction, out var cell))
           yield return cell;
-    }
-
-    public void CreateCells()
-    {
-      Cells = new CellController[Size.x * Size.y];
-      _cellsRoot = new GameObject("CellsRoot").transform;
-
-      for (var y = 0; y < Size.y; y++)
-      for (var x = 0; x < Size.x; x++)
-        CreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(x, y)), RegionType.Default);
     }
 
     private bool IsPositionInGrid(HexCoordinates position)

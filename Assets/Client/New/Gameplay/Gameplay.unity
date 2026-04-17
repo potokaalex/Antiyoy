@@ -150,7 +150,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _grid: {fileID: 278543115}
-  _cellPrefab: {fileID: 8535229870330343277, guid: b012fa36006fceb45b47c360ac1a9822, type: 3}
 --- !u!156049354 &278543115
 Grid:
   m_ObjectHideFlags: 0
@@ -397,6 +396,7 @@ GameObject:
   - component: {fileID: 1138225517}
   - component: {fileID: 1138225518}
   - component: {fileID: 1138225520}
+  - component: {fileID: 1138225521}
   m_Layer: 0
   m_Name: Startup
   m_TagString: Untagged
@@ -434,6 +434,7 @@ MonoBehaviour:
   _tilemapController: {fileID: 2086340858}
   _gridController: {fileID: 278543114}
   _cameraController: {fileID: 1016838088}
+  _debugController: {fileID: 1138225521}
 --- !u!114 &1138225520
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -446,6 +447,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7cf6bf50db94ed19edba8c93f012781, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Client::Client.New.Gameplay.GameplayTest
+--- !u!114 &1138225521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1138225516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7634fbeaaf744a499810cd3e3533e68d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::Client.New.DebugController
+  _cellDebugPrefab: {fileID: 5748800255380385168, guid: b012fa36006fceb45b47c360ac1a9822, type: 3}
 --- !u!1 &1193746974
 GameObject:
   m_ObjectHideFlags: 0
