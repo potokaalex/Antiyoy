@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using Client.New.Configs;
 using Client.New.Hex;
 using Client.New.Infrastructure;
+using UnityEngine;
 
 namespace Client.New.Region
 {
@@ -9,10 +11,12 @@ namespace Client.New.Region
   {
     private readonly List<RegionController> _regions = new();
     private GridController _gridController;
+    private ConfigsProvider _configsProvider;
 
     public void Initialize()
     {
       _gridController = Locator.Get<GridController>();
+      _configsProvider = Locator.Get<ConfigsProvider>();
     }
 
     public void CreateRegions()
@@ -33,7 +37,7 @@ namespace Client.New.Region
         regionCells.Add(baseCell);
         front.Add(baseCell);
         FindRegionCells(front, regionCells, unPassed);
-        _regions.Add(CreateRegion(regionCells));
+        _regions.Add(new RegionController(regionCells));
         regionCells.Clear();
       }
     }
@@ -63,6 +67,27 @@ namespace Client.New.Region
       TryDivideRegion(region);
     }
 
+    public Color GetColorFor(RegionController region)
+    {
+      if (region == null)
+        return Color.black;
+      return _configsProvider.RegionsColors[region.Type];
+    }
+
+    public RegionController GetBestNeighbourRegionOrCreate(HexCoordinates position, RegionType type)
+    {
+      RegionController region = null;
+
+      foreach (var neighbour in _gridController.GetNeighbourCells(position))
+        if (neighbour.Region.Type == type && (region == null || neighbour.Region.Cells.Count > region.Cells.Count))
+          region = neighbour.Region;
+
+      if (region != null)
+        return region;
+
+      return new RegionController(new List<CellController>(), type);
+    }
+
     private void FindRegionCells(List<CellController> front, List<CellController> regionCells, List<CellController> unPassed, bool byType = true)
     {
       while (front.Count > 0)
@@ -78,23 +103,12 @@ namespace Client.New.Region
           {
             front.Add(neighbour);
             regionCells.Add(neighbour);
-          }          
+          }
         }
 
         front.RemoveAt(0);
         unPassed.Remove(cell);
       }
-    }
-
-    private RegionController CreateRegion(List<CellController> regionCells)
-    {
-      var region = new RegionController(regionCells);
-      foreach (var cell in region.Cells)
-      {
-        cell.Region = region;
-      }
-
-      return region;
     }
 
     private void FindRegionParts(List<CellController> unPassed, List<CellController> front, List<List<CellController>> regionParts)
@@ -119,7 +133,7 @@ namespace Client.New.Region
         {
           var cell = region.Cells[0];
           region.Remove(cell);
-          mainRegion.Add(cell); 
+          mainRegion.Add(cell);
         }
       }
     }
@@ -131,7 +145,7 @@ namespace Client.New.Region
         foreach (var cell in regionParts[i])
           region.Remove(cell);
 
-        _regions.Add(new RegionController(regionParts[i]));
+        _regions.Add(new RegionController(regionParts[i], region.Type));
       }
     }
 

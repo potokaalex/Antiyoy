@@ -9,6 +9,7 @@ namespace Client.New.Gameplay
   {
     private CameraController _cameraController;
     private GridController _gridController;
+    private RegionType? _currentRegionType;
 
     private void Awake()
     {
@@ -16,25 +17,38 @@ namespace Client.New.Gameplay
       _cameraController = Locator.Get<CameraController>();
     }
 
+    private void OnGUI()
+    {
+      var width = 100;
+      var height = 50;
+      var space = height + 25;
+
+      GUI.Label(new Rect(0, 0, width, height), $"Regions: {_currentRegionType}");
+
+      if (GUI.Button(new Rect(0, space, width, height), "None"))
+        _currentRegionType = null;
+      if (GUI.Button(new Rect(0, space * 2, width, height), "Default"))
+        _currentRegionType = RegionType.Default;
+      if (GUI.Button(new Rect(0, space * 3, width, height), "Red"))
+        _currentRegionType = RegionType.Red;
+      if (GUI.Button(new Rect(0, space * 4, width, height), "Blue"))
+        _currentRegionType = RegionType.Blue;
+    }
+
     private void Update()
     {
       if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
       {
         var hit = _cameraController.GetHitFromMousePoint();
-        var point = _gridController.WorldPositionToHex(hit.point);
-        if (hit && !_gridController.HasCell(point))
+        if (hit)
         {
-          _gridController.CreateCell(point, RegionType.Default);
-        }
-      }
+          var point = _gridController.WorldPositionToHex(hit.point);
 
-      if (Input.GetMouseButton(1) && !EventSystem.current.IsPointerOverGameObject())
-      {
-        var hit = _cameraController.GetHitFromMousePoint();
-        var point = _gridController.WorldPositionToHex(hit.point);
-        if (hit && _gridController.TryGetCell(point, out var cell))
-        {
-          _gridController.DestroyCell(cell);
+          if (_gridController.TryGetCell(point, out var cell))
+            _gridController.DestroyCell(cell);
+
+          if (_currentRegionType.HasValue)
+            _gridController.CreateCell(point, _currentRegionType.Value);
         }
       }
     }

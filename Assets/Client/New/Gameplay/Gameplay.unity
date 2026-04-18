@@ -435,6 +435,7 @@ MonoBehaviour:
   _gridController: {fileID: 278543114}
   _cameraController: {fileID: 1016838088}
   _debugController: {fileID: 1138225521}
+  _configsProvider: {fileID: 11400000, guid: 19d1d9fac83a2d443aea6e0413d1274a, type: 2}
 --- !u!114 &1138225520
 MonoBehaviour:
   m_ObjectHideFlags: 0
