@@ -1,5 +1,6 @@
 using Client.New.Configs;
 using Client.New.Debug;
+using Client.New.Government;
 using Client.New.Infrastructure;
 using Client.New.Region;
 using Client.New.Tile;
@@ -22,7 +23,9 @@ namespace Client.New.Gameplay
       Locator.Set(_tilemapController);
       Locator.Set(_gridController);
       Locator.Set(_debugController);
+      Locator.Set(new RegionsFactory());
       Locator.Set(new RegionsService());
+      Locator.Set(new GovernmentsService());
       Locator.Set(new GameController());
     }
   }

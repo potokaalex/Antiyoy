@@ -4,17 +4,19 @@ namespace Client.New.Region
 {
   public class RegionController
   {
+    private readonly RegionsFactory _regionsFactory;
+
     public List<CellController> Cells { get; } = new();
 
     public RegionType Type { get; }
 
-    public RegionController(List<CellController> cells, RegionType type = RegionType.Default)
+    public RegionController(RegionsFactory regionsFactory, List<CellController> cells = null, RegionType type = RegionType.Default)
     {
       Type = type;
-      foreach (var cell in cells)
-      {
-        Add(cell);
-      }
+      _regionsFactory = regionsFactory;
+      if (cells != null)
+        foreach (var cell in cells)
+          Add(cell);
     }
 
     public void Add(CellController cell)
@@ -27,7 +29,8 @@ namespace Client.New.Region
     {
       cell.Region = null;
       Cells.Remove(cell);
-      //TODO: check for destroy region.
+      if (Cells.Count == 0) 
+        _regionsFactory.Destroy(this);
     }
   }
 }

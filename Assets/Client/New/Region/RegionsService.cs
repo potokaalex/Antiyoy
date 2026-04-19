@@ -9,37 +9,15 @@ namespace Client.New.Region
 {
   public class RegionsService : IInitializable
   {
-    private readonly List<RegionController> _regions = new();
     private GridController _gridController;
     private ConfigsProvider _configsProvider;
+    private RegionsFactory _regionsFactory;
 
     public void Initialize()
     {
       _gridController = Locator.Get<GridController>();
       _configsProvider = Locator.Get<ConfigsProvider>();
-    }
-
-    public void CreateRegions()
-    {
-      var cells = _gridController.Cells;
-      if (cells.Length == 0)
-      {
-        return;
-      }
-
-      var unPassed = new List<CellController>(cells);
-      var front = new List<CellController>();
-      var regionCells = new List<CellController>();
-
-      while (unPassed.Count > 0)
-      {
-        var baseCell = unPassed[0];
-        regionCells.Add(baseCell);
-        front.Add(baseCell);
-        FindRegionCells(front, regionCells, unPassed);
-        _regions.Add(new RegionController(regionCells));
-        regionCells.Clear();
-      }
+      _regionsFactory = Locator.Get<RegionsFactory>();
     }
 
     public void TryJoinRegions(HexCoordinates position, RegionType type)
@@ -85,7 +63,7 @@ namespace Client.New.Region
       if (region != null)
         return region;
 
-      return new RegionController(new List<CellController>(), type);
+      return _regionsFactory.Create(null, type);
     }
 
     private void FindRegionCells(List<CellController> front, List<CellController> regionCells, List<CellController> unPassed, bool byType = true)
@@ -145,7 +123,7 @@ namespace Client.New.Region
         foreach (var cell in regionParts[i])
           region.Remove(cell);
 
-        _regions.Add(new RegionController(regionParts[i], region.Type));
+        _regionsFactory.Create(regionParts[i], region.Type);
       }
     }
 
