@@ -80,10 +80,24 @@ namespace Client
       _regionsService.TryJoinRegions(position, type);
     }
 
+    public void ReCreateCell(HexCoordinates point, RegionType regionType)
+    {
+      if (TryGetCell(point, out var cell))
+        DestroyCell(cell);
+
+      CreateCell(point, regionType);
+    }
+
     public void DestroyCell(CellController cell)
     {
       Cells[GetCellIndex(cell.Position)] = null;
       _regionsService.RemoveFromRegionAndTryDivideRegion(cell);
+    }
+
+    public void TryDestroyCell(HexCoordinates position)
+    {
+      if (TryGetCell(position, out var cell))
+        DestroyCell(cell);
     }
 
     public IEnumerable<CellController> GetNeighbourCells(HexCoordinates aroundPosition)

@@ -8,12 +8,21 @@ using UnityEngine.Pool;
 
 namespace Client.Gameplay
 {
+  public enum MapEditorType
+  {
+    None = 0,
+    DestroyCell = 1,
+    CreateNeutral = 2,
+    CreateRed = 3,
+    CreateBlue = 4
+  }
+
   public class GameplayTest : MonoBehaviour
   {
     private CameraController _cameraController;
     private GridController _gridController;
     private GovernmentsService _governmentsService;
-    private RegionType? _currentRegionType;
+    private MapEditorType _mapEditorType;
 
     private void Awake()
     {
@@ -24,24 +33,61 @@ namespace Client.Gameplay
 
     private void OnGUI()
     {
+      var labelStyle = new GUIStyle(GUI.skin.label);
+      labelStyle.fontSize = 18;
+
+      ViewMapEditor(labelStyle);
+      ViewGovernmentDebug(labelStyle);
+    }
+
+    private void Update()
+    {
+      UpdateMapEditor();
+    }
+
+    private void UpdateMapEditor()
+    {
+      if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
+      {
+        var hit = _cameraController.GetHitFromMousePoint();
+        if (hit)
+        {
+          var point = _gridController.WorldPositionToHex(hit.point);
+
+          if (_mapEditorType == MapEditorType.DestroyCell)
+            _gridController.TryDestroyCell(point);
+          else if (_mapEditorType == MapEditorType.CreateNeutral)
+            _gridController.ReCreateCell(point, RegionType.Neutral);
+          else if (_mapEditorType == MapEditorType.CreateRed)
+            _gridController.ReCreateCell(point, RegionType.Red);
+          else if (_mapEditorType == MapEditorType.CreateBlue)
+            _gridController.ReCreateCell(point, RegionType.Blue);
+        }
+      }
+    }
+
+    private void ViewMapEditor(GUIStyle labelStyle)
+    {
       var width = 100;
       var height = 50;
       var space = height + 25;
 
-      var labelStyle = new GUIStyle(GUI.skin.label);
-      labelStyle.fontSize = 18;
-
-      GUI.Label(new Rect(0, 0, width * 2, height), $"Regions: {_currentRegionType}", labelStyle);
+      GUI.Label(new Rect(0, 0, width * 5, height), $"MapEditor: {_mapEditorType}", labelStyle);
 
       if (GUI.Button(new Rect(0, space, width, height), "None"))
-        _currentRegionType = null;
-      if (GUI.Button(new Rect(0, space * 2, width, height), "Default"))
-        _currentRegionType = RegionType.Neutral;
-      if (GUI.Button(new Rect(0, space * 3, width, height), "Red"))
-        _currentRegionType = RegionType.Red;
-      if (GUI.Button(new Rect(0, space * 4, width, height), "Blue"))
-        _currentRegionType = RegionType.Blue;
+        _mapEditorType = MapEditorType.None;
+      if (GUI.Button(new Rect(0, space * 2, width, height), "Destroy"))
+        _mapEditorType = MapEditorType.DestroyCell;
+      if (GUI.Button(new Rect(0, space * 3, width, height), "Neutral"))
+        _mapEditorType = MapEditorType.CreateNeutral;
+      if (GUI.Button(new Rect(0, space * 4, width, height), "Red"))
+        _mapEditorType = MapEditorType.CreateRed;
+      if (GUI.Button(new Rect(0, space * 5, width, height), "Blue"))
+        _mapEditorType = MapEditorType.CreateBlue;
+    }
 
+    private void ViewGovernmentDebug(GUIStyle labelStyle)
+    {
       using var d = ListPool<GovernmentController>.Get(out var governments);
       _governmentsService.GetAll(governments);
       var govLog = string.Empty;
@@ -52,24 +98,6 @@ namespace Client.Gameplay
       }
 
       GUI.Label(new Rect(Screen.width - 500, 0, 500, 1000), govLog, labelStyle);
-    }
-
-    private void Update()
-    {
-      if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
-      {
-        var hit = _cameraController.GetHitFromMousePoint();
-        if (hit)
-        {
-          var point = _gridController.WorldPositionToHex(hit.point);
-
-          if (_gridController.TryGetCell(point, out var cell))
-            _gridController.DestroyCell(cell);
-
-          if (_currentRegionType.HasValue)
-            _gridController.CreateCell(point, _currentRegionType.Value);
-        }
-      }
     }
   }
 }
