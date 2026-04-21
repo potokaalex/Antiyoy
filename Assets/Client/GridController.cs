@@ -91,7 +91,7 @@ namespace Client
     public void DestroyCell(CellController cell)
     {
       Cells[GetCellIndex(cell.Position)] = null;
-      _regionsService.RemoveFromRegionAndTryDivideRegion(cell);
+      cell.Dispose();
     }
 
     public void TryDestroyCell(HexCoordinates position)

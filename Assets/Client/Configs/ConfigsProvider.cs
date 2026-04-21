@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Client.Region;
+using Client.Unit;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -9,5 +10,6 @@ namespace Client.Configs
   public class ConfigsProvider : SerializedScriptableObject
   {
     public Dictionary<RegionType, Color> RegionsColors;
+    public Dictionary<UnitType, UnitController> UnitsPrefabs;
   }
 }

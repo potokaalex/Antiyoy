@@ -4,6 +4,7 @@ using Client.Government;
 using Client.Infrastructure;
 using Client.Region;
 using Client.Tile;
+using Client.Unit;
 using UnityEngine;
 
 namespace Client.Gameplay
@@ -26,6 +27,7 @@ namespace Client.Gameplay
       Locator.Set(new RegionsFactory());
       Locator.Set(new RegionsService());
       Locator.Set(new GovernmentsService());
+      Locator.Set(new UnitsService());
       Locator.Set(new GameController());
     }
   }

@@ -2,6 +2,7 @@ using System.Linq;
 using Client.Government;
 using Client.Infrastructure;
 using Client.Region;
+using Client.Unit;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Pool;
@@ -14,7 +15,8 @@ namespace Client.Gameplay
     DestroyCell = 1,
     CreateNeutral = 2,
     CreateRed = 3,
-    CreateBlue = 4
+    CreateBlue = 4,
+    CreateUnit = 5
   }
 
   public class GameplayTest : MonoBehaviour
@@ -22,6 +24,7 @@ namespace Client.Gameplay
     private CameraController _cameraController;
     private GridController _gridController;
     private GovernmentsService _governmentsService;
+    private UnitsService _unitsService;
     private MapEditorType _mapEditorType;
 
     private void Awake()
@@ -29,6 +32,7 @@ namespace Client.Gameplay
       _gridController = Locator.Get<GridController>();
       _cameraController = Locator.Get<CameraController>();
       _governmentsService = Locator.Get<GovernmentsService>();
+      _unitsService = Locator.Get<UnitsService>();
     }
 
     private void OnGUI()
@@ -62,6 +66,8 @@ namespace Client.Gameplay
             _gridController.ReCreateCell(point, RegionType.Red);
           else if (_mapEditorType == MapEditorType.CreateBlue)
             _gridController.ReCreateCell(point, RegionType.Blue);
+          else if (_mapEditorType == MapEditorType.CreateUnit) 
+            _unitsService.TryCreate(point, UnitType.Peasant);
         }
       }
     }
@@ -70,9 +76,9 @@ namespace Client.Gameplay
     {
       var width = 100;
       var height = 50;
-      var space = height + 25;
+      var space = height + 10;
 
-      GUI.Label(new Rect(0, 0, width * 5, height), $"MapEditor: {_mapEditorType}", labelStyle);
+      GUI.Label(new Rect(0, 0, width * 5, height), $"CurrentAction: {_mapEditorType}", labelStyle);
 
       if (GUI.Button(new Rect(0, space, width, height), "None"))
         _mapEditorType = MapEditorType.None;
@@ -84,6 +90,8 @@ namespace Client.Gameplay
         _mapEditorType = MapEditorType.CreateRed;
       if (GUI.Button(new Rect(0, space * 5, width, height), "Blue"))
         _mapEditorType = MapEditorType.CreateBlue;
+      if (GUI.Button(new Rect(0, space * 6, width, height), "CreateUnit"))
+        _mapEditorType = MapEditorType.CreateUnit;
     }
 
     private void ViewGovernmentDebug(GUIStyle labelStyle)
