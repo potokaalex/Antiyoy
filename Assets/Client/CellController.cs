@@ -34,6 +34,7 @@ namespace Client
       _unitsService = Locator.Get<UnitsService>();
       Position = position;
       _regionsService.AddToBestNeighbourRegion(position, type, this);
+      _regionsService.TryJoinRegions(position, type);
     }
 
     public void Dispose()
@@ -46,6 +47,7 @@ namespace Client
     {
       _regionsService.RemoveFromRegionAndTryDivideRegion(this);
       _regionsService.AddToBestNeighbourRegion(Position, type, this);
+      _regionsService.TryJoinRegions(Position, type);
     }
   }
 }

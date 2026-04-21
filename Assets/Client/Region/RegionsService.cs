@@ -81,12 +81,15 @@ namespace Client.Region
 
         foreach (var neighbour in _gridController.GetNeighbourCells(position))
         {
-          var isNiceRegion = byType ? neighbour.Region.Type == cell.Region.Type : neighbour.Region == cell.Region;
-
-          if (isNiceRegion && !front.Contains(neighbour) && !regionCells.Contains(neighbour))
+          if (neighbour.Region != null)
           {
-            front.Add(neighbour);
-            regionCells.Add(neighbour);
+            var isNiceRegion = byType ? neighbour.Region.Type == cell.Region.Type : neighbour.Region == cell.Region;
+
+            if (isNiceRegion && !front.Contains(neighbour) && !regionCells.Contains(neighbour))
+            {
+              front.Add(neighbour);
+              regionCells.Add(neighbour);
+            }
           }
         }
 

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Client.Hex;
-using Client.Infrastructure;
 using Client.Region;
 using UnityEngine;
 
@@ -9,16 +8,10 @@ namespace Client
   public class GridController : MonoBehaviour
   {
     [SerializeField] private Grid _grid;
-    private RegionsService _regionsService;
 
     public Vector2Int Size { get; } = new(10, 10);
 
     public CellController[] Cells { get; private set; }
-
-    private void Awake()
-    {
-      _regionsService = Locator.Get<RegionsService>();
-    }
 
     public HexCoordinates WorldPositionToHex(Vector3 worldPosition)
     {
@@ -74,22 +67,15 @@ namespace Client
     public void CreateCell(HexCoordinates position, RegionType type)
     {
       var cell = new CellController();
-      cell.Initialize(position, type);
       var arrayIndex = MathUtilities.ToArrayIndex(position.ToArray2DIndex(), Size.x);
       Cells[arrayIndex] = cell;
-      _regionsService.TryJoinRegions(position, type);
+      cell.Initialize(position, type);
     }
 
     public void ReCreateCell(HexCoordinates position, RegionType type)
     {
       if (TryGetCell(position, out var cell))
-      {
-        //TODO: refactoring.
-        Cells[GetCellIndex(cell.Position)] = null;
         cell.ChangeRegionType(type);
-        Cells[GetCellIndex(cell.Position)] = cell;
-        _regionsService.TryJoinRegions(position, type);
-      }
       else
         CreateCell(position, type);
     }
