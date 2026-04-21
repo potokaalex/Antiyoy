@@ -4,30 +4,28 @@ namespace Client.New.Region
 {
   public class RegionController
   {
+    private readonly List<CellController> _cells = new();
     private readonly RegionsFactory _regionsFactory;
 
-    public List<CellController> Cells { get; } = new();
+    public IReadOnlyList<CellController> Cells => _cells;
 
-    public RegionType Type { get; }
+    public RegionType Type { get; set; }
 
-    public RegionController(RegionsFactory regionsFactory, List<CellController> cells, RegionType type = RegionType.Neutral)
+    public RegionController(RegionsFactory regionsFactory)
     {
-      Type = type;
       _regionsFactory = regionsFactory;
-      foreach (var cell in cells)
-        Add(cell);
     }
 
     public void Add(CellController cell)
     {
       cell.Region = this;
-      Cells.Add(cell);
+      _cells.Add(cell);
     }
 
     public void Remove(CellController cell)
     {
       cell.Region = null;
-      Cells.Remove(cell);
+      _cells.Remove(cell);
       if (Cells.Count == 0) 
         _regionsFactory.Destroy(this);
     }

@@ -8,10 +8,12 @@ namespace Client.New.Region
   public class RegionsFactory : IInitializable
   {
     private GovernmentsService _governmentsService;
+    private ObjectPool<RegionController> _pool;
 
     public void Initialize()
     {
       _governmentsService = Locator.Get<GovernmentsService>();
+      _pool = new ObjectPool<RegionController>(() => new RegionController(this));
     }
 
     public RegionController Create(CellController cell, RegionType type = RegionType.Neutral)
@@ -25,15 +27,18 @@ namespace Client.New.Region
 
     public RegionController Create(List<CellController> cells, RegionType type = RegionType.Neutral)
     {
-      //todo: pool.
-      var instance = new RegionController(this, cells, type);
+      _pool.Get(out var instance);
+      instance.Type = type;
+      foreach (var cell in cells)
+        instance.Add(cell);
+
       _governmentsService.AddRegion(instance);
       return instance;
     }
 
     public void Destroy(RegionController instance)
     {
-      //todo: pool.
+      _pool.Release(instance);
       _governmentsService.RemoveRegion(instance);
     }
   }

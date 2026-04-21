@@ -4,11 +4,13 @@ using Client.New.Configs;
 using Client.New.Hex;
 using Client.New.Infrastructure;
 using UnityEngine;
+using UnityEngine.Pool;
 
 namespace Client.New.Region
 {
   public class RegionsService : IInitializable
   {
+    private readonly RegionParts _regionPartsBuffer = new();
     private GridController _gridController;
     private ConfigsProvider _configsProvider;
     private RegionsFactory _regionsFactory;
@@ -30,12 +32,16 @@ namespace Client.New.Region
 
     public void TryDivideRegion(RegionController region)
     {
-      var unPassed = new List<CellController>(region.Cells);
-      var front = new List<CellController>();
-      var regionParts = new List<List<CellController>>();
-      FindRegionParts(unPassed, front, regionParts);
-      SortByDecreasing(regionParts, x => x.Count);
-      DivideRegion(regionParts, region);
+      using (ListPool<CellController>.Get(out var unPassed))
+      using (ListPool<CellController>.Get(out var front))
+      {
+        var regionParts = _regionPartsBuffer;
+        unPassed.AddRange(region.Cells);
+        FindRegionParts(unPassed, front, regionParts);
+        SortByDecreasing(regionParts.Items, x => x.Count);
+        DivideRegion(regionParts, region);
+        regionParts.Clear();
+      }
     }
 
     public void RemoveFromRegionAndTryDivideRegion(CellController cell)
@@ -89,15 +95,18 @@ namespace Client.New.Region
       }
     }
 
-    private void FindRegionParts(List<CellController> unPassed, List<CellController> front, List<List<CellController>> regionParts)
+    private void FindRegionParts(List<CellController> unPassed, List<CellController> front, RegionParts regionParts)
     {
-      while (unPassed.Count > 0)
+      using (ListPool<CellController>.Get(out var regionPart))
       {
-        var cell = unPassed[0];
-        var regionPart = new List<CellController> { cell };
-        front.Add(cell);
-        FindRegionCells(front, regionPart, unPassed);
-        regionParts.Add(regionPart);
+        while (unPassed.Count > 0)
+        {
+          var cell = unPassed[0];
+          regionPart.Add(cell);
+          front.Add(cell);
+          FindRegionCells(front, regionPart, unPassed);
+          regionParts.NewPartFrom(regionPart);
+        }
       }
     }
 
@@ -116,14 +125,14 @@ namespace Client.New.Region
       }
     }
 
-    private void DivideRegion(List<List<CellController>> regionParts, RegionController region)
+    private void DivideRegion(RegionParts regionParts, RegionController region)
     {
-      for (var i = 1; i < regionParts.Count; i++)
+      for (var i = 1; i < regionParts.Items.Count; i++)
       {
-        foreach (var cell in regionParts[i])
+        foreach (var cell in regionParts.Items[i])
           region.Remove(cell);
 
-        _regionsFactory.Create(regionParts[i], region.Type);
+        _regionsFactory.Create(regionParts.Items[i], region.Type);
       }
     }
 
