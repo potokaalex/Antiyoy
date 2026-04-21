@@ -10,13 +10,12 @@ namespace Client.New.Region
 
     public RegionType Type { get; }
 
-    public RegionController(RegionsFactory regionsFactory, List<CellController> cells = null, RegionType type = RegionType.Default)
+    public RegionController(RegionsFactory regionsFactory, List<CellController> cells, RegionType type = RegionType.Neutral)
     {
       Type = type;
       _regionsFactory = regionsFactory;
-      if (cells != null)
-        foreach (var cell in cells)
-          Add(cell);
+      foreach (var cell in cells)
+        Add(cell);
     }
 
     public void Add(CellController cell)

@@ -68,7 +68,7 @@ namespace Client.New
 
       for (var y = 0; y < Size.y; y++)
       for (var x = 0; x < Size.x; x++)
-        CreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(x, y)), RegionType.Default);
+        CreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(x, y)), RegionType.Neutral);
     }
 
     public void CreateCell(HexCoordinates position, RegionType type)

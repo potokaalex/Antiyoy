@@ -52,7 +52,7 @@ namespace Client.New.Region
       return _configsProvider.RegionsColors[region.Type];
     }
 
-    public RegionController GetBestNeighbourRegionOrCreate(HexCoordinates position, RegionType type)
+    public void AddToBestNeighbourRegion(HexCoordinates position, RegionType type, CellController cell)
     {
       RegionController region = null;
 
@@ -61,9 +61,9 @@ namespace Client.New.Region
           region = neighbour.Region;
 
       if (region != null)
-        return region;
-
-      return _regionsFactory.Create(null, type);
+        region.Add(cell);
+      else
+        _regionsFactory.Create(cell, type);
     }
 
     private void FindRegionCells(List<CellController> front, List<CellController> regionCells, List<CellController> unPassed, bool byType = true)

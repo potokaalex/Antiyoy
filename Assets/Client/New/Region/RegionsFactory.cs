@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Client.New.Government;
 using Client.New.Infrastructure;
+using UnityEngine.Pool;
 
 namespace Client.New.Region
 {
@@ -13,7 +14,16 @@ namespace Client.New.Region
       _governmentsService = Locator.Get<GovernmentsService>();
     }
 
-    public RegionController Create(List<CellController> cells = null, RegionType type = RegionType.Default)
+    public RegionController Create(CellController cell, RegionType type = RegionType.Neutral)
+    {
+      using (ListPool<CellController>.Get(out var list))
+      {
+        list.Add(cell);
+        return Create(list, type);
+      }
+    }
+
+    public RegionController Create(List<CellController> cells, RegionType type = RegionType.Neutral)
     {
       //todo: pool.
       var instance = new RegionController(this, cells, type);

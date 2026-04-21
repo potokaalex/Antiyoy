@@ -36,7 +36,7 @@ namespace Client.New.Gameplay
       if (GUI.Button(new Rect(0, space, width, height), "None"))
         _currentRegionType = null;
       if (GUI.Button(new Rect(0, space * 2, width, height), "Default"))
-        _currentRegionType = RegionType.Default;
+        _currentRegionType = RegionType.Neutral;
       if (GUI.Button(new Rect(0, space * 3, width, height), "Red"))
         _currentRegionType = RegionType.Red;
       if (GUI.Button(new Rect(0, space * 4, width, height), "Blue"))
@@ -48,7 +48,7 @@ namespace Client.New.Gameplay
       foreach (var government in governments)
       {
         govLog +=
-          $"Type: {government.Regions[0].Type}, RegionsCount: {government.Regions.Count}, CellsCount: {government.Regions.Sum(x => x.Cells.Count)}\n";
+          $"Type: {government.RegionsType}, RegionsCount: {government.Regions.Count}, CellsCount: {government.Regions.Sum(x => x.Cells.Count)}\n";
       }
 
       GUI.Label(new Rect(Screen.width - 500, 0, 500, 1000), govLog, labelStyle);

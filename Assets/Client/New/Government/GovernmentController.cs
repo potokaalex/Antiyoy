@@ -9,6 +9,8 @@ namespace Client.New.Government
 
     public IReadOnlyList<RegionController> Regions => _regions;
 
+    public RegionType RegionsType => _regions[0].Type;
+
     public void AddRegion(RegionController region)
     {
       _regions.Add(region);

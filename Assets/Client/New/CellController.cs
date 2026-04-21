@@ -28,7 +28,7 @@ namespace Client.New
       _tilemapController = Locator.Get<TilemapController>();
       _regionsService = Locator.Get<RegionsService>();
       Position = position;
-      _regionsService.GetBestNeighbourRegionOrCreate(position, type).Add(this);
+      _regionsService.AddToBestNeighbourRegion(position, type, this);
     }
   }
 }
