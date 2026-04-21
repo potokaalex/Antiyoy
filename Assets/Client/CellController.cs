@@ -41,5 +41,11 @@ namespace Client
       _regionsService.RemoveFromRegionAndTryDivideRegion(this);
       _unitsService.TryDestroy(Unit);
     }
+
+    public void ChangeRegionType(RegionType type)
+    {
+      _regionsService.RemoveFromRegionAndTryDivideRegion(this);
+      _regionsService.AddToBestNeighbourRegion(Position, type, this);
+    }
   }
 }

@@ -80,12 +80,18 @@ namespace Client
       _regionsService.TryJoinRegions(position, type);
     }
 
-    public void ReCreateCell(HexCoordinates point, RegionType regionType)
+    public void ReCreateCell(HexCoordinates position, RegionType type)
     {
-      if (TryGetCell(point, out var cell))
-        DestroyCell(cell);
-
-      CreateCell(point, regionType);
+      if (TryGetCell(position, out var cell))
+      {
+        //TODO: refactoring.
+        Cells[GetCellIndex(cell.Position)] = null;
+        cell.ChangeRegionType(type);
+        Cells[GetCellIndex(cell.Position)] = cell;
+        _regionsService.TryJoinRegions(position, type);
+      }
+      else
+        CreateCell(position, type);
     }
 
     public void DestroyCell(CellController cell)
