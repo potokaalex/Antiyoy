@@ -34,20 +34,18 @@ namespace Client
       _unitsService = Locator.Get<UnitsService>();
       Position = position;
       _regionsService.AddToBestNeighbourRegion(position, type, this);
-      _regionsService.TryJoinRegions(position, type);
     }
 
     public void Dispose()
     {
-      _regionsService.RemoveFromRegionAndTryDivideRegion(this);
+      _regionsService.RemoveFromRegion(this);
       _unitsService.TryDestroy(Unit);
     }
 
     public void ChangeRegionType(RegionType type)
     {
-      _regionsService.RemoveFromRegionAndTryDivideRegion(this);
+      _regionsService.RemoveFromRegion(this);
       _regionsService.AddToBestNeighbourRegion(Position, type, this);
-      _regionsService.TryJoinRegions(Position, type);
     }
   }
 }

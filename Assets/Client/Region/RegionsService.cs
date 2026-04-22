@@ -44,7 +44,7 @@ namespace Client.Region
       }
     }
 
-    public void RemoveFromRegionAndTryDivideRegion(CellController cell)
+    public void RemoveFromRegion(CellController cell)
     {
       var region = cell.Region;
       cell.Region.Remove(cell);
@@ -70,6 +70,8 @@ namespace Client.Region
         region.Add(cell);
       else
         _regionsFactory.Create(cell, type);
+
+      TryJoinRegions(position, type);
     }
 
     private void FindRegionCells(List<CellController> front, List<CellController> regionCells, List<CellController> unPassed, bool byType = true)
