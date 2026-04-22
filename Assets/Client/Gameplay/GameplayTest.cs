@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Linq;
 using Client.Government;
+using Client.Hex;
 using Client.Infrastructure;
 using Client.Region;
 using Client.Unit;
@@ -21,11 +23,14 @@ namespace Client.Gameplay
 
   public class GameplayTest : MonoBehaviour
   {
+    private readonly List<HexCoordinates> _unitMovePositions = new();
     private CameraController _cameraController;
     private GridController _gridController;
     private GovernmentsService _governmentsService;
     private UnitsService _unitsService;
     private MapEditorType _mapEditorType;
+    private UnitController _selectedUnit;
+    [SerializeField] private SelectableTilemap _selectableTilemap;
 
     private void Awake()
     {
@@ -46,11 +51,34 @@ namespace Client.Gameplay
 
     private void Update()
     {
-      UpdateMapEditor();
-    }
+      if (_mapEditorType == MapEditorType.None)
+      {
+        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+        {
+          var hit = _cameraController.GetHitFromMousePoint();
+          if (hit)
+          {
+            var point = _gridController.WorldPositionToHex(hit.point);
+            if (_selectedUnit)
+            {
+              if (_unitMovePositions.Contains(point))
+                _selectedUnit.Move(point);
 
-    private void UpdateMapEditor()
-    {
+              _selectableTilemap.ClearView();
+              _selectedUnit = null;
+              return;
+            }
+
+            if (_unitsService.TryGet(point, out _selectedUnit))
+            {
+              _selectedUnit.GetMovePositions(_unitMovePositions);
+              _selectableTilemap.ViewSelect(_unitMovePositions);
+              return;
+            }
+          }
+        }
+      }
+
       if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
       {
         var hit = _cameraController.GetHitFromMousePoint();
@@ -66,7 +94,7 @@ namespace Client.Gameplay
             _gridController.ReCreateCell(point, RegionType.Red);
           else if (_mapEditorType == MapEditorType.CreateBlue)
             _gridController.ReCreateCell(point, RegionType.Blue);
-          else if (_mapEditorType == MapEditorType.CreateUnit) 
+          else if (_mapEditorType == MapEditorType.CreateUnit)
             _unitsService.TryCreate(point, UnitType.Peasant);
         }
       }
