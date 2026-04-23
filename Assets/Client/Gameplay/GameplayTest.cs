@@ -4,6 +4,7 @@ using Client.Government;
 using Client.Hex;
 using Client.Infrastructure;
 using Client.Region;
+using Client.TilesSelection;
 using Client.Unit;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -28,9 +29,9 @@ namespace Client.Gameplay
     private GridController _gridController;
     private GovernmentsService _governmentsService;
     private UnitsService _unitsService;
+    private TilesSelectionView _tilesSelectionView;
     private MapEditorType _mapEditorType;
     private UnitController _selectedUnit;
-    [SerializeField] private SelectableTilemap _selectableTilemap;
 
     private void Awake()
     {
@@ -38,6 +39,7 @@ namespace Client.Gameplay
       _cameraController = Locator.Get<CameraController>();
       _governmentsService = Locator.Get<GovernmentsService>();
       _unitsService = Locator.Get<UnitsService>();
+      _tilesSelectionView = Locator.Get<TilesSelectionView>();
     }
 
     private void OnGUI()
@@ -64,7 +66,7 @@ namespace Client.Gameplay
               if (_unitMovePositions.Contains(point))
                 _selectedUnit.Move(point);
 
-              _selectableTilemap.ClearView();
+              _tilesSelectionView.ClearView();
               _selectedUnit = null;
               return;
             }
@@ -72,7 +74,7 @@ namespace Client.Gameplay
             if (_unitsService.TryGet(point, out _selectedUnit))
             {
               _selectedUnit.GetMovePositions(_unitMovePositions);
-              _selectableTilemap.ViewSelect(_unitMovePositions);
+              _tilesSelectionView.ViewTiles(_unitMovePositions);
               return;
             }
           }
