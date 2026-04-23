@@ -9,6 +9,7 @@ namespace Client.TilesSelection
   public class TilesSelectionView : MonoBehaviour
   {
     [SerializeField] private GameObject _tileMaskPrefab;
+    [SerializeField] private GameObject _hidePanel;
     private readonly List<GameObject> _activeMasks = new();
     private GridController _gridController;
     private ObjectPool<GameObject> _pool;
@@ -16,13 +17,12 @@ namespace Client.TilesSelection
     private void Awake()
     {
       _gridController = Locator.Get<GridController>();
-      _pool = new ObjectPool<GameObject>(() => Instantiate(_tileMaskPrefab, transform, true), x => x.SetActive(true), x => x.SetActive(false));
+      _pool = new ObjectPool<GameObject>(() => Instantiate(_tileMaskPrefab, transform), x => x.SetActive(true), x => x.SetActive(false));
     }
 
     public void ViewTiles(List<HexCoordinates> positions)
     {
       ClearView();
-      gameObject.SetActive(true);
 
       foreach (var position in positions)
       {
@@ -30,11 +30,13 @@ namespace Client.TilesSelection
         mask.transform.position = _gridController.HexPositionToWorld(position);
         _activeMasks.Add(mask);
       }
+
+      _hidePanel.SetActive(true);
     }
 
     public void ClearView()
     {
-      gameObject.SetActive(false);
+      _hidePanel.SetActive(false);
       foreach (var mask in _activeMasks)
         _pool.Release(mask);
       _activeMasks.Clear();
