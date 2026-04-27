@@ -1,7 +1,11 @@
+using System.Collections.Generic;
 using System.Linq;
 using Client.Government;
+using Client.Hex;
 using Client.Infrastructure;
 using Client.Region;
+using Client.TilesSelection;
+using Client.Unit;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Pool;
@@ -14,21 +18,28 @@ namespace Client.Gameplay
     DestroyCell = 1,
     CreateNeutral = 2,
     CreateRed = 3,
-    CreateBlue = 4
+    CreateBlue = 4,
+    CreateUnit = 5
   }
 
   public class GameplayTest : MonoBehaviour
   {
+    private readonly List<HexCoordinates> _unitMovePositions = new();
     private CameraController _cameraController;
     private GridController _gridController;
     private GovernmentsService _governmentsService;
+    private UnitsService _unitsService;
+    private TilesSelectionView _tilesSelectionView;
     private MapEditorType _mapEditorType;
+    private UnitController _selectedUnit;
 
     private void Awake()
     {
       _gridController = Locator.Get<GridController>();
       _cameraController = Locator.Get<CameraController>();
       _governmentsService = Locator.Get<GovernmentsService>();
+      _unitsService = Locator.Get<UnitsService>();
+      _tilesSelectionView = Locator.Get<TilesSelectionView>();
     }
 
     private void OnGUI()
@@ -42,11 +53,34 @@ namespace Client.Gameplay
 
     private void Update()
     {
-      UpdateMapEditor();
-    }
+      if (_mapEditorType == MapEditorType.None)
+      {
+        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+        {
+          var hit = _cameraController.GetHitFromMousePoint();
+          if (hit)
+          {
+            var point = _gridController.WorldPositionToHex(hit.point);
+            if (_selectedUnit)
+            {
+              if (_unitMovePositions.Contains(point) && _gridController.TryGetCell(point, out var cell1))
+                _selectedUnit.Move(cell1);
 
-    private void UpdateMapEditor()
-    {
+              _tilesSelectionView.ClearView();
+              _selectedUnit = null;
+              return;
+            }
+
+            if (_gridController.TryGetCell(point, out var cell) && _unitsService.TryGet(cell, out _selectedUnit))
+            {
+              _selectedUnit.GetPositionsInMoveRadius(_unitMovePositions);
+              _tilesSelectionView.ViewTiles(_unitMovePositions);
+              return;
+            }
+          }
+        }
+      }
+
       if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
       {
         var hit = _cameraController.GetHitFromMousePoint();
@@ -62,6 +96,8 @@ namespace Client.Gameplay
             _gridController.ReCreateCell(point, RegionType.Red);
           else if (_mapEditorType == MapEditorType.CreateBlue)
             _gridController.ReCreateCell(point, RegionType.Blue);
+          else if (_mapEditorType == MapEditorType.CreateUnit && _gridController.TryGetCell(point, out var cell))
+            _unitsService.TryCreate(cell, UnitType.Peasant);
         }
       }
     }
@@ -70,9 +106,9 @@ namespace Client.Gameplay
     {
       var width = 100;
       var height = 50;
-      var space = height + 25;
+      var space = height + 10;
 
-      GUI.Label(new Rect(0, 0, width * 5, height), $"MapEditor: {_mapEditorType}", labelStyle);
+      GUI.Label(new Rect(0, 0, width * 5, height), $"CurrentAction: {_mapEditorType}", labelStyle);
 
       if (GUI.Button(new Rect(0, space, width, height), "None"))
         _mapEditorType = MapEditorType.None;
@@ -84,6 +120,8 @@ namespace Client.Gameplay
         _mapEditorType = MapEditorType.CreateRed;
       if (GUI.Button(new Rect(0, space * 5, width, height), "Blue"))
         _mapEditorType = MapEditorType.CreateBlue;
+      if (GUI.Button(new Rect(0, space * 6, width, height), "CreateUnit"))
+        _mapEditorType = MapEditorType.CreateUnit;
     }
 
     private void ViewGovernmentDebug(GUIStyle labelStyle)

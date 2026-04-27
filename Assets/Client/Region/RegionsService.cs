@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Client.Configs;
 using Client.Hex;
 using Client.Infrastructure;
+using Client.Utilities;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -22,40 +23,11 @@ namespace Client.Region
       _regionsFactory = Locator.Get<RegionsFactory>();
     }
 
-    public void TryJoinRegions(HexCoordinates position, RegionType type)
-    {
-      var regions = new List<RegionController>();
-      FindRegionsWhitOneType(position, regions, type);
-      SortByDecreasing(regions, x => x.Cells.Count);
-      JoinRegions(regions);
-    }
-
-    public void TryDivideRegion(RegionController region)
-    {
-      using (ListPool<CellController>.Get(out var unPassed))
-      using (ListPool<CellController>.Get(out var front))
-      {
-        var regionParts = _regionPartsBuffer;
-        unPassed.AddRange(region.Cells);
-        FindRegionParts(unPassed, front, regionParts);
-        SortByDecreasing(regionParts.Items, x => x.Count);
-        DivideRegion(regionParts, region);
-        regionParts.Clear();
-      }
-    }
-
-    public void RemoveFromRegionAndTryDivideRegion(CellController cell)
+    public void RemoveFromRegion(CellController cell)
     {
       var region = cell.Region;
       cell.Region.Remove(cell);
       TryDivideRegion(region);
-    }
-
-    public Color GetColorFor(RegionController region)
-    {
-      if (region == null)
-        return Color.black;
-      return _configsProvider.RegionsColors[region.Type];
     }
 
     public void AddToBestNeighbourRegion(HexCoordinates position, RegionType type, CellController cell)
@@ -70,32 +42,65 @@ namespace Client.Region
         region.Add(cell);
       else
         _regionsFactory.Create(cell, type);
+
+      TryJoinRegions(position, type);
     }
 
-    private void FindRegionCells(List<CellController> front, List<CellController> regionCells, List<CellController> unPassed, bool byType = true)
+    public Color GetColorFor(RegionController region)
+    {
+      if (region == null)
+        return Color.black;
+      return _configsProvider.RegionsColors[region.Type];
+    }
+
+    private void TryJoinRegions(HexCoordinates position, RegionType type)
+    {
+      var regions = new List<RegionController>();
+      FindRegionsWhitOneType(position, regions, type);
+      SortByDecreasing(regions, x => x.Cells.Count);
+      JoinRegions(regions);
+    }
+
+    private void TryDivideRegion(RegionController region)
+    {
+      using (ListPool<CellController>.Get(out var unPassed))
+      using (StackPool<CellController>.Get(out var front))
+      {
+        var regionParts = _regionPartsBuffer;
+        unPassed.AddRange(region.Cells);
+        FindRegionParts(unPassed, front, regionParts);
+        SortByDecreasing(regionParts.Items, x => x.Count);
+        DivideRegion(regionParts, region);
+        regionParts.Clear();
+      }
+    }
+
+    private void FindRegionCells(Stack<CellController> front, List<CellController> regionCells, List<CellController> unPassed, bool byType = true)
     {
       while (front.Count > 0)
       {
-        var cell = front[0];
+        var cell = front.Pop();
         var position = cell.Position;
 
         foreach (var neighbour in _gridController.GetNeighbourCells(position))
         {
-          var isNiceRegion = byType ? neighbour.Region.Type == cell.Region.Type : neighbour.Region == cell.Region;
-
-          if (isNiceRegion && !front.Contains(neighbour) && !regionCells.Contains(neighbour))
+          if (neighbour.Region != null)
           {
-            front.Add(neighbour);
-            regionCells.Add(neighbour);
+            var isNiceRegion = byType ? neighbour.Region.Type == cell.Region.Type : neighbour.Region == cell.Region;
+
+            if (isNiceRegion && !front.Contains(neighbour) && !regionCells.Contains(neighbour))
+            {
+              front.Push(neighbour);
+              regionCells.Add(neighbour);
+            }
           }
         }
 
-        front.RemoveAt(0);
         unPassed.Remove(cell);
       }
     }
 
-    private void FindRegionParts(List<CellController> unPassed, List<CellController> front, RegionParts regionParts)
+    private void FindRegionParts(List<CellController> unPassed, Stack<CellController> front, RegionParts regionParts)
     {
       using (ListPool<CellController>.Get(out var regionPart))
       {
@@ -103,7 +108,7 @@ namespace Client.Region
         {
           var cell = unPassed[0];
           regionPart.Add(cell);
-          front.Add(cell);
+          front.Push(cell);
           FindRegionCells(front, regionPart, unPassed);
           regionParts.NewPartFrom(regionPart);
         }

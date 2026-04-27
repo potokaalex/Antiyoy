@@ -4,6 +4,8 @@ using Client.Government;
 using Client.Infrastructure;
 using Client.Region;
 using Client.Tile;
+using Client.TilesSelection;
+using Client.Unit;
 using UnityEngine;
 
 namespace Client.Gameplay
@@ -15,7 +17,8 @@ namespace Client.Gameplay
     [SerializeField] private CameraController _cameraController;
     [SerializeField] private DebugController _debugController;
     [SerializeField] private ConfigsProvider _configsProvider;
-    
+    [SerializeField] private TilesSelectionView _tilesSelectionView;
+
     protected override void Install()
     {
       Locator.Set(_configsProvider);
@@ -26,6 +29,8 @@ namespace Client.Gameplay
       Locator.Set(new RegionsFactory());
       Locator.Set(new RegionsService());
       Locator.Set(new GovernmentsService());
+      Locator.Set(new UnitsService());
+      Locator.Set(_tilesSelectionView);
       Locator.Set(new GameController());
     }
   }

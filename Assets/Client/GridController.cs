@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Client.Hex;
-using Client.Infrastructure;
 using Client.Region;
+using Client.Utilities;
 using UnityEngine;
 
 namespace Client
@@ -9,16 +9,9 @@ namespace Client
   public class GridController : MonoBehaviour
   {
     [SerializeField] private Grid _grid;
-    private RegionsService _regionsService;
+    private CellController[] _cells;
 
     public Vector2Int Size { get; } = new(10, 10);
-
-    public CellController[] Cells { get; private set; }
-
-    private void Awake()
-    {
-      _regionsService = Locator.Get<RegionsService>();
-    }
 
     public HexCoordinates WorldPositionToHex(Vector3 worldPosition)
     {
@@ -40,21 +33,11 @@ namespace Client
       return new Vector2Int(index.y, index.x);
     }
 
-    public bool HasCell(HexCoordinates position)
-    {
-      return TryGetCell(position, out _);
-    }
-
-    public CellController GetCell(HexCoordinates position)
-    {
-      return Cells[GetCellIndex(position)];
-    }
-
     public bool TryGetCell(HexCoordinates position, out CellController cell)
     {
       if (IsPositionInGrid(position))
       {
-        cell = GetCell(position);
+        cell = _cells[GetCellIndex(position)];
         return cell != null;
       }
 
@@ -64,40 +47,28 @@ namespace Client
 
     public void CreateCells()
     {
-      Cells = new CellController[Size.x * Size.y];
+      _cells = new CellController[Size.x * Size.y];
 
       for (var y = 0; y < Size.y; y++)
       for (var x = 0; x < Size.x; x++)
         CreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(x, y)), RegionType.Neutral);
     }
 
-    public void CreateCell(HexCoordinates position, RegionType type)
+    public void ReCreateCell(HexCoordinates position, RegionType type)
     {
-      var cell = new CellController();
-      cell.Initialize(position, type);
-      var arrayIndex = MathUtilities.ToArrayIndex(position.ToArray2DIndex(), Size.x);
-      Cells[arrayIndex] = cell;
-      _regionsService.TryJoinRegions(position, type);
-    }
-
-    public void ReCreateCell(HexCoordinates point, RegionType regionType)
-    {
-      if (TryGetCell(point, out var cell))
-        DestroyCell(cell);
-
-      CreateCell(point, regionType);
-    }
-
-    public void DestroyCell(CellController cell)
-    {
-      Cells[GetCellIndex(cell.Position)] = null;
-      _regionsService.RemoveFromRegionAndTryDivideRegion(cell);
+      if (TryGetCell(position, out var cell))
+        cell.ChangeRegionType(type);
+      else
+        CreateCell(position, type);
     }
 
     public void TryDestroyCell(HexCoordinates position)
     {
       if (TryGetCell(position, out var cell))
-        DestroyCell(cell);
+      {
+        _cells[GetCellIndex(cell.Position)] = null;
+        cell.Dispose();
+      }
     }
 
     public IEnumerable<CellController> GetNeighbourCells(HexCoordinates aroundPosition)
@@ -105,6 +76,37 @@ namespace Client
       foreach (var direction in HexUtilities.Directions)
         if (TryGetCell(aroundPosition + direction, out var cell))
           yield return cell;
+    }
+
+    public void GetCellsInRadius(CellController center, int radius, List<CellController> outCells)
+    {
+      outCells.Clear();
+
+      using (StackPool<CellController>.Get(out var front))
+      {
+        front.Push(center);
+        outCells.Add(center);
+        while (front.Count > 0)
+        {
+          var cell = front.Pop();
+          foreach (var neighbour in GetNeighbourCells(cell.Position))
+          {
+            if ((neighbour.Position - center.Position).GetMagnitude() <= radius && !outCells.Contains(neighbour))
+            {
+              outCells.Add(neighbour);
+              front.Push(neighbour);
+            }
+          }
+        }
+      }
+    }
+
+    private void CreateCell(HexCoordinates position, RegionType type)
+    {
+      var cell = new CellController();
+      var arrayIndex = MathUtilities.ToArrayIndex(position.ToArray2DIndex(), Size.x);
+      _cells[arrayIndex] = cell;
+      cell.Initialize(position, type);
     }
 
     private bool IsPositionInGrid(HexCoordinates position)
