@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine.Pool;
 
-namespace Client
+namespace Client.Utilities
 {
   public class StackPool<T>
   {

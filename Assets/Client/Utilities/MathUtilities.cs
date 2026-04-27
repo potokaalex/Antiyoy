@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Client
+namespace Client.Utilities
 {
   public static class MathUtilities
   {
