@@ -8,10 +8,9 @@ namespace Client
   public class GridController : MonoBehaviour
   {
     [SerializeField] private Grid _grid;
+    private CellController[] _cells;
 
     public Vector2Int Size { get; } = new(10, 10);
-
-    public CellController[] Cells { get; private set; }
 
     public HexCoordinates WorldPositionToHex(Vector3 worldPosition)
     {
@@ -33,21 +32,11 @@ namespace Client
       return new Vector2Int(index.y, index.x);
     }
 
-    public bool HasCell(HexCoordinates position)
-    {
-      return TryGetCell(position, out _);
-    }
-
-    public CellController GetCell(HexCoordinates position)
-    {
-      return Cells[GetCellIndex(position)];
-    }
-
     public bool TryGetCell(HexCoordinates position, out CellController cell)
     {
       if (IsPositionInGrid(position))
       {
-        cell = GetCell(position);
+        cell = _cells[GetCellIndex(position)];
         return cell != null;
       }
 
@@ -57,19 +46,11 @@ namespace Client
 
     public void CreateCells()
     {
-      Cells = new CellController[Size.x * Size.y];
+      _cells = new CellController[Size.x * Size.y];
 
       for (var y = 0; y < Size.y; y++)
       for (var x = 0; x < Size.x; x++)
         CreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(x, y)), RegionType.Neutral);
-    }
-
-    public void CreateCell(HexCoordinates position, RegionType type)
-    {
-      var cell = new CellController();
-      var arrayIndex = MathUtilities.ToArrayIndex(position.ToArray2DIndex(), Size.x);
-      Cells[arrayIndex] = cell;
-      cell.Initialize(position, type);
     }
 
     public void ReCreateCell(HexCoordinates position, RegionType type)
@@ -80,16 +61,13 @@ namespace Client
         CreateCell(position, type);
     }
 
-    public void DestroyCell(CellController cell)
-    {
-      Cells[GetCellIndex(cell.Position)] = null;
-      cell.Dispose();
-    }
-
     public void TryDestroyCell(HexCoordinates position)
     {
       if (TryGetCell(position, out var cell))
-        DestroyCell(cell);
+      {
+        _cells[GetCellIndex(cell.Position)] = null;
+        cell.Dispose();
+      }
     }
 
     public IEnumerable<CellController> GetNeighbourCells(HexCoordinates aroundPosition)
@@ -97,6 +75,14 @@ namespace Client
       foreach (var direction in HexUtilities.Directions)
         if (TryGetCell(aroundPosition + direction, out var cell))
           yield return cell;
+    }
+
+    private void CreateCell(HexCoordinates position, RegionType type)
+    {
+      var cell = new CellController();
+      var arrayIndex = MathUtilities.ToArrayIndex(position.ToArray2DIndex(), Size.x);
+      _cells[arrayIndex] = cell;
+      cell.Initialize(position, type);
     }
 
     private bool IsPositionInGrid(HexCoordinates position)

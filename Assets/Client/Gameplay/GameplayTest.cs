@@ -63,15 +63,15 @@ namespace Client.Gameplay
             var point = _gridController.WorldPositionToHex(hit.point);
             if (_selectedUnit)
             {
-              if (_unitMovePositions.Contains(point))
-                _selectedUnit.Move(point);
+              if (_unitMovePositions.Contains(point) && _gridController.TryGetCell(point, out var cell1))
+                _selectedUnit.Move(cell1);
 
               _tilesSelectionView.ClearView();
               _selectedUnit = null;
               return;
             }
 
-            if (_unitsService.TryGet(point, out _selectedUnit))
+            if (_gridController.TryGetCell(point, out var cell) && _unitsService.TryGet(cell, out _selectedUnit))
             {
               _selectedUnit.GetMovePositions(_unitMovePositions);
               _tilesSelectionView.ViewTiles(_unitMovePositions);
@@ -96,8 +96,8 @@ namespace Client.Gameplay
             _gridController.ReCreateCell(point, RegionType.Red);
           else if (_mapEditorType == MapEditorType.CreateBlue)
             _gridController.ReCreateCell(point, RegionType.Blue);
-          else if (_mapEditorType == MapEditorType.CreateUnit)
-            _unitsService.TryCreate(point, UnitType.Peasant);
+          else if (_mapEditorType == MapEditorType.CreateUnit && _gridController.TryGetCell(point, out var cell))
+            _unitsService.TryCreate(cell, UnitType.Peasant);
         }
       }
     }

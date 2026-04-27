@@ -24,11 +24,11 @@ namespace Client.Unit
         outList.Add(cell.Position);
     }
 
-    public void Move(HexCoordinates position)
+    public void Move(CellController cell)
     {
       var prevCell = _cell;
       _cell.Unit = null;
-      _cell = _gridController.GetCell(position);
+      _cell = cell;
       _cell.Unit = this;
       if (_cell.Region.Type != prevCell.Region.Type)
         _cell.ChangeRegionType(prevCell.Region.Type);

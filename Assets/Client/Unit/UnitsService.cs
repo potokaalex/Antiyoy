@@ -1,5 +1,4 @@
 using Client.Configs;
-using Client.Hex;
 using Client.Infrastructure;
 using UnityEngine;
 
@@ -18,17 +17,9 @@ namespace Client.Unit
       _unitsRoot = new GameObject("UnitsRoot").transform;
     }
 
-    public void Create(CellController cell, UnitType type)
+    public void TryCreate(CellController cell, UnitType type)
     {
-      var prefab = _configsProvider.UnitsPrefabs[type];
-      var instance = Object.Instantiate(prefab, _gridController.HexPositionToWorld(cell.Position), Quaternion.identity, _unitsRoot);
-      instance.Initialize(cell);
-      cell.Unit = instance;
-    }
-
-    public void TryCreate(HexCoordinates point, UnitType type)
-    {
-      if (_gridController.TryGetCell(point, out var cell) && !cell.Unit) 
+      if (!cell.Unit) 
         Create(cell, type);
     }
 
@@ -38,16 +29,18 @@ namespace Client.Unit
         Object.Destroy(unit.gameObject);
     }
 
-    public bool TryGet(HexCoordinates point, out UnitController unit)
+    public bool TryGet(CellController cell, out UnitController unit)
     {
-      if (_gridController.TryGetCell(point, out var cell))
-      {
-        unit = cell.Unit;
-        return unit;
-      }
+      unit = cell.Unit;
+      return unit;
+    }
 
-      unit = null;
-      return false;
+    private void Create(CellController cell, UnitType type)
+    {
+      var prefab = _configsProvider.UnitsPrefabs[type];
+      var instance = Object.Instantiate(prefab, _gridController.HexPositionToWorld(cell.Position), Quaternion.identity, _unitsRoot);
+      instance.Initialize(cell);
+      cell.Unit = instance;
     }
   }
 }
