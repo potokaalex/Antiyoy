@@ -63,7 +63,7 @@ namespace Client.Region
     private void TryDivideRegion(RegionController region)
     {
       using (ListPool<CellController>.Get(out var unPassed))
-      using (ListPool<CellController>.Get(out var front))
+      using (StackPool<CellController>.Get(out var front))
       {
         var regionParts = _regionPartsBuffer;
         unPassed.AddRange(region.Cells);
@@ -74,11 +74,11 @@ namespace Client.Region
       }
     }
 
-    private void FindRegionCells(List<CellController> front, List<CellController> regionCells, List<CellController> unPassed, bool byType = true)
+    private void FindRegionCells(Stack<CellController> front, List<CellController> regionCells, List<CellController> unPassed, bool byType = true)
     {
       while (front.Count > 0)
       {
-        var cell = front[0];
+        var cell = front.Pop();
         var position = cell.Position;
 
         foreach (var neighbour in _gridController.GetNeighbourCells(position))
@@ -89,18 +89,17 @@ namespace Client.Region
 
             if (isNiceRegion && !front.Contains(neighbour) && !regionCells.Contains(neighbour))
             {
-              front.Add(neighbour);
+              front.Push(neighbour);
               regionCells.Add(neighbour);
             }
           }
         }
 
-        front.RemoveAt(0);
         unPassed.Remove(cell);
       }
     }
 
-    private void FindRegionParts(List<CellController> unPassed, List<CellController> front, RegionParts regionParts)
+    private void FindRegionParts(List<CellController> unPassed, Stack<CellController> front, RegionParts regionParts)
     {
       using (ListPool<CellController>.Get(out var regionPart))
       {
@@ -108,7 +107,7 @@ namespace Client.Region
         {
           var cell = unPassed[0];
           regionPart.Add(cell);
-          front.Add(cell);
+          front.Push(cell);
           FindRegionCells(front, regionPart, unPassed);
           regionParts.NewPartFrom(regionPart);
         }

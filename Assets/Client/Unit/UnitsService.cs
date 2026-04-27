@@ -25,8 +25,11 @@ namespace Client.Unit
 
     public void TryDestroy(UnitController unit)
     {
-      if (unit) 
+      if (unit)
+      {
+        unit.Cell.Unit = null;
         Object.Destroy(unit.gameObject);
+      }
     }
 
     public bool TryGet(CellController cell, out UnitController unit)

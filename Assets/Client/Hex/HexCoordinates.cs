@@ -34,15 +34,16 @@ namespace Client.Hex
       };
     }
 
+    public float GetMagnitude()
+    {
+      return (Math.Abs(Q) + Math.Abs(R) + Math.Abs(S)) / 2f;
+    }
+
     public override string ToString() => $"{Q};{R};{S}";
 
-    public static HexCoordinates operator +(HexCoordinates a, HexCoordinates b)
-    {
-      a.Q += b.Q;
-      a.R += b.R;
+    public static HexCoordinates operator +(HexCoordinates a, HexCoordinates b) => new(a.Q + b.Q, a.R + b.R);
 
-      return a;
-    }
+    public static HexCoordinates operator -(HexCoordinates a, HexCoordinates b) => new(a.Q - b.Q, a.R - b.R);
 
     public static bool operator ==(HexCoordinates a, HexCoordinates b) => a.Equals(b);
 

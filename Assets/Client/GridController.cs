@@ -77,6 +77,29 @@ namespace Client
           yield return cell;
     }
 
+    public void GetCellsInRadius(CellController center, int radius, List<CellController> outCells)
+    {
+      outCells.Clear();
+
+      using (StackPool<CellController>.Get(out var front))
+      {
+        front.Push(center);
+        outCells.Add(center);
+        while (front.Count > 0)
+        {
+          var cell = front.Pop();
+          foreach (var neighbour in GetNeighbourCells(cell.Position))
+          {
+            if ((neighbour.Position - center.Position).GetMagnitude() <= radius && !outCells.Contains(neighbour))
+            {
+              outCells.Add(neighbour);
+              front.Push(neighbour);
+            }
+          }
+        }
+      }
+    }
+
     private void CreateCell(HexCoordinates position, RegionType type)
     {
       var cell = new CellController();
