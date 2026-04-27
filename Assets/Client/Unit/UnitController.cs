@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Client.Hex;
 using Client.Infrastructure;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -8,17 +9,20 @@ namespace Client.Unit
 {
   public class UnitController : MonoBehaviour
   {
+    [SerializeField] private TextMeshPro _text;
     private GridController _gridController;
     private CellController _cell;
     private UnitsService _unitsService;
 
     public CellController Cell => _cell;
 
-    public void Initialize(CellController cell)
+    public void Initialize(CellController cell, UnitType type)
     {
       _gridController = Locator.Get<GridController>();
       _unitsService = Locator.Get<UnitsService>();
       _cell = cell;
+      transform.position = _gridController.HexPositionToWorld(_cell.Position);
+      _text.SetText(type.ToString());
     }
 
     public void GetPositionsInMoveRadius(List<HexCoordinates> outPositions)

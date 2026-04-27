@@ -10,6 +10,6 @@ namespace Client.Configs
   public class ConfigsProvider : SerializedScriptableObject
   {
     public Dictionary<RegionType, Color> RegionsColors;
-    public Dictionary<UnitType, UnitController> UnitsPrefabs;
+    public UnitController UnitPrefab;
   }
 }

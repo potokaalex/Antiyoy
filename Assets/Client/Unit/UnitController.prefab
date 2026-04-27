@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 883358939061396562}
   - component: {fileID: 5325725391586102747}
   m_Layer: 0
-  m_Name: Peasant
+  m_Name: UnitController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -105,6 +105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431c04502ae749a7823b6cbe28b67a6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Client::Client.Unit.UnitController
+  _text: {fileID: 2941746682600447053}
 --- !u!1 &6726092071249256274
 GameObject:
   m_ObjectHideFlags: 0
