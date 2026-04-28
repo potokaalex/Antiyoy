@@ -11,7 +11,7 @@ namespace Client
     [SerializeField] private Grid _grid;
     private CellController[] _cells;
 
-    public Vector2Int Size { get; } = new(10, 10);
+    public Vector2Int Size { get; } = new(9, 9);
 
     public HexCoordinates WorldPositionToHex(Vector3 worldPosition)
     {

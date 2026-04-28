@@ -12,6 +12,13 @@ namespace Client
       return Physics2D.Raycast(ray.origin, ray.direction);
     }
 
+    public bool GetHitFromMousePoint(out RaycastHit2D hit)
+    {
+      var ray = _camera.ScreenPointToRay(Input.mousePosition);
+      hit = Physics2D.Raycast(ray.origin, ray.direction);
+      return hit;
+    }
+
     private void Update()
     {
       Move();

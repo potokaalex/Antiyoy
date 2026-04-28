@@ -15,8 +15,7 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects:
-    - {fileID: 5325725391586102747, guid: 9a960f9f2005c8c45a720bf59f8a2e27, type: 3}
+    ReferencedUnityObjects: []
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -129,41 +128,4 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: UnitsPrefabs
-      Entry: 7
-      Data: 2|System.Collections.Generic.Dictionary`2[[Client.Unit.UnitType, Client],[Client.Unit.UnitController,
-        Client]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 3|System.Collections.Generic.EnumEqualityComparer`1[[Client.Unit.UnitType,
-        Client]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 1
-    - Name: $v
-      Entry: 10
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+  UnitPrefab: {fileID: 5325725391586102747, guid: 9a960f9f2005c8c45a720bf59f8a2e27, type: 3}

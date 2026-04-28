@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Client.Hex;
 using Client.Infrastructure;
+using Client.Region;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -27,11 +28,11 @@ namespace Client.Unit
 
     public void GetPositionsInMoveRadius(List<HexCoordinates> outPositions)
     {
-      outPositions.Clear();
       using (ListPool<CellController>.Get(out var cells))
       {
+        outPositions.Clear();
         _gridController.GetCellsInRadius(_cell, 1, cells);
-        foreach (var cell in cells) 
+        foreach (var cell in cells)
           outPositions.Add(cell.Position);
       }
     }
@@ -53,6 +54,12 @@ namespace Client.Unit
       _cell = cell;
       _cell.Unit = this;
       transform.position = _gridController.HexPositionToWorld(_cell.Position);
+    }
+
+    public void ConquerCurrentCell(RegionType type)
+    {
+      if (_cell.Region.Type != type)
+        _cell.ChangeRegionType(type);
     }
   }
 }
