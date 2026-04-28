@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Client.Infrastructure;
+using Client.Unit;
 
 namespace Client.Region
 {
@@ -6,14 +8,16 @@ namespace Client.Region
   {
     private readonly List<CellController> _cells = new();
     private readonly RegionsFactory _regionsFactory;
+    private readonly UnitsService _unitsService;
 
     public IReadOnlyList<CellController> Cells => _cells;
-
     public RegionType Type { get; set; }
+    public int Money { get; set; }
 
-    public RegionController(RegionsFactory regionsFactory)
+    public RegionController()
     {
-      _regionsFactory = regionsFactory;
+      _regionsFactory = Locator.Get<RegionsFactory>();
+      _unitsService = Locator.Get<UnitsService>();
     }
 
     public void Add(CellController cell)
@@ -26,8 +30,33 @@ namespace Client.Region
     {
       cell.Region = null;
       _cells.Remove(cell);
-      if (Cells.Count == 0) 
+      if (Cells.Count == 0)
         _regionsFactory.Destroy(this);
+    }
+
+    public int GetIncome()
+    {
+      var result = 0;
+      foreach (var cell in _cells)
+      {
+        result++;
+
+        if (cell.Unit)
+          result -= cell.Unit.MaintenanceCost;
+      }
+
+      return result;
+    }
+
+    public void ApplyIncome()
+    {
+      Money += GetIncome();
+      if (Money < 0)
+      {
+        Money = 0;
+        foreach (var cell in _cells)
+          _unitsService.TryDestroy(cell.Unit);
+      }
     }
   }
 }

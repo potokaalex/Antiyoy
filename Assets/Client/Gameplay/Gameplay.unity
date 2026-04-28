@@ -1233,6 +1233,8 @@ MonoBehaviour:
   _createUnitButton: {fileID: 332458720}
   _nextTurnButton: {fileID: 812877619}
   _turnsCount: {fileID: 476272090}
+  _moneyCount: {fileID: 776127778}
+  _incomeCount: {fileID: 1943269878}
 --- !u!1 &1138225516
 GameObject:
   m_ObjectHideFlags: 0

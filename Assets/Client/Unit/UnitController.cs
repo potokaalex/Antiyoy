@@ -18,6 +18,7 @@ namespace Client.Unit
     private int _turnsCount;
 
     public CellController Cell => _cell;
+    public int MaintenanceCost => 2;
 
     public void Initialize(CellController cell, UnitType type)
     {

@@ -11,6 +11,8 @@ namespace Client.Gameplay
     [SerializeField] private Button _createUnitButton;
     [SerializeField] private Button _nextTurnButton;
     [SerializeField] private TextMeshProUGUI _turnsCount;
+    [SerializeField] private TextMeshProUGUI _moneyCount;
+    [SerializeField] private TextMeshProUGUI _incomeCount;
     private GameplayController _gameplayController;
 
     private void Awake()
@@ -34,6 +36,12 @@ namespace Client.Gameplay
     public void ViewTurnsCount(int value)
     {
       _turnsCount.SetText($"TurnsCount: {value}");
+    }
+
+    public void ViewRegionData(int money, int income)
+    {
+      _moneyCount.SetText($"Currency: {money}");
+      _incomeCount.SetText($"Income: {income}");
     }
   }
 }

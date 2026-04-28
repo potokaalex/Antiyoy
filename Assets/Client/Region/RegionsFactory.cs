@@ -7,13 +7,16 @@ namespace Client.Region
 {
   public class RegionsFactory : IInitializable
   {
+    private readonly List<RegionController> _regions = new();
     private GovernmentsService _governmentsService;
     private ObjectPool<RegionController> _pool;
+
+    public IReadOnlyList<RegionController> ActiveRegions => _regions;
 
     public void Initialize()
     {
       _governmentsService = Locator.Get<GovernmentsService>();
-      _pool = new ObjectPool<RegionController>(() => new RegionController(this));
+      _pool = new ObjectPool<RegionController>(() => new RegionController());
     }
 
     public RegionController Create(CellController cell, RegionType type = RegionType.Neutral)
@@ -33,11 +36,14 @@ namespace Client.Region
         instance.Add(cell);
 
       _governmentsService.AddRegion(instance);
+      _regions.Add(instance);
       return instance;
     }
 
     public void Destroy(RegionController instance)
     {
+      _regions.Remove(instance);
+      instance.Money = 0;
       _pool.Release(instance);
       _governmentsService.RemoveRegion(instance);
     }

@@ -16,6 +16,8 @@ namespace Client.Region
     private ConfigsProvider _configsProvider;
     private RegionsFactory _regionsFactory;
 
+    public IReadOnlyList<RegionController> Regions => _regionsFactory.ActiveRegions;
+
     public void Initialize()
     {
       _gridController = Locator.Get<GridController>();

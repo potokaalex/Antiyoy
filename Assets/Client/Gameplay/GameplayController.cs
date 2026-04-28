@@ -20,6 +20,7 @@ namespace Client.Gameplay
     private TilesSelectionView _tilesSelectionView;
     private UnitController _selectedUnit;
     private GameplayUI _gameplayUI;
+    private RegionsService _regionsService;
     private GameplayMode _gameplayMode;
     private int _turnsCount;
 
@@ -30,6 +31,7 @@ namespace Client.Gameplay
       _unitsService = Locator.Get<UnitsService>();
       _tilesSelectionView = Locator.Get<TilesSelectionView>();
       _gameplayUI = Locator.Get<GameplayUI>();
+      _regionsService = Locator.Get<RegionsService>();
 
       _gridController.CreateCells();
       _gridController.ReCreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(0, 5)), RegionType.Red);
@@ -64,9 +66,7 @@ namespace Client.Gameplay
             TryMoveUnit(cell);
         }
 
-        _gameplayMode = GameplayMode.None;
-        _tilesSelectionView.ClearView();
-        _gameplayUI.ActiveRegionUI(false);
+        Clear();
       }
     }
 
@@ -81,8 +81,19 @@ namespace Client.Gameplay
     {
       foreach (var unit in _unitsService.Units)
         unit.RestTurnsCount();
+      foreach (var region in _regionsService.Regions)
+        region.ApplyIncome();
+
       _turnsCount++;
       _gameplayUI.ViewTurnsCount(_turnsCount);
+      Clear();
+    }
+
+    private void Clear()
+    {
+      _gameplayMode = GameplayMode.None;
+      _tilesSelectionView.ClearView();
+      _gameplayUI.ActiveRegionUI(false);
     }
 
     private void TryMoveUnit(CellController cell)
@@ -94,7 +105,10 @@ namespace Client.Gameplay
     private void TryCreateUnit(CellController cell)
     {
       if (_selectedTiles.Contains(cell.Position) && _unitsService.TryCreate(cell, UnitType.Peasant, out var unit))
+      {
         unit.ConquerCurrentCell(_playerRegion);
+        _gameplayUI.ViewRegionData(_selectedRegion.Money, _selectedRegion.GetIncome());
+      }
     }
 
     private void TrySelectRegion(CellController cell)
@@ -103,6 +117,7 @@ namespace Client.Gameplay
       {
         _selectedRegion = cell.Region;
         _gameplayUI.ActiveRegionUI(true);
+        _gameplayUI.ViewRegionData(_selectedRegion.Money, _selectedRegion.GetIncome());
         _gameplayMode = GameplayMode.SelectedRegion;
       }
     }
