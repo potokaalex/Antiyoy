@@ -5,18 +5,24 @@ using UnityEngine.Tilemaps;
 
 namespace Client.Tile
 {
-  public class TilemapController : MonoBehaviour
+  public class TilemapController : MonoBehaviour, IInitializable
   {
     [SerializeField] private Tilemap _tilemap;
     [SerializeField] private TileBase _tile;
     private GridController _gridController;
 
-    private void Awake()
+    public void Initialize()
     {
       _gridController = Locator.Get<GridController>();
+      FillByBaseTiles();
     }
 
-    public void FillByBaseTiles()
+    public void SetColor(HexCoordinates position, Color color)
+    {
+      _tilemap.SetColor(_gridController.GridIndexFrom2DIndex(position.ToArray2DIndex()), color);
+    }
+
+    private void FillByBaseTiles()
     {
       var size = _gridController.Size;
       for (var y = 0; y < size.y; y++)
@@ -24,11 +30,6 @@ namespace Client.Tile
         _tilemap.SetTile(_gridController.GridIndexFrom2DIndex(new Vector2Int(x, y)), _tile);
 
       _tilemap.CompressBounds();
-    }
-
-    public void SetColor(HexCoordinates position, Color color)
-    {
-      _tilemap.SetColor(_gridController.GridIndexFrom2DIndex(position.ToArray2DIndex()), color);
     }
   }
 }

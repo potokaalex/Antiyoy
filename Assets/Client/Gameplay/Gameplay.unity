@@ -987,6 +987,7 @@ GameObject:
   - component: {fileID: 1093741606}
   - component: {fileID: 1093741605}
   - component: {fileID: 1093741604}
+  - component: {fileID: 1093741608}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1078,6 +1079,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1093741608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1093741603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd8dc66955bf49f0ba6162e77960147c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::Client.Gameplay.GameplayUI
+  _regionPanel: {fileID: 44673947}
+  _createUnitButton: {fileID: 332458720}
 --- !u!1 &1138225516
 GameObject:
   m_ObjectHideFlags: 0
@@ -1090,7 +1105,6 @@ GameObject:
   - component: {fileID: 1138225518}
   - component: {fileID: 1138225520}
   - component: {fileID: 1138225521}
-  - component: {fileID: 1138225522}
   m_Layer: 0
   m_Name: Startup
   m_TagString: Untagged
@@ -1131,7 +1145,7 @@ MonoBehaviour:
   _debugController: {fileID: 1138225521}
   _configsProvider: {fileID: 11400000, guid: 19d1d9fac83a2d443aea6e0413d1274a, type: 2}
   _tilesSelectionView: {fileID: 1901397249}
-  _gameplayController: {fileID: 1138225522}
+  _gameplayUI: {fileID: 1093741608}
 --- !u!114 &1138225520
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1157,20 +1171,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Client::Client.New.DebugController
   _cellDebugPrefab: {fileID: 5748800255380385168, guid: b012fa36006fceb45b47c360ac1a9822, type: 3}
---- !u!114 &1138225522
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1138225516}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f4b51bf78bf4ee9ab6538d3e70ba68f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Client::Client.Gameplay.GameplayController
-  _regionPanel: {fileID: 44673947}
-  _createUnitButton: {fileID: 332458720}
 --- !u!1 &1193746974
 GameObject:
   m_ObjectHideFlags: 0

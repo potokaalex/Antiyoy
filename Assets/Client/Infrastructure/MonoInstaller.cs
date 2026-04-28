@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -6,6 +7,8 @@ namespace Client.Infrastructure
   [DefaultExecutionOrder(-10000)]
   public abstract class MonoInstaller : MonoBehaviour
   {
+    private readonly List<ITickable> _tickables = new();
+
     private void Awake()
     {
       Install();
@@ -17,6 +20,8 @@ namespace Client.Infrastructure
       Locator.GetAll(initializables);
       foreach (var initializable in initializables) 
         initializable.Initialize();
+
+      Locator.GetAll(_tickables);
     }
     
     private void OnDestroy()
@@ -24,6 +29,12 @@ namespace Client.Infrastructure
       Locator.Clear();
     }
 
+    private void Update()
+    {
+      foreach (var tickable in _tickables) 
+        tickable.Tick();
+    }
+    
     protected virtual void Install()
     {
     }

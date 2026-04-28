@@ -18,7 +18,7 @@ namespace Client.Gameplay
     [SerializeField] private DebugController _debugController;
     [SerializeField] private ConfigsProvider _configsProvider;
     [SerializeField] private TilesSelectionView _tilesSelectionView;
-    [SerializeField] private GameplayController _gameplayController;
+    [SerializeField] private GameplayUI _gameplayUI;
 
     protected override void Install()
     {
@@ -32,7 +32,8 @@ namespace Client.Gameplay
       Locator.Set(new GovernmentsService());
       Locator.Set(new UnitsService());
       Locator.Set(_tilesSelectionView);
-      Locator.Set(_gameplayController);
+      Locator.Set(_gameplayUI);
+      Locator.Set(new GameplayController());
     }
   }
 }

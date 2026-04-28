@@ -5,18 +5,19 @@ using UnityEngine;
 
 namespace Client.DebugFeatures
 {
-  public class DebugController : MonoBehaviour
+  public class DebugController : MonoBehaviour, IInitializable
   {
     [SerializeField] private CellDebugController _cellDebugPrefab;
     private Transform _cellsDebugRoot;
     private GridController _gridController;
 
-    private void Awake()
+    public void Initialize()
     {
       _gridController = Locator.Get<GridController>();
+      CreateCells();
     }
 
-    public void CreateCells()
+    private void CreateCells()
     {
       _cellsDebugRoot = new GameObject("Debug").transform;
       var size = _gridController.Size;
