@@ -21,6 +21,7 @@ namespace Client.Gameplay
     private UnitController _selectedUnit;
     private GameplayUI _gameplayUI;
     private GameplayMode _gameplayMode;
+    private int _turnsCount;
 
     public void Initialize()
     {
@@ -37,6 +38,8 @@ namespace Client.Gameplay
       _gridController.ReCreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(8, 5)), RegionType.Blue);
       _gridController.ReCreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(8, 4)), RegionType.Blue);
       _gridController.ReCreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(7, 4)), RegionType.Blue);
+
+      _gameplayUI.ViewTurnsCount(_turnsCount);
     }
 
     public void Tick()
@@ -70,8 +73,16 @@ namespace Client.Gameplay
     public void SetCreateUnitMode()
     {
       _gameplayMode = GameplayMode.CreateUnit;
-      _unitsService.GetAreaToCreateUnit(_selectedRegion, _selectedTiles);
+      _unitsService.GetCreateUnitArea(_selectedRegion, _selectedTiles);
       _tilesSelectionView.ViewTiles(_selectedTiles);
+    }
+
+    public void NexTurn()
+    {
+      foreach (var unit in _unitsService.Units)
+        unit.RestTurnsCount();
+      _turnsCount++;
+      _gameplayUI.ViewTurnsCount(_turnsCount);
     }
 
     private void TryMoveUnit(CellController cell)
@@ -98,9 +109,9 @@ namespace Client.Gameplay
 
     private void TrySelectUnit(CellController cell)
     {
-      if (cell.Region.Type == _playerRegion && _unitsService.TryGet(cell, out _selectedUnit))
+      if (cell.Region.Type == _playerRegion && _unitsService.TryGet(cell, out _selectedUnit) && _selectedUnit.HasTurns())
       {
-        _selectedUnit.GetPositionsInMoveRadius(_selectedTiles);
+        _selectedUnit.GetMoveArea(_selectedTiles);
         _tilesSelectionView.ViewTiles(_selectedTiles);
         _gameplayMode = GameplayMode.SelectedUnit;
       }

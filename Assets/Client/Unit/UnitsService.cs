@@ -11,10 +11,13 @@ namespace Client.Unit
 {
   public class UnitsService : IInitializable
   {
+    private readonly List<UnitController> _units = new();
     private ConfigsProvider _configsProvider;
     private GridController _gridController;
     private Transform _unitsRoot;
     private ObjectPool<UnitController> _pool;
+
+    public IReadOnlyList<UnitController> Units => _units;
 
     public void Initialize()
     {
@@ -42,6 +45,7 @@ namespace Client.Unit
       if (unit)
       {
         unit.Cell.Unit = null;
+        _units.Remove(unit);
         _pool.Release(unit);
       }
     }
@@ -52,7 +56,7 @@ namespace Client.Unit
       return unit;
     }
 
-    public void GetAreaToCreateUnit(RegionController region, List<HexCoordinates> outResult)
+    public void GetCreateUnitArea(RegionController region, List<HexCoordinates> outResult)
     {
       using (StackPool<CellController>.Get(out var front))
       {
@@ -78,7 +82,7 @@ namespace Client.Unit
     {
       var instance = _pool.Get();
       instance.Initialize(cell, type);
-      cell.Unit = instance;
+      _units.Add(instance);
       return instance;
     }
   }

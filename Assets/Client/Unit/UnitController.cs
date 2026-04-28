@@ -14,6 +14,8 @@ namespace Client.Unit
     private GridController _gridController;
     private CellController _cell;
     private UnitsService _unitsService;
+    private UnitType _type;
+    private int _turnsCount;
 
     public CellController Cell => _cell;
 
@@ -22,11 +24,15 @@ namespace Client.Unit
       _gridController = Locator.Get<GridController>();
       _unitsService = Locator.Get<UnitsService>();
       _cell = cell;
+      _type = type;
+      _unitsService.TryDestroy(_cell.Unit);
+      _cell.Unit = this;
       transform.position = _gridController.HexPositionToWorld(_cell.Position);
-      _text.SetText(type.ToString());
+      RestTurnsCount();
+      UpdateDebugText();
     }
 
-    public void GetPositionsInMoveRadius(List<HexCoordinates> outPositions)
+    public void GetMoveArea(List<HexCoordinates> outPositions)
     {
       using (ListPool<CellController>.Get(out var cells))
       {
@@ -54,12 +60,28 @@ namespace Client.Unit
       _cell = cell;
       _cell.Unit = this;
       transform.position = _gridController.HexPositionToWorld(_cell.Position);
+      _turnsCount -= 1;
+      UpdateDebugText();
     }
 
     public void ConquerCurrentCell(RegionType type)
     {
       if (_cell.Region.Type != type)
+      {
         _cell.ChangeRegionType(type);
+        _turnsCount -= 1;
+        UpdateDebugText();
+      }
     }
+
+    public void RestTurnsCount()
+    {
+      _turnsCount = 1;
+      UpdateDebugText();
+    }
+
+    public bool HasTurns() => _turnsCount > 0;
+
+    private void UpdateDebugText() => _text.SetText($"{_type.ToString()}\n{_turnsCount}");
   }
 }

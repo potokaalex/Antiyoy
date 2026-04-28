@@ -74,7 +74,7 @@ namespace Client.Gameplay
 
             if (_gridController.TryGetCell(point, out var cell) && _unitsService.TryGet(cell, out _selectedUnit))
             {
-              _selectedUnit.GetPositionsInMoveRadius(_unitMovePositions);
+              _selectedUnit.GetMoveArea(_unitMovePositions);
               _tilesSelectionView.ViewTiles(_unitMovePositions);
               return;
             }
