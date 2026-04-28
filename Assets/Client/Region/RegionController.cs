@@ -58,5 +58,16 @@ namespace Client.Region
           _unitsService.TryDestroy(cell.Unit);
       }
     }
+
+    public bool SpendMoney(int value)
+    {
+      if (Money >= value)
+      {
+        Money -= value;
+        return true;
+      }
+
+      return false;
+    }
   }
 }

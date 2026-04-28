@@ -19,6 +19,7 @@ namespace Client.Unit
 
     public CellController Cell => _cell;
     public int MaintenanceCost => 2;
+    public int Cost => 10;
 
     public void Initialize(CellController cell, UnitType type)
     {

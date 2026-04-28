@@ -78,6 +78,8 @@ namespace Client.Unit
       }
     }
 
+    public int GetCost(UnitType type) => _configsProvider.UnitPrefab.Cost;
+
     private UnitController Create(CellController cell, UnitType type)
     {
       var instance = _pool.Get();

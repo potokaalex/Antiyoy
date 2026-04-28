@@ -40,6 +40,8 @@ namespace Client.Gameplay
       _gridController.ReCreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(8, 5)), RegionType.Blue);
       _gridController.ReCreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(8, 4)), RegionType.Blue);
       _gridController.ReCreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(7, 4)), RegionType.Blue);
+      foreach (var region in _regionsService.Regions)
+        region.Money = 10;
 
       _gameplayUI.ViewTurnsCount(_turnsCount);
     }
@@ -104,10 +106,14 @@ namespace Client.Gameplay
 
     private void TryCreateUnit(CellController cell)
     {
-      if (_selectedTiles.Contains(cell.Position) && _unitsService.TryCreate(cell, UnitType.Peasant, out var unit))
+      var unitType = UnitType.Peasant;
+      if (_selectedRegion.SpendMoney(_unitsService.GetCost(unitType)))
       {
-        unit.ConquerCurrentCell(_playerRegion);
-        _gameplayUI.ViewRegionData(_selectedRegion.Money, _selectedRegion.GetIncome());
+        if (_selectedTiles.Contains(cell.Position) && _unitsService.TryCreate(cell, UnitType.Peasant, out var unit))
+        {
+          unit.ConquerCurrentCell(_playerRegion);
+          _gameplayUI.ViewRegionData(_selectedRegion.Money, _selectedRegion.GetIncome());
+        }
       }
     }
 
