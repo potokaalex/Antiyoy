@@ -41,7 +41,7 @@ namespace Client.Gameplay
       _gridController.ReCreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(8, 4)), RegionType.Blue);
       _gridController.ReCreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(7, 4)), RegionType.Blue);
       foreach (var region in _regionsService.Regions)
-        region.Money = 10;
+        region.Money = 100;
 
       _gameplayUI.ViewTurnsCount(_turnsCount);
     }
@@ -54,21 +54,18 @@ namespace Client.Gameplay
             _gridController.TryGetCell(_gridController.WorldPositionToHex(hit.point), out var cell))
         {
           if (_gameplayMode == GameplayMode.None)
-          {
             TrySelectRegion(cell);
-            TrySelectUnit(cell);
-            return;
-          }
-
-          if (_gameplayMode == GameplayMode.CreateUnit)
+          else if (_gameplayMode == GameplayMode.SelectedRegion && cell.Region.Type != _playerRegion)
+            Clear();
+          else if (_gameplayMode == GameplayMode.CreateUnit)
             TryCreateUnit(cell);
           else if (_gameplayMode != GameplayMode.SelectedUnit)
             TrySelectUnit(cell);
-          else if (_gameplayMode == GameplayMode.SelectedUnit)
+          else if (_gameplayMode == GameplayMode.SelectedUnit) 
             TryMoveUnit(cell);
         }
-
-        Clear();
+        else
+          Clear();
       }
     }
 
@@ -101,7 +98,18 @@ namespace Client.Gameplay
     private void TryMoveUnit(CellController cell)
     {
       if (_selectedTiles.Contains(cell.Position))
-        _selectedUnit.Move(cell);
+      {
+        if (_selectedUnit.Move(cell))
+        {
+          _tilesSelectionView.ClearView();
+          _gameplayMode = GameplayMode.SelectedRegion;
+        }
+      }
+      else
+      {
+        Clear();
+        TrySelectRegion(cell);
+      }
     }
 
     private void TryCreateUnit(CellController cell)
@@ -115,6 +123,9 @@ namespace Client.Gameplay
           _gameplayUI.ViewRegionData(_selectedRegion.Money, _selectedRegion.GetIncome());
         }
       }
+
+      _tilesSelectionView.ClearView();
+      _gameplayMode = GameplayMode.SelectedRegion;
     }
 
     private void TrySelectRegion(CellController cell)
@@ -126,6 +137,8 @@ namespace Client.Gameplay
         _gameplayUI.ViewRegionData(_selectedRegion.Money, _selectedRegion.GetIncome());
         _gameplayMode = GameplayMode.SelectedRegion;
       }
+
+      TrySelectUnit(cell);
     }
 
     private void TrySelectUnit(CellController cell)

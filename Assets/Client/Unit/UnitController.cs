@@ -45,12 +45,12 @@ namespace Client.Unit
       }
     }
 
-    public void Move(CellController cell)
+    public bool Move(CellController cell)
     {
       var friendlyRegion = _cell.Region.Type == cell.Region.Type;
 
       if (friendlyRegion && cell.Unit)
-        return;
+        return false;
 
       if (!friendlyRegion)
       {
@@ -64,6 +64,7 @@ namespace Client.Unit
       transform.position = _gridController.HexPositionToWorld(_cell.Position);
       _turnsCount -= 1;
       UpdateDebugText();
+      return true;
     }
 
     public void ConquerCurrentCell(RegionType type)
