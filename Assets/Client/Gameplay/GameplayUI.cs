@@ -1,4 +1,5 @@
 using Client.Infrastructure;
+using Client.Region;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +14,9 @@ namespace Client.Gameplay
     [SerializeField] private TextMeshProUGUI _turnsCount;
     [SerializeField] private TextMeshProUGUI _moneyCount;
     [SerializeField] private TextMeshProUGUI _incomeCount;
+    [SerializeField] private TextMeshProUGUI _winText;
+    [SerializeField] private GameObject _winPanel;
+    [SerializeField] private Button _winNexButton;
     private GameplayController _gameplayController;
 
     private void Awake()
@@ -20,12 +24,14 @@ namespace Client.Gameplay
       _gameplayController = Locator.Get<GameplayController>();
       _createUnitButton.onClick.AddListener(_gameplayController.SetCreateUnitMode);
       _nextTurnButton.onClick.AddListener(_gameplayController.NexTurn);
+      _winNexButton.onClick.AddListener(_gameplayController.EndGameplay);
     }
 
     private void OnDestroy()
     {
       _createUnitButton.onClick.RemoveListener(_gameplayController.SetCreateUnitMode);
       _nextTurnButton.onClick.RemoveListener(_gameplayController.NexTurn);
+      _winNexButton.onClick.RemoveListener(_gameplayController.EndGameplay);
     }
 
     public void ActiveRegionUI(bool isActive)
@@ -42,6 +48,12 @@ namespace Client.Gameplay
     {
       _moneyCount.SetText($"Currency: {money}");
       _incomeCount.SetText($"Income: {income}");
+    }
+
+    public void ShowEndScreen(RegionType winner)
+    {
+      _winPanel.SetActive(true);
+      _winText.SetText($"Winner: {winner}");
     }
   }
 }

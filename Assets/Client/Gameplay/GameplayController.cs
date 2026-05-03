@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Client.Government;
 using Client.Hex;
 using Client.Infrastructure;
 using Client.Region;
@@ -6,13 +7,15 @@ using Client.TilesSelection;
 using Client.Unit;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Pool;
+using UnityEngine.SceneManagement;
 
 namespace Client.Gameplay
 {
   public class GameplayController : IInitializable, ITickable
   {
     private readonly List<HexCoordinates> _selectedTiles = new();
-    private readonly RegionType _playerRegion = RegionType.Red;
+    private RegionType _playerRegion = RegionType.Red;
     private CameraController _cameraController;
     private GridController _gridController;
     private RegionController _selectedRegion;
@@ -21,6 +24,7 @@ namespace Client.Gameplay
     private UnitController _selectedUnit;
     private GameplayUI _gameplayUI;
     private RegionsService _regionsService;
+    private GovernmentsService _governmentsService;
     private GameplayMode _gameplayMode;
     private int _turnsCount;
 
@@ -32,14 +36,15 @@ namespace Client.Gameplay
       _tilesSelectionView = Locator.Get<TilesSelectionView>();
       _gameplayUI = Locator.Get<GameplayUI>();
       _regionsService = Locator.Get<RegionsService>();
+      _governmentsService = Locator.Get<GovernmentsService>();
 
       _gridController.CreateCells();
-      _gridController.ReCreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(0, 5)), RegionType.Red);
-      _gridController.ReCreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(0, 4)), RegionType.Red);
-      _gridController.ReCreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(1, 4)), RegionType.Red);
-      _gridController.ReCreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(8, 5)), RegionType.Blue);
-      _gridController.ReCreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(8, 4)), RegionType.Blue);
-      _gridController.ReCreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(7, 4)), RegionType.Blue);
+      for (var i = 0; i < 4; i++)
+        _gridController.ReCreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(i, 0)), RegionType.Red);
+
+      for (var i = 4; i < 9; i++)
+        _gridController.ReCreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(i, 0)), RegionType.Blue);
+
       foreach (var region in _regionsService.Regions)
         region.Money = 100;
 
@@ -61,7 +66,7 @@ namespace Client.Gameplay
             TryCreateUnit(cell);
           else if (_gameplayMode != GameplayMode.SelectedUnit)
             TrySelectUnit(cell);
-          else if (_gameplayMode == GameplayMode.SelectedUnit) 
+          else if (_gameplayMode == GameplayMode.SelectedUnit)
             TryMoveUnit(cell);
         }
         else
@@ -86,6 +91,22 @@ namespace Client.Gameplay
       _turnsCount++;
       _gameplayUI.ViewTurnsCount(_turnsCount);
       Clear();
+      CheckWin();
+    }
+
+    public void EndGameplay()
+    {
+      SceneManager.LoadScene(0);
+    }
+
+    private void CheckWin()
+    {
+      using (ListPool<GovernmentController>.Get(out var governments))
+      {
+        _governmentsService.GetAllAlive(governments);
+        if (governments.Count == 1) 
+          _gameplayUI.ShowEndScreen(governments[0].RegionsType);
+      }
     }
 
     private void Clear()

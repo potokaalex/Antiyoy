@@ -11,6 +11,17 @@ namespace Client.Government
 
     public RegionType RegionsType => _regions[0].Type;
 
+    public bool IsAlive
+    {
+      get
+      {
+        foreach (var region in _regions)
+          if (region.IsAlive)
+            return true;
+        return false;
+      }
+    }
+
     public void AddRegion(RegionController region)
     {
       _regions.Add(region);

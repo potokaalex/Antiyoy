@@ -11,24 +11,27 @@ namespace Client.Government
     {
       if (!_governments.TryGetValue(region.Type, out var government))
         government = _governments[region.Type] = new GovernmentController();
-
       government.AddRegion(region);
     }
 
     public void RemoveRegion(RegionController region)
     {
       if (_governments.TryGetValue(region.Type, out var government))
-      {
         government.RemoveRegion(region);
-        if (government.Regions.Count == 0)
-          _governments.Remove(region.Type);
-      }
     }
 
     public void GetAll(List<GovernmentController> outList)
     {
       outList.Clear();
       outList.AddRange(_governments.Values);
+    }
+
+    public void GetAllAlive(List<GovernmentController> outList)
+    {
+      outList.Clear();
+      foreach (var government in _governments.Values)
+        if (government.IsAlive)
+          outList.Add(government);
     }
   }
 }

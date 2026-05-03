@@ -13,6 +13,7 @@ namespace Client.Region
     public IReadOnlyList<CellController> Cells => _cells;
     public RegionType Type { get; set; }
     public int Money { get; set; }
+    public bool IsAlive => _cells.Count >= 2 && Type != RegionType.Neutral;
 
     public RegionController()
     {
