@@ -49,14 +49,20 @@ namespace Client.Region
       return result;
     }
 
-    public void ApplyIncome()
+    public void OnNextTurn()
     {
+      if (_cells.Count <= 1)
+      {
+        Money = 0;
+        DestroyAllUnits();
+        return;
+      }
+
       Money += GetIncome();
       if (Money < 0)
       {
         Money = 0;
-        foreach (var cell in _cells)
-          _unitsService.TryDestroy(cell.Unit);
+        DestroyAllUnits();
       }
     }
 
@@ -69,6 +75,12 @@ namespace Client.Region
       }
 
       return false;
+    }
+
+    private void DestroyAllUnits()
+    {
+      foreach (var cell in _cells)
+        _unitsService.TryDestroy(cell.Unit);
     }
   }
 }

@@ -58,9 +58,10 @@ namespace Client.Gameplay
         if (_cameraController.GetHitFromMousePoint(out var hit) &&
             _gridController.TryGetCell(_gridController.WorldPositionToHex(hit.point), out var cell))
         {
-          if (_gameplayMode == GameplayMode.None)
+          if (_gameplayMode == GameplayMode.None || _gameplayMode == GameplayMode.SelectedRegion)
             TrySelectRegion(cell);
-          else if (_gameplayMode == GameplayMode.SelectedRegion && cell.Region.Type != _currentPlayer)
+
+          if (_gameplayMode == GameplayMode.SelectedRegion && cell.Region.Type != _currentPlayer)
             Clear();
           else if (_gameplayMode == GameplayMode.CreateUnit)
             TryCreateUnit(cell);
@@ -81,7 +82,7 @@ namespace Client.Gameplay
       _tilesSelectionView.ViewTiles(_selectedTiles);
     }
 
-    public void NexTurn()
+    public void NextTurn()
     {
       Clear();
 
@@ -95,7 +96,7 @@ namespace Client.Gameplay
       foreach (var unit in _unitsService.Units)
         unit.RestTurnsCount();
       foreach (var region in _regionsService.Regions)
-        region.ApplyIncome();
+        region.OnNextTurn();
 
       _turnsCount++;
       _gameplayUI.ViewTurnsCount(_turnsCount);
@@ -147,8 +148,8 @@ namespace Client.Gameplay
       {
         if (_selectedUnit.Move(cell))
         {
-          _tilesSelectionView.ClearView();
-          _gameplayMode = GameplayMode.SelectedRegion;
+          Clear();
+          TrySelectRegion(cell);
         }
       }
       else
@@ -163,7 +164,7 @@ namespace Client.Gameplay
       var unitType = UnitType.Peasant;
       if (_selectedRegion.SpendMoney(_unitsService.GetCost(unitType)))
       {
-        if (_selectedTiles.Contains(cell.Position) && _unitsService.TryCreate(cell, UnitType.Peasant, out var unit))
+        if (_selectedTiles.Contains(cell.Position) && _unitsService.TryCreate(cell, UnitType.Peasant, _currentPlayer, out var unit))
         {
           unit.ConquerCurrentCell(_currentPlayer);
           _gameplayUI.ViewRegionData(_selectedRegion.Money, _selectedRegion.GetIncome());
@@ -176,7 +177,7 @@ namespace Client.Gameplay
 
     private void TrySelectRegion(CellController cell)
     {
-      if (cell.Region.Type == _currentPlayer)
+      if (cell.Region.Type == _currentPlayer && cell.Region.IsAlive)
       {
         _selectedRegion = cell.Region;
         _gameplayUI.ActiveRegionUI(true);

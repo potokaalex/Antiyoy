@@ -28,9 +28,9 @@ namespace Client.Unit
         x => x.gameObject.SetActive(false));
     }
 
-    public bool TryCreate(CellController cell, UnitType type, out UnitController unit)
+    public bool TryCreate(CellController cell, UnitType type, RegionType playerRegion, out UnitController unit)
     {
-      if (!cell.Unit)
+      if (CanCreateUnitAt(cell, playerRegion))
       {
         unit = Create(cell, type);
         return true;
@@ -86,6 +86,16 @@ namespace Client.Unit
       instance.Initialize(cell, type);
       _units.Add(instance);
       return instance;
+    }
+
+    private bool CanCreateUnitAt(CellController cell, RegionType playerRegion)
+    {
+      var friendlyRegion = cell.Region.Type == playerRegion;
+
+      if (friendlyRegion && cell.Unit)
+        return false;
+
+      return true;
     }
   }
 }

@@ -123,6 +123,8 @@ namespace Client.Region
       for (var i = 1; i < regions.Count; i++)
       {
         var region = regions[i];
+        mainRegion.Money += region.Money;
+
         while (region.Cells.Count > 0)
         {
           var cell = region.Cells[0];

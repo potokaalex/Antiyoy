@@ -23,14 +23,14 @@ namespace Client.Gameplay
     {
       _gameplayController = Locator.Get<GameplayController>();
       _createUnitButton.onClick.AddListener(_gameplayController.SetCreateUnitMode);
-      _nextTurnButton.onClick.AddListener(_gameplayController.NexTurn);
+      _nextTurnButton.onClick.AddListener(_gameplayController.NextTurn);
       _winNexButton.onClick.AddListener(_gameplayController.EndGameplay);
     }
 
     private void OnDestroy()
     {
       _createUnitButton.onClick.RemoveListener(_gameplayController.SetCreateUnitMode);
-      _nextTurnButton.onClick.RemoveListener(_gameplayController.NexTurn);
+      _nextTurnButton.onClick.RemoveListener(_gameplayController.NextTurn);
       _winNexButton.onClick.RemoveListener(_gameplayController.EndGameplay);
     }
 
