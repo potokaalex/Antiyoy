@@ -15,7 +15,7 @@ namespace Client.Gameplay
   public class GameplayController : IInitializable, ITickable
   {
     private readonly List<HexCoordinates> _selectedTiles = new();
-    private RegionType _playerRegion = RegionType.Red;
+    private RegionType _currentPlayer = RegionType.Red;
     private CameraController _cameraController;
     private GridController _gridController;
     private RegionController _selectedRegion;
@@ -60,7 +60,7 @@ namespace Client.Gameplay
         {
           if (_gameplayMode == GameplayMode.None)
             TrySelectRegion(cell);
-          else if (_gameplayMode == GameplayMode.SelectedRegion && cell.Region.Type != _playerRegion)
+          else if (_gameplayMode == GameplayMode.SelectedRegion && cell.Region.Type != _currentPlayer)
             Clear();
           else if (_gameplayMode == GameplayMode.CreateUnit)
             TryCreateUnit(cell);
@@ -83,6 +83,15 @@ namespace Client.Gameplay
 
     public void NexTurn()
     {
+      Clear();
+
+      if (CheckWin())
+        return;
+
+      if (MoveNextPlayer())
+        return;
+
+      _currentPlayer = RegionType.Red;
       foreach (var unit in _unitsService.Units)
         unit.RestTurnsCount();
       foreach (var region in _regionsService.Regions)
@@ -90,8 +99,19 @@ namespace Client.Gameplay
 
       _turnsCount++;
       _gameplayUI.ViewTurnsCount(_turnsCount);
-      Clear();
-      CheckWin();
+    }
+
+    private bool MoveNextPlayer()
+    {
+      var currentIndex = (int)_currentPlayer;
+      var maxIndex = (int)RegionType.Blue;
+      if (currentIndex < maxIndex)
+      {
+        _currentPlayer = (RegionType)(currentIndex + 1);
+        return true;
+      }
+
+      return false;
     }
 
     public void EndGameplay()
@@ -99,13 +119,18 @@ namespace Client.Gameplay
       SceneManager.LoadScene(0);
     }
 
-    private void CheckWin()
+    private bool CheckWin()
     {
       using (ListPool<GovernmentController>.Get(out var governments))
       {
         _governmentsService.GetAllAlive(governments);
-        if (governments.Count == 1) 
+        if (governments.Count == 1)
+        {
           _gameplayUI.ShowEndScreen(governments[0].RegionsType);
+          return true;
+        }
+
+        return false;
       }
     }
 
@@ -140,7 +165,7 @@ namespace Client.Gameplay
       {
         if (_selectedTiles.Contains(cell.Position) && _unitsService.TryCreate(cell, UnitType.Peasant, out var unit))
         {
-          unit.ConquerCurrentCell(_playerRegion);
+          unit.ConquerCurrentCell(_currentPlayer);
           _gameplayUI.ViewRegionData(_selectedRegion.Money, _selectedRegion.GetIncome());
         }
       }
@@ -151,7 +176,7 @@ namespace Client.Gameplay
 
     private void TrySelectRegion(CellController cell)
     {
-      if (cell.Region.Type == _playerRegion)
+      if (cell.Region.Type == _currentPlayer)
       {
         _selectedRegion = cell.Region;
         _gameplayUI.ActiveRegionUI(true);
@@ -164,7 +189,7 @@ namespace Client.Gameplay
 
     private void TrySelectUnit(CellController cell)
     {
-      if (cell.Region.Type == _playerRegion && _unitsService.TryGet(cell, out _selectedUnit) && _selectedUnit.HasTurns())
+      if (cell.Region.Type == _currentPlayer && _unitsService.TryGet(cell, out _selectedUnit) && _selectedUnit.HasTurns())
       {
         _selectedUnit.GetMoveArea(_selectedTiles);
         _tilesSelectionView.ViewTiles(_selectedTiles);
