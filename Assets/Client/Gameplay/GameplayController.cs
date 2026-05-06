@@ -4,7 +4,7 @@ using Client.Hex;
 using Client.Infrastructure;
 using Client.Region;
 using Client.TilesSelection;
-using Client.Unit;
+using Client.Unit.Code;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Pool;
@@ -26,6 +26,7 @@ namespace Client.Gameplay
     private RegionsService _regionsService;
     private GovernmentsService _governmentsService;
     private GameplayMode _gameplayMode;
+    private UnitType _creationUnitType;
     private int _turnsCount;
 
     public void Initialize()
@@ -75,10 +76,11 @@ namespace Client.Gameplay
       }
     }
 
-    public void SetCreateUnitMode()
+    public void SetCreateUnitMode(UnitType type)
     {
       _gameplayMode = GameplayMode.CreateUnit;
-      _unitsService.GetCreateUnitArea(_selectedRegion, _selectedTiles);
+      _creationUnitType = type;
+      _unitsService.GetCreateUnitArea(_selectedRegion, _selectedTiles, _creationUnitType);
       _tilesSelectionView.ViewTiles(_selectedTiles);
     }
 
@@ -161,10 +163,9 @@ namespace Client.Gameplay
 
     private void TryCreateUnit(CellController cell)
     {
-      var unitType = UnitType.Peasant;
-      if (_selectedRegion.SpendMoney(_unitsService.GetCost(unitType)))
+      if (_selectedRegion.SpendMoney(_unitsService.GetCost(_creationUnitType)))
       {
-        if (_selectedTiles.Contains(cell.Position) && _unitsService.TryCreate(cell, UnitType.Peasant, _currentPlayer, out var unit))
+        if (_selectedTiles.Contains(cell.Position) && _unitsService.TryCreate(cell, _creationUnitType, _currentPlayer, out var unit))
         {
           unit.ConquerCurrentCell(_currentPlayer);
           _gameplayUI.ViewRegionData(_selectedRegion.Money, _selectedRegion.GetIncome());

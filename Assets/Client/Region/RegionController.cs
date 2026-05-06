@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Client.Infrastructure;
 using Client.Unit;
+using Client.Unit.Code;
 
 namespace Client.Region
 {
@@ -43,7 +44,7 @@ namespace Client.Region
         result++;
 
         if (cell.Unit)
-          result -= cell.Unit.MaintenanceCost;
+          result += cell.Unit.Income;
       }
 
       return result;

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Client.Configs;
 using Client.Hex;
 using Client.Infrastructure;
@@ -7,7 +8,7 @@ using Client.Utilities;
 using UnityEngine;
 using UnityEngine.Pool;
 
-namespace Client.Unit
+namespace Client.Unit.Code
 {
   public class UnitsService : IInitializable
   {
@@ -56,7 +57,7 @@ namespace Client.Unit
       return unit;
     }
 
-    public void GetCreateUnitArea(RegionController region, List<HexCoordinates> outResult)
+    public void GetCreateUnitArea(RegionController region, List<HexCoordinates> outResult, UnitType unitType)
     {
       using (StackPool<CellController>.Get(out var front))
       {
@@ -68,6 +69,9 @@ namespace Client.Unit
           outResult.Add(cell.Position);
         }
 
+        if (unitType == UnitType.Farm)
+          return;
+
         while (front.Count > 0)
         {
           var cell = front.Pop();
@@ -78,12 +82,18 @@ namespace Client.Unit
       }
     }
 
-    public int GetCost(UnitType type) => _configsProvider.UnitPrefab.Cost;
+    public int GetCost(UnitType type)
+    {
+      var creationCost = _configsProvider.UnitsConfigs[type].CreationCost;
+      if (type == UnitType.Farm)
+        return creationCost + _units.Count(x => x.Type == UnitType.Farm) * 2;
+      return creationCost;
+    }
 
     private UnitController Create(CellController cell, UnitType type)
     {
       var instance = _pool.Get();
-      instance.Initialize(cell, type);
+      instance.Initialize(cell, _configsProvider.UnitsConfigs[type]);
       _units.Add(instance);
       return instance;
     }

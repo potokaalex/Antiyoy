@@ -3,6 +3,7 @@ using Client.Infrastructure;
 using Client.Region;
 using Client.Tile;
 using Client.Unit;
+using Client.Unit.Code;
 
 namespace Client
 {

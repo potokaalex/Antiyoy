@@ -6,32 +6,34 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Pool;
 
-namespace Client.Unit
+namespace Client.Unit.Code
 {
   public class UnitController : MonoBehaviour
   {
     [SerializeField] private TextMeshPro _text;
+    [SerializeField] private SpriteRenderer _renderer;
     private GridController _gridController;
     private CellController _cell;
     private UnitsService _unitsService;
-    private UnitType _type;
+    private UnitConfig _config;
     private int _turnsCount;
 
     public CellController Cell => _cell;
-    public int MaintenanceCost => 2;
-    public int Cost => 10;
+    public int Income => _config.Income;
+    public UnitType Type => _config.Type;
 
-    public void Initialize(CellController cell, UnitType type)
+    public void Initialize(CellController cell, UnitConfig config)
     {
       _gridController = Locator.Get<GridController>();
       _unitsService = Locator.Get<UnitsService>();
       _cell = cell;
-      _type = type;
+      _config = config;
       _unitsService.TryDestroy(_cell.Unit);
       _cell.Unit = this;
       transform.position = _gridController.HexPositionToWorld(_cell.Position);
       RestTurnsCount();
       UpdateDebugText();
+      _renderer.sprite = config.Sprite;
     }
 
     public void GetMoveArea(List<HexCoordinates> outPositions)
@@ -79,12 +81,12 @@ namespace Client.Unit
 
     public void RestTurnsCount()
     {
-      _turnsCount = 1;
+      _turnsCount = _config.TurnsCount;
       UpdateDebugText();
     }
 
     public bool HasTurns() => _turnsCount > 0;
 
-    private void UpdateDebugText() => _text.SetText($"{_type.ToString()}\n{_turnsCount}");
+    private void UpdateDebugText() => _text.SetText($"{_config.Type.ToString()}\n{_turnsCount}");
   }
 }

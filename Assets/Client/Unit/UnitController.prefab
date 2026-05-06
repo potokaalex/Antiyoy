@@ -106,6 +106,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Client::Client.Unit.UnitController
   _text: {fileID: 2941746682600447053}
+  _renderer: {fileID: 883358939061396562}
 --- !u!1 &6726092071249256274
 GameObject:
   m_ObjectHideFlags: 0
