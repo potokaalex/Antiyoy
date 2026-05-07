@@ -14,7 +14,7 @@ namespace Client.Gameplay
 {
   public class GameplayController : IInitializable, ITickable
   {
-    private readonly List<HexCoordinates> _selectedTiles = new();
+    private readonly List<CellController> _selectedCells = new();
     private RegionType _currentPlayer = RegionType.Red;
     private CameraController _cameraController;
     private GridController _gridController;
@@ -42,9 +42,13 @@ namespace Client.Gameplay
       _gridController.CreateCells();
       for (var i = 0; i < 4; i++)
         _gridController.ReCreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(i, 0)), RegionType.Red);
+      _gridController.TryGetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(0, 0)), out var redCapitalCell);
+      _unitsService.TryCreate(redCapitalCell, UnitType.Capital, RegionType.Red, out _);
 
       for (var i = 4; i < 9; i++)
         _gridController.ReCreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(i, 0)), RegionType.Blue);
+      _gridController.TryGetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(8, 0)), out var blueCapitalCell);
+      _unitsService.TryCreate(blueCapitalCell, UnitType.Capital, RegionType.Blue, out _);
 
       foreach (var region in _regionsService.Regions)
         region.Money = 100;
@@ -80,8 +84,8 @@ namespace Client.Gameplay
     {
       _gameplayMode = GameplayMode.CreateUnit;
       _creationUnitType = type;
-      _unitsService.GetCreateUnitArea(_selectedRegion, _selectedTiles, _creationUnitType);
-      _tilesSelectionView.ViewTiles(_selectedTiles);
+      _unitsService.GetCreateUnitArea(_selectedRegion, _selectedCells, _creationUnitType);
+      _tilesSelectionView.ViewTiles(_selectedCells);
       _gameplayUI.ViewUnitPrice(_unitsService.GetCost(type));
     }
 
@@ -148,7 +152,7 @@ namespace Client.Gameplay
 
     private void TryMoveUnit(CellController cell)
     {
-      if (_selectedTiles.Contains(cell.Position))
+      if (_selectedCells.Contains(cell))
       {
         if (_selectedUnit.Move(cell))
         {
@@ -168,7 +172,7 @@ namespace Client.Gameplay
       var cost = _unitsService.GetCost(_creationUnitType);
       if (_selectedRegion.Money >= cost)
       {
-        if (_selectedTiles.Contains(cell.Position) && _unitsService.TryCreate(cell, _creationUnitType, _currentPlayer, out var unit))
+        if (_selectedCells.Contains(cell) && _unitsService.TryCreate(cell, _creationUnitType, _currentPlayer, out var unit))
         {
           unit.ConquerCurrentCell(_currentPlayer);
           _selectedRegion.Money -= cost;
@@ -199,8 +203,8 @@ namespace Client.Gameplay
     {
       if (cell.Region.Type == _currentPlayer && _unitsService.TryGet(cell, out _selectedUnit) && _selectedUnit.HasTurns())
       {
-        _selectedUnit.GetMoveArea(_selectedTiles);
-        _tilesSelectionView.ViewTiles(_selectedTiles);
+        _selectedUnit.GetMoveArea(_selectedCells);
+        _tilesSelectionView.ViewTiles(_selectedCells);
         _gameplayMode = GameplayMode.SelectedUnit;
       }
     }

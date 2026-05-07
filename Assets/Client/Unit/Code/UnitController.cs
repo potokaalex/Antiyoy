@@ -1,10 +1,8 @@
 using System.Collections.Generic;
-using Client.Hex;
 using Client.Infrastructure;
 using Client.Region;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Pool;
 
 namespace Client.Unit.Code
 {
@@ -19,8 +17,12 @@ namespace Client.Unit.Code
     private int _turnsCount;
 
     public CellController Cell => _cell;
+
     public int Income => _config.Income;
+
     public UnitType Type => _config.Type;
+
+    public int CapitalReplacementFactor => _config.CapitalReplacementFactor;
 
     public void Initialize(CellController cell, UnitConfig config)
     {
@@ -28,23 +30,23 @@ namespace Client.Unit.Code
       _unitsService = Locator.Get<UnitsService>();
       _cell = cell;
       _config = config;
-      _unitsService.TryDestroy(_cell.Unit);
       _cell.Unit = this;
-      transform.position = _gridController.HexPositionToWorld(_cell.Position);
+      MovePositionToCell();
       RestTurnsCount();
       UpdateDebugText();
       _renderer.sprite = config.Sprite;
     }
 
-    public void GetMoveArea(List<HexCoordinates> outPositions)
+    public void Dispose()
     {
-      using (ListPool<CellController>.Get(out var cells))
-      {
-        outPositions.Clear();
-        _gridController.GetCellsInRadius(_cell, 1, cells);
-        foreach (var cell in cells)
-          outPositions.Add(cell.Position);
-      }
+      _cell.Unit = null;
+      _text.SetText(string.Empty);
+    }
+
+    public void GetMoveArea(List<CellController> outList)
+    {
+      outList.Clear();
+      _gridController.GetCellsInRadius(_cell, 1, outList);
     }
 
     public bool Move(CellController cell)
@@ -63,8 +65,8 @@ namespace Client.Unit.Code
       _cell.Unit = null;
       _cell = cell;
       _cell.Unit = this;
-      transform.position = _gridController.HexPositionToWorld(_cell.Position);
-      _turnsCount -= 1;
+      MovePositionToCell();
+      _turnsCount--;
       UpdateDebugText();
       return true;
     }
@@ -74,7 +76,7 @@ namespace Client.Unit.Code
       if (_cell.Region.Type != type)
       {
         _cell.ChangeRegionType(type);
-        _turnsCount -= 1;
+        _turnsCount--;
         UpdateDebugText();
       }
     }
@@ -92,5 +94,7 @@ namespace Client.Unit.Code
       if (Type == UnitType.Peasant)
         _text.SetText($"{_turnsCount}");
     }
+
+    private void MovePositionToCell() => transform.position = _gridController.HexPositionToWorld(_cell.Position);
   }
 }

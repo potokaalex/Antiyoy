@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using Client.Infrastructure;
 using Client.Unit.Code;
+using UnityEngine.Pool;
+using Client.Utilities;
 
 namespace Client.Region
 {
@@ -31,6 +33,8 @@ namespace Client.Region
     {
       cell.Region = null;
       _cells.Remove(cell);
+      CreateCapital();
+
       if (Cells.Count == 0)
         _regionsFactory.Destroy(this);
     }
@@ -54,7 +58,7 @@ namespace Client.Region
       if (_cells.Count <= 1)
       {
         Money = 0;
-        DestroyAllUnits();
+        DestroyAllUnits(true);
         return;
       }
 
@@ -66,10 +70,47 @@ namespace Client.Region
       }
     }
 
-    private void DestroyAllUnits()
+    public void CreateCapital()
+    {
+      if (IsAlive && !HasCapital())
+      {
+        using (ListPool<CellController>.Get(out var cells))
+        {
+          cells.AddRange(_cells);
+          cells.SortByIncreasing(x => !x.Unit ? 0 : x.Unit.CapitalReplacementFactor);
+          var cell = cells[0];
+          _unitsService.TryDestroy(cell.Unit);
+          _unitsService.TryCreate(cell, UnitType.Capital, Type, out _);
+        }
+      }
+    }
+
+    public void DestroyCapital()
+    {
+      if (IsAlive)
+      {
+        foreach (var cell in _cells)
+          if (cell.Unit && cell.Unit.Type == UnitType.Capital)
+            _unitsService.TryDestroy(cell.Unit);
+      }
+    }
+
+    private void DestroyAllUnits(bool withCapital = false)
     {
       foreach (var cell in _cells)
-        _unitsService.TryDestroy(cell.Unit);
+      {
+        var isCapital = cell.Unit && cell.Unit.Type == UnitType.Capital;
+        if (!isCapital || !withCapital)
+          _unitsService.TryDestroy(cell.Unit);
+      }
+    }
+
+    private bool HasCapital()
+    {
+      foreach (var cell in _cells)
+        if (cell.Unit && cell.Unit.Type == UnitType.Capital)
+          return true;
+      return false;
     }
   }
 }

@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6a8b44abab7543d684e4a749cad7f050, type: 3}
-  m_Name: PeasantConfig
+  m_Name: CapitalConfig
   m_EditorClassIdentifier: Client::Client.Unit.Scripts.UnitConfig
-  Type: 1
-  Sprite: {fileID: -1657439729, guid: 488e27ed4f18bc645887aadb816b5c84, type: 3}
-  Income: -2
-  CreationCost: 10
-  TurnsCount: 1
-  CapitalReplacementFactor: 1
+  Type: 3
+  Sprite: {fileID: -335417480, guid: 488e27ed4f18bc645887aadb816b5c84, type: 3}
+  Income: 0
+  CreationCost: 0
+  TurnsCount: 0
+  CapitalReplacementFactor: 0
   ProtectionLevel: 0

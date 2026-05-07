@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Client.Configs;
 using Client.Hex;
@@ -59,7 +58,7 @@ namespace Client.Region
     {
       var regions = new List<RegionController>();
       FindRegionsWhitOneType(position, regions, type);
-      SortByDecreasing(regions, x => x.Cells.Count);
+      regions.SortByDecreasing(x => x.Cells.Count);
       JoinRegions(regions);
     }
 
@@ -71,13 +70,13 @@ namespace Client.Region
         var regionParts = _regionPartsBuffer;
         unPassed.AddRange(region.Cells);
         FindRegionParts(unPassed, front, regionParts);
-        SortByDecreasing(regionParts.Items, x => x.Count);
+        regionParts.Items.SortByDecreasing(x => x.Count);
         DivideRegion(regionParts, region);
         regionParts.Clear();
       }
     }
 
-    private void FindRegionCells(Stack<CellController> front, List<CellController> regionCells, List<CellController> unPassed, bool byType = true)
+    private void FindRegionCells(Stack<CellController> front, List<CellController> regionCells, List<CellController> unPassed)
     {
       while (front.Count > 0)
       {
@@ -86,15 +85,12 @@ namespace Client.Region
 
         foreach (var neighbour in _gridController.GetNeighbourCells(position))
         {
-          if (neighbour.Region != null)
-          {
-            var isNiceRegion = byType ? neighbour.Region.Type == cell.Region.Type : neighbour.Region == cell.Region;
+          var isNiceRegion = neighbour.Region != null && neighbour.Region.Type == cell.Region.Type;
 
-            if (isNiceRegion && !front.Contains(neighbour) && !regionCells.Contains(neighbour))
-            {
-              front.Push(neighbour);
-              regionCells.Add(neighbour);
-            }
+          if (isNiceRegion && !front.Contains(neighbour) && !regionCells.Contains(neighbour))
+          {
+            front.Push(neighbour);
+            regionCells.Add(neighbour);
           }
         }
 
@@ -113,6 +109,7 @@ namespace Client.Region
           front.Push(cell);
           FindRegionCells(front, regionPart, unPassed);
           regionParts.NewPartFrom(regionPart);
+          regionPart.Clear();
         }
       }
     }
@@ -124,6 +121,7 @@ namespace Client.Region
       {
         var region = regions[i];
         mainRegion.Money += region.Money;
+        region.DestroyCapital();
 
         while (region.Cells.Count > 0)
         {
@@ -143,14 +141,6 @@ namespace Client.Region
 
         _regionsFactory.Create(regionParts.Items[i], region.Type);
       }
-    }
-
-    private void SortByDecreasing<T>(List<T> list, Func<T, int> getValue)
-    {
-      for (var i = 0; i < list.Count - 1; i++)
-      for (var j = 0; j < list.Count - i - 1; j++)
-        if (getValue(list[j]) < getValue(list[j + 1]))
-          (list[j], list[j + 1]) = (list[j + 1], list[j]);
     }
 
     private void FindRegionsWhitOneType(HexCoordinates position, List<RegionController> list, RegionType type)

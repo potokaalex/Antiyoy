@@ -10,5 +10,7 @@ namespace Client.Unit.Code
     public int Income;
     public int CreationCost;
     public int TurnsCount;
+    public int CapitalReplacementFactor;
+    public int ProtectionLevel;
   }
 }

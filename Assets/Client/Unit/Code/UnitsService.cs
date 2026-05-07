@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Client.Configs;
-using Client.Hex;
 using Client.Infrastructure;
 using Client.Region;
 using Client.Utilities;
@@ -45,7 +44,7 @@ namespace Client.Unit.Code
     {
       if (unit)
       {
-        unit.Cell.Unit = null;
+        unit.Dispose();
         _units.Remove(unit);
         _pool.Release(unit);
       }
@@ -57,7 +56,7 @@ namespace Client.Unit.Code
       return unit;
     }
 
-    public void GetCreateUnitArea(RegionController region, List<HexCoordinates> outResult, UnitType unitType)
+    public void GetCreateUnitArea(RegionController region, List<CellController> outResult, UnitType unitType)
     {
       using (StackPool<CellController>.Get(out var front))
       {
@@ -66,7 +65,7 @@ namespace Client.Unit.Code
         foreach (var cell in region.Cells)
         {
           front.Push(cell);
-          outResult.Add(cell.Position);
+          outResult.Add(cell);
         }
 
         if (unitType == UnitType.Farm)
@@ -76,8 +75,8 @@ namespace Client.Unit.Code
         {
           var cell = front.Pop();
           foreach (var neighbour in _gridController.GetNeighbourCells(cell.Position))
-            if (neighbour.Region.Type != cell.Region.Type && !outResult.Contains(neighbour.Position))
-              outResult.Add(neighbour.Position);
+            if (neighbour.Region.Type != cell.Region.Type && !outResult.Contains(neighbour))
+              outResult.Add(neighbour);
         }
       }
     }
@@ -92,6 +91,7 @@ namespace Client.Unit.Code
 
     private UnitController Create(CellController cell, UnitType type)
     {
+      TryDestroy(cell.Unit);
       var instance = _pool.Get();
       instance.Initialize(cell, _configsProvider.UnitsConfigs[type]);
       _units.Add(instance);

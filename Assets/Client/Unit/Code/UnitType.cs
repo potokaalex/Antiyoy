@@ -4,6 +4,7 @@ namespace Client.Unit.Code
   {
     None = 0,
     Peasant = 1,
-    Farm = 2
+    Farm = 2,
+    Capital = 3
   }
 }

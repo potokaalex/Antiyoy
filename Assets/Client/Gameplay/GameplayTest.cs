@@ -1,11 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Client.Government;
-using Client.Hex;
 using Client.Infrastructure;
 using Client.Region;
 using Client.TilesSelection;
-using Client.Unit;
 using Client.Unit.Code;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -25,7 +23,7 @@ namespace Client.Gameplay
 
   public class GameplayTest : MonoBehaviour
   {
-    private readonly List<HexCoordinates> _unitMovePositions = new();
+    private readonly List<CellController> _unitMovePositions = new();
     private CameraController _cameraController;
     private GridController _gridController;
     private GovernmentsService _governmentsService;
@@ -65,8 +63,8 @@ namespace Client.Gameplay
             var point = _gridController.WorldPositionToHex(hit.point);
             if (_selectedUnit)
             {
-              if (_unitMovePositions.Contains(point) && _gridController.TryGetCell(point, out var cell1))
-                _selectedUnit.Move(cell1);
+              //if (_unitMovePositions.Contains(point) && _gridController.TryGetCell(point, out var cell1))
+              //  _selectedUnit.Move(cell1);
 
               _tilesSelectionView.ClearView();
               _selectedUnit = null;
