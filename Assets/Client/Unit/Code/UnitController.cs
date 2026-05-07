@@ -87,6 +87,10 @@ namespace Client.Unit.Code
 
     public bool HasTurns() => _turnsCount > 0;
 
-    private void UpdateDebugText() => _text.SetText($"{_config.Type.ToString()}\n{_turnsCount}");
+    private void UpdateDebugText()
+    {
+      if (Type == UnitType.Peasant)
+        _text.SetText($"{_turnsCount}");
+    }
   }
 }

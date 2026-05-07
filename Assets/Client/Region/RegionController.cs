@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Client.Infrastructure;
-using Client.Unit;
 using Client.Unit.Code;
 
 namespace Client.Region
@@ -65,17 +64,6 @@ namespace Client.Region
         Money = 0;
         DestroyAllUnits();
       }
-    }
-
-    public bool SpendMoney(int value)
-    {
-      if (Money >= value)
-      {
-        Money -= value;
-        return true;
-      }
-
-      return false;
     }
 
     private void DestroyAllUnits()

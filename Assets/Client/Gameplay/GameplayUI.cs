@@ -12,6 +12,7 @@ namespace Client.Gameplay
     [SerializeField] private GameObject _regionPanel;
     [SerializeField] private Button _createPeasantButton;
     [SerializeField] private Button _createFarmButton;
+    [SerializeField] private TextMeshProUGUI _unitPrice;
     [SerializeField] private Button _nextTurnButton;
     [SerializeField] private TextMeshProUGUI _turnsCount;
     [SerializeField] private TextMeshProUGUI _moneyCount;
@@ -60,6 +61,11 @@ namespace Client.Gameplay
       _winText.SetText($"Winner: {winner}");
     }
 
+    public void ViewUnitPrice(int value)
+    {
+      _unitPrice.SetText(value > 0 ? $"Price: {value}" : string.Empty);
+    }
+    
     private void OnCreatePeasant()
     {
       _gameplayController.SetCreateUnitMode(UnitType.Peasant);

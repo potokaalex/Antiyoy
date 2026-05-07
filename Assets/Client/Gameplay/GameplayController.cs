@@ -82,6 +82,7 @@ namespace Client.Gameplay
       _creationUnitType = type;
       _unitsService.GetCreateUnitArea(_selectedRegion, _selectedTiles, _creationUnitType);
       _tilesSelectionView.ViewTiles(_selectedTiles);
+      _gameplayUI.ViewUnitPrice(_unitsService.GetCost(type));
     }
 
     public void NextTurn()
@@ -142,6 +143,7 @@ namespace Client.Gameplay
       _gameplayMode = GameplayMode.None;
       _tilesSelectionView.ClearView();
       _gameplayUI.ActiveRegionUI(false);
+      _gameplayUI.ViewUnitPrice(0);
     }
 
     private void TryMoveUnit(CellController cell)
@@ -163,30 +165,34 @@ namespace Client.Gameplay
 
     private void TryCreateUnit(CellController cell)
     {
-      if (_selectedRegion.SpendMoney(_unitsService.GetCost(_creationUnitType)))
+      var cost = _unitsService.GetCost(_creationUnitType);
+      if (_selectedRegion.Money >= cost)
       {
         if (_selectedTiles.Contains(cell.Position) && _unitsService.TryCreate(cell, _creationUnitType, _currentPlayer, out var unit))
         {
           unit.ConquerCurrentCell(_currentPlayer);
+          _selectedRegion.Money -= cost;
           _gameplayUI.ViewRegionData(_selectedRegion.Money, _selectedRegion.GetIncome());
         }
       }
 
-      _tilesSelectionView.ClearView();
-      _gameplayMode = GameplayMode.SelectedRegion;
+      ReturnToSelectedRegion();
+    }
+
+    private void ReturnToSelectedRegion()
+    {
+      var region = _selectedRegion;
+      Clear();
+      SelectRegion(region);
     }
 
     private void TrySelectRegion(CellController cell)
     {
       if (cell.Region.Type == _currentPlayer && cell.Region.IsAlive)
       {
-        _selectedRegion = cell.Region;
-        _gameplayUI.ActiveRegionUI(true);
-        _gameplayUI.ViewRegionData(_selectedRegion.Money, _selectedRegion.GetIncome());
-        _gameplayMode = GameplayMode.SelectedRegion;
+        SelectRegion(cell.Region);
+        TrySelectUnit(cell);
       }
-
-      TrySelectUnit(cell);
     }
 
     private void TrySelectUnit(CellController cell)
@@ -197,6 +203,14 @@ namespace Client.Gameplay
         _tilesSelectionView.ViewTiles(_selectedTiles);
         _gameplayMode = GameplayMode.SelectedUnit;
       }
+    }
+
+    private void SelectRegion(RegionController region)
+    {
+      _selectedRegion = region;
+      _gameplayUI.ActiveRegionUI(true);
+      _gameplayUI.ViewRegionData(_selectedRegion.Money, _selectedRegion.GetIncome());
+      _gameplayMode = GameplayMode.SelectedRegion;
     }
   }
 }
