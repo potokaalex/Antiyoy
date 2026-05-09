@@ -47,7 +47,7 @@ namespace Client.Gameplay
       labelStyle.fontSize = 18;
 
       //ViewMapEditor(labelStyle);
-      //ViewGovernmentDebug(labelStyle);
+      ViewGovernmentDebug(labelStyle);
     }
 
     private void Update()

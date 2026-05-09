@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using Client.Infrastructure;
 using Client.Unit.Code;
-using UnityEngine.Pool;
-using Client.Utilities;
 
 namespace Client.Region
 {
@@ -11,6 +9,7 @@ namespace Client.Region
     private readonly List<CellController> _cells = new();
     private readonly RegionsFactory _regionsFactory;
     private readonly UnitsService _unitsService;
+    private readonly CapitalsController _capitalsController;
 
     public IReadOnlyList<CellController> Cells => _cells;
     public RegionType Type { get; set; }
@@ -21,19 +20,22 @@ namespace Client.Region
     {
       _regionsFactory = Locator.Get<RegionsFactory>();
       _unitsService = Locator.Get<UnitsService>();
+      _capitalsController = Locator.Get<CapitalsController>();
     }
 
     public void Add(CellController cell)
     {
+      _capitalsController.DestroyCapitalBeforeAddCell(this, cell);
       cell.Region = this;
       _cells.Add(cell);
+      _capitalsController.UpdateCapital(this);
     }
 
     public void Remove(CellController cell)
     {
       cell.Region = null;
       _cells.Remove(cell);
-      CreateCapital();
+      _capitalsController.UpdateCapital(this);
 
       if (Cells.Count == 0)
         _regionsFactory.Destroy(this);
@@ -53,13 +55,12 @@ namespace Client.Region
       return result;
     }
 
-    public void OnNextTurn()
+    public void Update()
     {
       if (_cells.Count <= 1)
       {
         Money = 0;
-        DestroyAllUnits(true);
-        return;
+        DestroyAllUnits();
       }
 
       Money += GetIncome();
@@ -68,49 +69,17 @@ namespace Client.Region
         Money = 0;
         DestroyAllUnits();
       }
+
+      foreach (var cell in _cells)
+        if (cell.Unit)
+          cell.Unit.RestTurnsCount();
     }
 
-    public void CreateCapital()
-    {
-      if (IsAlive && !HasCapital())
-      {
-        using (ListPool<CellController>.Get(out var cells))
-        {
-          cells.AddRange(_cells);
-          cells.SortByIncreasing(x => !x.Unit ? 0 : x.Unit.CapitalReplacementFactor);
-          var cell = cells[0];
-          _unitsService.TryDestroy(cell.Unit);
-          _unitsService.TryCreate(cell, UnitType.Capital, Type, out _);
-        }
-      }
-    }
-
-    public void DestroyCapital()
-    {
-      if (IsAlive)
-      {
-        foreach (var cell in _cells)
-          if (cell.Unit && cell.Unit.Type == UnitType.Capital)
-            _unitsService.TryDestroy(cell.Unit);
-      }
-    }
-
-    private void DestroyAllUnits(bool withCapital = false)
+    private void DestroyAllUnits()
     {
       foreach (var cell in _cells)
-      {
-        var isCapital = cell.Unit && cell.Unit.Type == UnitType.Capital;
-        if (!isCapital || !withCapital)
+        if (!_capitalsController.IsCapital(cell.Unit))
           _unitsService.TryDestroy(cell.Unit);
-      }
-    }
-
-    private bool HasCapital()
-    {
-      foreach (var cell in _cells)
-        if (cell.Unit && cell.Unit.Type == UnitType.Capital)
-          return true;
-      return false;
     }
   }
 }

@@ -121,7 +121,6 @@ namespace Client.Region
       {
         var region = regions[i];
         mainRegion.Money += region.Money;
-        region.DestroyCapital();
 
         while (region.Cells.Count > 0)
         {

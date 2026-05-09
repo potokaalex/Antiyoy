@@ -25,6 +25,7 @@ namespace Client.Gameplay
     private GameplayUI _gameplayUI;
     private RegionsService _regionsService;
     private GovernmentsService _governmentsService;
+    private CapitalsController _capitalsController;
     private GameplayMode _gameplayMode;
     private UnitType _creationUnitType;
     private int _turnsCount;
@@ -38,17 +39,18 @@ namespace Client.Gameplay
       _gameplayUI = Locator.Get<GameplayUI>();
       _regionsService = Locator.Get<RegionsService>();
       _governmentsService = Locator.Get<GovernmentsService>();
+      _capitalsController = Locator.Get<CapitalsController>();
 
       _gridController.CreateCells();
       for (var i = 0; i < 4; i++)
         _gridController.ReCreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(i, 0)), RegionType.Red);
       _gridController.TryGetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(0, 0)), out var redCapitalCell);
-      _unitsService.TryCreate(redCapitalCell, UnitType.Capital, RegionType.Red, out _);
+      _capitalsController.SetCapital(redCapitalCell);
 
       for (var i = 4; i < 9; i++)
         _gridController.ReCreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(i, 0)), RegionType.Blue);
       _gridController.TryGetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(8, 0)), out var blueCapitalCell);
-      _unitsService.TryCreate(blueCapitalCell, UnitType.Capital, RegionType.Blue, out _);
+      _capitalsController.SetCapital(blueCapitalCell);
 
       foreach (var region in _regionsService.Regions)
         region.Money = 100;
@@ -97,16 +99,30 @@ namespace Client.Gameplay
         return;
 
       if (MoveNextPlayer())
+      {
+        UpdatePlayerRegions();
         return;
-
-      _currentPlayer = RegionType.Red;
-      foreach (var unit in _unitsService.Units)
-        unit.RestTurnsCount();
-      foreach (var region in _regionsService.Regions)
-        region.OnNextTurn();
+      }
 
       _turnsCount++;
       _gameplayUI.ViewTurnsCount(_turnsCount);
+      _currentPlayer = RegionType.Red;
+      UpdatePlayerRegions();
+    }
+
+    public void EndGameplay()
+    {
+      SceneManager.LoadScene(0);
+    }
+
+    private void UpdatePlayerRegions()
+    {
+      if (_turnsCount <= 0)
+        return;
+
+      foreach (var region in _regionsService.Regions)
+        if (region.Type == _currentPlayer)
+          region.Update();
     }
 
     private bool MoveNextPlayer()
@@ -120,11 +136,6 @@ namespace Client.Gameplay
       }
 
       return false;
-    }
-
-    public void EndGameplay()
-    {
-      SceneManager.LoadScene(0);
     }
 
     private bool CheckWin()

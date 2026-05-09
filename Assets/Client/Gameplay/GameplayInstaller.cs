@@ -5,7 +5,6 @@ using Client.Infrastructure;
 using Client.Region;
 using Client.Tile;
 using Client.TilesSelection;
-using Client.Unit;
 using Client.Unit.Code;
 using UnityEngine;
 
@@ -28,6 +27,7 @@ namespace Client.Gameplay
       Locator.Set(_tilemapController);
       Locator.Set(_gridController);
       Locator.Set(_debugController);
+      Locator.Set(new CapitalsController());
       Locator.Set(new RegionsFactory());
       Locator.Set(new RegionsService());
       Locator.Set(new GovernmentsService());

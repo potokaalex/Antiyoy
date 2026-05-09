@@ -34,7 +34,6 @@ namespace Client.Region
       instance.Type = type;
       foreach (var cell in cells)
         instance.Add(cell);
-      instance.CreateCapital();
 
       _governmentsService.AddRegion(instance);
       _regions.Add(instance);
