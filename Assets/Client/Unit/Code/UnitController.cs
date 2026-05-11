@@ -16,22 +16,20 @@ namespace Client.Unit.Code
     private UnitConfig _config;
     private int _turnsCount;
 
-    public CellController Cell => _cell;
-
     public int Income => _config.Income;
 
     public UnitType Type => _config.Type;
 
     public int CapitalReplacementFactor => _config.CapitalReplacementFactor;
 
+    public int Protection => _config.Protection;
+
     public void Initialize(CellController cell, UnitConfig config)
     {
       _gridController = Locator.Get<GridController>();
       _unitsService = Locator.Get<UnitsService>();
-      _cell = cell;
       _config = config;
-      _cell.Unit = this;
-      MovePositionToCell();
+      MoveToCell(cell);
       RestTurnsCount();
       UpdateDebugText();
       _renderer.sprite = config.Sprite;
@@ -62,10 +60,9 @@ namespace Client.Unit.Code
         cell.ChangeRegionType(_cell.Region.Type);
       }
 
+      SetCellsProtection(false);
       _cell.Unit = null;
-      _cell = cell;
-      _cell.Unit = this;
-      MovePositionToCell();
+      MoveToCell(cell);
       _turnsCount--;
       UpdateDebugText();
       return true;
@@ -95,6 +92,26 @@ namespace Client.Unit.Code
         _text.SetText($"{_turnsCount}");
     }
 
-    private void MovePositionToCell() => transform.position = _gridController.HexPositionToWorld(_cell.Position);
+    private void MoveToCell(CellController cell)
+    {
+      _cell = cell;
+      _cell.Unit = this;
+      transform.position = _gridController.HexPositionToWorld(_cell.Position);
+      SetCellsProtection(true);
+    }
+
+    private void SetCellsProtection(bool active)
+    {
+      foreach (var cell in _gridController.GetNeighbourCells(_cell.Position))
+      {
+        if (cell.Region.Type == _cell.Region.Type)
+        {
+          if (active)
+            cell.AddUnitForProtection(this);
+          else
+            cell.RemoveUnitForProtection(this);
+        }
+      }
+    }
   }
 }

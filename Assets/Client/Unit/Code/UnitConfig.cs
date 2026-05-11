@@ -11,6 +11,7 @@ namespace Client.Unit.Code
     public int CreationCost;
     public int TurnsCount;
     public int CapitalReplacementFactor;
-    public int ProtectionLevel;
+    public int Protection;
+    public int Attack;
   }
 }

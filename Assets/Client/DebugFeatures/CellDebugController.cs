@@ -24,7 +24,8 @@ namespace Client.DebugFeatures
       {
         if (cell.Region != null)
         {
-          SetText(cell.Region.Cells.Count.ToString());
+          //SetText(cell.Region.Cells.Count.ToString());
+          SetText(cell.Protection.ToString());
           return;
         }
       }

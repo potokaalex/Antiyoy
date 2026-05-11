@@ -18,4 +18,5 @@ MonoBehaviour:
   CreationCost: 10
   TurnsCount: 1
   CapitalReplacementFactor: 1
-  ProtectionLevel: 0
+  Protection: 1
+  Attack: 10000

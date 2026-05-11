@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Client.Hex;
 using Client.Infrastructure;
 using Client.Region;
@@ -8,6 +9,7 @@ namespace Client
 {
   public class CellController
   {
+    private readonly List<UnitController> _protectionsUnit = new();
     private TilemapController _tilemapController;
     private RegionsService _regionsService;
     private RegionController _region;
@@ -26,6 +28,18 @@ namespace Client
     }
 
     public UnitController Unit { get; set; }
+
+    public int Protection
+    {
+      get
+      {
+        var max = 0;
+        foreach (var unit in _protectionsUnit)
+          if (unit.Protection > max)
+            max = unit.Protection;
+        return max;
+      }
+    }
 
     public void Initialize(HexCoordinates position, RegionType type)
     {
@@ -46,6 +60,16 @@ namespace Client
     {
       _regionsService.RemoveFromRegion(this);
       _regionsService.AddToBestNeighbourRegion(Position, type, this);
+    }
+
+    public void AddUnitForProtection(UnitController unit)
+    {
+      _protectionsUnit.Add(unit);
+    }
+
+    public void RemoveUnitForProtection(UnitController unit)
+    {
+      _protectionsUnit.Remove(unit);
     }
   }
 }
