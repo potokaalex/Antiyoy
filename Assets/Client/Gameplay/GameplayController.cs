@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Client.Government;
 using Client.Hex;
 using Client.Infrastructure;
+using Client.Protection;
 using Client.Region;
 using Client.TilesSelection;
 using Client.Unit.Code;
@@ -26,6 +27,7 @@ namespace Client.Gameplay
     private RegionsService _regionsService;
     private GovernmentsService _governmentsService;
     private CapitalsController _capitalsController;
+    private ProtectionView _protectionView;
     private GameplayMode _gameplayMode;
     private UnitType _creationUnitType;
     private int _turnsCount;
@@ -40,6 +42,7 @@ namespace Client.Gameplay
       _regionsService = Locator.Get<RegionsService>();
       _governmentsService = Locator.Get<GovernmentsService>();
       _capitalsController = Locator.Get<CapitalsController>();
+      _protectionView = Locator.Get<ProtectionView>();
 
       _gridController.CreateCells();
       for (var i = 0; i < 4; i++)
@@ -163,18 +166,11 @@ namespace Client.Gameplay
 
     private void TryMoveUnit(CellController cell)
     {
-      if (_selectedCells.Contains(cell))
-      {
-        if (_selectedUnit.Move(cell))
-        {
-          Clear();
-          TrySelectRegion(cell);
-        }
-      }
-      else
+      if (!_selectedCells.Contains(cell) || _selectedUnit.Move(cell))
       {
         Clear();
         TrySelectRegion(cell);
+        TrySelectUnit(cell);
       }
     }
 
@@ -183,7 +179,7 @@ namespace Client.Gameplay
       var cost = _unitsService.GetCost(_creationUnitType);
       if (_selectedRegion.Money >= cost)
       {
-        if (_selectedCells.Contains(cell) && _unitsService.TryCreate(cell, _creationUnitType, _currentPlayer, out var unit))
+        if (_selectedCells.Contains(cell) && _unitsService.TryCreate(cell, _creationUnitType, _currentPlayer))
         {
           _selectedRegion.Money -= cost;
           _gameplayUI.ViewRegionData(_selectedRegion.Money, _selectedRegion.GetIncome());
@@ -202,20 +198,22 @@ namespace Client.Gameplay
 
     private void TrySelectRegion(CellController cell)
     {
-      if (cell.Region.Type == _currentPlayer && cell.Region.IsAlive)
-      {
+      if (cell.Region.Type == _currentPlayer && cell.Region.IsAlive) 
         SelectRegion(cell.Region);
-        TrySelectUnit(cell);
-      }
     }
 
     private void TrySelectUnit(CellController cell)
     {
-      if (cell.Region.Type == _currentPlayer && _unitsService.TryGet(cell, out _selectedUnit) && _selectedUnit.HasTurns())
+      if (cell.Region.Type == _currentPlayer && _unitsService.TryGet(cell, out _selectedUnit))
       {
-        _selectedUnit.GetMoveArea(_selectedCells);
-        _tilesSelectionView.ViewTiles(_selectedCells);
-        _gameplayMode = GameplayMode.SelectedUnit;
+        if (_selectedUnit.IsBuilding)
+          _protectionView.ViewBuildingsProtection(cell.Region);
+        else if (_selectedUnit.HasTurns())
+        {
+          _selectedUnit.GetMoveArea(_selectedCells);
+          _tilesSelectionView.ViewTiles(_selectedCells);
+          _gameplayMode = GameplayMode.SelectedUnit;
+        }
       }
     }
 

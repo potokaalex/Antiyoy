@@ -2,6 +2,7 @@ using Client.Configs;
 using Client.DebugFeatures;
 using Client.Government;
 using Client.Infrastructure;
+using Client.Protection;
 using Client.Region;
 using Client.Tile;
 using Client.TilesSelection;
@@ -19,6 +20,7 @@ namespace Client.Gameplay
     [SerializeField] private ConfigsProvider _configsProvider;
     [SerializeField] private TilesSelectionView _tilesSelectionView;
     [SerializeField] private GameplayUI _gameplayUI;
+    [SerializeField] private ProtectionView _protectionView;
 
     protected override void Install()
     {
@@ -34,6 +36,7 @@ namespace Client.Gameplay
       Locator.Set(new UnitsService());
       Locator.Set(_tilesSelectionView);
       Locator.Set(_gameplayUI);
+      Locator.Set(_protectionView);
       Locator.Set(new GameplayController());
     }
   }

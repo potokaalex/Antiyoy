@@ -26,15 +26,14 @@ namespace Client.Unit.Code
         x => x.gameObject.SetActive(false));
     }
 
-    public bool TryCreate(CellController cell, UnitType type, RegionType regionType, out UnitController unit)
+    public bool TryCreate(CellController cell, UnitType type, RegionType regionType)
     {
       if (CanCreateUnitAt(cell, regionType))
       {
-        unit = Create(cell, type, regionType);
+        Create(cell, type, regionType);
         return true;
       }
 
-      unit = null;
       return false;
     }
 
@@ -110,13 +109,12 @@ namespace Client.Unit.Code
       }
     }
 
-    private UnitController Create(CellController cell, UnitType type, RegionType regionType)
+    private void Create(CellController cell, UnitType type, RegionType regionType)
     {
       TryDestroy(cell.Unit);
       var instance = _pool.Get();
       instance.Initialize(cell, _configsProvider.UnitsConfigs[type], regionType);
       _units.Add(instance);
-      return instance;
     }
 
     private bool CanCreateUnitAt(CellController cell, RegionType playerRegion)

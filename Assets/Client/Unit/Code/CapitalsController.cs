@@ -59,7 +59,7 @@ namespace Client.Unit.Code
     private void CreateCapital(RegionController region, CellController cell)
     {
       _unitsService.TryDestroy(cell.Unit);
-      _unitsService.TryCreate(cell, UnitType.Capital, region.Type, out _);
+      _unitsService.TryCreate(cell, UnitType.Capital, region.Type);
     }
   }
 }

@@ -415,6 +415,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 332458718}
   m_CullTransparentMesh: 1
+--- !u!1 &420462081
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 420462083}
+  - component: {fileID: 420462082}
+  m_Layer: 0
+  m_Name: ProtectionView
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &420462082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 420462081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c34f9944bda46eb81f7373d45a28b1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::Client.Protection.ProtectionView
+  _icon: {fileID: 3984962226042294778, guid: 70ffdc9ad3a7df841bc71cab853914f8, type: 3}
+--- !u!4 &420462083
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 420462081}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &476272089
 GameObject:
   m_ObjectHideFlags: 0
@@ -2025,6 +2070,7 @@ MonoBehaviour:
   _configsProvider: {fileID: 11400000, guid: 19d1d9fac83a2d443aea6e0413d1274a, type: 2}
   _tilesSelectionView: {fileID: 1901397249}
   _gameplayUI: {fileID: 1093741608}
+  _protectionView: {fileID: 420462082}
 --- !u!114 &1138225520
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2822,3 +2868,4 @@ SceneRoots:
   - {fileID: 1093741607}
   - {fileID: 1193746977}
   - {fileID: 1901397248}
+  - {fileID: 420462083}

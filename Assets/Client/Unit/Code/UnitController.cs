@@ -3,6 +3,7 @@ using Client.Infrastructure;
 using Client.Region;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Pool;
 
 namespace Client.Unit.Code
 {
@@ -25,6 +26,8 @@ namespace Client.Unit.Code
     public int CapitalReplacementFactor => _config.CapitalReplacementFactor;
 
     public int Protection => _config.Protection;
+
+    public bool IsBuilding => Type is UnitType.Capital or UnitType.Farm;
 
     public void Initialize(CellController cell, UnitConfig config, RegionType regionType)
     {
@@ -52,7 +55,7 @@ namespace Client.Unit.Code
 
     public bool Move(CellController cell)
     {
-      if (!IsFriendlyRegion(cell, _cell.Region.Type) || !cell.Unit)
+      if (IsFriendlyRegion(cell, _cell.Region.Type) && cell.Unit)
         return false;
 
       SetCellsProtection(false);
@@ -101,23 +104,32 @@ namespace Client.Unit.Code
 
     private void SetCellsProtection(bool active)
     {
-      SetCellProtection(active, _cell);
-      foreach (var cell in _gridController.GetNeighbourCells(_cell.Position))
-        SetCellProtection(active, cell);
-    }
-
-    private void SetCellProtection(bool active, CellController cell)
-    {
-      if (active)
-        cell.AddUnitForProtection(this);
-      else
-        cell.RemoveUnitForProtection(this);
+      using (ListPool<CellController>.Get(out var cells))
+      {
+        GetProtectionArea(cells);
+        foreach (var cell in cells)
+        {
+          if (active)
+            cell.AddUnitForProtection(this);
+          else
+            cell.RemoveUnitForProtection(this);
+        }
+      }
     }
 
     private void DecreaseTurnsCount()
     {
       _turnsCount = Mathf.Max(0, _turnsCount - 1);
       UpdateDebugText();
+    }
+
+    public void GetProtectionArea(List<CellController> outList, bool withRegionCheck = false)
+    {
+      outList.Clear();
+      outList.Add(_cell);
+      foreach (var cell in _gridController.GetNeighbourCells(_cell.Position))
+        if (!withRegionCheck || IsFriendlyRegion(cell, _cell.Region.Type))
+          outList.Add(cell);
     }
   }
 }

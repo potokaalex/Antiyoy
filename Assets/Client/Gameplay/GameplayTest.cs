@@ -97,7 +97,7 @@ namespace Client.Gameplay
           else if (_mapEditorType == MapEditorType.CreateBlue)
             _gridController.ReCreateCell(point, RegionType.Blue);
           else if (_mapEditorType == MapEditorType.CreateUnit && _gridController.TryGetCell(point, out var cell))
-            _unitsService.TryCreate(cell, UnitType.Peasant, RegionType.Neutral, out _);
+            _unitsService.TryCreate(cell, UnitType.Peasant, RegionType.Neutral);
         }
       }
     }
