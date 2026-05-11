@@ -56,20 +56,23 @@ namespace Client.Unit.Code
       return unit;
     }
 
-    public void GetCreateUnitArea(RegionController region, List<CellController> outResult, UnitType unitType)
+    public void GetUnitCreationArea(RegionController region, List<CellController> outResult, UnitType unitType)
     {
       using (StackPool<CellController>.Get(out var front))
       {
         outResult.Clear();
+
+        if (unitType == UnitType.Farm)
+        {
+          GetFarmCreationArea(region, front, outResult);
+          return;
+        }
 
         foreach (var cell in region.Cells)
         {
           front.Push(cell);
           outResult.Add(cell);
         }
-
-        if (unitType == UnitType.Farm)
-          return;
 
         while (front.Count > 0)
         {
@@ -87,6 +90,26 @@ namespace Client.Unit.Code
       if (type == UnitType.Farm)
         return creationCost + _units.Count(x => x.Type == UnitType.Farm) * 2;
       return creationCost;
+    }
+
+    private void GetFarmCreationArea(RegionController region, Stack<CellController> front, List<CellController> outResult)
+    {
+      foreach (var cell in region.Cells)
+      {
+        if (cell.Unit && cell.Unit.Type is UnitType.Capital or UnitType.Farm)
+        {
+          front.Push(cell);
+          outResult.Add(cell);
+        }
+      }
+
+      while (front.Count > 0)
+      {
+        var cell = front.Pop();
+        foreach (var neighbour in _gridController.GetNeighbourCells(cell.Position))
+          if (neighbour.Region.Type == cell.Region.Type && !outResult.Contains(neighbour))
+            outResult.Add(neighbour);
+      }
     }
 
     private UnitController Create(CellController cell, UnitType type)

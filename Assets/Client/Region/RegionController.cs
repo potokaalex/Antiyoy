@@ -25,17 +25,17 @@ namespace Client.Region
 
     public void Add(CellController cell)
     {
-      _capitalsController.DestroyCapitalBeforeAddCell(this, cell);
+      _capitalsController.DestroyCellCapitalIfRegionHasCapital(this, cell);
       cell.Region = this;
       _cells.Add(cell);
-      _capitalsController.UpdateCapital(this);
+      UpdateBuildings();
     }
 
     public void Remove(CellController cell)
     {
       cell.Region = null;
       _cells.Remove(cell);
-      _capitalsController.UpdateCapital(this);
+      UpdateBuildings();
 
       if (Cells.Count == 0)
         _regionsFactory.Destroy(this);
@@ -80,6 +80,21 @@ namespace Client.Region
       foreach (var cell in _cells)
         if (!_capitalsController.IsCapital(cell.Unit))
           _unitsService.TryDestroy(cell.Unit);
+    }
+
+    private void UpdateBuildings()
+    {
+      if (_cells.Count <= 1)
+        DestroyBuildings();
+      else
+        _capitalsController.CreateCapital(this);
+    }
+
+    private void DestroyBuildings()
+    {
+      foreach (var c in _cells)
+        if (c.Unit && c.Unit.Type is UnitType.Capital or UnitType.Farm)
+          _unitsService.TryDestroy(c.Unit);
     }
   }
 }

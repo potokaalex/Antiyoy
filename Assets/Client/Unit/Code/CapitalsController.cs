@@ -14,17 +14,15 @@ namespace Client.Unit.Code
       _unitsService = Locator.Get<UnitsService>();
     }
 
-    public void DestroyCapitalBeforeAddCell(RegionController region, CellController cell)
+    public void DestroyCellCapitalIfRegionHasCapital(RegionController region, CellController cell)
     {
       if (IsCapital(cell.Unit) && HasCapital(region))
         _unitsService.TryDestroy(cell.Unit);
     }
 
-    public void UpdateCapital(RegionController region)
+    public void CreateCapital(RegionController region)
     {
-      if (region.Cells.Count <= 1)
-        DestroyCapitals(region);
-      else if (region.IsAlive && !HasCapital(region))
+      if (region.IsAlive && !HasCapital(region))
       {
         using (ListPool<CellController>.Get(out var cells))
         {

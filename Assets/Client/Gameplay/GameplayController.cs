@@ -86,7 +86,7 @@ namespace Client.Gameplay
     {
       _gameplayMode = GameplayMode.CreateUnit;
       _creationUnitType = type;
-      _unitsService.GetCreateUnitArea(_selectedRegion, _selectedCells, _creationUnitType);
+      _unitsService.GetUnitCreationArea(_selectedRegion, _selectedCells, _creationUnitType);
       _tilesSelectionView.ViewTiles(_selectedCells);
       _gameplayUI.ViewUnitPrice(_unitsService.GetCost(type));
     }
