@@ -185,7 +185,6 @@ namespace Client.Gameplay
       {
         if (_selectedCells.Contains(cell) && _unitsService.TryCreate(cell, _creationUnitType, _currentPlayer, out var unit))
         {
-          unit.ConquerCurrentCell(_currentPlayer);
           _selectedRegion.Money -= cost;
           _gameplayUI.ViewRegionData(_selectedRegion.Money, _selectedRegion.GetIncome());
         }

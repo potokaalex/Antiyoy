@@ -35,7 +35,7 @@ namespace Client
       {
         var max = 0;
         foreach (var unit in _protectionsUnit)
-          if (unit.Protection > max)
+          if (unit.Cell.Region.Type == Region.Type && unit.Protection > max)
             max = unit.Protection;
         return max;
       }
@@ -62,14 +62,8 @@ namespace Client
       _regionsService.AddToBestNeighbourRegion(Position, type, this);
     }
 
-    public void AddUnitForProtection(UnitController unit)
-    {
-      _protectionsUnit.Add(unit);
-    }
+    public void AddUnitForProtection(UnitController unit) => _protectionsUnit.Add(unit);
 
-    public void RemoveUnitForProtection(UnitController unit)
-    {
-      _protectionsUnit.Remove(unit);
-    }
+    public void RemoveUnitForProtection(UnitController unit) => _protectionsUnit.Remove(unit);
   }
 }

@@ -16,6 +16,8 @@ namespace Client.Unit.Code
     private UnitConfig _config;
     private int _turnsCount;
 
+    public CellController Cell => _cell;
+
     public int Income => _config.Income;
 
     public UnitType Type => _config.Type;
@@ -24,19 +26,20 @@ namespace Client.Unit.Code
 
     public int Protection => _config.Protection;
 
-    public void Initialize(CellController cell, UnitConfig config)
+    public void Initialize(CellController cell, UnitConfig config, RegionType regionType)
     {
       _gridController = Locator.Get<GridController>();
       _unitsService = Locator.Get<UnitsService>();
       _config = config;
-      MoveToCell(cell);
       RestTurnsCount();
-      UpdateDebugText();
       _renderer.sprite = config.Sprite;
+      InitialConquer(cell, regionType);
+      UpdateDebugText();
     }
 
     public void Dispose()
     {
+      SetCellsProtection(false);
       _cell.Unit = null;
       _text.SetText(string.Empty);
     }
@@ -49,33 +52,14 @@ namespace Client.Unit.Code
 
     public bool Move(CellController cell)
     {
-      var friendlyRegion = _cell.Region.Type == cell.Region.Type;
-
-      if (friendlyRegion && cell.Unit)
+      if (!IsFriendlyRegion(cell, _cell.Region.Type) || !cell.Unit)
         return false;
-
-      if (!friendlyRegion)
-      {
-        _unitsService.TryDestroy(cell.Unit);
-        cell.ChangeRegionType(_cell.Region.Type);
-      }
 
       SetCellsProtection(false);
       _cell.Unit = null;
-      MoveToCell(cell);
-      _turnsCount--;
-      UpdateDebugText();
+      Conquer(cell, _cell.Region.Type);
+      DecreaseTurnsCount();
       return true;
-    }
-
-    public void ConquerCurrentCell(RegionType type)
-    {
-      if (_cell.Region.Type != type)
-      {
-        _cell.ChangeRegionType(type);
-        _turnsCount--;
-        UpdateDebugText();
-      }
     }
 
     public void RestTurnsCount()
@@ -86,32 +70,54 @@ namespace Client.Unit.Code
 
     public bool HasTurns() => _turnsCount > 0;
 
-    private void UpdateDebugText()
+    private void InitialConquer(CellController cell, RegionType regionType)
     {
-      if (Type == UnitType.Peasant)
-        _text.SetText($"{_turnsCount}");
+      if (!IsFriendlyRegion(cell, regionType))
+        DecreaseTurnsCount();
+      Conquer(cell, regionType);
     }
 
-    private void MoveToCell(CellController cell)
+    private void Conquer(CellController cell, RegionType regionType)
     {
+      if (!IsFriendlyRegion(cell, regionType))
+      {
+        _unitsService.TryDestroy(cell.Unit);
+        cell.ChangeRegionType(regionType);
+      }
+
       _cell = cell;
       _cell.Unit = this;
       transform.position = _gridController.HexPositionToWorld(_cell.Position);
       SetCellsProtection(true);
     }
 
+    private bool IsFriendlyRegion(CellController cell, RegionType regionType) => cell.Region.Type == regionType;
+
+    private void UpdateDebugText()
+    {
+      if (Type == UnitType.Peasant)
+        _text.SetText($"{_turnsCount}");
+    }
+
     private void SetCellsProtection(bool active)
     {
+      SetCellProtection(active, _cell);
       foreach (var cell in _gridController.GetNeighbourCells(_cell.Position))
-      {
-        if (cell.Region.Type == _cell.Region.Type)
-        {
-          if (active)
-            cell.AddUnitForProtection(this);
-          else
-            cell.RemoveUnitForProtection(this);
-        }
-      }
+        SetCellProtection(active, cell);
+    }
+
+    private void SetCellProtection(bool active, CellController cell)
+    {
+      if (active)
+        cell.AddUnitForProtection(this);
+      else
+        cell.RemoveUnitForProtection(this);
+    }
+
+    private void DecreaseTurnsCount()
+    {
+      _turnsCount = Mathf.Max(0, _turnsCount - 1);
+      UpdateDebugText();
     }
   }
 }

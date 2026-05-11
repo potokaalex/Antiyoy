@@ -17,8 +17,6 @@ namespace Client.Unit.Code
     private Transform _unitsRoot;
     private ObjectPool<UnitController> _pool;
 
-    public IReadOnlyList<UnitController> Units => _units;
-
     public void Initialize()
     {
       _configsProvider = Locator.Get<ConfigsProvider>();
@@ -28,11 +26,11 @@ namespace Client.Unit.Code
         x => x.gameObject.SetActive(false));
     }
 
-    public bool TryCreate(CellController cell, UnitType type, RegionType playerRegion, out UnitController unit)
+    public bool TryCreate(CellController cell, UnitType type, RegionType regionType, out UnitController unit)
     {
-      if (CanCreateUnitAt(cell, playerRegion))
+      if (CanCreateUnitAt(cell, regionType))
       {
-        unit = Create(cell, type);
+        unit = Create(cell, type, regionType);
         return true;
       }
 
@@ -112,11 +110,11 @@ namespace Client.Unit.Code
       }
     }
 
-    private UnitController Create(CellController cell, UnitType type)
+    private UnitController Create(CellController cell, UnitType type, RegionType regionType)
     {
       TryDestroy(cell.Unit);
       var instance = _pool.Get();
-      instance.Initialize(cell, _configsProvider.UnitsConfigs[type]);
+      instance.Initialize(cell, _configsProvider.UnitsConfigs[type], regionType);
       _units.Add(instance);
       return instance;
     }
