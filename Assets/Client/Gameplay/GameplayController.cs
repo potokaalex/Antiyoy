@@ -68,6 +68,9 @@ namespace Client.Gameplay
         if (_cameraController.GetHitFromMousePoint(out var hit) &&
             _gridController.TryGetCell(_gridController.WorldPositionToHex(hit.point), out var cell))
         {
+          if (_gameplayMode == GameplayMode.SelectedRegion)
+            ShowBuildingsProtection(cell);
+
           if (_gameplayMode == GameplayMode.None || _gameplayMode == GameplayMode.SelectedRegion)
             TrySelectRegion(cell);
 
@@ -207,16 +210,11 @@ namespace Client.Gameplay
 
     private void TrySelectUnit(CellController cell)
     {
-      if (cell.Region.Type == _currentPlayer && _unitsService.TryGet(cell, out _selectedUnit))
+      if (cell.Region.Type == _currentPlayer && _unitsService.TryGet(cell, out _selectedUnit) && _selectedUnit.HasTurns())
       {
-        if (_selectedUnit.CanViewProtection)
-          _protectionView.ViewBuildingsProtection(cell.Region);
-        else if (_selectedUnit.HasTurns())
-        {
-          _selectedUnit.GetMoveArea(_selectedCells);
-          _tilesSelectionView.ViewTiles(_selectedCells);
-          _gameplayMode = GameplayMode.SelectedUnit;
-        }
+        _selectedUnit.GetMoveArea(_selectedCells);
+        _tilesSelectionView.ViewTiles(_selectedCells);
+        _gameplayMode = GameplayMode.SelectedUnit;
       }
     }
 
@@ -226,6 +224,12 @@ namespace Client.Gameplay
       _gameplayUI.ActiveRegionUI(true);
       _gameplayUI.ViewRegionData(_selectedRegion.Money, _selectedRegion.GetIncome());
       _gameplayMode = GameplayMode.SelectedRegion;
+    }
+
+    private void ShowBuildingsProtection(CellController cell)
+    {
+      if (cell.Region.Type == _currentPlayer && _unitsService.TryGet(cell, out _selectedUnit) && _selectedUnit.CanViewProtection)
+        _protectionView.ViewBuildingsProtection(cell.Region);
     }
   }
 }
