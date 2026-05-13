@@ -21,8 +21,6 @@ namespace Client.TilesSelection
 
     public void ViewTiles(List<CellController> cells)
     {
-      ClearView();
-
       foreach (var cell in cells)
       {
         var mask = _pool.Get();

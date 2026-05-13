@@ -1887,7 +1887,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Client::Client.Gameplay.GameplayUI
   _regionPanel: {fileID: 44673947}
   _createPeasantButton: {fileID: 332458720}
-  _createFarmButton: {fileID: 1113925201}
+  _createBuildingButton: {fileID: 1113925201}
+  _createBuildingButtonText: {fileID: 854518621}
   _unitPrice: {fileID: 790771785}
   _nextTurnButton: {fileID: 812877619}
   _turnsCount: {fileID: 476272090}
@@ -1909,7 +1910,7 @@ GameObject:
   - component: {fileID: 1113925202}
   - component: {fileID: 1113925201}
   m_Layer: 5
-  m_Name: CreateFarmButton
+  m_Name: CreateBuildingButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

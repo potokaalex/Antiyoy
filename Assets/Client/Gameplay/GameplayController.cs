@@ -90,7 +90,9 @@ namespace Client.Gameplay
       _gameplayMode = GameplayMode.CreateUnit;
       _creationUnitType = type;
       _unitsService.GetUnitCreationArea(_selectedRegion, _selectedCells, _creationUnitType);
-      _tilesSelectionView.ViewTiles(_selectedCells);
+      _tilesSelectionView.ClearView();
+      if (type != UnitType.Tower)
+        _tilesSelectionView.ViewTiles(_selectedCells);
       _gameplayUI.ViewUnitPrice(_unitsService.GetCost(type));
     }
 
@@ -187,6 +189,7 @@ namespace Client.Gameplay
       }
 
       ReturnToSelectedRegion();
+      _gameplayUI.ClearCurrentBuilding();
     }
 
     private void ReturnToSelectedRegion()
@@ -198,7 +201,7 @@ namespace Client.Gameplay
 
     private void TrySelectRegion(CellController cell)
     {
-      if (cell.Region.Type == _currentPlayer && cell.Region.IsAlive) 
+      if (cell.Region.Type == _currentPlayer && cell.Region.IsAlive)
         SelectRegion(cell.Region);
     }
 
@@ -206,7 +209,7 @@ namespace Client.Gameplay
     {
       if (cell.Region.Type == _currentPlayer && _unitsService.TryGet(cell, out _selectedUnit))
       {
-        if (_selectedUnit.IsBuilding)
+        if (_selectedUnit.CanViewProtection)
           _protectionView.ViewBuildingsProtection(cell.Region);
         else if (_selectedUnit.HasTurns())
         {

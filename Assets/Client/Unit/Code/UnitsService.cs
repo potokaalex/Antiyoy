@@ -65,6 +65,12 @@ namespace Client.Unit.Code
           return;
         }
 
+        if (unitType == UnitType.Tower)
+        {
+          outResult.AddRange(region.Cells);
+          return;
+        }
+
         foreach (var cell in region.Cells)
         {
           front.Push(cell);

@@ -27,7 +27,7 @@ namespace Client.Unit.Code
 
     public int Protection => _config.Protection;
 
-    public bool IsBuilding => Type is UnitType.Capital or UnitType.Farm;
+    public bool CanViewProtection => Type is UnitType.Capital or UnitType.Tower;
 
     public void Initialize(CellController cell, UnitConfig config, RegionType regionType)
     {

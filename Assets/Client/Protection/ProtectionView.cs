@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Client.Infrastructure;
 using Client.Region;
+using Client.Unit.Code;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -35,7 +36,7 @@ namespace Client.Protection
 
         foreach (var cell in region.Cells)
         {
-          if (cell.Unit && cell.Unit.IsBuilding)
+          if (cell.Unit && cell.Unit.CanViewProtection)
           {
             cell.Unit.GetProtectionArea(protectionArea, true);
             foreach (var areaCell in protectionArea)
