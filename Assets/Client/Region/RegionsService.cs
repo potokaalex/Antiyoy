@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Client.Configs;
 using Client.Hex;
 using Client.Infrastructure;
+using Client.Unit.Code;
 using Client.Utilities;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -36,7 +37,7 @@ namespace Client.Region
       RegionController region = null;
 
       foreach (var neighbour in _gridController.GetNeighbourCells(position))
-        if (neighbour.Region.Type == type && (region == null || neighbour.Region.Cells.Count > region.Cells.Count))
+        if (neighbour.Region.Type == type && (region == null || GetRegionPower(neighbour.Region) > GetRegionPower(region)))
           region = neighbour.Region;
 
       if (region != null)
@@ -58,7 +59,7 @@ namespace Client.Region
     {
       var regions = new List<RegionController>();
       FindRegionsWhitOneType(position, regions, type);
-      regions.SortByDecreasing(x => x.Cells.Count);
+      regions.SortByDecreasing(GetRegionPower);
       JoinRegions(regions);
     }
 
@@ -70,7 +71,7 @@ namespace Client.Region
         var regionParts = _regionPartsBuffer;
         unPassed.AddRange(region.Cells);
         FindRegionParts(unPassed, front, regionParts);
-        regionParts.Items.SortByDecreasing(x => x.Count);
+        regionParts.Items.SortByDecreasing(GetRegionPower);
         DivideRegion(regionParts, region);
         regionParts.Clear();
       }
@@ -151,6 +152,23 @@ namespace Client.Region
       foreach (var neighbour in _gridController.GetNeighbourCells(position))
         if (neighbour.Region.Type == type && !list.Contains(neighbour.Region))
           list.Add(neighbour.Region);
+    }
+
+    private int GetRegionPower(RegionController region) => GetRegionPower(region.Cells);
+
+    private int GetRegionPower(IReadOnlyList<CellController> cells)
+    {
+      var result = 0;
+
+      foreach (var cell in cells)
+      {
+        result++;
+
+        if (cell.Unit && cell.Unit.Type == UnitType.Farm)
+          result++;
+      }
+
+      return result;
     }
   }
 }

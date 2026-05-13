@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Client.Infrastructure;
 using Client.Region;
+using Client.Utilities;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -49,8 +50,36 @@ namespace Client.Unit.Code
 
     public void GetMoveArea(List<CellController> outList)
     {
-      outList.Clear();
-      _gridController.GetCellsInRadius(_cell, 1, outList);
+      using (QueuePool<UnitMoveAreaCell>.Get(out var front))
+      {
+        outList.Clear();
+        front.Enqueue(new UnitMoveAreaCell(_cell, 4));
+        outList.Add(_cell);
+
+        while (front.Count > 0)
+        {
+          var areaCell = front.Dequeue();
+
+          if (areaCell.RemainingMove == 0)
+            continue;
+
+          foreach (var neighbour in _gridController.GetNeighbourCells(areaCell.Cell.Position))
+          {
+            if (outList.Contains(neighbour))
+              continue;
+
+            if (neighbour.Region.Type == _cell.Region.Type)
+            {
+              outList.Add(neighbour);
+              front.Enqueue(new UnitMoveAreaCell(neighbour, areaCell.RemainingMove - 1));
+            }
+            else
+            {
+              outList.Add(neighbour);
+            }
+          }
+        }
+      }
     }
 
     public bool Move(CellController cell)
