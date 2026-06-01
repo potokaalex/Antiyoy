@@ -32,11 +32,11 @@ namespace Client.Region
       TryDivideRegion(region);
     }
 
-    public void AddToBestNeighbourRegion(HexCoordinates position, RegionType type, CellController cell)
+    public void AddToBestNeighbourRegion(RegionType type, CellController cell)
     {
       RegionController region = null;
 
-      foreach (var neighbour in _gridController.GetNeighbourCells(position))
+      foreach (var neighbour in _gridController.GetNeighbourCells(cell.Position))
         if (neighbour.Region.Type == type && (region == null || GetRegionPower(neighbour.Region) > GetRegionPower(region)))
           region = neighbour.Region;
 
@@ -45,7 +45,7 @@ namespace Client.Region
       else
         _regionsFactory.Create(cell, type);
 
-      TryJoinRegions(position, type);
+      TryJoinRegions(cell.Position, type);
     }
 
     public Color GetColorFor(RegionController region)
@@ -145,7 +145,7 @@ namespace Client.Region
 
     private void FindRegionsWhitOneType(HexCoordinates position, List<RegionController> list, RegionType type)
     {
-      if (_gridController.TryGetCell(position, out var cell))
+      if (_gridController.GetCell(position, out var cell))
         if (cell.Region.Type == type)
           list.Add(cell.Region);
 

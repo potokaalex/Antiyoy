@@ -12,8 +12,11 @@ namespace Client.Region
     private readonly CapitalsController _capitalsController;
 
     public IReadOnlyList<CellController> Cells => _cells;
+
     public RegionType Type { get; set; }
+
     public int Money { get; set; }
+
     public bool IsAlive => _cells.Count >= 2 && Type != RegionType.Neutral;
 
     public RegionController()
@@ -25,7 +28,7 @@ namespace Client.Region
 
     public void Add(CellController cell)
     {
-      _capitalsController.DestroyCellCapitalIfRegionHasCapital(this, cell);
+      _capitalsController.DestroyCapital(cell);
       cell.Region = this;
       _cells.Add(cell);
       UpdateBuildings();
@@ -72,14 +75,14 @@ namespace Client.Region
 
       foreach (var cell in _cells)
         if (cell.Unit)
-          cell.Unit.RestTurnsCount();
+          cell.Unit.ResetTurnsCount();
     }
 
     private void DestroyAllUnits()
     {
       foreach (var cell in _cells)
         if (!_capitalsController.IsCapital(cell.Unit))
-          _unitsService.TryDestroy(cell.Unit);
+          _unitsService.Destroy(cell.Unit);
     }
 
     private void UpdateBuildings()
@@ -93,8 +96,8 @@ namespace Client.Region
     private void DestroyBuildings()
     {
       foreach (var c in _cells)
-        if (c.Unit && c.Unit.Type is UnitType.Capital or UnitType.Farm)
-          _unitsService.TryDestroy(c.Unit);
+        if (c.Unit && c.Unit.IsBuilding)
+          _unitsService.Destroy(c.Unit);
     }
   }
 }

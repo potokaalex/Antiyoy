@@ -47,12 +47,12 @@ namespace Client.Gameplay
       _gridController.CreateCells();
       for (var i = 0; i < 4; i++)
         _gridController.ReCreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(i, 0)), RegionType.Red);
-      _gridController.TryGetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(0, 0)), out var redCapitalCell);
+      _gridController.GetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(0, 0)), out var redCapitalCell);
       _capitalsController.SetCapital(redCapitalCell);
 
       for (var i = 4; i < 9; i++)
         _gridController.ReCreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(i, 0)), RegionType.Blue);
-      _gridController.TryGetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(8, 0)), out var blueCapitalCell);
+      _gridController.GetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(8, 0)), out var blueCapitalCell);
       _capitalsController.SetCapital(blueCapitalCell);
 
       foreach (var region in _regionsService.Regions)
@@ -66,7 +66,7 @@ namespace Client.Gameplay
       if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
       {
         if (_cameraController.GetHitFromMousePoint(out var hit) &&
-            _gridController.TryGetCell(_gridController.WorldPositionToHex(hit.point), out var cell))
+            _gridController.GetCell(_gridController.WorldPositionToHex(hit.point), out var cell))
         {
           if (_gameplayMode == GameplayMode.SelectedRegion)
             ShowBuildingsProtection(cell);
@@ -184,7 +184,7 @@ namespace Client.Gameplay
       var cost = _unitsService.GetCost(_creationUnitType);
       if (_selectedRegion.Money >= cost)
       {
-        if (_selectedCells.Contains(cell) && _unitsService.TryCreate(cell, _creationUnitType, _currentPlayer))
+        if (_selectedCells.Contains(cell) && _unitsService.Create(cell, _creationUnitType, _currentPlayer))
         {
           _selectedRegion.Money -= cost;
           TrySelectRegion(cell);
@@ -210,7 +210,7 @@ namespace Client.Gameplay
 
     private void TrySelectUnit(CellController cell)
     {
-      if (cell.Region.Type == _currentPlayer && _unitsService.TryGet(cell, out _selectedUnit) && _selectedUnit.HasTurns())
+      if (cell.Region.Type == _currentPlayer && _unitsService.Get(cell, out _selectedUnit) && _selectedUnit.HasTurns())
       {
         _selectedUnit.GetMoveArea(_selectedCells);
         _tilesSelectionView.ViewTiles(_selectedCells);
@@ -228,7 +228,7 @@ namespace Client.Gameplay
 
     private void ShowBuildingsProtection(CellController cell)
     {
-      if (cell.Region.Type == _currentPlayer && _unitsService.TryGet(cell, out _selectedUnit) && _selectedUnit.CanViewProtection)
+      if (cell.Region.Type == _currentPlayer && _unitsService.Get(cell, out _selectedUnit) && _selectedUnit.CanViewProtection)
         _protectionView.ViewBuildingsProtection(cell.Region);
     }
   }

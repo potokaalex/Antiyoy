@@ -2,8 +2,8 @@ namespace Client.Unit.Code
 {
   public struct UnitMoveAreaCell
   {
-    public CellController Cell;
-    public int RemainingMove;
+    public readonly CellController Cell;
+    public readonly int RemainingMove;
 
     public UnitMoveAreaCell(CellController cell, int remainingMove)
     {

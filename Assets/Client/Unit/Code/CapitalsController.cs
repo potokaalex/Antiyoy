@@ -9,15 +9,12 @@ namespace Client.Unit.Code
   {
     private UnitsService _unitsService;
 
-    public void Initialize()
-    {
-      _unitsService = Locator.Get<UnitsService>();
-    }
+    public void Initialize() => _unitsService = Locator.Get<UnitsService>();
 
-    public void DestroyCellCapitalIfRegionHasCapital(RegionController region, CellController cell)
+    public void DestroyCapital(CellController cell)
     {
-      if (IsCapital(cell.Unit) && HasCapital(region))
-        _unitsService.TryDestroy(cell.Unit);
+      if (IsCapital(cell.Unit))
+        _unitsService.Destroy(cell.Unit);
     }
 
     public void CreateCapital(RegionController region)
@@ -53,13 +50,13 @@ namespace Client.Unit.Code
     {
       foreach (var cell in region.Cells)
         if (IsCapital(cell.Unit))
-          _unitsService.TryDestroy(cell.Unit);
+          _unitsService.Destroy(cell.Unit);
     }
 
     private void CreateCapital(RegionController region, CellController cell)
     {
-      _unitsService.TryDestroy(cell.Unit);
-      _unitsService.TryCreate(cell, UnitType.Capital, region.Type);
+      _unitsService.Destroy(cell.Unit);
+      _unitsService.Create(cell, UnitType.Capital, region.Type);
     }
   }
 }

@@ -47,19 +47,19 @@ namespace Client
       _regionsService = Locator.Get<RegionsService>();
       _unitsService = Locator.Get<UnitsService>();
       Position = position;
-      _regionsService.AddToBestNeighbourRegion(position, type, this);
+      _regionsService.AddToBestNeighbourRegion(type, this);
     }
 
     public void Dispose()
     {
       _regionsService.RemoveFromRegion(this);
-      _unitsService.TryDestroy(Unit);
+      _unitsService.Destroy(Unit);
     }
 
     public void ChangeRegionType(RegionType type)
     {
       _regionsService.RemoveFromRegion(this);
-      _regionsService.AddToBestNeighbourRegion(Position, type, this);
+      _regionsService.AddToBestNeighbourRegion(type, this);
     }
 
     public void AddUnitForProtection(UnitController unit) => _protectionsUnit.Add(unit);

@@ -13,12 +13,11 @@ namespace Client.Unit.Code
     [SerializeField] private TextMeshPro _text;
     [SerializeField] private SpriteRenderer _renderer;
     private GridController _gridController;
-    private CellController _cell;
     private UnitsService _unitsService;
     private UnitConfig _config;
     private int _turnsCount;
 
-    public CellController Cell => _cell;
+    public CellController Cell { get; private set; }
 
     public int Income => _config.Income;
 
@@ -30,12 +29,14 @@ namespace Client.Unit.Code
 
     public bool CanViewProtection => Type is UnitType.Capital or UnitType.Tower;
 
+    public bool IsBuilding => Type is UnitType.Capital or UnitType.Farm or UnitType.Tower;
+
     public void Initialize(CellController cell, UnitConfig config, RegionType regionType)
     {
       _gridController = Locator.Get<GridController>();
       _unitsService = Locator.Get<UnitsService>();
       _config = config;
-      RestTurnsCount();
+      ResetTurnsCount();
       _renderer.sprite = config.Sprite;
       InitialConquer(cell, regionType);
       UpdateDebugText();
@@ -44,7 +45,7 @@ namespace Client.Unit.Code
     public void Dispose()
     {
       SetCellsProtection(false);
-      _cell.Unit = null;
+      Cell.Unit = null;
       _text.SetText(string.Empty);
     }
 
@@ -53,8 +54,8 @@ namespace Client.Unit.Code
       using (QueuePool<UnitMoveAreaCell>.Get(out var front))
       {
         outList.Clear();
-        front.Enqueue(new UnitMoveAreaCell(_cell, 4));
-        outList.Add(_cell);
+        front.Enqueue(new UnitMoveAreaCell(Cell, 4));
+        outList.Add(Cell);
 
         while (front.Count > 0)
         {
@@ -68,7 +69,7 @@ namespace Client.Unit.Code
             if (outList.Contains(neighbour))
               continue;
 
-            if (neighbour.Region.Type == _cell.Region.Type)
+            if (neighbour.Region.Type == Cell.Region.Type)
             {
               outList.Add(neighbour);
               front.Enqueue(new UnitMoveAreaCell(neighbour, areaCell.RemainingMove - 1));
@@ -84,17 +85,17 @@ namespace Client.Unit.Code
 
     public bool Move(CellController cell)
     {
-      if (IsFriendlyRegion(cell, _cell.Region.Type) && cell.Unit)
+      if (IsFriendlyRegion(cell, Cell.Region.Type) && cell.Unit)
         return false;
 
       SetCellsProtection(false);
-      _cell.Unit = null;
-      Conquer(cell, _cell.Region.Type);
+      Cell.Unit = null;
+      Conquer(cell, Cell.Region.Type);
       DecreaseTurnsCount();
       return true;
     }
 
-    public void RestTurnsCount()
+    public void ResetTurnsCount()
     {
       _turnsCount = _config.TurnsCount;
       UpdateDebugText();
@@ -113,13 +114,13 @@ namespace Client.Unit.Code
     {
       if (!IsFriendlyRegion(cell, regionType))
       {
-        _unitsService.TryDestroy(cell.Unit);
+        _unitsService.Destroy(cell.Unit);
         cell.ChangeRegionType(regionType);
       }
 
-      _cell = cell;
-      _cell.Unit = this;
-      transform.position = _gridController.HexPositionToWorld(_cell.Position);
+      Cell = cell;
+      Cell.Unit = this;
+      transform.position = _gridController.HexPositionToWorld(Cell.Position);
       SetCellsProtection(true);
     }
 
@@ -155,9 +156,9 @@ namespace Client.Unit.Code
     public void GetProtectionArea(List<CellController> outList, bool withRegionCheck = false)
     {
       outList.Clear();
-      outList.Add(_cell);
-      foreach (var cell in _gridController.GetNeighbourCells(_cell.Position))
-        if (!withRegionCheck || IsFriendlyRegion(cell, _cell.Region.Type))
+      outList.Add(Cell);
+      foreach (var cell in _gridController.GetNeighbourCells(Cell.Position))
+        if (!withRegionCheck || IsFriendlyRegion(cell, Cell.Region.Type))
           outList.Add(cell);
     }
   }

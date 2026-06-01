@@ -34,10 +34,7 @@ namespace Client.Hex
       };
     }
 
-    public float GetMagnitude()
-    {
-      return (Math.Abs(Q) + Math.Abs(R) + Math.Abs(S)) / 2f;
-    }
+    public float GetMagnitude() => (Math.Abs(Q) + Math.Abs(R) + Math.Abs(S)) / 2f;
 
     public override string ToString() => $"{Q};{R};{S}";
 

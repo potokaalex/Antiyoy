@@ -7,14 +7,8 @@ namespace Client.Utilities
   {
     private static readonly ObjectPool<Stack<T>> _pool = new(() => new Stack<T>(), actionOnRelease: x => x.Clear());
 
-    public static PooledObject<Stack<T>> Get(out Stack<T> value)
-    {
-      return _pool.Get(out value);
-    }
+    public static PooledObject<Stack<T>> Get(out Stack<T> value) => _pool.Get(out value);
 
-    public static void Release(Stack<T> toRelease)
-    {
-      _pool.Release(toRelease);
-    }
+    public static void Release(Stack<T> toRelease) => _pool.Release(toRelease);
   }
 }
