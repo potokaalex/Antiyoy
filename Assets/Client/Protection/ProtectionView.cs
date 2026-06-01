@@ -35,9 +35,9 @@ namespace Client.Protection
 
         foreach (var cell in region.Cells)
         {
-          if (cell.Unit && cell.Unit.CanViewProtection)
+          if (cell.HasUnit && cell.Unit.CanViewProtection)
           {
-            cell.Unit.GetProtectionArea(protectionArea, true);
+            cell.Unit.GetProtectionArea(protectionArea);
             foreach (var areaCell in protectionArea)
             {
               if (areaCell != cell)

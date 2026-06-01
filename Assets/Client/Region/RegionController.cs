@@ -51,7 +51,7 @@ namespace Client.Region
       {
         result++;
 
-        if (cell.Unit)
+        if (cell.HasUnit)
           result += cell.Unit.Income;
       }
 
@@ -74,7 +74,7 @@ namespace Client.Region
       }
 
       foreach (var cell in _cells)
-        if (cell.Unit)
+        if (cell.HasUnit)
           cell.Unit.ResetTurnsCount();
     }
 
@@ -96,7 +96,7 @@ namespace Client.Region
     private void DestroyBuildings()
     {
       foreach (var c in _cells)
-        if (c.Unit && c.Unit.IsBuilding)
+        if (c.HasUnit && c.Unit.IsBuilding)
           _unitsService.Destroy(c.Unit);
     }
   }

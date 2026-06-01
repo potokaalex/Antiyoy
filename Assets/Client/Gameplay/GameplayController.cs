@@ -22,7 +22,7 @@ namespace Client.Gameplay
     private RegionController _selectedRegion;
     private UnitsService _unitsService;
     private TilesSelectionView _tilesSelectionView;
-    private UnitController _selectedUnit;
+    private IUnitController _selectedUnit;
     private GameplayUI _gameplayUI;
     private RegionsService _regionsService;
     private GovernmentsService _governmentsService;
@@ -210,7 +210,7 @@ namespace Client.Gameplay
 
     private void TrySelectUnit(CellController cell)
     {
-      if (cell.Region.Type == _currentPlayer && _unitsService.Get(cell, out _selectedUnit) && _selectedUnit.HasTurns())
+      if (cell.Region.Type == _currentPlayer && _unitsService.Get(cell, out _selectedUnit) && _selectedUnit.HasTurns)
       {
         _selectedUnit.GetMoveArea(_selectedCells);
         _tilesSelectionView.ViewTiles(_selectedCells);

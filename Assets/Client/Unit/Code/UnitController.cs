@@ -8,7 +8,7 @@ using UnityEngine.Pool;
 
 namespace Client.Unit.Code
 {
-  public class UnitController : MonoBehaviour
+  public class UnitController : MonoBehaviour, IUnitController
   {
     [SerializeField] private TextMeshPro _text;
     [SerializeField] private SpriteRenderer _renderer;
@@ -19,9 +19,11 @@ namespace Client.Unit.Code
 
     public CellController Cell { get; private set; }
 
-    public int Income => _config.Income;
-
     public UnitType Type => _config.Type;
+
+    public bool HasTurns => _turnsCount > 0;
+
+    public int Income => _config.Income;
 
     public int CapitalReplacementFactor => _config.CapitalReplacementFactor;
 
@@ -47,6 +49,12 @@ namespace Client.Unit.Code
       SetCellsProtection(false);
       Cell.Unit = null;
       _text.SetText(string.Empty);
+    }
+
+    public void ResetTurnsCount()
+    {
+      _turnsCount = _config.TurnsCount;
+      UpdateDebugText();
     }
 
     public void GetMoveArea(List<CellController> outList)
@@ -85,7 +93,7 @@ namespace Client.Unit.Code
 
     public bool Move(CellController cell)
     {
-      if (IsFriendlyRegion(cell, Cell.Region.Type) && cell.Unit)
+      if (IsFriendlyRegion(cell, Cell.Region.Type) && cell.HasUnit)
         return false;
 
       SetCellsProtection(false);
@@ -95,13 +103,7 @@ namespace Client.Unit.Code
       return true;
     }
 
-    public void ResetTurnsCount()
-    {
-      _turnsCount = _config.TurnsCount;
-      UpdateDebugText();
-    }
-
-    public bool HasTurns() => _turnsCount > 0;
+    public void GetProtectionArea(List<CellController> outList) => GetProtectionArea(outList, true);
 
     private void InitialConquer(CellController cell, RegionType regionType)
     {
@@ -136,7 +138,7 @@ namespace Client.Unit.Code
     {
       using (ListPool<CellController>.Get(out var cells))
       {
-        GetProtectionArea(cells);
+        GetProtectionArea(cells, false);
         foreach (var cell in cells)
         {
           if (active)
@@ -153,7 +155,7 @@ namespace Client.Unit.Code
       UpdateDebugText();
     }
 
-    public void GetProtectionArea(List<CellController> outList, bool withRegionCheck = false)
+    private void GetProtectionArea(List<CellController> outList, bool withRegionCheck)
     {
       outList.Clear();
       outList.Add(Cell);

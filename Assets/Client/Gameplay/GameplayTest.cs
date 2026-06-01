@@ -30,7 +30,7 @@ namespace Client.Gameplay
     private UnitsService _unitsService;
     private TilesSelectionView _tilesSelectionView;
     private MapEditorType _mapEditorType;
-    private UnitController _selectedUnit;
+    private IUnitController _selectedUnit;
 
     private void Awake()
     {
@@ -61,7 +61,7 @@ namespace Client.Gameplay
           if (hit)
           {
             var point = _gridController.WorldPositionToHex(hit.point);
-            if (_selectedUnit)
+            if (_selectedUnit != null)
             {
               //if (_unitMovePositions.Contains(point) && _gridController.TryGetCell(point, out var cell1))
               //  _selectedUnit.Move(cell1);

@@ -9,7 +9,7 @@ namespace Client
 {
   public class CellController
   {
-    private readonly List<UnitController> _protectionsUnit = new();
+    private readonly List<IUnitController> _protectionsUnit = new();
     private TilemapController _tilemapController;
     private RegionsService _regionsService;
     private RegionController _region;
@@ -27,7 +27,9 @@ namespace Client
       }
     }
 
-    public UnitController Unit { get; set; }
+    public IUnitController Unit { get; set; }
+
+    public bool HasUnit => Unit != null;
 
     public int Protection
     {
@@ -62,8 +64,8 @@ namespace Client
       _regionsService.AddToBestNeighbourRegion(type, this);
     }
 
-    public void AddUnitForProtection(UnitController unit) => _protectionsUnit.Add(unit);
+    public void AddUnitForProtection(IUnitController unit) => _protectionsUnit.Add(unit);
 
-    public void RemoveUnitForProtection(UnitController unit) => _protectionsUnit.Remove(unit);
+    public void RemoveUnitForProtection(IUnitController unit) => _protectionsUnit.Remove(unit);
   }
 }

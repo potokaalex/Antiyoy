@@ -11,7 +11,7 @@ namespace Client.Unit.Code
 {
   public class UnitsService : IInitializable
   {
-    private readonly List<UnitController> _units = new();
+    private readonly List<IUnitController> _units = new();
     private ConfigsProvider _configsProvider;
     private GridController _gridController;
     private Transform _unitsRoot;
@@ -37,20 +37,21 @@ namespace Client.Unit.Code
       return false;
     }
 
-    public void Destroy(UnitController unit)
+    public void Destroy(IUnitController unit)
     {
-      if (unit)
+      if (unit != null)
       {
-        unit.Dispose();
+        var unitController = (UnitController)unit;
+        unitController.Dispose();
         _units.Remove(unit);
-        _pool.Release(unit);
+        _pool.Release(unitController);
       }
     }
 
-    public bool Get(CellController cell, out UnitController unit)
+    public bool Get(CellController cell, out IUnitController unit)
     {
       unit = cell.Unit;
-      return unit;
+      return unit != null;
     }
 
     public void GetUnitCreationArea(RegionController region, List<CellController> outResult, UnitType unitType)
@@ -99,7 +100,7 @@ namespace Client.Unit.Code
     {
       foreach (var cell in region.Cells)
       {
-        if (cell.Unit && cell.Unit.Type is UnitType.Capital or UnitType.Farm)
+        if (cell.HasUnit && cell.Unit.Type is UnitType.Capital or UnitType.Farm)
         {
           front.Push(cell);
           outResult.Add(cell);
@@ -127,7 +128,7 @@ namespace Client.Unit.Code
     {
       var friendlyRegion = cell.Region.Type == playerRegion;
 
-      if (friendlyRegion && cell.Unit)
+      if (friendlyRegion && cell.HasUnit)
         return false;
 
       return true;

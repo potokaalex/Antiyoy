@@ -24,7 +24,7 @@ namespace Client.Unit.Code
         using (ListPool<CellController>.Get(out var cells))
         {
           cells.AddRange(region.Cells);
-          cells.SortByIncreasing(x => !x.Unit ? 0 : x.Unit.CapitalReplacementFactor);
+          cells.SortByIncreasing(x => !x.HasUnit ? 0 : x.Unit.CapitalReplacementFactor);
           CreateCapital(region, cells[0]);
         }
       }
@@ -36,7 +36,7 @@ namespace Client.Unit.Code
       CreateCapital(cell.Region, cell);
     }
 
-    public bool IsCapital(UnitController unit) => unit && unit.Type == UnitType.Capital;
+    public bool IsCapital(IUnitController unit) => unit != null && unit.Type == UnitType.Capital;
 
     private bool HasCapital(RegionController region)
     {

@@ -164,7 +164,7 @@ namespace Client.Region
       {
         result++;
 
-        if (cell.Unit && cell.Unit.Type == UnitType.Farm)
+        if (cell.HasUnit && cell.Unit.Type == UnitType.Farm)
           result++;
       }
 
