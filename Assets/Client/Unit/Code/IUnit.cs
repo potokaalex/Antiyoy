@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Client.Unit.Code
 {
-  public interface IUnitController
+  public interface IUnit
   {
     CellController Cell { get; }
     UnitType Type { get; }

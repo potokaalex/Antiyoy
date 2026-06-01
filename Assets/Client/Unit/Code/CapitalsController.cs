@@ -36,7 +36,7 @@ namespace Client.Unit.Code
       CreateCapital(cell.Region, cell);
     }
 
-    public bool IsCapital(IUnitController unit) => unit != null && unit.Type == UnitType.Capital;
+    public bool IsCapital(IUnit unit) => unit != null && unit.Type == UnitType.Capital;
 
     private bool HasCapital(RegionController region)
     {

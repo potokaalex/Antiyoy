@@ -30,7 +30,7 @@ namespace Client.Gameplay
     private UnitsService _unitsService;
     private TilesSelectionView _tilesSelectionView;
     private MapEditorType _mapEditorType;
-    private IUnitController _selectedUnit;
+    private IUnit _selectedUnit;
 
     private void Awake()
     {

@@ -11,7 +11,7 @@ namespace Client.Unit.Code
 {
   public class UnitsService : IInitializable
   {
-    private readonly List<IUnitController> _units = new();
+    private readonly List<IUnit> _units = new();
     private ConfigsProvider _configsProvider;
     private GridController _gridController;
     private Transform _unitsRoot;
@@ -37,7 +37,7 @@ namespace Client.Unit.Code
       return false;
     }
 
-    public void Destroy(IUnitController unit)
+    public void Destroy(IUnit unit)
     {
       if (unit != null)
       {
@@ -48,7 +48,7 @@ namespace Client.Unit.Code
       }
     }
 
-    public bool Get(CellController cell, out IUnitController unit)
+    public bool Get(CellController cell, out IUnit unit)
     {
       unit = cell.Unit;
       return unit != null;

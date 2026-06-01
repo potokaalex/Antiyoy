@@ -8,7 +8,7 @@ using UnityEngine.Pool;
 
 namespace Client.Unit.Code
 {
-  public class UnitController : MonoBehaviour, IUnitController
+  public class UnitController : MonoBehaviour, IUnit
   {
     [SerializeField] private TextMeshPro _text;
     [SerializeField] private SpriteRenderer _renderer;

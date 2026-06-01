@@ -22,7 +22,7 @@ namespace Client.Gameplay
     private RegionController _selectedRegion;
     private UnitsService _unitsService;
     private TilesSelectionView _tilesSelectionView;
-    private IUnitController _selectedUnit;
+    private IUnit _selectedUnit;
     private GameplayUI _gameplayUI;
     private RegionsService _regionsService;
     private GovernmentsService _governmentsService;
