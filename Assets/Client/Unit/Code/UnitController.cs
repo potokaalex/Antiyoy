@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Client.Infrastructure;
 using Client.Region;
-using Client.Utilities;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -14,6 +13,7 @@ namespace Client.Unit.Code
     [SerializeField] private SpriteRenderer _renderer;
     private GridController _gridController;
     private UnitsService _unitsService;
+    private UnitsAreaCalculator _areaCalculator;
     private UnitConfig _config;
     private int _turnsCount;
 
@@ -21,7 +21,7 @@ namespace Client.Unit.Code
 
     public UnitType Type => _config.Type;
 
-    public bool HasTurns => _turnsCount > 0;
+    public bool HasTurns => TurnsCount > 0;
 
     public int Income => _config.Income;
 
@@ -33,15 +33,25 @@ namespace Client.Unit.Code
 
     public bool IsBuilding => Type is UnitType.Capital or UnitType.Farm or UnitType.Tower;
 
+    private int TurnsCount
+    {
+      get => _turnsCount;
+      set
+      {
+        _turnsCount = value;
+        UpdateDebugText();
+      }
+    }
+
     public void Initialize(CellController cell, UnitConfig config, RegionType regionType)
     {
       _gridController = Locator.Get<GridController>();
       _unitsService = Locator.Get<UnitsService>();
+      _areaCalculator = Locator.Get<UnitsAreaCalculator>();
       _config = config;
       ResetTurnsCount();
       _renderer.sprite = config.Sprite;
       InitialConquer(cell, regionType);
-      UpdateDebugText();
     }
 
     public void Dispose()
@@ -51,45 +61,9 @@ namespace Client.Unit.Code
       _text.SetText(string.Empty);
     }
 
-    public void ResetTurnsCount()
-    {
-      _turnsCount = _config.TurnsCount;
-      UpdateDebugText();
-    }
+    public void ResetTurnsCount() => TurnsCount = _config.TurnsCount;
 
-    public void GetMoveArea(List<CellController> outList)
-    {
-      using (QueuePool<UnitMoveAreaCell>.Get(out var front))
-      {
-        outList.Clear();
-        front.Enqueue(new UnitMoveAreaCell(Cell, 4));
-        outList.Add(Cell);
-
-        while (front.Count > 0)
-        {
-          var areaCell = front.Dequeue();
-
-          if (areaCell.RemainingMove == 0)
-            continue;
-
-          foreach (var neighbour in _gridController.GetNeighbourCells(areaCell.Cell.Position))
-          {
-            if (outList.Contains(neighbour))
-              continue;
-
-            if (neighbour.Region.Type == Cell.Region.Type)
-            {
-              outList.Add(neighbour);
-              front.Enqueue(new UnitMoveAreaCell(neighbour, areaCell.RemainingMove - 1));
-            }
-            else
-            {
-              outList.Add(neighbour);
-            }
-          }
-        }
-      }
-    }
+    public void GetMoveArea(List<CellController> outList) => _areaCalculator.GetMoveArea(this, outList);
 
     public bool Move(CellController cell)
     {
@@ -103,7 +77,7 @@ namespace Client.Unit.Code
       return true;
     }
 
-    public void GetProtectionArea(List<CellController> outList) => GetProtectionArea(outList, true);
+    public void GetProtectionArea(List<CellController> outList) => _areaCalculator.GetProtectionArea(this, outList, true);
 
     private void InitialConquer(CellController cell, RegionType regionType)
     {
@@ -131,14 +105,14 @@ namespace Client.Unit.Code
     private void UpdateDebugText()
     {
       if (Type == UnitType.Peasant)
-        _text.SetText($"{_turnsCount}");
+        _text.SetText($"{TurnsCount}");
     }
 
     private void SetCellsProtection(bool active)
     {
       using (ListPool<CellController>.Get(out var cells))
       {
-        GetProtectionArea(cells, false);
+        _areaCalculator.GetProtectionArea(this, cells, false);
         foreach (var cell in cells)
         {
           if (active)
@@ -149,19 +123,6 @@ namespace Client.Unit.Code
       }
     }
 
-    private void DecreaseTurnsCount()
-    {
-      _turnsCount = Mathf.Max(0, _turnsCount - 1);
-      UpdateDebugText();
-    }
-
-    private void GetProtectionArea(List<CellController> outList, bool withRegionCheck)
-    {
-      outList.Clear();
-      outList.Add(Cell);
-      foreach (var cell in _gridController.GetNeighbourCells(Cell.Position))
-        if (!withRegionCheck || IsFriendlyRegion(cell, Cell.Region.Type))
-          outList.Add(cell);
-    }
+    private void DecreaseTurnsCount() => TurnsCount = Mathf.Max(0, TurnsCount - 1);
   }
 }

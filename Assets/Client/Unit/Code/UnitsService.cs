@@ -3,7 +3,6 @@ using System.Linq;
 using Client.Configs;
 using Client.Infrastructure;
 using Client.Region;
-using Client.Utilities;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -13,14 +12,14 @@ namespace Client.Unit.Code
   {
     private readonly List<IUnit> _units = new();
     private ConfigsProvider _configsProvider;
-    private GridController _gridController;
+    private UnitsAreaCalculator _areaCalculator;
     private Transform _unitsRoot;
     private ObjectPool<UnitController> _pool;
 
     public void Initialize()
     {
       _configsProvider = Locator.Get<ConfigsProvider>();
-      _gridController = Locator.Get<GridController>();
+      _areaCalculator = Locator.Get<UnitsAreaCalculator>();
       _unitsRoot = new GameObject("UnitsRoot").transform;
       _pool = new(() => Object.Instantiate(_configsProvider.UnitPrefab, _unitsRoot), x => x.gameObject.SetActive(true),
         x => x.gameObject.SetActive(false));
@@ -54,39 +53,8 @@ namespace Client.Unit.Code
       return unit != null;
     }
 
-    public void GetUnitCreationArea(RegionController region, List<CellController> outResult, UnitType unitType)
-    {
-      using (StackPool<CellController>.Get(out var front))
-      {
-        outResult.Clear();
-
-        if (unitType == UnitType.Farm)
-        {
-          GetFarmCreationArea(region, front, outResult);
-          return;
-        }
-
-        if (unitType == UnitType.Tower)
-        {
-          outResult.AddRange(region.Cells);
-          return;
-        }
-
-        foreach (var cell in region.Cells)
-        {
-          front.Push(cell);
-          outResult.Add(cell);
-        }
-
-        while (front.Count > 0)
-        {
-          var cell = front.Pop();
-          foreach (var neighbour in _gridController.GetNeighbourCells(cell.Position))
-            if (neighbour.Region.Type != cell.Region.Type && !outResult.Contains(neighbour))
-              outResult.Add(neighbour);
-        }
-      }
-    }
+    public void GetUnitCreationArea(RegionController region, List<CellController> outResult, UnitType unitType) => 
+      _areaCalculator.GetCreationArea(region, outResult, unitType);
 
     public int GetCost(UnitType type)
     {
@@ -94,26 +62,6 @@ namespace Client.Unit.Code
       if (type == UnitType.Farm)
         return creationCost + _units.Count(x => x.Type == UnitType.Farm) * 2;
       return creationCost;
-    }
-
-    private void GetFarmCreationArea(RegionController region, Stack<CellController> front, List<CellController> outResult)
-    {
-      foreach (var cell in region.Cells)
-      {
-        if (cell.HasUnit && cell.Unit.Type is UnitType.Capital or UnitType.Farm)
-        {
-          front.Push(cell);
-          outResult.Add(cell);
-        }
-      }
-
-      while (front.Count > 0)
-      {
-        var cell = front.Pop();
-        foreach (var neighbour in _gridController.GetNeighbourCells(cell.Position))
-          if (neighbour.Region.Type == cell.Region.Type && !outResult.Contains(neighbour))
-            outResult.Add(neighbour);
-      }
     }
 
     private void CreateUnit(CellController cell, UnitType type, RegionType regionType)

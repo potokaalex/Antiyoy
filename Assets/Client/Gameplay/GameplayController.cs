@@ -118,10 +118,7 @@ namespace Client.Gameplay
       UpdatePlayerRegions();
     }
 
-    public void EndGameplay()
-    {
-      SceneManager.LoadScene(0);
-    }
+    public void EndGameplay() => SceneManager.LoadScene(0);
 
     private void UpdatePlayerRegions()
     {

@@ -33,6 +33,7 @@ namespace Client.Gameplay
       Locator.Set(new RegionsFactory());
       Locator.Set(new RegionsService());
       Locator.Set(new GovernmentsService());
+      Locator.Set(new UnitsAreaCalculator());
       Locator.Set(new UnitsService());
       Locator.Set(_tilesSelectionView);
       Locator.Set(_gameplayUI);
