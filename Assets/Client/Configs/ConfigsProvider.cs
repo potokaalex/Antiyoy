@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Client.Region;
-using Client.Unit;
+using Client.Unit.Code;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -11,5 +11,6 @@ namespace Client.Configs
   {
     public Dictionary<RegionType, Color> RegionsColors;
     public UnitController UnitPrefab;
+    public Dictionary<UnitType, UnitConfig> UnitsConfigs;
   }
 }

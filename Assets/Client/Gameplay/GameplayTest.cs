@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Client.Government;
-using Client.Hex;
 using Client.Infrastructure;
 using Client.Region;
 using Client.TilesSelection;
-using Client.Unit;
+using Client.Unit.Code;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Pool;
@@ -24,14 +23,14 @@ namespace Client.Gameplay
 
   public class GameplayTest : MonoBehaviour
   {
-    private readonly List<HexCoordinates> _unitMovePositions = new();
+    private readonly List<CellController> _unitMovePositions = new();
     private CameraController _cameraController;
     private GridController _gridController;
     private GovernmentsService _governmentsService;
     private UnitsService _unitsService;
     private TilesSelectionView _tilesSelectionView;
     private MapEditorType _mapEditorType;
-    private UnitController _selectedUnit;
+    private IUnit _selectedUnit;
 
     private void Awake()
     {
@@ -48,7 +47,7 @@ namespace Client.Gameplay
       labelStyle.fontSize = 18;
 
       //ViewMapEditor(labelStyle);
-      //ViewGovernmentDebug(labelStyle);
+      ViewGovernmentDebug(labelStyle);
     }
 
     private void Update()
@@ -62,17 +61,17 @@ namespace Client.Gameplay
           if (hit)
           {
             var point = _gridController.WorldPositionToHex(hit.point);
-            if (_selectedUnit)
+            if (_selectedUnit != null)
             {
-              if (_unitMovePositions.Contains(point) && _gridController.TryGetCell(point, out var cell1))
-                _selectedUnit.Move(cell1);
+              //if (_unitMovePositions.Contains(point) && _gridController.TryGetCell(point, out var cell1))
+              //  _selectedUnit.Move(cell1);
 
               _tilesSelectionView.ClearView();
               _selectedUnit = null;
               return;
             }
 
-            if (_gridController.TryGetCell(point, out var cell) && _unitsService.TryGet(cell, out _selectedUnit))
+            if (_gridController.GetCell(point, out var cell) && _unitsService.Get(cell, out _selectedUnit))
             {
               _selectedUnit.GetMoveArea(_unitMovePositions);
               _tilesSelectionView.ViewTiles(_unitMovePositions);
@@ -90,15 +89,15 @@ namespace Client.Gameplay
           var point = _gridController.WorldPositionToHex(hit.point);
 
           if (_mapEditorType == MapEditorType.DestroyCell)
-            _gridController.TryDestroyCell(point);
+            _gridController.DestroyCell(point);
           else if (_mapEditorType == MapEditorType.CreateNeutral)
             _gridController.ReCreateCell(point, RegionType.Neutral);
           else if (_mapEditorType == MapEditorType.CreateRed)
             _gridController.ReCreateCell(point, RegionType.Red);
           else if (_mapEditorType == MapEditorType.CreateBlue)
             _gridController.ReCreateCell(point, RegionType.Blue);
-          else if (_mapEditorType == MapEditorType.CreateUnit && _gridController.TryGetCell(point, out var cell))
-            _unitsService.TryCreate(cell, UnitType.Peasant, RegionType.Neutral, out _);
+          else if (_mapEditorType == MapEditorType.CreateUnit && _gridController.GetCell(point, out var cell))
+            _unitsService.Create(cell, UnitType.Peasant, RegionType.Neutral);
         }
       }
     }

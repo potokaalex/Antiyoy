@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Client.Hex;
 using Client.Infrastructure;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -20,14 +19,12 @@ namespace Client.TilesSelection
       _pool = new ObjectPool<GameObject>(() => Instantiate(_tileMaskPrefab, transform), x => x.SetActive(true), x => x.SetActive(false));
     }
 
-    public void ViewTiles(List<HexCoordinates> positions)
+    public void ViewTiles(List<CellController> cells)
     {
-      ClearView();
-
-      foreach (var position in positions)
+      foreach (var cell in cells)
       {
         var mask = _pool.Get();
-        mask.transform.position = _gridController.HexPositionToWorld(position);
+        mask.transform.position = _gridController.HexPositionToWorld(cell.Position);
         _activeMasks.Add(mask);
       }
 

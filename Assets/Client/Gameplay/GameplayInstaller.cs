@@ -2,10 +2,11 @@ using Client.Configs;
 using Client.DebugFeatures;
 using Client.Government;
 using Client.Infrastructure;
+using Client.Protection;
 using Client.Region;
 using Client.Tile;
 using Client.TilesSelection;
-using Client.Unit;
+using Client.Unit.Code;
 using UnityEngine;
 
 namespace Client.Gameplay
@@ -19,6 +20,7 @@ namespace Client.Gameplay
     [SerializeField] private ConfigsProvider _configsProvider;
     [SerializeField] private TilesSelectionView _tilesSelectionView;
     [SerializeField] private GameplayUI _gameplayUI;
+    [SerializeField] private ProtectionView _protectionView;
 
     protected override void Install()
     {
@@ -27,12 +29,15 @@ namespace Client.Gameplay
       Locator.Set(_tilemapController);
       Locator.Set(_gridController);
       Locator.Set(_debugController);
+      Locator.Set(new CapitalsController());
       Locator.Set(new RegionsFactory());
       Locator.Set(new RegionsService());
       Locator.Set(new GovernmentsService());
+      Locator.Set(new UnitsAreaCalculator());
       Locator.Set(new UnitsService());
       Locator.Set(_tilesSelectionView);
       Locator.Set(_gameplayUI);
+      Locator.Set(_protectionView);
       Locator.Set(new GameplayController());
     }
   }

@@ -17,10 +17,8 @@ namespace Client.Tile
       FillByBaseTiles();
     }
 
-    public void SetColor(HexCoordinates position, Color color)
-    {
+    public void SetColor(HexCoordinates position, Color color) =>
       _tilemap.SetColor(_gridController.GridIndexFrom2DIndex(position.ToArray2DIndex()), color);
-    }
 
     private void FillByBaseTiles()
     {

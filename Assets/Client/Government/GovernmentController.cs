@@ -22,14 +22,8 @@ namespace Client.Government
       }
     }
 
-    public void AddRegion(RegionController region)
-    {
-      _regions.Add(region);
-    }
+    public void AddRegion(RegionController region) => _regions.Add(region);
 
-    public void RemoveRegion(RegionController region)
-    {
-      _regions.Remove(region);
-    }
+    public void RemoveRegion(RegionController region) => _regions.Remove(region);
   }
 }

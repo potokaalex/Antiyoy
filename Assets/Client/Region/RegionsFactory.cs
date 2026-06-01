@@ -19,16 +19,16 @@ namespace Client.Region
       _pool = new ObjectPool<RegionController>(() => new RegionController());
     }
 
-    public RegionController Create(CellController cell, RegionType type = RegionType.Neutral)
+    public void Create(CellController cell, RegionType type = RegionType.Neutral)
     {
       using (ListPool<CellController>.Get(out var list))
       {
         list.Add(cell);
-        return Create(list, type);
+        Create(list, type);
       }
     }
 
-    public RegionController Create(List<CellController> cells, RegionType type = RegionType.Neutral)
+    public void Create(List<CellController> cells, RegionType type = RegionType.Neutral)
     {
       _pool.Get(out var instance);
       instance.Type = type;
@@ -37,7 +37,6 @@ namespace Client.Region
 
       _governmentsService.AddRegion(instance);
       _regions.Add(instance);
-      return instance;
     }
 
     public void Destroy(RegionController instance)
