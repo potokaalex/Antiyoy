@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Client.Gameplay.UI;
 using Client.Government;
 using Client.Hex;
 using Client.Infrastructure;
@@ -96,7 +97,7 @@ namespace Client.Gameplay
       _tilesSelectionView.ClearView();
       if (type != UnitType.Tower)
         _tilesSelectionView.ViewTiles(_selectedCells);
-      _gameplayUI.ViewUnitPrice(_unitsService.GetCost(type));
+      _gameplayUI.ViewRegionCreation(type);
     }
 
     public void NextTurn()
@@ -163,7 +164,7 @@ namespace Client.Gameplay
       _gameplayMode = GameplayMode.None;
       _tilesSelectionView.ClearView();
       _gameplayUI.ActiveRegionUI(false);
-      _gameplayUI.ViewUnitPrice(0);
+      _gameplayUI.ClearRegionCreation();
     }
 
     private void TryMoveUnit(CellController cell)
@@ -189,7 +190,7 @@ namespace Client.Gameplay
       }
 
       ReturnToSelectedRegion();
-      _gameplayUI.ClearCurrentBuilding();
+      _gameplayUI.ClearRegionCreation();
     }
 
     private void ReturnToSelectedRegion()

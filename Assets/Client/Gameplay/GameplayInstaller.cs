@@ -1,5 +1,6 @@
 using Client.Configs;
 using Client.DebugFeatures;
+using Client.Gameplay.UI;
 using Client.Government;
 using Client.Infrastructure;
 using Client.Protection;

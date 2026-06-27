@@ -44,7 +44,7 @@ namespace Client.Gameplay
     private void OnGUI()
     {
       var labelStyle = new GUIStyle(GUI.skin.label);
-      labelStyle.fontSize = 18;
+      labelStyle.fontSize = 28;
 
       //ViewMapEditor(labelStyle);
       ViewGovernmentDebug(labelStyle);
@@ -135,7 +135,7 @@ namespace Client.Gameplay
           $"Type: {government.RegionsType}, RegionsCount: {government.Regions.Count}, CellsCount: {government.Regions.Sum(x => x.Cells.Count)}\n";
       }
 
-      GUI.Label(new Rect(Screen.width - 500, 0, 500, 1000), govLog, labelStyle);
+      GUI.Label(new Rect(0, 125, 1000, 1000), govLog, labelStyle);
     }
   }
 }

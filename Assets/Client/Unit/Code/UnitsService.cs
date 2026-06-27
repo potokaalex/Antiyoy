@@ -64,6 +64,8 @@ namespace Client.Unit.Code
       return creationCost;
     }
 
+    public Sprite GetSprite(UnitType unitType) => _configsProvider.UnitsConfigs[unitType].Sprite;
+
     private void CreateUnit(CellController cell, UnitType type, RegionType regionType)
     {
       Destroy(cell.Unit);
