@@ -10,9 +10,9 @@ namespace Client.Gameplay.UI
   {
     [SerializeField] private Button _createWarriorButton;
     [SerializeField] private Button _createBuildingButton;
+    [SerializeField] private GameObject _variantPanel;
     [SerializeField] private TextMeshProUGUI _variantCost;
     [SerializeField] private Image _variantIcon;
-    [SerializeField] private GameObject _variantPanel;
     private UnitsService _unitsService;
     private UnitType _buildingType;
     private GameplayController _gameplayController;
@@ -39,13 +39,14 @@ namespace Client.Gameplay.UI
     
     private void OnCreateWarrior()
     {
-      _gameplayController.SetCreateUnitMode(UnitType.Peasant);
-      _buildingType = UnitType.None;
+      _buildingType = UnitType.Peasant;
+      _gameplayController.SetCreateUnitMode(_buildingType);
+      View(_buildingType);
     }
 
     private void OnCreateBuilding()
     {
-      if (_buildingType == UnitType.None)
+      if (!_buildingType.IsBuilding())
         _buildingType = UnitType.Farm;
       else if (_buildingType == UnitType.Farm)
         _buildingType = UnitType.Tower;
@@ -56,7 +57,7 @@ namespace Client.Gameplay.UI
       View(_buildingType);
     }
 
-    public void View(UnitType unitType)
+    private void View(UnitType unitType)
     {
       _variantPanel.SetActive(true);
       _variantCost.SetText($"${_unitsService.GetCost(unitType)}");

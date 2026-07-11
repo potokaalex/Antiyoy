@@ -97,7 +97,6 @@ namespace Client.Gameplay
       _tilesSelectionView.ClearView();
       if (type != UnitType.Tower)
         _tilesSelectionView.ViewTiles(_selectedCells);
-      _gameplayUI.ViewRegionCreation(type);
     }
 
     public void NextTurn()

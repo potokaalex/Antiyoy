@@ -1,6 +1,5 @@
 using Client.Infrastructure;
 using Client.Region;
-using Client.Unit.Code;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -38,8 +37,6 @@ namespace Client.Gameplay.UI
       _winPanel.SetActive(true);
       _winText.SetText($"Winner: {winner}");
     }
-
-    public void ViewRegionCreation(UnitType unitType) => _hud.Region.Creation.View(unitType);
 
     public void ClearRegionCreation() => _hud.Region.Creation.Clear();
   }

@@ -11,7 +11,6 @@ namespace Client.Unit.Code
     int CapitalReplacementFactor { get; }
     int Protection { get; }
     bool CanViewProtection { get; }
-    bool IsBuilding { get; }
     void ResetTurnsCount();
     void GetMoveArea(List<CellController> outList);
     bool Move(CellController cell);

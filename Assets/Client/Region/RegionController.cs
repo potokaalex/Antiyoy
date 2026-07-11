@@ -96,7 +96,7 @@ namespace Client.Region
     private void DestroyBuildings()
     {
       foreach (var c in _cells)
-        if (c.HasUnit && c.Unit.IsBuilding)
+        if (c.HasUnit && c.Unit.Type.IsBuilding())
           _unitsService.Destroy(c.Unit);
     }
   }
