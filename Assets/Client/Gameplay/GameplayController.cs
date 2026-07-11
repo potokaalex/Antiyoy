@@ -35,6 +35,8 @@ namespace Client.Gameplay
 
     public void Initialize()
     {
+      Application.targetFrameRate = 300;
+
       _gridController = Locator.Get<GridController>();
       _cameraController = Locator.Get<CameraController>();
       _unitsService = Locator.Get<UnitsService>();
