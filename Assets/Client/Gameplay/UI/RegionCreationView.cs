@@ -1,5 +1,6 @@
 using Client.Infrastructure;
 using Client.Unit.Code;
+using Client.Utilities;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -36,7 +37,7 @@ namespace Client.Gameplay.UI
       _buildingType = UnitType.None;
       _variantPanel.SetActive(false);
     }
-    
+
     private void OnCreateWarrior()
     {
       _buildingType = UnitType.Peasant;
@@ -62,6 +63,7 @@ namespace Client.Gameplay.UI
       _variantPanel.SetActive(true);
       _variantCost.SetText($"${_unitsService.GetCost(unitType)}");
       _variantIcon.sprite = _unitsService.GetSprite(unitType);
+      AnimationsUtilities.DoAnchoredMove((RectTransform)_variantPanel.transform, new Vector2(0, -150), new Vector2(0, 0));
     }
   }
 }
