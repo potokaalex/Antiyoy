@@ -767,6 +767,7 @@ GameObject:
   m_Component:
   - component: {fileID: 639490972}
   - component: {fileID: 639490973}
+  - component: {fileID: 639490974}
   m_Layer: 0
   m_Name: CreationPanel
   m_TagString: Untagged
@@ -812,6 +813,18 @@ MonoBehaviour:
   _variantPanel: {fileID: 734907060}
   _variantCost: {fileID: 420938574}
   _variantIcon: {fileID: 1949230143}
+--- !u!225 &639490974
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 639490971}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &692192622
 GameObject:
   m_ObjectHideFlags: 0
@@ -2076,6 +2089,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1531856264}
+  - component: {fileID: 1531856265}
   m_Layer: 0
   m_Name: TopPanel
   m_TagString: Untagged
@@ -2104,6 +2118,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &1531856265
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1531856263}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1665626644
 GameObject:
   m_ObjectHideFlags: 0
@@ -2940,8 +2966,8 @@ RectTransform:
   - {fileID: 1286928583}
   m_Father: {fileID: 872443097}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 0.03794643}
+  m_AnchorMax: {x: 1, y: 0.95089287}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -3334,7 +3360,9 @@ MonoBehaviour:
   _incomeCount: {fileID: 794766312}
   _creationView: {fileID: 639490973}
   _topPanel: {fileID: 1531856264}
+  _topPanelCanvasGroup: {fileID: 1531856265}
   _creationPanel: {fileID: 639490972}
+  _creationPanelCanvasGroup: {fileID: 639490974}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

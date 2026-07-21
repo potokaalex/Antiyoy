@@ -67,6 +67,7 @@ namespace Client.Gameplay
 
     public void Tick()
     {
+      //Input.GetMouseButtonDown(0) должно заменяться нажатием, не должно быть драгом.
       if (Input.GetMouseButtonDown(0) && !_eventSystemController.IsPointerOverUI())
       {
         if (_cameraController.GetHitFromMousePoint(out var hit) &&
@@ -161,11 +162,12 @@ namespace Client.Gameplay
       }
     }
 
-    private void Clear()
+    private void Clear(bool clearRegionUiActive = true)
     {
       _gameplayMode = GameplayMode.None;
       _tilesSelectionView.ClearView();
-      _gameplayUI.ActiveRegionUI(false);
+      if(clearRegionUiActive)
+        _gameplayUI.ActiveRegionUI(false);
       _gameplayUI.ClearRegionCreation();
     }
 
@@ -187,18 +189,19 @@ namespace Client.Gameplay
         if (_selectedCells.Contains(cell) && _unitsService.Create(cell, _creationUnitType, _currentPlayer))
         {
           _selectedRegion.Money -= cost;
-          TrySelectRegion(cell);
+          Clear(false);
+          SelectRegion(cell.Region);
+          return;
         }
       }
 
       ReturnToSelectedRegion();
-      _gameplayUI.ClearRegionCreation();
     }
 
     private void ReturnToSelectedRegion()
     {
       var region = _selectedRegion;
-      Clear();
+      Clear(false);
       SelectRegion(region);
     }
 
