@@ -34,7 +34,7 @@ namespace Client
 
     private void Awake()
     {
-      _inertiaTargetPosition = _startPosition = _targetPosition = _camera.transform.position;
+      ClearMovement();
       _targetSize = _camera.orthographicSize;
     }
 
@@ -47,7 +47,10 @@ namespace Client
     private void MovePosition()
     {
       if (Input.touchCount > 1)
+      {
         _canMove = false;
+        ClearMovement();
+      }
 
       if (Input.touchCount == 0 || PlatformUtilities.IsEditor)
         _canMove = true;
@@ -107,7 +110,7 @@ namespace Client
       {
         var delta = Input.mouseScrollDelta.y;
         if (Mathf.Abs(delta) > 0)
-          _targetSize = _camera.orthographicSize - delta * _zoomDragMultiplier / 5f;
+          _targetSize = _camera.orthographicSize - delta * _zoomDragMultiplier / 7.5f;
       }
 
       _targetSize = Mathf.Clamp(_targetSize, 4, 10);
@@ -132,5 +135,7 @@ namespace Client
       position.y = Mathf.Clamp(position.y, -4, 10);
       return position;
     }
+
+    private void ClearMovement() => _startPosition = _targetPosition = _inertiaTargetPosition = _camera.transform.position;
   }
 }

@@ -1758,7 +1758,7 @@ MonoBehaviour:
   _positionLerpFactor: 20
   _positionInertiaFactor: 2
   _positionInertiaLerpFactor: 15
-  _zoomDragMultiplier: 10
+  _zoomDragMultiplier: 15
   _zoomLerpFactor: 12
 --- !u!1 &1138225516
 GameObject:
