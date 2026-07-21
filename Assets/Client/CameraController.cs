@@ -1,3 +1,4 @@
+using Client.Infrastructure;
 using Client.Utilities;
 using UnityEngine;
 
@@ -12,6 +13,7 @@ namespace Client
     [SerializeField] private float _positionInertiaLerpFactor;
     [SerializeField] private float _zoomDragMultiplier;
     [SerializeField] private float _zoomLerpFactor;
+    private EventSystemController _eventSystemController;
     private Vector2? _firstTouchPosition;
     private Vector3 _startPosition;
     private Vector3 _targetPosition;
@@ -34,12 +36,18 @@ namespace Client
 
     private void Awake()
     {
-      ClearMovement();
-      _targetSize = _camera.orthographicSize;
+      _eventSystemController = Locator.Get<EventSystemController>();
+      Clear();
     }
 
     private void Update()
     {
+      if(_eventSystemController.IsPointerOverUI())
+      {
+        Clear();
+        return;
+      }
+
       MovePosition();
       Zoom();
     }
@@ -49,7 +57,7 @@ namespace Client
       if (Input.touchCount > 1)
       {
         _canMove = false;
-        ClearMovement();
+        ClearPositionMove();
       }
 
       if (Input.touchCount == 0 || PlatformUtilities.IsEditor)
@@ -103,7 +111,7 @@ namespace Client
         var currentDistance = Vector2.Distance(touch0.position, touch1.position);
         var pixelDelta = currentDistance - prevDistance;
         var screenDelta = pixelDelta * PixelToScreenSizeFactor();
-        _targetSize = _camera.orthographicSize - screenDelta * _zoomDragMultiplier;
+        _targetSize = _camera.orthographicSize - screenDelta * _zoomDragMultiplier; //use startSize like in movePosition?
       }
 
       if (PlatformUtilities.IsEditor)
@@ -136,6 +144,12 @@ namespace Client
       return position;
     }
 
-    private void ClearMovement() => _startPosition = _targetPosition = _inertiaTargetPosition = _camera.transform.position;
+    private void ClearPositionMove() => _startPosition = _targetPosition = _inertiaTargetPosition = _camera.transform.position;
+
+    private void Clear()
+    {
+      ClearPositionMove();
+      _targetSize = _camera.orthographicSize;
+    }
   }
 }
