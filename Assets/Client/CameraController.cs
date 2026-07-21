@@ -1,4 +1,4 @@
-using System;
+using Client.Utilities;
 using UnityEngine;
 
 namespace Client
@@ -6,21 +6,18 @@ namespace Client
   public class CameraController : MonoBehaviour
   {
     [SerializeField] private Camera _camera;
-    private Vector3 _positionVelocity;
-    private Touch? _firstTouch;
+    [SerializeField] private float _positionDragMultiplier;
+    [SerializeField] private float _positionLerpFactor;
+    [SerializeField] private float _positionInertiaFactor;
+    [SerializeField] private float _positionInertiaLerpFactor;
+    [SerializeField] private float _zoomDragMultiplier;
+    [SerializeField] private float _zoomLerpFactor;
+    private Vector2? _firstTouchPosition;
     private Vector3 _startPosition;
-    [SerializeField] private float _lerpFactor = 20f;
-    [SerializeField] private float _dpiFactor = 1;
-    [SerializeField] private float _scaleLerpFactor;
-    [SerializeField] private float _scaleDpiFactor;
     private Vector3 _targetPosition;
-    [SerializeField] private float _smoothTime;
-    [SerializeField] private float _smoothTimeOnInput;
-    [SerializeField] private float _maxSpeed;
-    private Vector3 _currentVelocity;
     private Vector3 _inertiaTargetPosition;
-    [SerializeField] private float _inertiaFactor;
-    [SerializeField] private float _inertiaLerpFactor;
+    private bool _canMove;
+    private float _targetSize;
 
     public RaycastHit2D GetHitFromMousePoint()
     {
@@ -38,59 +35,61 @@ namespace Client
     private void Awake()
     {
       _inertiaTargetPosition = _startPosition = _targetPosition = _camera.transform.position;
+      _targetSize = _camera.orthographicSize;
     }
 
     private void Update()
     {
-      //float cm = pixels / dpi * 2.54f;
-
-/*
-#if UNITY_EDITOR
-      Move();
-      Scroll();
-#else
-      */
-      MobileMove();
-      //MobileScroll();
-//#endif
+      MovePosition();
+      Zoom();
     }
 
-    private void Move()
+    private void MovePosition()
     {
-      var speed = 5f;
-      var offset = speed * Time.deltaTime;
+      if (Input.touchCount > 1)
+        _canMove = false;
 
-      if (Input.GetKey(KeyCode.A))
-        _camera.transform.position += Vector3.left * offset;
-      if (Input.GetKey(KeyCode.D))
-        _camera.transform.position += Vector3.right * offset;
+      if (Input.touchCount == 0 || PlatformUtilities.IsEditor)
+        _canMove = true;
 
-      if (Input.GetKey(KeyCode.W))
-        _camera.transform.position += Vector3.up * offset;
-      if (Input.GetKey(KeyCode.S))
-        _camera.transform.position += Vector3.down * offset;
+      if (!_canMove)
+        return;
+
+      Vector3 position;
+
+      if (PlatformUtilities.IsEditor ? Input.GetMouseButton(0) : Input.touchCount == 1)
+      {
+        var mousePosition = Input.mousePosition;
+        var touchPosition = PlatformUtilities.IsEditor ? (Vector2)mousePosition : Input.GetTouch(0).position;
+        if (_firstTouchPosition == null)
+        {
+          _firstTouchPosition = touchPosition;
+          _startPosition = _camera.transform.position;
+        }
+
+        var pixelDelta = touchPosition - _firstTouchPosition.Value;
+        var screenDelta = pixelDelta * PixelToScreenSizeFactor();
+        var dragMultiplier = _positionDragMultiplier * (_camera.orthographicSize / 6);
+        var fromStartDelta = -new Vector3(screenDelta.x, screenDelta.y, 0) * dragMultiplier;
+
+        _targetPosition = _startPosition + fromStartDelta;
+        _targetPosition = ClampPosition(_targetPosition);
+        var fromCurrentDelta = _targetPosition - _camera.transform.position;
+        _inertiaTargetPosition = _camera.transform.position + fromCurrentDelta * _positionInertiaFactor;
+        _inertiaTargetPosition = ClampPosition(_inertiaTargetPosition);
+        position = Vector3.Lerp(_camera.transform.position, _targetPosition, _positionLerpFactor * Time.deltaTime);
+      }
+      else
+      {
+        _firstTouchPosition = null;
+        position = Vector3.Lerp(_camera.transform.position, _inertiaTargetPosition, _positionInertiaLerpFactor * Time.deltaTime);
+      }
+
+      _camera.transform.position = position;
     }
 
-    private void Scroll()
+    private void Zoom()
     {
-      var speed = 100f;
-      var size = _camera.orthographicSize;
-      var delta = Input.mouseScrollDelta.y;
-
-      if (delta > 0)
-        size -= speed * Time.deltaTime;
-      else if (delta < 0)
-        size += speed * Time.deltaTime;
-
-      _camera.orthographicSize = Mathf.Clamp(size, 2, 5);
-    }
-
-    private void MobileMove()
-    {
-      MobileMove1();
-      return;
-
-      //scroll
       if (Input.touchCount == 2)
       {
         var touch0 = Input.GetTouch(0);
@@ -101,45 +100,18 @@ namespace Client
         var currentDistance = Vector2.Distance(touch0.position, touch1.position);
         var pixelDelta = currentDistance - prevDistance;
         var screenDelta = pixelDelta * PixelToScreenSizeFactor();
-        var targetSize = _camera.orthographicSize - screenDelta * _scaleDpiFactor;
-        var size = Mathf.Lerp(_camera.orthographicSize, targetSize, _scaleLerpFactor * Time.deltaTime);
-
-        _camera.orthographicSize = Mathf.Clamp(size, 2, 8);
+        _targetSize = _camera.orthographicSize - screenDelta * _zoomDragMultiplier;
       }
-    }
 
-    private void MobileMove1()
-    {
-      Vector3 position;
-
-      if (Input.touchCount == 1)
+      if (PlatformUtilities.IsEditor)
       {
-        var touch = Input.GetTouch(0);
-        if (_firstTouch == null)
-        {
-          _firstTouch = touch;
-          _startPosition = _camera.transform.position;
-        }
-
-        var pixelDelta = touch.position - _firstTouch.Value.position;
-        var screenDelta = pixelDelta * PixelToScreenSizeFactor();
-        var fromStartDelta = -new Vector3(screenDelta.x, screenDelta.y, 0) * _dpiFactor;
-        _targetPosition = _startPosition + fromStartDelta;
-        var fromCurrentDelta = _targetPosition - _camera.transform.position;
-        _inertiaTargetPosition = _camera.transform.position + fromCurrentDelta * _inertiaFactor;
-        position = Vector3.Lerp(_camera.transform.position, _targetPosition, _lerpFactor * Time.deltaTime);
-      }
-      else
-      {
-        if (_firstTouch.HasValue)
-          _firstTouch = null;
-
-        position = Vector3.Lerp(_camera.transform.position, _inertiaTargetPosition, _inertiaLerpFactor * Time.deltaTime);
+        var delta = Input.mouseScrollDelta.y;
+        if (Mathf.Abs(delta) > 0)
+          _targetSize = _camera.orthographicSize - delta * _zoomDragMultiplier / 5f;
       }
 
-      position.x = Mathf.Clamp(position.x, -4, 10);
-      position.y = Mathf.Clamp(position.y, -4, 10);
-      _camera.transform.position = position;
+      _targetSize = Mathf.Clamp(_targetSize, 4, 10);
+      _camera.orthographicSize = Mathf.Lerp(_camera.orthographicSize, _targetSize, _zoomLerpFactor * Time.deltaTime);
     }
 
     private float PixelToScreenSizeFactor()
@@ -148,30 +120,17 @@ namespace Client
       if (dpi <= 0)
         dpi = 160f;
 
+      if (PlatformUtilities.IsEditor)
+        dpi = 400;
+
       return 2.54f / dpi;
     }
 
-    private void MobileScroll()
+    private Vector3 ClampPosition(Vector3 position)
     {
-      if (Input.touchCount == 2)
-      {
-        var speed = 20f;
-        var size = _camera.orthographicSize;
-        var touch0 = Input.GetTouch(0);
-        var touch1 = Input.GetTouch(1);
-        var prevPos0 = touch0.position - touch0.deltaPosition;
-        var prevPos1 = touch1.position - touch1.deltaPosition;
-        var prevDistance = Vector2.Distance(prevPos0, prevPos1);
-        var currentDistance = Vector2.Distance(touch0.position, touch1.position);
-        var delta = currentDistance - prevDistance;
-
-        if (delta > 0)
-          size -= speed * Time.deltaTime;
-        else if (delta < 0)
-          size += speed * Time.deltaTime;
-
-        _camera.orthographicSize = Mathf.Clamp(size, 2, 5);
-      }
+      position.x = Mathf.Clamp(position.x, -4, 10);
+      position.y = Mathf.Clamp(position.y, -4, 10);
+      return position;
     }
   }
 }
