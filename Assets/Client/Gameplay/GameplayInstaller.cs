@@ -26,7 +26,7 @@ namespace Client.Gameplay
     protected override void Install()
     {
       Locator.Set(_configsProvider);
-      Locator.Set(new EventSystemController());
+      Locator.Set(new InputController());
       Locator.Set(_cameraController);
       Locator.Set(_tilemapController);
       Locator.Set(_gridController);

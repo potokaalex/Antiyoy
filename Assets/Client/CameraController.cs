@@ -13,7 +13,7 @@ namespace Client
     [SerializeField] private float _positionInertiaLerpFactor;
     [SerializeField] private float _zoomDragMultiplier;
     [SerializeField] private float _zoomLerpFactor;
-    private EventSystemController _eventSystemController;
+    private InputController _inputController;
     private Vector2? _firstTouchPosition;
     private Vector3 _startPosition;
     private Vector3 _targetPosition;
@@ -36,13 +36,13 @@ namespace Client
 
     private void Awake()
     {
-      _eventSystemController = Locator.Get<EventSystemController>();
+      _inputController = Locator.Get<InputController>();
       Clear();
     }
 
     private void Update()
     {
-      if(_eventSystemController.IsPointerOverUI())
+      if(_inputController.IsPointerOverUI())
       {
         Clear();
         return;

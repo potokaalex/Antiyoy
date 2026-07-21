@@ -1,6 +1,7 @@
 using Client.Infrastructure;
 using Client.Unit.Code;
 using Client.Utilities;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,7 +12,8 @@ namespace Client.Gameplay.UI
   {
     [SerializeField] private Button _createWarriorButton;
     [SerializeField] private Button _createBuildingButton;
-    [SerializeField] private GameObject _variantPanel;
+    [SerializeField] private RectTransform _variantPanel;
+    [SerializeField] private CanvasGroup _variantPanelCanvasGroup;
     [SerializeField] private TextMeshProUGUI _variantCost;
     [SerializeField] private Image _variantIcon;
     private UnitsService _unitsService;
@@ -35,7 +37,7 @@ namespace Client.Gameplay.UI
     public void Clear()
     {
       _buildingType = UnitType.None;
-      _variantPanel.SetActive(false);
+      SetActive(false);
     }
 
     private void OnCreateWarrior()
@@ -60,10 +62,27 @@ namespace Client.Gameplay.UI
 
     private void View(UnitType unitType)
     {
-      _variantPanel.SetActive(true);
       _variantCost.SetText($"${_unitsService.GetCost(unitType)}");
       _variantIcon.sprite = _unitsService.GetSprite(unitType);
-      AnimationsUtilities.DoAnchoredMove((RectTransform)_variantPanel.transform, new Vector2(0, -150), new Vector2(0, 0));
+      SetActive(true);
+    }
+
+    private void SetActive(bool isActive)
+    {
+      DOTween.Kill(this);
+      
+      if (isActive)
+      {
+        _variantPanel.gameObject.SetActive(true);
+        AnimationsUtilities.DoAnchoredMove(_variantPanel, new Vector2(0, -150), new Vector2(0, 0));
+        AnimationsUtilities.DoFade(_variantPanelCanvasGroup, 0, 1);
+      }
+      else
+      {
+        AnimationsUtilities.DoAnchoredMove(_variantPanel, new Vector2(0, 0), new Vector2(0, -150));
+        AnimationsUtilities.DoFade(_variantPanelCanvasGroup, 1, 0).SetId(this)
+          .onComplete += () => _variantPanel.gameObject.SetActive(false);
+      }
     }
   }
 }

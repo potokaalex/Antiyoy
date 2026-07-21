@@ -29,8 +29,8 @@ namespace Client.Gameplay.UI
       {
         _isActive = true;
         gameObject.SetActive(true);
-        AnimationsUtilities.DoAnchoredMove(_topPanel, new Vector2(0, 200), new Vector2(0, 0));
-        AnimationsUtilities.DoAnchoredMove(_creationPanel, new Vector2(0, -200), new Vector2(0, 0));
+        AnimationsUtilities.DoAnchoredMove(_topPanel, new Vector2(0, 150), new Vector2(0, 0));
+        AnimationsUtilities.DoAnchoredMove(_creationPanel, new Vector2(0, -150), new Vector2(0, 0));
         AnimationsUtilities.DoFade(_topPanelCanvasGroup, 0, 1);
         AnimationsUtilities.DoFade(_creationPanelCanvasGroup, 0, 1);
       }
@@ -38,8 +38,8 @@ namespace Client.Gameplay.UI
       {
         _isActive = false;
         DOTween.Sequence().SetId(this)
-          .Append(AnimationsUtilities.DoAnchoredMove(_topPanel, new Vector2(0, 0), new Vector2(0, 200)))
-          .Join(AnimationsUtilities.DoAnchoredMove(_creationPanel, new Vector2(0, 0), new Vector2(0, -200)))
+          .Append(AnimationsUtilities.DoAnchoredMove(_topPanel, new Vector2(0, 0), new Vector2(0, 150)))
+          .Join(AnimationsUtilities.DoAnchoredMove(_creationPanel, new Vector2(0, 0), new Vector2(0, -150)))
           .Join(AnimationsUtilities.DoFade(_topPanelCanvasGroup, 1, 0))
           .Join(AnimationsUtilities.DoFade(_creationPanelCanvasGroup, 1, 0))
           .onComplete += () => gameObject.SetActive(false);

@@ -28,7 +28,7 @@ namespace Client.Gameplay
     private GovernmentsService _governmentsService;
     private CapitalsController _capitalsController;
     private ProtectionView _protectionView;
-    private EventSystemController _eventSystemController;
+    private InputController _inputController;
     private GameplayMode _gameplayMode;
     private UnitType _creationUnitType;
     private int _turnsCount;
@@ -46,7 +46,7 @@ namespace Client.Gameplay
       _governmentsService = Locator.Get<GovernmentsService>();
       _capitalsController = Locator.Get<CapitalsController>();
       _protectionView = Locator.Get<ProtectionView>();
-      _eventSystemController = Locator.Get<EventSystemController>();
+      _inputController = Locator.Get<InputController>();
 
       _gridController.CreateCells();
       for (var i = 0; i < 4; i++)
@@ -68,7 +68,7 @@ namespace Client.Gameplay
     public void Tick()
     {
       //Input.GetMouseButtonDown(0) должно заменяться нажатием, не должно быть драгом.
-      if (Input.GetMouseButtonDown(0) && !_eventSystemController.IsPointerOverUI())
+      if (_inputController.IsClick && !_inputController.IsPointerOverUI())
       {
         if (_cameraController.GetHitFromMousePoint(out var hit) &&
             _gridController.GetCell(_gridController.WorldPositionToHex(hit.point), out var cell))
