@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Client.Utilities
+namespace Client.UI
 {
   [ExecuteAlways]
   public class SafeAreaFitter : MonoBehaviour

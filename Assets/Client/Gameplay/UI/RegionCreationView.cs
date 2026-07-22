@@ -1,4 +1,5 @@
 using Client.Infrastructure;
+using Client.UI;
 using Client.Unit.Code;
 using Client.Utilities;
 using DG.Tweening;
@@ -10,8 +11,8 @@ namespace Client.Gameplay.UI
 {
   public class RegionCreationView : MonoBehaviour
   {
-    [SerializeField] private Button _createWarriorButton;
-    [SerializeField] private Button _createBuildingButton;
+    [SerializeField] private CustomButton _createWarriorButton;
+    [SerializeField] private CustomButton _createBuildingButton;
     [SerializeField] private RectTransform _variantPanel;
     [SerializeField] private CanvasGroup _variantPanelCanvasGroup;
     [SerializeField] private TextMeshProUGUI _variantCost;
@@ -24,14 +25,14 @@ namespace Client.Gameplay.UI
     {
       _gameplayController = Locator.Get<GameplayController>();
       _unitsService = Locator.Get<UnitsService>();
-      _createWarriorButton.onClick.AddListener(OnCreateWarrior);
-      _createBuildingButton.onClick.AddListener(OnCreateBuilding);
+      _createWarriorButton.OnClick += OnCreateWarrior;
+      _createBuildingButton.OnClick += OnCreateBuilding;
     }
 
     private void OnDestroy()
     {
-      _createWarriorButton.onClick.RemoveListener(OnCreateWarrior);
-      _createBuildingButton.onClick.RemoveListener(OnCreateBuilding);
+      _createWarriorButton.OnClick -= OnCreateWarrior;
+      _createBuildingButton.OnClick -= OnCreateBuilding;
     }
 
     public void Clear()
