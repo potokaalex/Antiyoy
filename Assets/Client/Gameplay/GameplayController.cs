@@ -67,7 +67,6 @@ namespace Client.Gameplay
 
     public void Tick()
     {
-      //Input.GetMouseButtonDown(0) должно заменяться нажатием, не должно быть драгом.
       if (_inputController.IsClick && !_inputController.IsPointerOverUI())
       {
         if (_cameraController.GetHitFromMousePoint(out var hit) &&

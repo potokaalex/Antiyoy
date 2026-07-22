@@ -21,12 +21,14 @@ namespace Client
       _eventData = new PointerEventData(_eventSystem);
     }
 
-    public bool IsPointerOverUI()
+    public bool IsPointerOverUI() => IsPointerOverUI(Input.mousePosition);
+
+    public bool IsPointerOverUI(Vector2 mousePosition)
     {
       using (ListPool<RaycastResult>.Get(out var results))
       {
         _eventData ??= new PointerEventData(_eventSystem);
-        _eventData.position = Input.mousePosition;
+        _eventData.position = mousePosition;
         _eventSystem.RaycastAll(_eventData, results);
         return results.Count > 0;
       }

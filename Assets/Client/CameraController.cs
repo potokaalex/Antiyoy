@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using Client.Infrastructure;
 using Client.Utilities;
 using UnityEngine;
+using UnityEngine.Pool;
 
 namespace Client
 {
@@ -13,7 +15,10 @@ namespace Client
     [SerializeField] private float _positionInertiaLerpFactor;
     [SerializeField] private float _zoomDragMultiplier;
     [SerializeField] private float _zoomLerpFactor;
+    private readonly List<Touch> _touches = new();
+    private readonly List<int> _ignoredTouches = new();
     private InputController _inputController;
+    private Vector2? _mousePosition;
     private Vector2? _firstTouchPosition;
     private Vector3 _startPosition;
     private Vector3 _targetPosition;
@@ -42,25 +47,55 @@ namespace Client
 
     private void Update()
     {
-      if(_inputController.IsPointerOverUI())
-      {
-        Clear();
-        return;
-      }
-
+      CalculateTouches();
       MovePosition();
       Zoom();
     }
 
+    private void CalculateTouches()
+    {
+      _touches.Clear();
+
+      using (ListPool<int>.Get(out var allTouchesId))
+      {
+        for (var i = 0; i < Input.touchCount; i++)
+        {
+          var touch = Input.GetTouch(i);
+          allTouchesId.Add(touch.fingerId);
+          var ignored = _ignoredTouches.Contains(touch.fingerId);
+          
+          if (touch.phase == TouchPhase.Began && _inputController.IsPointerOverUI(touch.position) && !ignored)
+            _ignoredTouches.Add(touch.fingerId);
+          
+          if(!ignored)
+            _touches.Add(touch);
+        }
+
+        _ignoredTouches.RemoveAll(touchId => !allTouchesId.Contains(touchId));
+      }
+
+      if (PlatformUtilities.IsEditor)
+      {
+        var position = Input.mousePosition;
+
+        if (Input.GetMouseButtonDown(0))
+          _mousePosition = _inputController.IsPointerOverUI() ? null : position;
+        else if (Input.GetMouseButtonUp(0))
+          _mousePosition = null;
+        else if (_mousePosition.HasValue) 
+          _mousePosition = position;
+      }
+    }
+
     private void MovePosition()
     {
-      if (Input.touchCount > 1)
+      if (_touches.Count > 1)
       {
         _canMove = false;
         ClearPositionMove();
       }
 
-      if (Input.touchCount == 0 || PlatformUtilities.IsEditor)
+      if (_touches.Count == 0 || !_mousePosition.HasValue)
         _canMove = true;
 
       if (!_canMove)
@@ -68,10 +103,9 @@ namespace Client
 
       Vector3 position;
 
-      if (PlatformUtilities.IsEditor ? Input.GetMouseButton(0) : Input.touchCount == 1)
+      if (_mousePosition.HasValue || _touches.Count == 1)
       {
-        var mousePosition = Input.mousePosition;
-        var touchPosition = PlatformUtilities.IsEditor ? (Vector2)mousePosition : Input.GetTouch(0).position;
+        var touchPosition = PlatformUtilities.IsEditor ? _mousePosition!.Value : _touches[0].position;
         if (_firstTouchPosition == null)
         {
           _firstTouchPosition = touchPosition;
@@ -101,17 +135,17 @@ namespace Client
 
     private void Zoom()
     {
-      if (Input.touchCount == 2)
+      if (_touches.Count == 2)
       {
-        var touch0 = Input.GetTouch(0);
-        var touch1 = Input.GetTouch(1);
+        var touch0 = _touches[0];
+        var touch1 = _touches[1];
         var prevPos0 = touch0.position - touch0.deltaPosition;
         var prevPos1 = touch1.position - touch1.deltaPosition;
         var prevDistance = Vector2.Distance(prevPos0, prevPos1);
         var currentDistance = Vector2.Distance(touch0.position, touch1.position);
         var pixelDelta = currentDistance - prevDistance;
         var screenDelta = pixelDelta * PixelToScreenSizeFactor();
-        _targetSize = _camera.orthographicSize - screenDelta * _zoomDragMultiplier; //use startSize like in movePosition?
+        _targetSize = _camera.orthographicSize - screenDelta * _zoomDragMultiplier; //better use startSize like in movePosition?
       }
 
       if (PlatformUtilities.IsEditor)
@@ -144,7 +178,11 @@ namespace Client
       return position;
     }
 
-    private void ClearPositionMove() => _startPosition = _targetPosition = _inertiaTargetPosition = _camera.transform.position;
+    private void ClearPositionMove()
+    {
+      _startPosition = _targetPosition = _inertiaTargetPosition = _camera.transform.position;
+      _firstTouchPosition = null;
+    }
 
     private void Clear()
     {
