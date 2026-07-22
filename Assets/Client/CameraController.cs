@@ -105,7 +105,7 @@ namespace Client
 
       if (_mousePosition.HasValue || _touches.Count == 1)
       {
-        var touchPosition = PlatformUtilities.IsEditor ? _mousePosition!.Value : _touches[0].position;
+        var touchPosition = _mousePosition ?? _touches[0].position;
         if (_firstTouchPosition == null)
         {
           _firstTouchPosition = touchPosition;
