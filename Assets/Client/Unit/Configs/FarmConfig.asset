@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: FarmConfig
   m_EditorClassIdentifier: Client::Client.Unit.Scripts.UnitConfig
   Type: 2
-  Sprite: {fileID: 1212699043, guid: 488e27ed4f18bc645887aadb816b5c84, type: 3}
+  Sprite: {fileID: 21300000, guid: fd4ae562979f9bf46b2d22bb20fe12e4, type: 3}
   Income: 4
   CreationCost: 12
   TurnsCount: 0

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CapitalConfig
   m_EditorClassIdentifier: Client::Client.Unit.Scripts.UnitConfig
   Type: 3
-  Sprite: {fileID: -335417480, guid: 488e27ed4f18bc645887aadb816b5c84, type: 3}
+  Sprite: {fileID: 21300000, guid: fb9576ff5e765bd46b503d6dbae9c3d2, type: 3}
   Income: 0
   CreationCost: 0
   TurnsCount: 0

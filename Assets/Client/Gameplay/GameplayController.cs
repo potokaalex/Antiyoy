@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Client.Gameplay.UI;
 using Client.Government;
 using Client.Hex;
 using Client.Infrastructure;
@@ -7,7 +8,6 @@ using Client.Region;
 using Client.TilesSelection;
 using Client.Unit.Code;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.Pool;
 using UnityEngine.SceneManagement;
 
@@ -28,12 +28,15 @@ namespace Client.Gameplay
     private GovernmentsService _governmentsService;
     private CapitalsController _capitalsController;
     private ProtectionView _protectionView;
+    private InputController _inputController;
     private GameplayMode _gameplayMode;
     private UnitType _creationUnitType;
     private int _turnsCount;
 
     public void Initialize()
     {
+      Application.targetFrameRate = 300;
+
       _gridController = Locator.Get<GridController>();
       _cameraController = Locator.Get<CameraController>();
       _unitsService = Locator.Get<UnitsService>();
@@ -43,6 +46,7 @@ namespace Client.Gameplay
       _governmentsService = Locator.Get<GovernmentsService>();
       _capitalsController = Locator.Get<CapitalsController>();
       _protectionView = Locator.Get<ProtectionView>();
+      _inputController = Locator.Get<InputController>();
 
       _gridController.CreateCells();
       for (var i = 0; i < 4; i++)
@@ -63,7 +67,7 @@ namespace Client.Gameplay
 
     public void Tick()
     {
-      if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+      if (_inputController.IsClick && !_inputController.IsPointerOverUI())
       {
         if (_cameraController.GetHitFromMousePoint(out var hit) &&
             _gridController.GetCell(_gridController.WorldPositionToHex(hit.point), out var cell))
@@ -96,7 +100,6 @@ namespace Client.Gameplay
       _tilesSelectionView.ClearView();
       if (type != UnitType.Tower)
         _tilesSelectionView.ViewTiles(_selectedCells);
-      _gameplayUI.ViewUnitPrice(_unitsService.GetCost(type));
     }
 
     public void NextTurn()
@@ -158,12 +161,13 @@ namespace Client.Gameplay
       }
     }
 
-    private void Clear()
+    private void Clear(bool clearRegionUiActive = true)
     {
       _gameplayMode = GameplayMode.None;
       _tilesSelectionView.ClearView();
-      _gameplayUI.ActiveRegionUI(false);
-      _gameplayUI.ViewUnitPrice(0);
+      if(clearRegionUiActive)
+        _gameplayUI.ActiveRegionUI(false);
+      _gameplayUI.ClearRegionCreation();
     }
 
     private void TryMoveUnit(CellController cell)
@@ -184,18 +188,19 @@ namespace Client.Gameplay
         if (_selectedCells.Contains(cell) && _unitsService.Create(cell, _creationUnitType, _currentPlayer))
         {
           _selectedRegion.Money -= cost;
-          TrySelectRegion(cell);
+          Clear(false);
+          SelectRegion(cell.Region);
+          return;
         }
       }
 
       ReturnToSelectedRegion();
-      _gameplayUI.ClearCurrentBuilding();
     }
 
     private void ReturnToSelectedRegion()
     {
       var region = _selectedRegion;
-      Clear();
+      Clear(false);
       SelectRegion(region);
     }
 

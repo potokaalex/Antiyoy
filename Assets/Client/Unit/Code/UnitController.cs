@@ -31,8 +31,6 @@ namespace Client.Unit.Code
 
     public bool CanViewProtection => Type is UnitType.Capital or UnitType.Tower;
 
-    public bool IsBuilding => Type is UnitType.Capital or UnitType.Farm or UnitType.Tower;
-
     private int TurnsCount
     {
       get => _turnsCount;

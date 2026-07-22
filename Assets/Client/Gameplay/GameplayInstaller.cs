@@ -1,5 +1,6 @@
 using Client.Configs;
 using Client.DebugFeatures;
+using Client.Gameplay.UI;
 using Client.Government;
 using Client.Infrastructure;
 using Client.Protection;
@@ -25,6 +26,7 @@ namespace Client.Gameplay
     protected override void Install()
     {
       Locator.Set(_configsProvider);
+      Locator.Set(new InputController());
       Locator.Set(_cameraController);
       Locator.Set(_tilemapController);
       Locator.Set(_gridController);
