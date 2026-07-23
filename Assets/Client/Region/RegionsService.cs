@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Client._T;
+using Client.Borders;
 using Client.Configs;
 using Client.Hex;
 using Client.Infrastructure;
@@ -16,7 +16,7 @@ namespace Client.Region
     private GridController _gridController;
     private ConfigsProvider _configsProvider;
     private RegionsFactory _regionsFactory;
-    private BordersController _bordersController;
+    private BordersService _bordersService;
 
     public IReadOnlyList<RegionController> Regions => _regionsFactory.ActiveRegions;
 
@@ -25,7 +25,7 @@ namespace Client.Region
       _gridController = Locator.Get<GridController>();
       _configsProvider = Locator.Get<ConfigsProvider>();
       _regionsFactory = Locator.Get<RegionsFactory>();
-      _bordersController = Locator.Get<BordersController>();
+      _bordersService = Locator.Get<BordersService>();
     }
 
     public void InitialCreateRegions()
@@ -51,6 +51,9 @@ namespace Client.Region
       _regionsFactory.Create(regions[0], RegionType.Red);
       _regionsFactory.Create(regions[1], RegionType.Blue);
       _regionsFactory.Create(regions[2]);
+      
+      foreach (var region in Regions)
+        region.Money = 100;
     }
 
     public void RemoveFromRegion(CellController cell)
@@ -74,7 +77,7 @@ namespace Client.Region
         _regionsFactory.Create(cell, type);
 
       TryJoinRegions(cell.Position, type);
-      _bordersController.RecreateBorders();
+      _bordersService.ViewRegionsBorders();
     }
 
     public Color GetColorFor(RegionController region)

@@ -1,4 +1,4 @@
-using Client._T;
+using Client.Borders;
 using Client.Configs;
 using Client.DebugFeatures;
 using Client.Gameplay.UI;
@@ -23,7 +23,7 @@ namespace Client.Gameplay
     [SerializeField] private TilesSelectionView _tilesSelectionView;
     [SerializeField] private GameplayUI _gameplayUI;
     [SerializeField] private ProtectionView _protectionView;
-    [SerializeField] private BordersController _bordersController;
+    [SerializeField] private BordersService _bordersService;
 
     protected override void Install()
     {
@@ -34,7 +34,7 @@ namespace Client.Gameplay
       Locator.Set(_gridController);
       Locator.Set(_debugController);
       Locator.Set(new CapitalsController());
-      Locator.Set(_bordersController);
+      Locator.Set(_bordersService);
       Locator.Set(new RegionsFactory());
       Locator.Set(new RegionsService());
       Locator.Set(new GovernmentsService());

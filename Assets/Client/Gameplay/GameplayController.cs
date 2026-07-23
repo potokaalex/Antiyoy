@@ -1,8 +1,7 @@
 using System.Collections.Generic;
-using Client._T;
+using Client.Borders;
 using Client.Gameplay.UI;
 using Client.Government;
-using Client.Hex;
 using Client.Infrastructure;
 using Client.Protection;
 using Client.Region;
@@ -27,10 +26,9 @@ namespace Client.Gameplay
     private GameplayUI _gameplayUI;
     private RegionsService _regionsService;
     private GovernmentsService _governmentsService;
-    private CapitalsController _capitalsController;
     private ProtectionView _protectionView;
     private InputController _inputController;
-    private BordersController _bordersController;
+    private BordersService _bordersService;
     private GameplayMode _gameplayMode;
     private UnitType _creationUnitType;
     private int _turnsCount;
@@ -46,20 +44,14 @@ namespace Client.Gameplay
       _gameplayUI = Locator.Get<GameplayUI>();
       _regionsService = Locator.Get<RegionsService>();
       _governmentsService = Locator.Get<GovernmentsService>();
-      _capitalsController = Locator.Get<CapitalsController>();
       _protectionView = Locator.Get<ProtectionView>();
       _inputController = Locator.Get<InputController>();
-      _bordersController = Locator.Get<BordersController>();
+      _bordersService = Locator.Get<BordersService>();
 
       _gridController.InitialCreateCells();
       _unitsService.InitialCreateUnits();
       _regionsService.InitialCreateRegions();
-      _bordersController.RecreateBorders();
-
-      //пайплайн: сздать все клетки(+), создать всех юнитов(+), посчитать все регионы(+), посчитать все границы.
-
-      foreach (var region in _regionsService.Regions)
-        region.Money = 100;
+      _bordersService.ViewRegionsBorders();
 
       _gameplayUI.ViewTurnsCount(_turnsCount);
     }

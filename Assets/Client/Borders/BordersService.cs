@@ -7,27 +7,36 @@ using Client.Utilities;
 using UnityEngine;
 using UnityEngine.Pool;
 
-namespace Client._T
+namespace Client.Borders
 {
-  public class BordersController : MonoBehaviour, IInitializable
+  //нужно как-то подсветить границы заселекченного региона.
+  //и сделать красивую анимацию для заселекченных тайлов.
+  //т.е. наверное можно просто расширить интерфейс сервиса, но в нём уже многовато логики, значит можно вынести какую-то фабрику.
+  
+  public class BordersService : MonoBehaviour, IInitializable
   {
-    [SerializeField] private GameObject _borderPrefab;
+    [SerializeField] private BorderController _borderPrefab;
     [SerializeField] private float _borderWidth;
     [SerializeField] private float _borderHeight;
-    private readonly List<GameObject> _activeBorders = new();
+    private readonly List<BorderController> _activeBorders = new();
     private readonly HashSet<Vector2> _activeBordersPositions = new();
     private RegionsService _regionsService;
     private GridController _gridController;
-    private ObjectPool<GameObject> _bordersPool;
+    private ObjectPool<BorderController> _bordersPool;
 
     public void Initialize()
     {
       _regionsService = Locator.Get<RegionsService>();
       _gridController = Locator.Get<GridController>();
-      _bordersPool = new ObjectPool<GameObject>(() => Instantiate(_borderPrefab, transform), t => t.SetActive(true), t => t.SetActive(false));
+      _bordersPool = new ObjectPool<BorderController>(CreateBorder, x => x.SetActive(true), x => x.SetActive(false));
     }
 
-    public void RecreateBorders()
+    public void ViewSelectedRegionBorders()
+    {
+      
+    }
+
+    public void ViewRegionsBorders()
     {
       ReleaseActiveBorders();
 
@@ -71,8 +80,7 @@ namespace Client._T
         return;
 
       var border = _bordersPool.Get();
-      border.transform.SetPositionAndRotation(position, Quaternion.Euler(0, 0, zRotation));
-      border.transform.localScale = new Vector3(_borderHeight, _borderWidth, 1);
+      border.Transform.SetPositionAndRotation(position, Quaternion.Euler(0, 0, zRotation));
       _activeBorders.Add(border);
       _activeBordersPositions.Add(position);
     }
@@ -114,6 +122,13 @@ namespace Client._T
         position = Vector2.zero;
         zRotation = 0;
       }
+    }
+
+    private BorderController CreateBorder()
+    {
+      var instance = Instantiate(_borderPrefab, transform);
+      instance.Initialize(_borderWidth, _borderHeight);
+      return instance;
     }
   }
 }
