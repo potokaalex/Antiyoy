@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Client._T;
 using Client.Configs;
 using Client.Hex;
 using Client.Infrastructure;
@@ -15,6 +16,7 @@ namespace Client.Region
     private GridController _gridController;
     private ConfigsProvider _configsProvider;
     private RegionsFactory _regionsFactory;
+    private BordersController _bordersController;
 
     public IReadOnlyList<RegionController> Regions => _regionsFactory.ActiveRegions;
 
@@ -23,6 +25,32 @@ namespace Client.Region
       _gridController = Locator.Get<GridController>();
       _configsProvider = Locator.Get<ConfigsProvider>();
       _regionsFactory = Locator.Get<RegionsFactory>();
+      _bordersController = Locator.Get<BordersController>();
+    }
+
+    public void InitialCreateRegions()
+    {
+      List<List<CellController>> regions = new() { new(), new(), new() };
+
+      for (var y = 0; y < _gridController.Size.y; y++)
+      for (var x = 0; x < _gridController.Size.x; x++)
+      {
+        _gridController.GetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(x, y)), out var cell);
+
+        if (y == 0)
+        {
+          if (x < 4)
+            regions[0].Add(cell);
+          else if (x <= 9)
+            regions[1].Add(cell);
+        }
+        else
+          regions[2].Add(cell);
+      }
+
+      _regionsFactory.Create(regions[0], RegionType.Red);
+      _regionsFactory.Create(regions[1], RegionType.Blue);
+      _regionsFactory.Create(regions[2]);
     }
 
     public void RemoveFromRegion(CellController cell)
@@ -46,6 +74,7 @@ namespace Client.Region
         _regionsFactory.Create(cell, type);
 
       TryJoinRegions(cell.Position, type);
+      _bordersController.RecreateBorders();
     }
 
     public Color GetColorFor(RegionController region)

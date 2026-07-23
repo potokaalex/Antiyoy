@@ -1,17 +1,21 @@
 using System.Collections.Generic;
 using Client.Hex;
+using Client.Infrastructure;
 using Client.Region;
 using Client.Utilities;
 using UnityEngine;
 
 namespace Client
 {
-  public class GridController : MonoBehaviour
+  public class GridController : MonoBehaviour, IInitializable
   {
     [SerializeField] private Grid _grid;
     private CellController[] _cells;
+    private RegionsService _regionsService;
 
     public Vector2Int Size { get; } = new(9, 9);
+
+    public void Initialize() => _regionsService = Locator.Get<RegionsService>();
 
     public HexCoordinates WorldPositionToHex(Vector3 worldPosition) =>
       HexCoordinates.FromArray2DIndex(GridIndexTo2DIndex(_grid.WorldToCell(worldPosition)));
@@ -34,13 +38,13 @@ namespace Client
       return false;
     }
 
-    public void CreateCells()
+    public void InitialCreateCells()
     {
       _cells = new CellController[Size.x * Size.y];
 
       for (var y = 0; y < Size.y; y++)
       for (var x = 0; x < Size.x; x++)
-        CreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(x, y)), RegionType.Neutral);
+        CreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(x, y)));
     }
 
     public void ReCreateCell(HexCoordinates position, RegionType type)
@@ -69,10 +73,17 @@ namespace Client
 
     private void CreateCell(HexCoordinates position, RegionType type)
     {
+      var cell = CreateCell(position);
+      _regionsService.AddToBestNeighbourRegion(type, cell);
+    }
+
+    private CellController CreateCell(HexCoordinates position)
+    {
       var cell = new CellController();
       var arrayIndex = MathUtilities.ToArrayIndex(position.ToArray2DIndex(), Size.x);
       _cells[arrayIndex] = cell;
-      cell.Initialize(position, type);
+      cell.Initialize(position);
+      return cell;
     }
 
     private bool IsPositionInGrid(HexCoordinates position)

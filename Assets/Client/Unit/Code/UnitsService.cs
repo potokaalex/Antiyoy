@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Client.Configs;
+using Client.Hex;
 using Client.Infrastructure;
 using Client.Region;
 using UnityEngine;
@@ -13,6 +14,7 @@ namespace Client.Unit.Code
     private readonly List<IUnit> _units = new();
     private ConfigsProvider _configsProvider;
     private UnitsAreaCalculator _areaCalculator;
+    private GridController _gridController;
     private Transform _unitsRoot;
     private ObjectPool<UnitController> _pool;
 
@@ -20,9 +22,19 @@ namespace Client.Unit.Code
     {
       _configsProvider = Locator.Get<ConfigsProvider>();
       _areaCalculator = Locator.Get<UnitsAreaCalculator>();
+      _gridController = Locator.Get<GridController>();
       _unitsRoot = new GameObject("UnitsRoot").transform;
       _pool = new(() => Object.Instantiate(_configsProvider.UnitPrefab, _unitsRoot), x => x.gameObject.SetActive(true),
         x => x.gameObject.SetActive(false));
+    }
+
+    public void InitialCreateUnits()
+    {
+      _gridController.GetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(0, 0)), out var redCapitalCell);
+      CreateUnit(redCapitalCell, UnitType.Capital);
+
+      _gridController.GetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(8, 0)), out var blueCapitalCell);
+      CreateUnit(blueCapitalCell, UnitType.Capital);
     }
 
     public bool Create(CellController cell, UnitType type, RegionType regionType)
@@ -68,10 +80,17 @@ namespace Client.Unit.Code
 
     private void CreateUnit(CellController cell, UnitType type, RegionType regionType)
     {
+      var unit = CreateUnit(cell, type);
+      unit.InitialConquer(cell, regionType);
+    }
+
+    private UnitController CreateUnit(CellController cell, UnitType type)
+    {
       Destroy(cell.Unit);
       var instance = _pool.Get();
-      instance.Initialize(cell, _configsProvider.UnitsConfigs[type], regionType);
+      instance.Initialize(_configsProvider.UnitsConfigs[type]);
       _units.Add(instance);
+      return instance;
     }
 
     private bool CanCreateUnitAt(CellController cell, RegionType playerRegion)

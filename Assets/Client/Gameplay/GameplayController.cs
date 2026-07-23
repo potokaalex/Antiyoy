@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Client._T;
 using Client.Gameplay.UI;
 using Client.Government;
 using Client.Hex;
@@ -29,6 +30,7 @@ namespace Client.Gameplay
     private CapitalsController _capitalsController;
     private ProtectionView _protectionView;
     private InputController _inputController;
+    private BordersController _bordersController;
     private GameplayMode _gameplayMode;
     private UnitType _creationUnitType;
     private int _turnsCount;
@@ -47,17 +49,14 @@ namespace Client.Gameplay
       _capitalsController = Locator.Get<CapitalsController>();
       _protectionView = Locator.Get<ProtectionView>();
       _inputController = Locator.Get<InputController>();
+      _bordersController = Locator.Get<BordersController>();
 
-      _gridController.CreateCells();
-      for (var i = 0; i < 4; i++)
-        _gridController.ReCreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(i, 0)), RegionType.Red);
-      _gridController.GetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(0, 0)), out var redCapitalCell);
-      _capitalsController.SetCapital(redCapitalCell);
+      _gridController.InitialCreateCells();
+      _unitsService.InitialCreateUnits();
+      _regionsService.InitialCreateRegions();
+      _bordersController.RecreateBorders();
 
-      for (var i = 4; i < 9; i++)
-        _gridController.ReCreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(i, 0)), RegionType.Blue);
-      _gridController.GetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(8, 0)), out var blueCapitalCell);
-      _capitalsController.SetCapital(blueCapitalCell);
+      //пайплайн: сздать все клетки(+), создать всех юнитов(+), посчитать все регионы(+), посчитать все границы.
 
       foreach (var region in _regionsService.Regions)
         region.Money = 100;
