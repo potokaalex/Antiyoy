@@ -31,8 +31,8 @@ namespace Client.Borders
       ClearBorders();
 
       foreach (var region in _regionsService.Regions)
-      foreach (var cell in region.Cells) 
-        CreateAround(cell, region.Type, CreateBorder);
+      foreach (var cell in region.Cells)
+        CreateAroundRegion(cell, region.Type, CreateBorder);
     }
 
     public void ClearBorders()
@@ -45,8 +45,8 @@ namespace Client.Borders
 
       _activePositions.Clear();
     }
-    
-    public void CreateAround(CellController cell, RegionType regionType, Action<Vector2, HexCoordinates> create)
+
+    public void CreateAroundRegion(CellController cell, RegionType regionType, Action<Vector2, HexCoordinates> create)
     {
       var cellWorldPosition = (Vector2)_gridController.HexPositionToWorld(cell.Position);
       foreach (var direction in HexUtilities.Directions)
@@ -54,6 +54,21 @@ namespace Client.Borders
         if (_gridController.GetCell(cell.Position + direction, out var neighbourCell))
         {
           if (neighbourCell.Region.Type != regionType)
+            create(cellWorldPosition, direction);
+        }
+        else
+          create(cellWorldPosition, direction);
+      }
+    }
+
+    public void CreateAround(CellController cell, List<CellController> cells, Action<Vector2, HexCoordinates> create)
+    {
+      var cellWorldPosition = (Vector2)_gridController.HexPositionToWorld(cell.Position);
+      foreach (var direction in HexUtilities.Directions)
+      {
+        if (_gridController.GetCell(cell.Position + direction, out var neighbourCell))
+        {
+          if (!cells.Contains(neighbourCell))
             create(cellWorldPosition, direction);
         }
         else
@@ -99,7 +114,7 @@ namespace Client.Borders
         zRotation = 0;
       }
     }
-    
+
     private void CreateBorder(Vector2 cellPosition, HexCoordinates direction)
     {
       CalculatePosition(cellPosition, direction, out var position, out var zRotation);

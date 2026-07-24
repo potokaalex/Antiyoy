@@ -5,13 +5,17 @@ namespace Client.Borders
 {
   public class BorderController : MonoBehaviour
   {
-    [SerializeField] private SpriteRenderer _spriteRenderer;
+    [SerializeField] private SpriteRenderer[] _spriteRenderers;
 
     public Transform Transform { get; private set; }
 
     private void Awake() => Transform = transform;
 
-    public void SetActive(bool isActive) => _spriteRenderer.enabled = isActive;
+    public void SetActive(bool isActive)
+    {
+      foreach (var r in _spriteRenderers) 
+        r.enabled = isActive;
+    }
 
     public Tween DoAppearAnimation(Vector3 targetPosition, Vector3 direction)
     {

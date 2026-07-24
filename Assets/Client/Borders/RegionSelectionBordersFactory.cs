@@ -7,7 +7,7 @@ using UnityEngine.Pool;
 
 namespace Client.Borders
 {
-  public class SelectionBordersFactory : MonoBehaviour
+  public class RegionSelectionBordersFactory : MonoBehaviour
   {
     [SerializeField] private BordersFactory _bordersFactory;
     [SerializeField] private BorderController _prefab;
@@ -25,7 +25,7 @@ namespace Client.Borders
       ClearBorders();
 
       foreach (var cell in region.Cells) 
-        _bordersFactory.CreateAround(cell, region.Type, CreateBorder);
+        _bordersFactory.CreateAroundRegion(cell, region.Type, CreateBorder);
     }
 
     public void ClearBorders()

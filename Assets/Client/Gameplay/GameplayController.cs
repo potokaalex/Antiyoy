@@ -89,8 +89,10 @@ namespace Client.Gameplay
       _creationUnitType = type;
       _unitsService.GetUnitCreationArea(_selectedRegion, _selectedCells, _creationUnitType);
       _tilesSelectionView.ClearView();
-      if (type != UnitType.Tower)
-        _tilesSelectionView.ViewTiles(_selectedCells);
+      _bordersService.ViewRegionSelectionBorders(_selectedRegion);
+
+      if (type != UnitType.Tower) 
+        ViewSelectedCells();
     }
 
     public void NextTurn()
@@ -210,7 +212,7 @@ namespace Client.Gameplay
       if (cell.Region.Type == _currentPlayer && _unitsService.Get(cell, out _selectedUnit) && _selectedUnit.HasTurns)
       {
         _selectedUnit.GetMoveArea(_selectedCells);
-        _tilesSelectionView.ViewTiles(_selectedCells);
+        ViewSelectedCells();
         _gameplayMode = GameplayMode.SelectedUnit;
       }
     }
@@ -228,6 +230,12 @@ namespace Client.Gameplay
     {
       if (cell.Region.Type == _currentPlayer && _unitsService.Get(cell, out _selectedUnit) && _selectedUnit.CanViewProtection)
         _protectionView.ViewBuildingsProtection(cell.Region);
+    }
+
+    private void ViewSelectedCells()
+    {
+      _bordersService.ClearRegionSelectionBorders();
+      _tilesSelectionView.ViewTiles(_selectedCells);
     }
   }
 }

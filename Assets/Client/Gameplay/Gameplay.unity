@@ -834,6 +834,7 @@ GameObject:
   - component: {fileID: 1094341603}
   - component: {fileID: 1094341605}
   - component: {fileID: 1094341604}
+  - component: {fileID: 1094341606}
   m_Layer: 0
   m_Name: BordersService
   m_TagString: Untagged
@@ -869,7 +870,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Client::Client._T.BordersController
   _bordersFactory: {fileID: 1094341605}
-  _selectionBordersFactory: {fileID: 1094341604}
+  _regionSelectionBordersFactory: {fileID: 1094341604}
+  _tilesSelectionBordersFactory: {fileID: 1094341606}
 --- !u!114 &1094341604
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -897,6 +899,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Client::Client.Borders.BordersFactory
   _prefab: {fileID: 2345319183372345114, guid: 8bf7ee778af52004aa82763e8adc439e, type: 3}
+--- !u!114 &1094341606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1094341601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d520cf69f05418cb012101614935b82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::Client.Borders.TilesSelectionBordersFactory
+  _bordersFactory: {fileID: 1094341605}
+  _prefab: {fileID: 2345319183372345114, guid: 37a4c118d3a33654da07144bdf239f27, type: 3}
+  _height: 0.5
+  _width: 0.04
 --- !u!1001 &1097210872
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1312,7 +1330,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!212 &1825226719
 SpriteRenderer:
   serializedVersion: 2
@@ -1321,7 +1339,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1825226718}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -1510,7 +1528,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Client::Client.Gameplay.SelectableTilemap
   _tileMaskPrefab: {fileID: 7311759828820901779, guid: 82e460a06ef2395489a9ad7233817309, type: 3}
-  _hidePanel: {fileID: 1825226718}
+  _hidePanel: {fileID: 1825226719}
 --- !u!1 &1901806471
 GameObject:
   m_ObjectHideFlags: 0
