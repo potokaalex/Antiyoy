@@ -152,12 +152,16 @@ namespace Client.Gameplay
       }
     }
 
-    private void Clear(bool clearRegionUiActive = true)
+    private void Clear(bool clearRegionView = true)
     {
       _gameplayMode = GameplayMode.None;
+      _selectedRegion = null;
       _tilesSelectionView.ClearView();
-      if(clearRegionUiActive)
+      if(clearRegionView)
+      {
         _gameplayUI.ActiveRegionUI(false);
+        _bordersService.ClearRegionSelectionBorders();
+      }
       _gameplayUI.ClearRegionCreation();
     }
 
@@ -197,7 +201,7 @@ namespace Client.Gameplay
 
     private void TrySelectRegion(CellController cell)
     {
-      if (cell.Region.Type == _currentPlayer && cell.Region.IsAlive)
+      if (cell.Region.Type == _currentPlayer && cell.Region.IsAlive && _selectedRegion != cell.Region)
         SelectRegion(cell.Region);
     }
 
@@ -216,6 +220,7 @@ namespace Client.Gameplay
       _selectedRegion = region;
       _gameplayUI.ActiveRegionUI(true);
       _gameplayUI.ViewRegionData(_selectedRegion.Money, _selectedRegion.GetIncome());
+      _bordersService.ViewRegionSelectionBorders(region);
       _gameplayMode = GameplayMode.SelectedRegion;
     }
 

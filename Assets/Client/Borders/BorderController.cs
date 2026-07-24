@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 
 namespace Client.Borders
@@ -8,12 +9,14 @@ namespace Client.Borders
 
     public Transform Transform { get; private set; }
 
-    public void Initialize(float width, float height)
-    {
-      Transform = transform;
-      Transform.localScale = new Vector3(height, width, 1);
-    }
+    private void Awake() => Transform = transform;
 
     public void SetActive(bool isActive) => _spriteRenderer.enabled = isActive;
+
+    public Tween DoAppearAnimation(Vector3 targetPosition, Vector3 direction)
+    {
+      Transform.position = targetPosition - direction * 0.05f;
+      return Transform.DOMove(targetPosition, 0.2f);
+    }
   }
 }
