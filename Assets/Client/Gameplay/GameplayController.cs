@@ -67,7 +67,7 @@ namespace Client.Gameplay
             ShowBuildingsProtection(cell);
 
           if (_gameplayMode == GameplayMode.None || _gameplayMode == GameplayMode.SelectedRegion)
-            TrySelectRegion(cell);
+            TrySelectRegion(cell, false);
 
           if (_gameplayMode == GameplayMode.SelectedRegion && cell.Region.Type != _currentPlayer)
             Clear();
@@ -89,10 +89,9 @@ namespace Client.Gameplay
       _creationUnitType = type;
       _unitsService.GetUnitCreationArea(_selectedRegion, _selectedCells, _creationUnitType);
       _tilesSelectionView.ClearView();
-      _bordersService.ViewRegionSelectionBorders(_selectedRegion);
 
       if (type != UnitType.Tower) 
-        ViewSelectedCells();
+        _tilesSelectionView.ViewTiles(_selectedCells);
     }
 
     public void NextTurn()
@@ -171,7 +170,7 @@ namespace Client.Gameplay
     {
       if (!_selectedCells.Contains(cell) || _selectedUnit.Move(cell))
       {
-        Clear();
+        Clear(cell.Region.Type != _currentPlayer);
         TrySelectRegion(cell);
         TrySelectUnit(cell);
       }
@@ -201,10 +200,10 @@ namespace Client.Gameplay
       SelectRegion(region);
     }
 
-    private void TrySelectRegion(CellController cell)
+    private void TrySelectRegion(CellController cell, bool forceBordersAnim = true)
     {
       if (cell.Region.Type == _currentPlayer && cell.Region.IsAlive && _selectedRegion != cell.Region)
-        SelectRegion(cell.Region);
+        SelectRegion(cell.Region, forceBordersAnim);
     }
 
     private void TrySelectUnit(CellController cell)
@@ -212,17 +211,17 @@ namespace Client.Gameplay
       if (cell.Region.Type == _currentPlayer && _unitsService.Get(cell, out _selectedUnit) && _selectedUnit.HasTurns)
       {
         _selectedUnit.GetMoveArea(_selectedCells);
-        ViewSelectedCells();
+        _tilesSelectionView.ViewTiles(_selectedCells);
         _gameplayMode = GameplayMode.SelectedUnit;
       }
     }
 
-    private void SelectRegion(RegionController region)
+    private void SelectRegion(RegionController region, bool forceBordersAnim = true)
     {
       _selectedRegion = region;
       _gameplayUI.ActiveRegionUI(true);
       _gameplayUI.ViewRegionData(_selectedRegion.Money, _selectedRegion.GetIncome());
-      _bordersService.ViewRegionSelectionBorders(region);
+      _bordersService.ViewRegionSelectionBorders(region, forceBordersAnim);
       _gameplayMode = GameplayMode.SelectedRegion;
     }
 
@@ -230,12 +229,6 @@ namespace Client.Gameplay
     {
       if (cell.Region.Type == _currentPlayer && _unitsService.Get(cell, out _selectedUnit) && _selectedUnit.CanViewProtection)
         _protectionView.ViewBuildingsProtection(cell.Region);
-    }
-
-    private void ViewSelectedCells()
-    {
-      _bordersService.ClearRegionSelectionBorders();
-      _tilesSelectionView.ViewTiles(_selectedCells);
     }
   }
 }

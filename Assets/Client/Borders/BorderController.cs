@@ -17,10 +17,16 @@ namespace Client.Borders
         r.enabled = isActive;
     }
 
-    public Tween DoAppearAnimation(Vector3 targetPosition, Vector3 direction)
+    public Tween DoAppearAnimation(Vector3 targetPosition, Vector3 direction, bool forceAnimation)
     {
+      if (forceAnimation)
+      {
+        Transform.position = targetPosition;
+        return null;
+      }
+
       Transform.position = targetPosition - direction * 0.05f;
-      return Transform.DOMove(targetPosition, 0.2f);
+      return Transform.DOMove(targetPosition, 0.25f);
     }
   }
 }

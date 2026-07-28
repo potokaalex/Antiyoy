@@ -20,12 +20,11 @@ namespace Client.Borders
         new ObjectPool<BorderController>(() => Instantiate(_prefab, transform), x => x.SetActive(true), x => x.SetActive(false));
     }
 
-    public void ViewBorders(RegionController region)
+    public void ViewBorders(RegionController region, bool forceAnimation)
     {
       ClearBorders();
-
-      foreach (var cell in region.Cells) 
-        _bordersFactory.CreateAroundRegion(cell, region.Type, CreateBorder);
+      foreach (var cell in region.Cells)
+        _bordersFactory.CreateAroundRegion(cell, region.Type, (pos, dir) => CreateBorder(pos, dir, forceAnimation));
     }
 
     public void ClearBorders()
@@ -39,13 +38,13 @@ namespace Client.Borders
       }
     }
 
-    private void CreateBorder(Vector2 cellPosition, HexCoordinates direction)
+    private void CreateBorder(Vector2 cellPosition, HexCoordinates direction, bool forceAnimation)
     {
       _bordersFactory.CalculatePosition(cellPosition, direction, out var position, out var zRotation);
       var border = _pool.Get();
       _active.Add(border);
       border.Transform.rotation = Quaternion.Euler(0, 0, zRotation);
-      border.DoAppearAnimation(position, (position - cellPosition).normalized).SetId(this);
+      border.DoAppearAnimation(position, (position - cellPosition).normalized, forceAnimation)?.SetId(this);
     }
   }
 }

@@ -12,7 +12,8 @@ namespace Client.Borders
 
     public void ClearRegionSelectionBorders() => _regionSelectionBordersFactory.ClearBorders();
 
-    public void ViewRegionSelectionBorders(RegionController region) => _regionSelectionBordersFactory.ViewBorders(region);
+    public void ViewRegionSelectionBorders(RegionController region, bool forceAnimation) =>
+      _regionSelectionBordersFactory.ViewBorders(region, forceAnimation);
 
     public void ViewRegionsBorders() => _bordersFactory.ViewRegionsBorders();
 

@@ -51,7 +51,7 @@ namespace Client.Borders
       else
         border.Transform.localScale = new Vector3(_height, _width, 1);
 
-      border.DoAppearAnimation(position, (position - cellPosition).normalized).SetId(this);
+      border.DoAppearAnimation(position, (position - cellPosition).normalized, false).SetId(this);
     }
   }
 }
