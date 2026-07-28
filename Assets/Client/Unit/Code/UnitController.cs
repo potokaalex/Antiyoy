@@ -41,7 +41,7 @@ namespace Client.Unit.Code
       }
     }
 
-    public void Initialize(CellController cell, UnitConfig config, RegionType regionType)
+    public void Initialize(UnitConfig config)
     {
       _gridController = Locator.Get<GridController>();
       _unitsService = Locator.Get<UnitsService>();
@@ -49,7 +49,13 @@ namespace Client.Unit.Code
       _config = config;
       ResetTurnsCount();
       _renderer.sprite = config.Sprite;
-      InitialConquer(cell, regionType);
+    }
+
+    public void InitialConquer(CellController cell, RegionType regionType)
+    {
+      if (!IsFriendlyRegion(cell, regionType))
+        DecreaseTurnsCount();
+      Conquer(cell, regionType);
     }
 
     public void Dispose()
@@ -76,13 +82,6 @@ namespace Client.Unit.Code
     }
 
     public void GetProtectionArea(List<CellController> outList) => _areaCalculator.GetProtectionArea(this, outList, true);
-
-    private void InitialConquer(CellController cell, RegionType regionType)
-    {
-      if (!IsFriendlyRegion(cell, regionType))
-        DecreaseTurnsCount();
-      Conquer(cell, regionType);
-    }
 
     private void Conquer(CellController cell, RegionType regionType)
     {

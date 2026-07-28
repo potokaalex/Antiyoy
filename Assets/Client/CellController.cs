@@ -43,13 +43,12 @@ namespace Client
       }
     }
 
-    public void Initialize(HexCoordinates position, RegionType type)
+    public void Initialize(HexCoordinates position)
     {
       _tilemapController = Locator.Get<TilemapController>();
       _regionsService = Locator.Get<RegionsService>();
       _unitsService = Locator.Get<UnitsService>();
       Position = position;
-      _regionsService.AddToBestNeighbourRegion(type, this);
     }
 
     public void Dispose()

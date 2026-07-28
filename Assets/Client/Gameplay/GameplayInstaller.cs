@@ -1,3 +1,4 @@
+using Client.Borders;
 using Client.Configs;
 using Client.DebugFeatures;
 using Client.Gameplay.UI;
@@ -8,6 +9,7 @@ using Client.Region;
 using Client.Tile;
 using Client.TilesSelection;
 using Client.Unit.Code;
+using Client.Unit.Code.Capital;
 using UnityEngine;
 
 namespace Client.Gameplay
@@ -22,6 +24,8 @@ namespace Client.Gameplay
     [SerializeField] private TilesSelectionView _tilesSelectionView;
     [SerializeField] private GameplayUI _gameplayUI;
     [SerializeField] private ProtectionView _protectionView;
+    [SerializeField] private BordersService _bordersService;
+    [SerializeField] private CapitalsMarkController _capitalsMarkController;
 
     protected override void Install()
     {
@@ -32,6 +36,7 @@ namespace Client.Gameplay
       Locator.Set(_gridController);
       Locator.Set(_debugController);
       Locator.Set(new CapitalsController());
+      Locator.Set(_bordersService);
       Locator.Set(new RegionsFactory());
       Locator.Set(new RegionsService());
       Locator.Set(new GovernmentsService());
@@ -40,6 +45,7 @@ namespace Client.Gameplay
       Locator.Set(_tilesSelectionView);
       Locator.Set(_gameplayUI);
       Locator.Set(_protectionView);
+      Locator.Set(_capitalsMarkController);
       Locator.Set(new GameplayController());
     }
   }
