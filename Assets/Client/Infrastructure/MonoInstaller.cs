@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -21,7 +22,15 @@ namespace Client.Infrastructure
       Locator.GetAll(_tickables);
     }
 
-    private void OnDestroy() => Locator.Clear();
+    private void OnDestroy()
+    {
+      using var d = ListPool<IDisposable>.Get(out var disposables);
+      Locator.GetAll(disposables);
+      foreach (var disposable in disposables)
+        disposable.Dispose();
+
+      Locator.Clear();
+    }
 
     private void Update()
     {

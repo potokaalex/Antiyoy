@@ -271,6 +271,53 @@ MonoBehaviour:
   _tilemap: {fileID: 2086340854}
   _tilemapShadows: {fileID: 1351827970}
   _tile: {fileID: 11400000, guid: ea3f56202d478104c9948b1712f8fcb2, type: 2}
+--- !u!1 &315787305
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 315787307}
+  - component: {fileID: 315787306}
+  m_Layer: 0
+  m_Name: CapitalsMarkController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &315787306
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 315787305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad272c4450404500a53fabc70b2d19f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::Client.Unit.Code.Capital.CapitalsMarkController
+  _prefab: {fileID: 4877965541181541766, guid: cd10c36d45176b945be1375817c18698, type: 3}
+  _fromCellCenterOffset: {x: -0.17, y: 0.15}
+  _animationOffset: 0.05
+--- !u!4 &315787307
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 315787305}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &420462081
 GameObject:
   m_ObjectHideFlags: 0
@@ -1031,6 +1078,7 @@ MonoBehaviour:
   _gameplayUI: {fileID: 880764490}
   _protectionView: {fileID: 420462082}
   _bordersService: {fileID: 1094341603}
+  _capitalsMarkController: {fileID: 315787306}
 --- !u!114 &1138225520
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2090,5 +2138,6 @@ SceneRoots:
   - {fileID: 1901397248}
   - {fileID: 420462083}
   - {fileID: 1094341602}
+  - {fileID: 315787307}
   - {fileID: 2088271763}
   - {fileID: 1097210872}

@@ -9,6 +9,7 @@ using Client.Region;
 using Client.Tile;
 using Client.TilesSelection;
 using Client.Unit.Code;
+using Client.Unit.Code.Capital;
 using UnityEngine;
 
 namespace Client.Gameplay
@@ -24,6 +25,7 @@ namespace Client.Gameplay
     [SerializeField] private GameplayUI _gameplayUI;
     [SerializeField] private ProtectionView _protectionView;
     [SerializeField] private BordersService _bordersService;
+    [SerializeField] private CapitalsMarkController _capitalsMarkController;
 
     protected override void Install()
     {
@@ -43,6 +45,7 @@ namespace Client.Gameplay
       Locator.Set(_tilesSelectionView);
       Locator.Set(_gameplayUI);
       Locator.Set(_protectionView);
+      Locator.Set(_capitalsMarkController);
       Locator.Set(new GameplayController());
     }
   }

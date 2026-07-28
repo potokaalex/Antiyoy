@@ -33,6 +33,8 @@ namespace Client.Gameplay
     private UnitType _creationUnitType;
     private int _turnsCount;
 
+    public RegionType CurrentPlayerRegionType => _currentPlayer;
+
     public void Initialize()
     {
       Application.targetFrameRate = 300;

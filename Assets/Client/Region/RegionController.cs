@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Client.Infrastructure;
 using Client.Unit.Code;
+using Client.Unit.Code.Capital;
 
 namespace Client.Region
 {
