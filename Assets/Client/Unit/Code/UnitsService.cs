@@ -31,22 +31,13 @@ namespace Client.Unit.Code
     public void InitialCreateUnits()
     {
       _gridController.GetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(0, 0)), out var redCapitalCell);
-      CreateUnit(redCapitalCell, UnitType.Capital);
+      CreateUnit(redCapitalCell, UnitType.Capital, true);
 
       _gridController.GetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(8, 0)), out var blueCapitalCell);
-      CreateUnit(blueCapitalCell, UnitType.Capital);
+      CreateUnit(blueCapitalCell, UnitType.Capital, true);
     }
 
-    public bool Create(CellController cell, UnitType type, RegionType regionType)
-    {
-      if (CanCreateUnitAt(cell, regionType))
-      {
-        CreateUnit(cell, type, regionType);
-        return true;
-      }
-
-      return false;
-    }
+    public void Create(CellController cell, UnitType type, bool hasTurns = true) => CreateUnit(cell, type, hasTurns);
 
     public void Destroy(IUnit unit)
     {
@@ -78,29 +69,12 @@ namespace Client.Unit.Code
 
     public Sprite GetSprite(UnitType unitType) => _configsProvider.UnitsConfigs[unitType].Sprite;
 
-    private void CreateUnit(CellController cell, UnitType type, RegionType regionType)
-    {
-      var unit = CreateUnit(cell, type);
-      unit.InitialConquer(cell, regionType);
-    }
-
-    private UnitController CreateUnit(CellController cell, UnitType type)
+    private void CreateUnit(CellController cell, UnitType type, bool hasTurns)
     {
       Destroy(cell.Unit);
       var instance = _pool.Get();
-      instance.Initialize(_configsProvider.UnitsConfigs[type]);
+      instance.Initialize(_configsProvider.UnitsConfigs[type], cell, hasTurns);
       _units.Add(instance);
-      return instance;
-    }
-
-    private bool CanCreateUnitAt(CellController cell, RegionType playerRegion)
-    {
-      var friendlyRegion = cell.Region.Type == playerRegion;
-
-      if (friendlyRegion && cell.HasUnit)
-        return false;
-
-      return true;
     }
   }
 }

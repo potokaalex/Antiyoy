@@ -97,7 +97,7 @@ namespace Client.Gameplay
           else if (_mapEditorType == MapEditorType.CreateBlue)
             _gridController.ReCreateCell(point, RegionType.Blue);
           else if (_mapEditorType == MapEditorType.CreateUnit && _gridController.GetCell(point, out var cell))
-            _unitsService.Create(cell, UnitType.Peasant, RegionType.Neutral);
+            _unitsService.Create(cell, UnitType.Peasant);
         }
       }
     }
@@ -131,8 +131,11 @@ namespace Client.Gameplay
       var govLog = string.Empty;
       foreach (var government in governments)
       {
-        govLog +=
-          $"Type: {government.RegionsType}, RegionsCount: {government.Regions.Count}, CellsCount: {government.Regions.Sum(x => x.Cells.Count)}\n";
+        if (government.Regions.Count > 0)
+        {
+          govLog +=
+            $"Type: {government.RegionsType}, RegionsCount: {government.Regions.Count}, CellsCount: {government.Regions.Sum(x => x.Cells.Count)}\n";
+        }
       }
 
       GUI.Label(new Rect(0, 125, 1000, 1000), govLog, labelStyle);

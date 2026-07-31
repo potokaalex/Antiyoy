@@ -92,7 +92,7 @@ namespace Client.Gameplay
       _unitsService.GetUnitCreationArea(_selectedRegion, _selectedCells, _creationUnitType);
       _tilesSelectionView.ClearView();
 
-      if (type != UnitType.Tower) 
+      if (type != UnitType.Tower)
         _tilesSelectionView.ViewTiles(_selectedCells);
     }
 
@@ -160,11 +160,12 @@ namespace Client.Gameplay
       _gameplayMode = GameplayMode.None;
       _selectedRegion = null;
       _tilesSelectionView.ClearView();
-      if(clearRegionView)
+      if (clearRegionView)
       {
         _gameplayUI.ActiveRegionUI(false);
         _bordersService.ClearRegionSelectionBorders();
       }
+
       _gameplayUI.ClearRegionCreation();
     }
 
@@ -183,8 +184,18 @@ namespace Client.Gameplay
       var cost = _unitsService.GetCost(_creationUnitType);
       if (_selectedRegion.Money >= cost)
       {
-        if (_selectedCells.Contains(cell) && _unitsService.Create(cell, _creationUnitType, _currentPlayer))
+        if (_selectedCells.Contains(cell) && !(cell.HasUnit && cell.Region.Type == _currentPlayer))
         {
+          if (cell.Region.Type != _currentPlayer)
+          {
+            _gridController.ReCreateCell(cell.Position, _currentPlayer);
+            _unitsService.Create(cell, _creationUnitType, false);
+          }
+          else
+          {
+            _unitsService.Create(cell, _creationUnitType);
+          }
+
           _selectedRegion.Money -= cost;
           Clear(false);
           SelectRegion(cell.Region);

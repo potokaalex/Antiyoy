@@ -25,7 +25,7 @@ namespace Client.Unit.Code.Capital
         {
           cells.AddRange(region.Cells);
           cells.SortByIncreasing(x => !x.HasUnit ? 0 : x.Unit.CapitalReplacementFactor);
-          CreateCapital(region, cells[0]);
+          _unitsService.Create(cells[0], UnitType.Capital);
         }
       }
     }
@@ -33,7 +33,7 @@ namespace Client.Unit.Code.Capital
     public void SetCapital(CellController cell)
     {
       DestroyCapitals(cell.Region);
-      CreateCapital(cell.Region, cell);
+      _unitsService.Create(cell, UnitType.Capital);
     }
 
     public bool IsCapital(IUnit unit) => unit != null && unit.Type == UnitType.Capital;
@@ -59,12 +59,6 @@ namespace Client.Unit.Code.Capital
       foreach (var cell in region.Cells)
         if (IsCapital(cell.Unit))
           _unitsService.Destroy(cell.Unit);
-    }
-
-    private void CreateCapital(RegionController region, CellController cell)
-    {
-      _unitsService.Destroy(cell.Unit);
-      _unitsService.Create(cell, UnitType.Capital, region.Type);
     }
   }
 }

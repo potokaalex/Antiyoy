@@ -1,3 +1,4 @@
+using Client._Back;
 using Client.Borders;
 using Client.Configs;
 using Client.DebugFeatures;
@@ -46,6 +47,7 @@ namespace Client.Gameplay
       Locator.Set(_gameplayUI);
       Locator.Set(_protectionView);
       Locator.Set(_capitalsMarkController);
+      Locator.Set(new BackController());
       Locator.Set(new GameplayController());
     }
   }

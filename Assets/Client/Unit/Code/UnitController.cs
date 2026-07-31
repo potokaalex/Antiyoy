@@ -41,21 +41,18 @@ namespace Client.Unit.Code
       }
     }
 
-    public void Initialize(UnitConfig config)
+    public void Initialize(UnitConfig config, CellController cell, bool hasTurns)
     {
       _gridController = Locator.Get<GridController>();
       _unitsService = Locator.Get<UnitsService>();
       _areaCalculator = Locator.Get<UnitsAreaCalculator>();
       _config = config;
-      ResetTurnsCount();
+      SetCell(cell);
+      if (hasTurns)
+        ResetTurnsCount();
+      else
+        TurnsCount = 0;
       _renderer.sprite = config.Sprite;
-    }
-
-    public void InitialConquer(CellController cell, RegionType regionType)
-    {
-      if (!IsFriendlyRegion(cell, regionType))
-        DecreaseTurnsCount();
-      Conquer(cell, regionType);
     }
 
     public void Dispose()
@@ -91,10 +88,15 @@ namespace Client.Unit.Code
         cell.ChangeRegionType(regionType);
       }
 
+      SetCell(cell);
+      SetCellsProtection(true);
+    }
+
+    private void SetCell(CellController cell)
+    {
       Cell = cell;
       Cell.Unit = this;
       transform.position = _gridController.HexPositionToWorld(Cell.Position);
-      SetCellsProtection(true);
     }
 
     private bool IsFriendlyRegion(CellController cell, RegionType regionType) => cell.Region.Type == regionType;
