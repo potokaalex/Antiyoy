@@ -18,6 +18,14 @@ namespace Client.Gameplay.UI
 
     public RegionCreationView Creation => _creationView;
 
+    private void Awake()
+    {
+      _topPanel.anchoredPosition = new Vector2(0, 150);
+      _creationPanel.anchoredPosition = new Vector2(0, -150);
+      _topPanelCanvasGroup.alpha = 0;
+      _creationPanelCanvasGroup.alpha = 0;
+    }
+
     public void SetActive(bool isActive)
     {
       if (_isActive == isActive)
@@ -29,19 +37,19 @@ namespace Client.Gameplay.UI
       {
         _isActive = true;
         gameObject.SetActive(true);
-        AnimationsUtilities.DoAnchoredMove(_topPanel, new Vector2(0, 150), new Vector2(0, 0));
-        AnimationsUtilities.DoAnchoredMove(_creationPanel, new Vector2(0, -150), new Vector2(0, 0));
-        AnimationsUtilities.DoFade(_topPanelCanvasGroup, 0, 1);
-        AnimationsUtilities.DoFade(_creationPanelCanvasGroup, 0, 1);
+        AnimationsUtilities.DoAnchoredMove(_topPanel, _topPanel.anchoredPosition, new Vector2(0, 0));
+        AnimationsUtilities.DoAnchoredMove(_creationPanel, _creationPanel.anchoredPosition, new Vector2(0, 0));
+        AnimationsUtilities.DoFade(_topPanelCanvasGroup, _topPanelCanvasGroup.alpha, 1);
+        AnimationsUtilities.DoFade(_creationPanelCanvasGroup, _creationPanelCanvasGroup.alpha, 1);
       }
       else
       {
         _isActive = false;
         DOTween.Sequence().SetId(this)
-          .Append(AnimationsUtilities.DoAnchoredMove(_topPanel, new Vector2(0, 0), new Vector2(0, 150)))
-          .Join(AnimationsUtilities.DoAnchoredMove(_creationPanel, new Vector2(0, 0), new Vector2(0, -150)))
-          .Join(AnimationsUtilities.DoFade(_topPanelCanvasGroup, 1, 0))
-          .Join(AnimationsUtilities.DoFade(_creationPanelCanvasGroup, 1, 0))
+          .Append(AnimationsUtilities.DoAnchoredMove(_topPanel, _topPanel.anchoredPosition, new Vector2(0, 150)))
+          .Join(AnimationsUtilities.DoAnchoredMove(_creationPanel, _creationPanel.anchoredPosition, new Vector2(0, -150)))
+          .Join(AnimationsUtilities.DoFade(_topPanelCanvasGroup, _topPanelCanvasGroup.alpha, 0))
+          .Join(AnimationsUtilities.DoFade(_creationPanelCanvasGroup, _creationPanelCanvasGroup.alpha, 0))
           .onComplete += () => gameObject.SetActive(false);
       }
     }
