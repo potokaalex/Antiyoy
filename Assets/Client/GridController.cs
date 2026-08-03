@@ -50,7 +50,7 @@ namespace Client
     public void ReCreateCell(HexCoordinates position, RegionType type)
     {
       if (GetCell(position, out var cell))
-        cell.ChangeRegionType(type);
+        _regionsService.SetRegionType(cell, type);
       else
         CreateCell(position, type);
     }

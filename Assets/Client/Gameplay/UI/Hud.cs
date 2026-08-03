@@ -1,4 +1,4 @@
-using Client._Back;
+using Client.ActionsHistory;
 using Client.Infrastructure;
 using Client.UI;
 using TMPro;
@@ -13,22 +13,22 @@ namespace Client.Gameplay.UI
     [SerializeField] private TextMeshProUGUI _turnsCount;
     [SerializeField] private CustomButton _backButton;
     private GameplayController _gameplayController;
-    private BackController _backController;
+    private ActionsHistoryController _actionsHistoryController;
 
     public RegionView Region => _regionView;
 
     private void Awake()
     {
       _gameplayController = Locator.Get<GameplayController>();
-      _backController = Locator.Get<BackController>();
+      _actionsHistoryController = Locator.Get<ActionsHistoryController>();
       _nextTurnButton.OnClick += _gameplayController.NextTurn;
-      _backButton.OnClick += _backController.Back;
+      _backButton.OnClick += _actionsHistoryController.Undo;
     }
 
     private void OnDestroy()
     {
       _nextTurnButton.OnClick -= _gameplayController.NextTurn;
-      _backButton.OnClick -= _backController.Back;
+      _backButton.OnClick -= _actionsHistoryController.Undo;
     }
 
     public void ViewTurnsCount(int value) => _turnsCount.SetText($"Turn {value}");

@@ -87,6 +87,12 @@ namespace Client.Region
       return _configsProvider.RegionsColors[region.Type];
     }
 
+    public void SetRegionType(CellController cell, RegionType type)
+    {
+      RemoveFromRegion(cell);
+      AddToBestNeighbourRegion(type, cell); 
+    }
+
     private void TryJoinRegions(HexCoordinates position, RegionType type)
     {
       var regions = new List<RegionController>();

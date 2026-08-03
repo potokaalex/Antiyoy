@@ -14,6 +14,7 @@ namespace Client.Unit.Code
     private GridController _gridController;
     private UnitsService _unitsService;
     private UnitsAreaCalculator _areaCalculator;
+    private RegionsService _regionsService;
     private UnitConfig _config;
     private int _turnsCount;
 
@@ -46,6 +47,7 @@ namespace Client.Unit.Code
       _gridController = Locator.Get<GridController>();
       _unitsService = Locator.Get<UnitsService>();
       _areaCalculator = Locator.Get<UnitsAreaCalculator>();
+      _regionsService = Locator.Get<RegionsService>();
       _config = config;
       SetCell(cell);
       if (hasTurns)
@@ -85,7 +87,7 @@ namespace Client.Unit.Code
       if (!IsFriendlyRegion(cell, regionType))
       {
         _unitsService.Destroy(cell.Unit);
-        cell.ChangeRegionType(regionType);
+        _regionsService.SetRegionType(cell, regionType);
       }
 
       SetCell(cell);

@@ -57,12 +57,6 @@ namespace Client
       _unitsService.Destroy(Unit);
     }
 
-    public void ChangeRegionType(RegionType type)
-    {
-      _regionsService.RemoveFromRegion(this);
-      _regionsService.AddToBestNeighbourRegion(type, this);
-    }
-
     public void AddUnitForProtection(IUnit unit) => _protectionsUnit.Add(unit);
 
     public void RemoveUnitForProtection(IUnit unit) => _protectionsUnit.Remove(unit);
