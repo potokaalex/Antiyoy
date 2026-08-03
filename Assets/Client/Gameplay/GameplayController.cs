@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Client.ActionsHistory;
 using Client.Borders;
 using Client.Gameplay.UI;
 using Client.Government;
@@ -20,6 +21,7 @@ namespace Client.Gameplay
     private CameraController _cameraController;
     private GridController _gridController;
     private RegionController _selectedRegion;
+    private RegionController _lastSelectedRegion;
     private UnitsService _unitsService;
     private TilesSelectionView _tilesSelectionView;
     private IUnit _selectedUnit;
@@ -29,6 +31,7 @@ namespace Client.Gameplay
     private ProtectionView _protectionView;
     private InputController _inputController;
     private BordersService _bordersService;
+    private ActionsHistoryController _actionsHistoryController;
     private GameplayMode _gameplayMode;
     private UnitType _creationUnitType;
     private int _turnsCount;
@@ -49,6 +52,7 @@ namespace Client.Gameplay
       _protectionView = Locator.Get<ProtectionView>();
       _inputController = Locator.Get<InputController>();
       _bordersService = Locator.Get<BordersService>();
+      _actionsHistoryController = Locator.Get<ActionsHistoryController>();
 
       _gridController.InitialCreateCells();
       _unitsService.InitialCreateUnits();
@@ -113,9 +117,16 @@ namespace Client.Gameplay
       _gameplayUI.ViewTurnsCount(_turnsCount);
       _currentPlayer = RegionType.Red;
       UpdatePlayerRegions();
+      _actionsHistoryController.Clear();
     }
 
     public void EndGameplay() => SceneManager.LoadScene(0);
+
+    public void SelectLastSelectedRegion()
+    {
+      Clear();
+      TrySelectRegion(_lastSelectedRegion);
+    }
 
     private void UpdatePlayerRegions()
     {
@@ -171,11 +182,15 @@ namespace Client.Gameplay
 
     private void TryMoveUnit(CellController cell)
     {
+      var oldRegion = cell.Region.Type;
+      var oldCell = _selectedUnit.Cell;
+
       if (!_selectedCells.Contains(cell) || _selectedUnit.Move(cell))
       {
         Clear(cell.Region.Type != _currentPlayer);
         TrySelectRegion(cell);
         TrySelectUnit(cell);
+        _actionsHistoryController.MoveUnit(cell, oldCell, oldRegion, _selectedUnit.Type);
       }
     }
 
@@ -186,19 +201,20 @@ namespace Client.Gameplay
       {
         if (_selectedCells.Contains(cell) && !(cell.HasUnit && cell.Region.Type == _currentPlayer))
         {
+          var hasTurns = true;
+          var oldRegion = cell.Region.Type;
+          
           if (cell.Region.Type != _currentPlayer)
           {
             _gridController.ReCreateCell(cell.Position, _currentPlayer);
-            _unitsService.Create(cell, _creationUnitType, false);
-          }
-          else
-          {
-            _unitsService.Create(cell, _creationUnitType);
+            hasTurns = false;
           }
 
+          _unitsService.Create(cell, _creationUnitType, hasTurns);
           _selectedRegion.Money -= cost;
           Clear(false);
           SelectRegion(cell.Region);
+          _actionsHistoryController.CreateUnit(cell, oldRegion, cost);
           return;
         }
       }
@@ -219,6 +235,12 @@ namespace Client.Gameplay
         SelectRegion(cell.Region, forceBordersAnim);
     }
 
+    private void TrySelectRegion(RegionController region, bool forceBordersAnim = true)
+    {
+      if (region.Type == _currentPlayer && region.IsAlive && _selectedRegion != region)
+        SelectRegion(region, forceBordersAnim);
+    }
+
     private void TrySelectUnit(CellController cell)
     {
       if (cell.Region.Type == _currentPlayer && _unitsService.Get(cell, out _selectedUnit) && _selectedUnit.HasTurns)
@@ -231,6 +253,7 @@ namespace Client.Gameplay
 
     private void SelectRegion(RegionController region, bool forceBordersAnim = true)
     {
+      _lastSelectedRegion = region;
       _selectedRegion = region;
       _gameplayUI.ActiveRegionUI(true);
       _gameplayUI.ViewRegionData(_selectedRegion.Money, _selectedRegion.GetIncome());

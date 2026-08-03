@@ -89,6 +89,9 @@ namespace Client.Region
 
     public void SetRegionType(CellController cell, RegionType type)
     {
+      if(cell.Region.Type == type)
+        return;
+
       RemoveFromRegion(cell);
       AddToBestNeighbourRegion(type, cell); 
     }
