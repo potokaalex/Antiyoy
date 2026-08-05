@@ -8,6 +8,8 @@ namespace Client.UITests.MainMenu
     [SerializeField] private UIParticlesAnimator _particlesAnimator;
     [SerializeField] private RectTransform _circle;
 
+    private void Awake() => gameObject.SetActive(false);
+
     public Tween PlayAppearAnimation()
     {
       return DOTween.Sequence().AppendCallback(() =>

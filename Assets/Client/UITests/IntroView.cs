@@ -14,8 +14,8 @@ namespace Client.UITests
     {
       return DOTween.Sequence()
         .Append(AnimationsUtilities.DoAnchoredMove(_textRoot, new Vector2(0, -50), Vector2.zero))
-        .Join(_fade.DOFade(0, 0.25f))
-        .AppendInterval(0.5f)
+        .Join(_fade.DOFade(0, 0.3f))
+        .AppendInterval(0.65f)
         .AppendCallback(() => gameObject.SetActive(false));
     }
   }

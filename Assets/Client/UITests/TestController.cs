@@ -9,8 +9,10 @@ namespace Client.UITests
     [SerializeField] private IntroView _introView;
     [SerializeField] private MainMenuView _mainMenuView;
     
-    private void Awake()
+    private void Start()
     {
+      Application.targetFrameRate = 300;
+      QualitySettings.vSyncCount = -1;
       DOTween.Sequence().Append(_introView.Play()).Append(_mainMenuView.PlayAppearAnimation());
     }
   }

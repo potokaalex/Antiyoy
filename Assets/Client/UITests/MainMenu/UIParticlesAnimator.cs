@@ -21,23 +21,25 @@ namespace Client.UITests.MainMenu
 
       for (var i = 0; i < count; i++)
       {
-        endPositions[i] = particles[i].position;
+        var endPosition = particles[i].position;
+        endPositions[i] = endPosition;
 
-        var dir = _appearStartOffsetCenter - endPositions[i];
+        var dir = _appearStartOffsetCenter - endPosition;
         dir.y = 0;
         if (dir == Vector3.zero)
           dir = new Vector3(1, 0, 1);
         dir.Normalize();
 
-        startPositions[i] = endPositions[i] - dir * _appearStartOffsetValue;
-        particles[i].position = startPositions[i];
+        var startPosition = endPosition - dir * _appearStartOffsetValue;
+        startPositions[i] = startPosition;
+        particles[i].position = startPosition;
       }
 
       _particleSystem.SetParticles(particles, count);
 
       DOVirtual.Float(0, 1, _appearDuration, v =>
       {
-        for (var i = 0; i < count; i++) 
+        for (var i = 0; i < count; i++)
           particles[i].position = Vector3.Lerp(startPositions[i], endPositions[i], v);
         _particleSystem.SetParticles(particles, count);
       }).onComplete += _particleSystem.Play;

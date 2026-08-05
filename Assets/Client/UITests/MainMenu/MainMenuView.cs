@@ -14,9 +14,12 @@ namespace Client.UITests.MainMenu
     [SerializeField] private RectTransform _playButton;
     [SerializeField] private RectTransform _topPanel;
 
+    private void Awake() => gameObject.SetActive(false);
+
     public Tween PlayAppearAnimation()
     {
       return DOTween.Sequence()
+        .AppendCallback(() => gameObject.SetActive(true))
         .Append(_backgroundView.PlayAppearAnimation())
         .Join(_fade.DOFade(0, 0.4f))
         .Join(DOTween.Sequence().AppendInterval(0.1f).Append(MoveAnimations()).Join(MaskAnimation()));
