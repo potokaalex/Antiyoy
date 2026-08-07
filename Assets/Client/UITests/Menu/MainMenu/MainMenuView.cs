@@ -1,9 +1,10 @@
+using Client.UITests.Menu.Background;
 using Client.Utilities;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Client.UITests.MainMenu
+namespace Client.UITests.Menu.MainMenu
 {
   public class MainMenuView : MonoBehaviour
   {

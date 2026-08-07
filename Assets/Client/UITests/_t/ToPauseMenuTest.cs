@@ -3,7 +3,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Client.UITests
+namespace Client.UITests._t
 {
   public class ToPauseMenuTest : MonoBehaviour
   {

@@ -1,11 +1,11 @@
 using DG.Tweening;
 using UnityEngine;
 
-namespace Client.UITests.MainMenu
+namespace Client.UITests.Menu.Background
 {
   public class MenuBackgroundView : MonoBehaviour
   {
-    [SerializeField] private UIParticlesAnimator _particlesAnimator;
+    [SerializeField] private BackgroundParticlesAnimator _particlesAnimator;
     [SerializeField] private RectTransform _circle;
 
     private void Awake() => gameObject.SetActive(false);

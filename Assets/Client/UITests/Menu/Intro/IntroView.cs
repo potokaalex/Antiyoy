@@ -3,7 +3,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Client.UITests
+namespace Client.UITests.Menu.Intro
 {
   public class IntroView : MonoBehaviour
   {
