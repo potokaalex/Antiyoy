@@ -1,20 +1,27 @@
 using System.Collections;
-using Client.UITests.Menu.Intro;
-using Client.UITests.Menu.MainMenu;
+using Client.Infrastructure;
+using Client.Menu;
+using Client.Menu.Intro;
+using Client.Menu.MainMenu;
 using DG.Tweening;
 using UnityEngine;
 
-namespace Client.UITests
+namespace Client.Boot
 {
-  public class ProjectStartup : MonoBehaviour
+  public class ProjectInstaller : MonoInstaller
   {
     [SerializeField] private IntroView _introView;
     [SerializeField] private MainMenuView _mainMenuView;
+    [SerializeField] private MenuView _menuView;
 
-    private void Start()
+    protected override void Install() => Register(_menuView);
+
+    protected override void Start()
     {
+      base.Start();
       Application.targetFrameRate = 300;
       QualitySettings.vSyncCount = -1;
+      DontDestroyOnLoad(this);
       StartCoroutine(PlayAnimation());
     }
 

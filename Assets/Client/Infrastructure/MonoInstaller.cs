@@ -9,27 +9,39 @@ namespace Client.Infrastructure
   public abstract class MonoInstaller : MonoBehaviour
   {
     private readonly List<ITickable> _tickables = new();
+    private readonly List<Type> _registrations = new();
+
+    private protected void Register<T>(T service)
+    {
+      _registrations.Add(typeof(T));
+      Locator.Set(service);
+    }
 
     private void Awake() => Install();
 
-    private void Start()
+    protected virtual void Start()
     {
-      using var d = ListPool<IInitializable>.Get(out var initializables);
-      Locator.GetAll(initializables);
-      foreach (var initializable in initializables)
-        initializable.Initialize();
+      using (ListPool<IInitializable>.Get(out var initializables))
+      {
+        Locator.GetAll(initializables, _registrations);
+        foreach (var initializable in initializables)
+          initializable.Initialize();
+      }
 
-      Locator.GetAll(_tickables);
+      Locator.GetAll(_tickables, _registrations);
     }
 
     private void OnDestroy()
     {
-      using var d = ListPool<IDisposable>.Get(out var disposables);
-      Locator.GetAll(disposables);
-      foreach (var disposable in disposables)
-        disposable.Dispose();
+      using (ListPool<IDisposable>.Get(out var disposables))
+      {
+        Locator.GetAll(disposables, _registrations);
+        foreach (var disposable in disposables)
+          disposable.Dispose();
 
-      Locator.Clear();
+        foreach (var registration in _registrations)
+          Locator.Remove(registration);
+      }
     }
 
     private void Update()

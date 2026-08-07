@@ -1,27 +1,31 @@
-using Client.UITests.Menu.Background;
+using Client.Infrastructure;
 using Client.Utilities;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Client.UITests.Menu.MainMenu
+namespace Client.Menu.MainMenu
 {
   public class MainMenuView : MonoBehaviour
   {
-    [SerializeField] private MenuBackgroundView _backgroundView;
     [SerializeField] private Image _fade;
     [SerializeField] private RectTransform _mask;
     [SerializeField] private RectTransform _underMask;
     [SerializeField] private RectTransform _playButton;
     [SerializeField] private RectTransform _topPanel;
+    private MenuView _menuView;
 
-    private void Awake() => gameObject.SetActive(false);
+    private void Awake()
+    {
+      _menuView = Locator.Get<MenuView>();
+      gameObject.SetActive(false);
+    }
 
     public Tween PlayAppearAnimation()
     {
       return DOTween.Sequence()
         .AppendCallback(() => gameObject.SetActive(true))
-        .Append(_backgroundView.PlayAppearAnimation())
+        .Append(_menuView.Background.PlayAppearAnimation())
         .Join(_fade.DOFade(0, 0.4f))
         .Join(DOTween.Sequence().AppendInterval(0.1f).Append(MoveAnimations()).Join(MaskAnimation()));
     }

@@ -1,7 +1,7 @@
 using DG.Tweening;
 using UnityEngine;
 
-namespace Client.UITests.Menu.Background
+namespace Client.Menu.Background
 {
   public class MenuBackgroundView : MonoBehaviour
   {
