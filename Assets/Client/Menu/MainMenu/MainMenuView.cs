@@ -13,5 +13,7 @@ namespace Client.Menu.MainMenu
     public Tween PlayAppearAnimation() => _start.PlayAppearAnimation();
 
     public void ShowOptions() => _options.Show();
+
+    public void ShowStart() => _start.Show();
   }
 }

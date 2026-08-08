@@ -233,6 +233,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6131823070450448137, guid: 10651db774aae314598754fca26fc5a3, type: 3}
+      propertyPath: _hardFadeAnimation
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:

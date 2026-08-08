@@ -20,6 +20,7 @@ namespace Client.Menu.MainMenu.Start
     private MenuView _menuView;
     private MainMenuView _mainMenuView;
     private Vector2 _playButtonStartPosition;
+    private Vector2 _topPanelStartPosition;
 
     private void Awake()
     {
@@ -31,20 +32,30 @@ namespace Client.Menu.MainMenu.Start
       _fade.gameObject.SetActive(true);
       _mask.gameObject.SetActive(false);
       _playButtonStartPosition = _playButtonTransform.anchoredPosition;
+      _topPanelStartPosition = _topPanel.anchoredPosition;
     }
 
     private void OnDestroy() => _playButton.OnClick -= OnPlayClick;
 
     private void OnPlayClick()
     {
-      //UnityEngine.Debug.Break();
       _playButtonAnimatedBackground.gameObject.SetActive(true);
       _playButtonAnimatedBackground.transform.localScale = Vector3.one;
       DOTween.Sequence()
-        .Append(_playButtonAnimatedBackground.transform.DOScale(1.25f, 0.1f))
+        .Append(_playButtonAnimatedBackground.transform.DOScale(1.25f, 0.15f))
         .Append(HideMoveAnimation())
         .Join(_playButtonTransform.transform.DOScale(0.5f, 0.5f))
-        .JoinCallback(_mainMenuView.ShowOptions);
+        .JoinCallback(_mainMenuView.ShowOptions)
+        .OnComplete(() => _playButtonAnimatedBackground.gameObject.SetActive(false));
+    }
+
+    public void Show()
+    {
+      DOTween.Sequence()
+        .Append(ShowMoveAnimation())
+        .Join(_playButtonTransform.transform.DOScale(1, 0.5f))
+        .Join(_menuView.Background.PlayColorTransition(new Color(0.6078432f, 0.5882353f, 0.3686275f), 
+          new Color(0.3607843f, 0.4509804f, 0.509804f)));
     }
 
     public Tween PlayAppearAnimation()
@@ -61,7 +72,7 @@ namespace Client.Menu.MainMenu.Start
       return DOTween.Sequence()
         .AppendCallback(() => _topPanel.gameObject.SetActive(true))
         .Append(AnimationsUtilities.DoAnchoredMove(_topPanel, new Vector2(0, 250), new Vector2(0, 0), 0.3f))
-        .Join(AnimationsUtilities.DoAnchoredMove(_playButtonTransform, _playButtonStartPosition + new Vector2(0, 150), 
+        .Join(AnimationsUtilities.DoAnchoredMove(_playButtonTransform, _playButtonStartPosition + new Vector2(0, 150),
           _playButtonStartPosition, 0.3f));
     }
 
@@ -88,8 +99,15 @@ namespace Client.Menu.MainMenu.Start
     private Tween HideMoveAnimation()
     {
       return DOTween.Sequence()
-        .Append(_topPanel.DOAnchorPosY(250f, 0.5f))
+        .Append(_topPanel.DOAnchorPos(_topPanelStartPosition + new Vector2(0, 250), 0.5f))
         .Join(_rootCanvasGroup.DOFade(0, 0.35f));
+    }
+
+    private Tween ShowMoveAnimation()
+    {
+      return DOTween.Sequence()
+        .Append(_topPanel.DOAnchorPos(_topPanelStartPosition, 0.5f))
+        .Join(_rootCanvasGroup.DOFade(1, 0.35f));
     }
   }
 }
