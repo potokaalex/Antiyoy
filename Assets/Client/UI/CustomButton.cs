@@ -14,9 +14,13 @@ namespace Client.UI
 
     public void OnPointerDown(PointerEventData eventData)
     {
-      DOTween.Kill(this);
-      _background.color = new Color(0f, 0f, 0.3f, 0.75f);
-      _background.DOFade(0, 0.5f).SetEase(Ease.OutQuad).SetId(this);
+      if (_background)
+      {
+        DOTween.Kill(this);
+        _background.color = new Color(0f, 0f, 0.3f, 0.75f);
+        _background.DOFade(0, 0.5f).SetEase(Ease.OutQuad).SetId(this);
+      }
+
       OnClick?.Invoke();
     }
   }

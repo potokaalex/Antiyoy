@@ -55,5 +55,12 @@ namespace Client.Menu.Background
         _particleSystem.SetParticles(_particles, count);
       }).onComplete += _particleSystem.Play;
     }
+
+    public Tween PlayColorTransition(Color color)
+    {
+      //а как заменить цвет у уже присутствующих?
+     // _particleSystem.main.startColor
+     return null;
+    }
   }
 }

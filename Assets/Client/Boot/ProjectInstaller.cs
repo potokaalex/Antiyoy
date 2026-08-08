@@ -14,7 +14,11 @@ namespace Client.Boot
     [SerializeField] private MainMenuView _mainMenuView;
     [SerializeField] private MenuView _menuView;
 
-    protected override void Install() => Register(_menuView);
+    protected override void Install()
+    {
+      Register(_menuView);
+      Register(_mainMenuView);
+    }
 
     protected override void Start()
     {
