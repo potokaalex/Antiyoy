@@ -37,7 +37,7 @@ namespace Client.Menu.MainMenu.Start
 
     private void OnPlayClick()
     {
-      UnityEngine.Debug.Break();
+      //UnityEngine.Debug.Break();
       _playButtonAnimatedBackground.gameObject.SetActive(true);
       _playButtonAnimatedBackground.transform.localScale = Vector3.one;
       DOTween.Sequence()

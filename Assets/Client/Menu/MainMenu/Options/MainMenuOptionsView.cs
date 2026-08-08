@@ -26,12 +26,11 @@ namespace Client.Menu.MainMenu.Options
       _body.localScale = Vector3.one * 0.25f;
       _canvasGroup.alpha = 0;
 
-      //_menuView.Background.PlayColorTransition()
-      
       DOTween.Sequence()
         .Append(_topPanel.DOAnchorPos(_topPanelStartPosition, 0.5f))
         .Join(_body.DOScale(1, 0.5f))
-        .Join(_canvasGroup.DOFade(1, 0.35f));
+        .Join(_canvasGroup.DOFade(1, 0.35f))
+        .Join(_menuView.Background.PlayColorTransition(new Color(0.4313726f, 0.4588236f, 0.627451f), new Color(0.3372549f, 0.4235294f, 0.4941177f)));
     }
   }
 }

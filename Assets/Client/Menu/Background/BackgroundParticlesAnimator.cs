@@ -10,22 +10,25 @@ namespace Client.Menu.Background
     [SerializeField] float _appearStartOffsetValue;
     [SerializeField] float _appearDuration = 1f;
     private ParticleSystem.Particle[] _particles;
+    private ParticleSystem.MainModule _particleSystemMain;
     private Vector3[] _startPositions;
     private Vector3[] _endPositions;
+    private Color _particlesColor;
 
     private void Awake()
     {
-      var maxParticles = _particleSystem.main.maxParticles;
+      _particleSystemMain = _particleSystem.main;
+      var maxParticles = _particleSystemMain.maxParticles;
       _particles = new ParticleSystem.Particle[maxParticles];
       _startPositions = new Vector3[maxParticles];
       _endPositions = new Vector3[maxParticles];
+      _particlesColor = _particleSystemMain.startColor.color;
     }
 
     public void PlayAppearAnimation()
     {
       _particleSystem.Pause();
 
-      _particles = new ParticleSystem.Particle[_particleSystem.main.maxParticles];
       var count = _particleSystem.GetParticles(_particles);
       _startPositions = new Vector3[count];
       _endPositions = new Vector3[count];
@@ -58,9 +61,19 @@ namespace Client.Menu.Background
 
     public Tween PlayColorTransition(Color color)
     {
-      //а как заменить цвет у уже присутствующих?
-     // _particleSystem.main.startColor
-     return null;
+      var main = _particleSystemMain;
+
+      return DOVirtual.Float(0, 1, 0.5f, v =>
+      {
+        var count = _particleSystem.GetParticles(_particles);
+        var c = Color.Lerp(_particlesColor, color, v);
+        
+        main.startColor = new ParticleSystem.MinMaxGradient(c);
+        for (var i = 0; i < count; i++)
+          _particles[i].startColor = c;
+        
+        _particleSystem.SetParticles(_particles, count);
+      });
     }
   }
 }

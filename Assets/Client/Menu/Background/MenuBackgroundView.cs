@@ -23,7 +23,9 @@ namespace Client.Menu.Background
 
     public Tween PlayColorTransition(Color backgroundColor, Color particlesColor)
     {
-      return _background.DOColor(backgroundColor, 0.5f);
+      return DOTween.Sequence()
+        .Append(_background.DOColor(backgroundColor, 0.5f))
+        .Join(_particlesAnimator.PlayColorTransition(particlesColor));
     }
   }
 }
