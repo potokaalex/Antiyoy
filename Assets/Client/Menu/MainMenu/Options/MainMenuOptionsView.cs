@@ -30,7 +30,7 @@ namespace Client.Menu.MainMenu.Options
         .Append(_topPanel.DOAnchorPos(_topPanelStartPosition, 0.5f))
         .Join(_body.DOScale(1, 0.5f))
         .Join(_canvasGroup.DOFade(1, 0.35f))
-        .Join(_menuView.Background.PlayColorTransition(new Color(0.4313726f, 0.4588236f, 0.627451f), new Color(0.3372549f, 0.4235294f, 0.4941177f)));
+        .Join(_menuView.Background.PlayColorTransition(new Color(0.4627451f,0.4862745f, 0.654902f), new Color(0.36078432f, 0.4509804f, 0.50980395f)));
     }
   }
 }
