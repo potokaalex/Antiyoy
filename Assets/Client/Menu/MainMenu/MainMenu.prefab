@@ -363,6 +363,7 @@ GameObject:
   - component: {fileID: 7118529298344012553}
   - component: {fileID: 3095305869393638677}
   - component: {fileID: 8786233896940926859}
+  - component: {fileID: 4080981362302901974}
   m_Layer: 5
   m_Name: Start
   m_TagString: Untagged
@@ -412,6 +413,7 @@ MonoBehaviour:
   _playButton: {fileID: 1557479974723700305}
   _playButtonAnimatedBackground: {fileID: 9016784603138155858}
   _rootCanvasGroup: {fileID: 8786233896940926859}
+  _menuAnimator: {fileID: 4080981362302901974}
 --- !u!225 &8786233896940926859
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -424,6 +426,24 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &4080981362302901974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3140862915096079185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e063b5f718de4f8db6114941ee8d798e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::Client.Menu.MenuAnimator
+  _topPanel: {fileID: 5941649047480740748}
+  _body: {fileID: 642503969711712427}
+  _canvasGroup: {fileID: 8786233896940926859}
+  _backgroundShowColor: {r: 0.6078432, g: 0.5882353, b: 0.3686275, a: 1}
+  _particlesShowColor: {r: 0.3607843, g: 0.4509804, b: 0.509804, a: 1}
+  _autoInitialize: 0
 --- !u!1 &3665872216423380090
 GameObject:
   m_ObjectHideFlags: 0
@@ -980,6 +1000,7 @@ GameObject:
   - component: {fileID: 1403043814898001071}
   - component: {fileID: 3026254535347561424}
   - component: {fileID: 5304983017767992859}
+  - component: {fileID: 8761071344610802318}
   m_Layer: 5
   m_Name: Options
   m_TagString: Untagged
@@ -1020,10 +1041,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe218e903c0f44c683332dcd72cdafb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Client::Client.Menu.MainMenu.Options.MainMenuOptionsView
-  _topPanel: {fileID: 3797825007925099643}
-  _body: {fileID: 760176691764468931}
   _backButton: {fileID: 7181634003812240447}
-  _canvasGroup: {fileID: 5304983017767992859}
+  _menuAnimator: {fileID: 8761071344610802318}
 --- !u!225 &5304983017767992859
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1036,6 +1055,24 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &8761071344610802318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8699166816465190660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e063b5f718de4f8db6114941ee8d798e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::Client.Menu.MenuAnimator
+  _topPanel: {fileID: 3797825007925099643}
+  _body: {fileID: 760176691764468931}
+  _canvasGroup: {fileID: 5304983017767992859}
+  _backgroundShowColor: {r: 0.4627451, g: 0.4862745, b: 0.654902, a: 1}
+  _particlesShowColor: {r: 0.36078432, g: 0.4509804, b: 0.50980395, a: 1}
+  _autoInitialize: 1
 --- !u!1 &8767418408027898943
 GameObject:
   m_ObjectHideFlags: 0

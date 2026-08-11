@@ -17,22 +17,20 @@ namespace Client.Menu.MainMenu.Start
     [SerializeField] private CustomButton _playButton;
     [SerializeField] private Image _playButtonAnimatedBackground;
     [SerializeField] private CanvasGroup _rootCanvasGroup;
+    [SerializeField] private MenuAnimator _menuAnimator;
     private MenuView _menuView;
     private MainMenuView _mainMenuView;
     private Vector2 _playButtonStartPosition;
-    private Vector2 _topPanelStartPosition;
 
     private void Awake()
     {
       _menuView = Locator.Get<MenuView>();
       _mainMenuView = Locator.Get<MainMenuView>();
       _playButton.OnClick += OnPlayClick;
-      gameObject.SetActive(false);
-      _topPanel.gameObject.SetActive(false);
+      _menuAnimator.Initialize();
       _fade.gameObject.SetActive(true);
       _mask.gameObject.SetActive(false);
       _playButtonStartPosition = _playButtonTransform.anchoredPosition;
-      _topPanelStartPosition = _topPanel.anchoredPosition;
     }
 
     private void OnDestroy() => _playButton.OnClick -= OnPlayClick;
@@ -40,35 +38,30 @@ namespace Client.Menu.MainMenu.Start
     private void OnPlayClick()
     {
       PlayClickAnimation();
-      DOTween.Sequence()
-        .Append(HideMoveAnimation())
-        .Join(_playButtonTransform.transform.DOScale(0f, 0.5f))
-        .JoinCallback(_mainMenuView.ShowOptions)
-        .OnComplete(() => _playButtonAnimatedBackground.gameObject.SetActive(false))
-        .SetEase(Ease.InQuint);
+      _menuAnimator.PlayHide();
+      _mainMenuView.ShowOptions();
     }
 
     private void PlayClickAnimation()
     {
       _playButtonAnimatedBackground.gameObject.SetActive(true);
       _playButtonAnimatedBackground.transform.localScale = Vector3.one;
-      DOTween.Sequence().Append(_playButtonAnimatedBackground.transform.DOScale(1.25f, 0.15f));
+      DOTween.Sequence()
+        .Append(_playButtonAnimatedBackground.transform.DOScale(1.25f, 0.15f))
+        .InsertCallback(0.5f, () => _playButtonAnimatedBackground.gameObject.SetActive(false));
     }
 
-    public void Show()
-    {
-      DOTween.Sequence()
-        .Append(ShowMoveAnimation())
-        .Join(_playButtonTransform.transform.DOScale(1, 0.5f))
-        .Join(_menuView.Background.PlayColorTransition(new Color(0.6078432f, 0.5882353f, 0.3686275f), 
-          new Color(0.3607843f, 0.4509804f, 0.509804f)))
-        .SetEase(Ease.InQuint);
-    }
+    public void Show() => _menuAnimator.PlayShow();
 
     public Tween PlayAppearAnimation()
     {
       return DOTween.Sequence()
-        .AppendCallback(() => gameObject.SetActive(true))
+        .AppendCallback(() =>
+        {
+          gameObject.SetActive(true);
+          _rootCanvasGroup.alpha = 1;
+          _playButtonTransform.transform.localScale = Vector3.one;
+        })
         .Append(_menuView.Background.PlayAppearAnimation())
         .Join(_fade.DOFade(0, 0.4f).OnComplete(() => _fade.gameObject.SetActive(false)))
         .Join(DOTween.Sequence().AppendInterval(0.1f).Append(MoveAnimations()).Join(MaskAnimation()));
@@ -101,20 +94,6 @@ namespace Client.Menu.MainMenu.Start
           _underMask.localScale = Vector3.one / f;
           _underMask.anchoredPosition = initialPos / f;
         }));
-    }
-
-    private Tween HideMoveAnimation()
-    {
-      return DOTween.Sequence()
-        .Append(_topPanel.DOAnchorPos(_topPanelStartPosition + new Vector2(0, 250), 0.5f))
-        .Join(_rootCanvasGroup.DOFade(0, 0.35f));
-    }
-
-    private Tween ShowMoveAnimation()
-    {
-      return DOTween.Sequence()
-        .Append(_topPanel.DOAnchorPos(_topPanelStartPosition, 0.5f))
-        .Join(_rootCanvasGroup.DOFade(1, 0.35f));
     }
   }
 }
