@@ -18,6 +18,7 @@ namespace Client.Menu.MainMenu.Start
     [SerializeField] private Image _playButtonAnimatedBackground;
     [SerializeField] private CanvasGroup _rootCanvasGroup;
     [SerializeField] private MenuAnimator _menuAnimator;
+    [SerializeField] private CustomButton _quitButton;
     private MenuView _menuView;
     private MainMenuView _mainMenuView;
     private Vector2 _playButtonStartPosition;
@@ -27,13 +28,18 @@ namespace Client.Menu.MainMenu.Start
       _menuView = Locator.Get<MenuView>();
       _mainMenuView = Locator.Get<MainMenuView>();
       _playButton.OnClick += OnPlayClick;
+      _quitButton.OnClick += OnQuitClick;
       _menuAnimator.Initialize();
       _fade.gameObject.SetActive(true);
       _mask.gameObject.SetActive(false);
       _playButtonStartPosition = _playButtonTransform.anchoredPosition;
     }
 
-    private void OnDestroy() => _playButton.OnClick -= OnPlayClick;
+    private void OnDestroy()
+    {
+      _playButton.OnClick -= OnPlayClick;
+      _quitButton.OnClick -= OnQuitClick;
+    }
 
     private void OnPlayClick()
     {
@@ -94,6 +100,15 @@ namespace Client.Menu.MainMenu.Start
           _underMask.localScale = Vector3.one / f;
           _underMask.anchoredPosition = initialPos / f;
         }));
+    }
+
+    private void OnQuitClick()
+    {
+#if UNITY_EDITOR
+      UnityEditor.EditorApplication.isPlaying = false;
+#else
+      Application.Quit();
+#endif
     }
   }
 }

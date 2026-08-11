@@ -16,5 +16,13 @@ namespace Client.Utilities
       canvasGroup.alpha = from;
       return canvasGroup.DOFade(to, duration).SetEase(Ease.OutQuad);
     }
+
+    public static T AddOnComplete<T>(this T tween, TweenCallback action) where T : Tween
+    {
+      if (tween == null || !tween.active)
+        return tween;
+      tween.onComplete += action;
+      return tween;
+    }
   }
 }

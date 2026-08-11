@@ -1,4 +1,5 @@
 using Client.Infrastructure;
+using Client.Utilities;
 using DG.Tweening;
 using UnityEngine;
 
@@ -43,7 +44,7 @@ namespace Client.Menu
         .Join(_menuView.Background.PlayColorTransition(_backgroundShowColor, _particlesShowColor));
     }
 
-    public void PlayHide() => MenuAnimation(_topPanelEndPosition, _bodyMinScale, 0).OnComplete(() => gameObject.SetActive(false));
+    public void PlayHide() => MenuAnimation(_topPanelEndPosition, _bodyMinScale, 0).AddOnComplete(() => gameObject.SetActive(false));
 
     private Sequence MenuAnimation(Vector3 topPosition, float bodyScale, float alpha)
     {
@@ -51,6 +52,8 @@ namespace Client.Menu
         .Append(_topPanel.DOAnchorPos(topPosition, 0.5f))
         .Join(_body.DOScale(bodyScale, 0.5f))
         .Join(_canvasGroup.DOFade(alpha, 0.35f))
+        .JoinCallback(() => _menuView.SetBlockInput(true))
+        .AddOnComplete(() => _menuView.SetBlockInput(false))
         .SetEase(Ease.InQuint);
     }
   }
