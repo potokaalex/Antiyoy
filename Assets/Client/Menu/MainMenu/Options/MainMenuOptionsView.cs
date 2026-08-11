@@ -38,7 +38,8 @@ namespace Client.Menu.MainMenu.Options
         .Join(_body.DOScale(1, 0.5f))
         .Join(_canvasGroup.DOFade(1, 0.35f))
         .Join(_menuView.Background.PlayColorTransition(new Color(0.4627451f, 0.4862745f, 0.654902f),
-          new Color(0.36078432f, 0.4509804f, 0.50980395f)));
+          new Color(0.36078432f, 0.4509804f, 0.50980395f)))
+        .SetEase(Ease.InQuint);
     }
 
     private void OnBackClick()
@@ -49,7 +50,7 @@ namespace Client.Menu.MainMenu.Options
         .Join(_canvasGroup.DOFade(0, 0.35f))
         .JoinCallback(_mainMenuView.ShowStart)
         .OnComplete(() => gameObject.SetActive(false))
-        .SetEase(Ease.InExpo);
+        .SetEase(Ease.InQuint);
     }
   }
 }

@@ -39,14 +39,20 @@ namespace Client.Menu.MainMenu.Start
 
     private void OnPlayClick()
     {
+      PlayClickAnimation();
+      DOTween.Sequence()
+        .Append(HideMoveAnimation())
+        .Join(_playButtonTransform.transform.DOScale(0f, 0.5f))
+        .JoinCallback(_mainMenuView.ShowOptions)
+        .OnComplete(() => _playButtonAnimatedBackground.gameObject.SetActive(false))
+        .SetEase(Ease.InQuint);
+    }
+
+    private void PlayClickAnimation()
+    {
       _playButtonAnimatedBackground.gameObject.SetActive(true);
       _playButtonAnimatedBackground.transform.localScale = Vector3.one;
-      DOTween.Sequence()
-        .Append(_playButtonAnimatedBackground.transform.DOScale(1.25f, 0.15f))
-        .Append(HideMoveAnimation())
-        .Join(_playButtonTransform.transform.DOScale(0.5f, 0.5f))
-        .JoinCallback(_mainMenuView.ShowOptions)
-        .OnComplete(() => _playButtonAnimatedBackground.gameObject.SetActive(false));
+      DOTween.Sequence().Append(_playButtonAnimatedBackground.transform.DOScale(1.25f, 0.15f));
     }
 
     public void Show()
@@ -55,7 +61,8 @@ namespace Client.Menu.MainMenu.Start
         .Append(ShowMoveAnimation())
         .Join(_playButtonTransform.transform.DOScale(1, 0.5f))
         .Join(_menuView.Background.PlayColorTransition(new Color(0.6078432f, 0.5882353f, 0.3686275f), 
-          new Color(0.3607843f, 0.4509804f, 0.509804f)));
+          new Color(0.3607843f, 0.4509804f, 0.509804f)))
+        .SetEase(Ease.InQuint);
     }
 
     public Tween PlayAppearAnimation()
