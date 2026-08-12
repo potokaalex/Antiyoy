@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9009325633170518298}
   - component: {fileID: 8888741386820286032}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: IntroView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -61,7 +61,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2970604952328165622}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: TextRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,7 +100,7 @@ GameObject:
   - component: {fileID: 12168586658876760}
   - component: {fileID: 4302032606098244768}
   - component: {fileID: 7749147483913163504}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -237,7 +237,7 @@ GameObject:
   - component: {fileID: 5322774426380801786}
   - component: {fileID: 2322258688439933839}
   - component: {fileID: 1349402991613743028}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Text (TMP) (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -374,7 +374,7 @@ GameObject:
   - component: {fileID: 4238104481480342611}
   - component: {fileID: 8154537563030236644}
   - component: {fileID: 4845745501271041292}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Fade
   m_TagString: Untagged
   m_Icon: {fileID: 0}

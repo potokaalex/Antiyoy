@@ -1,5 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
 using Client.Infrastructure;
+using Client.Menu;
 using Client.Utilities;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -25,6 +27,8 @@ namespace Client
     private Vector3 _inertiaTargetPosition;
     private bool _canMove;
     private float _targetSize;
+    private RenderTexture _screenshotRt;
+    private bool _returnScreenshotRequest;
 
     public RaycastHit2D GetHitFromMousePoint()
     {
@@ -39,9 +43,30 @@ namespace Client
       return hit;
     }
 
+    public IEnumerator CreateScreenshotCoroutine(RenderTexture rt)
+    {
+      _screenshotRt = rt;
+      while (!_returnScreenshotRequest)
+        yield return null;
+      _screenshotRt = null;
+      _returnScreenshotRequest = false;
+    }
+
+    private void OnRenderImage(RenderTexture source, RenderTexture destination)
+    {
+      Graphics.Blit(source, destination);
+
+      if (_screenshotRt != null)
+      {
+        Graphics.Blit(source, _screenshotRt);
+        _returnScreenshotRequest = true;
+      }
+    }
+
     private void Awake()
     {
       _inputController = Locator.Get<InputController>();
+      Locator.Get<MenuView>().SetGameplayCamera(this);
       Clear();
     }
 
@@ -63,11 +88,11 @@ namespace Client
           var touch = Input.GetTouch(i);
           allTouchesId.Add(touch.fingerId);
           var ignored = _ignoredTouches.Contains(touch.fingerId);
-          
+
           if (touch.phase == TouchPhase.Began && _inputController.IsPointerOverUI(touch.position) && !ignored)
             _ignoredTouches.Add(touch.fingerId);
-          
-          if(!ignored)
+
+          if (!ignored)
             _touches.Add(touch);
         }
 
@@ -82,7 +107,7 @@ namespace Client
           _mousePosition = _inputController.IsPointerOverUI() ? null : position;
         else if (Input.GetMouseButtonUp(0))
           _mousePosition = null;
-        else if (_mousePosition.HasValue) 
+        else if (_mousePosition.HasValue)
           _mousePosition = position;
       }
     }

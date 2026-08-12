@@ -7,16 +7,24 @@ namespace Client.Menu.MainMenu.Options
   public class MainMenuOptionsView : MonoBehaviour
   {
     [SerializeField] private CustomButton _backButton;
+    [SerializeField] private CustomButton _battleButton;
     [SerializeField] private MenuAnimator _menuAnimator;
     private MainMenuView _mainMenuView;
+    private MenuView _mainView;
 
     private void Awake()
     {
+      _mainView = Locator.Get<MenuView>();
       _mainMenuView = Locator.Get<MainMenuView>();
       _backButton.OnClick += OnBackClick;
+      _battleButton.OnClick += OnBattleClick;
     }
 
-    private void OnDestroy() => _backButton.OnClick -= OnBackClick;
+    private void OnDestroy()
+    {
+      _backButton.OnClick -= OnBackClick;
+      _battleButton.OnClick -= OnBattleClick;
+    }
 
     public void Show() => _menuAnimator.PlayShow();
 
@@ -24,6 +32,12 @@ namespace Client.Menu.MainMenu.Options
     {
       _menuAnimator.PlayHide();
       _mainMenuView.ShowStart();
+    }
+
+    private void OnBattleClick()
+    {
+      _menuAnimator.PlayHide();
+      _mainView.PlayGameTransition();
     }
   }
 }

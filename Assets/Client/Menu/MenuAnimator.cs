@@ -13,7 +13,7 @@ namespace Client.Menu
     [SerializeField] private Color _backgroundShowColor;
     [SerializeField] private Color _particlesShowColor;
     [SerializeField] private bool _autoInitialize = true;
-    private readonly float _bodyMinScale = 0.15f;
+    private readonly float _bodyMinScale = 0.25f;
     private Vector2 _topPanelStartPosition;
     private Vector2 _topPanelEndPosition;
     private MenuView _menuView;

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 760176691764468931}
   - component: {fileID: 6688278671900539905}
   - component: {fileID: 8220519383144066390}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -87,7 +87,7 @@ GameObject:
   - component: {fileID: 8407347186032166504}
   - component: {fileID: 7924583775684083563}
   - component: {fileID: 4461833823980355434}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -161,7 +161,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8970739063198461271}
   - component: {fileID: 1227479729406716636}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: SafeArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -212,7 +212,7 @@ GameObject:
   - component: {fileID: 546922115554089038}
   - component: {fileID: 345854964988127287}
   - component: {fileID: 2608398511488180736}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -287,7 +287,7 @@ GameObject:
   - component: {fileID: 4290385890591833713}
   - component: {fileID: 2997600403813578609}
   - component: {fileID: 8104306817654230}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Fade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -363,7 +363,7 @@ GameObject:
   - component: {fileID: 3095305869393638677}
   - component: {fileID: 8786233896940926859}
   - component: {fileID: 4080981362302901974}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Start
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -455,7 +455,7 @@ GameObject:
   - component: {fileID: 295946411946339713}
   - component: {fileID: 6401138284776080990}
   - component: {fileID: 2968698754627137419}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -530,7 +530,7 @@ GameObject:
   - component: {fileID: 2004317026332300161}
   - component: {fileID: 561935744919948588}
   - component: {fileID: 3701112480436613632}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -603,7 +603,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 764887878994164188}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: UnderMask
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -640,7 +640,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3797825007925099643}
   - component: {fileID: 1140745645967713787}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: TopPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -689,7 +689,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6522639175541704232}
   - component: {fileID: 8914549775902354375}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: SafeArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -742,7 +742,7 @@ GameObject:
   - component: {fileID: 6121434758919011756}
   - component: {fileID: 1639619954701097368}
   - component: {fileID: 3386963502927303885}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Group
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -862,7 +862,7 @@ GameObject:
   - component: {fileID: 5318551492399624093}
   - component: {fileID: 6941028310193469900}
   - component: {fileID: 2786907357023629494}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Mask
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -950,7 +950,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5941649047480740748}
   - component: {fileID: 4146727655093503785}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: TopPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1001,7 +1001,7 @@ GameObject:
   - component: {fileID: 3026254535347561424}
   - component: {fileID: 5304983017767992859}
   - component: {fileID: 8761071344610802318}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Options
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1042,6 +1042,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Client::Client.Menu.MainMenu.Options.MainMenuOptionsView
   _backButton: {fileID: 7181634003812240447}
+  _battleButton: {fileID: 8042331067038285916}
   _menuAnimator: {fileID: 8761071344610802318}
 --- !u!225 &5304983017767992859
 CanvasGroup:
@@ -1083,7 +1084,7 @@ GameObject:
   m_Component:
   - component: {fileID: 669244796919101596}
   - component: {fileID: 5518055333862911750}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: MainMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1136,6 +1137,14 @@ PrefabInstance:
     - target: {fileID: 2375640287218177070, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
       propertyPath: m_Name
       value: CustomButton (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2375640287218177070, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2483669654241345248, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2645820149790249754, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
       propertyPath: m_Pivot.x
@@ -1229,9 +1238,17 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0.35686275
       objectReference: {fileID: 0}
+    - target: {fileID: 3185197312950019340, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 7866581061948486584, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
       propertyPath: m_text
       value: Editor
+      objectReference: {fileID: 0}
+    - target: {fileID: 8413538365283385888, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1254,6 +1271,14 @@ PrefabInstance:
     - target: {fileID: 2375640287218177070, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
       propertyPath: m_Name
       value: CustomButton (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2375640287218177070, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2483669654241345248, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2645820149790249754, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
       propertyPath: m_Pivot.x
@@ -1347,9 +1372,17 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0.4
       objectReference: {fileID: 0}
+    - target: {fileID: 3185197312950019340, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 7866581061948486584, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
       propertyPath: m_text
       value: Player levels
+      objectReference: {fileID: 0}
+    - target: {fileID: 8413538365283385888, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1377,6 +1410,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: e0d84e612f5719242ad9a5a84a2c7cee, type: 3}
+    - target: {fileID: 4678314054711046117, guid: 10651db774aae314598754fca26fc5a3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 5219525339767593459, guid: 10651db774aae314598754fca26fc5a3, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1494,7 +1531,19 @@ PrefabInstance:
       value: BackButton
       objectReference: {fileID: 0}
     - target: {fileID: 5489700535715094215, guid: 10651db774aae314598754fca26fc5a3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5489700535715094215, guid: 10651db774aae314598754fca26fc5a3, type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5669866626751017993, guid: 10651db774aae314598754fca26fc5a3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6131823070450448137, guid: 10651db774aae314598754fca26fc5a3, type: 3}
+      propertyPath: _hardFadeAnimation
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -1637,6 +1686,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4678314054711046117, guid: 10651db774aae314598754fca26fc5a3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4678314054711046117, guid: 10651db774aae314598754fca26fc5a3, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -1732,6 +1785,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayButton
       objectReference: {fileID: 0}
+    - target: {fileID: 5489700535715094215, guid: 10651db774aae314598754fca26fc5a3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5669866626751017993, guid: 10651db774aae314598754fca26fc5a3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 6131823070450448137, guid: 10651db774aae314598754fca26fc5a3, type: 3}
       propertyPath: _background
       value: 
@@ -1795,6 +1856,10 @@ PrefabInstance:
     - target: {fileID: 4442755413066929162, guid: 10651db774aae314598754fca26fc5a3, type: 3}
       propertyPath: m_Color.r
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4678314054711046117, guid: 10651db774aae314598754fca26fc5a3, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5219525339767593459, guid: 10651db774aae314598754fca26fc5a3, type: 3}
       propertyPath: m_Pivot.x
@@ -1900,6 +1965,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: QuitButton
       objectReference: {fileID: 0}
+    - target: {fileID: 5489700535715094215, guid: 10651db774aae314598754fca26fc5a3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5669866626751017993, guid: 10651db774aae314598754fca26fc5a3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 6131823070450448137, guid: 10651db774aae314598754fca26fc5a3, type: 3}
       propertyPath: _hardFadeAnimation
       value: 1
@@ -1942,6 +2015,14 @@ PrefabInstance:
     - target: {fileID: 2375640287218177070, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
       propertyPath: m_Name
       value: CustomButton (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2375640287218177070, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2483669654241345248, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2645820149790249754, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
       propertyPath: m_Pivot.x
@@ -2035,9 +2116,17 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0.35686275
       objectReference: {fileID: 0}
+    - target: {fileID: 3185197312950019340, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 7866581061948486584, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
       propertyPath: m_text
       value: Company
+      objectReference: {fileID: 0}
+    - target: {fileID: 8413538365283385888, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2061,6 +2150,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: CustomButton (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 2375640287218177070, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2483669654241345248, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 2645820149790249754, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2153,9 +2250,17 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0.6666667
       objectReference: {fileID: 0}
+    - target: {fileID: 3185197312950019340, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 7866581061948486584, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
       propertyPath: m_text
       value: Load
+      objectReference: {fileID: 0}
+    - target: {fileID: 8413538365283385888, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2179,6 +2284,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: CustomButton
       objectReference: {fileID: 0}
+    - target: {fileID: 2375640287218177070, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2483669654241345248, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 2645820149790249754, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2271,6 +2384,10 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0.6666667
       objectReference: {fileID: 0}
+    - target: {fileID: 3185197312950019340, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 7866581061948486584, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
       propertyPath: m_text
       value: Battle
@@ -2279,11 +2396,26 @@ PrefabInstance:
       propertyPath: m_fontSizeBase
       value: 88
       objectReference: {fileID: 0}
+    - target: {fileID: 8413538365283385888, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
+--- !u!114 &8042331067038285916 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4161380294023232992, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
+  m_PrefabInstance: {fileID: 6222892948262452668}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44c6a04895734ff5a5a8cc48379dfb38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::Client.Utilities.CustomButton
 --- !u!224 &8280993003072843430 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2645820149790249754, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}

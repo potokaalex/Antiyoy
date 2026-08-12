@@ -14,7 +14,7 @@ namespace Client.UITests._t
     [SerializeField] private float _fadeDur;
     private RenderTexture _rt;
 
-    private void Awake() => _rt = new(Screen.width, Screen.height, 32);
+    private void Awake() => _rt = new(Screen.width, Screen.height, 16);
 
     private void Update()
     {
