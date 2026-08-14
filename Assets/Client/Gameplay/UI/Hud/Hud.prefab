@@ -432,6 +432,7 @@ MonoBehaviour:
   _topPanel: {fileID: 544662518169937864}
   _bottomPanel: {fileID: 1474170467554359323}
   _canvasGroup: {fileID: 2435455835274682659}
+  _pauseButton: {fileID: 32024792142800534}
 --- !u!225 &2435455835274682659
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1630,6 +1631,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 10651db774aae314598754fca26fc5a3, type: 3}
+--- !u!114 &32024792142800534 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6131823070450448137, guid: 10651db774aae314598754fca26fc5a3, type: 3}
+  m_PrefabInstance: {fileID: 6154550389998031263}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44c6a04895734ff5a5a8cc48379dfb38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::Client.Utilities.CustomButton
 --- !u!224 &2091394660108617836 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5219525339767593459, guid: 10651db774aae314598754fca26fc5a3, type: 3}

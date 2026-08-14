@@ -118,6 +118,8 @@ namespace Client.Gameplay
 
     public void EndGameplay() => SceneManager.LoadScene(0);
 
+    public void Pause() => _gameplayUI.ShowPause();
+
     private void UpdatePlayerRegions()
     {
       if (_turnsCount <= 0)

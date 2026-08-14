@@ -1,4 +1,6 @@
+using Client.Gameplay.UI.Pause;
 using Client.Infrastructure;
+using Client.Menu;
 using Client.Region;
 using TMPro;
 using UnityEngine;
@@ -13,19 +15,27 @@ namespace Client.Gameplay.UI
     [SerializeField] private TextMeshProUGUI _winText;
     [SerializeField] private Button _winNexButton;
     [SerializeField] private GameTransitionView _gameTransitionView;
+    [SerializeField] private PauseView _pauseViewPrefab;
     private GameplayController _gameplayController;
+    private PauseView _pauseView;
 
     public Hud Hud => _hud;
 
     private void Awake()
     {
       _gameplayController = Locator.Get<GameplayController>();
+      _pauseView = Locator.Get<MenuView>().Spawn(_pauseViewPrefab);
       _winNexButton.onClick.AddListener(_gameplayController.EndGameplay);
     }
 
-    private void OnDestroy() => _winNexButton.onClick.RemoveListener(_gameplayController.EndGameplay);
+    private void OnDestroy()
+    {
+      _winNexButton.onClick.RemoveListener(_gameplayController.EndGameplay);
+      if(_pauseView)
+        Destroy(_pauseView.gameObject);
+    }
 
-    public void PlayShow() => _gameTransitionView.PlayGameTransition();
+    public void PlayShow() => _gameTransitionView.PlaToyGameTransition();
 
     public void ActiveRegionUI(bool isActive) => _hud.Region.SetActive(isActive);
 
@@ -44,5 +54,13 @@ namespace Client.Gameplay.UI
     }
 
     public void ClearRegionCreation() => _hud.Region.Creation.Clear();
+
+    public void ShowPause()
+    {
+      _pauseView.Show();
+      _gameTransitionView.PlaOutGameTransition();
+    }
+
+    public void HidePause() => _pauseView.Hide();
   }
 }

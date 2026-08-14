@@ -831,6 +831,7 @@ MonoBehaviour:
   _winText: {fileID: 1901806473}
   _winNexButton: {fileID: 799869980}
   _gameTransitionView: {fileID: 1274207883}
+  _pauseViewPrefab: {fileID: 6609262769190381928, guid: 6200c0365b6d2fe47b50e042b82128d9, type: 3}
 --- !u!1 &1016838084
 GameObject:
   m_ObjectHideFlags: 0

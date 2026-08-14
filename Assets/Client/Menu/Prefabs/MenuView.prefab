@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Client::Client.UITests.Menu.MenuView
   _background: {fileID: 3794070134341014230}
   _blockInput: {fileID: 940309689352174776}
-  _gameTransitionView: {fileID: 0}
+  _viewsRoot: {fileID: 3826588594859744449}
 --- !u!1 &2539013241959254766
 GameObject:
   m_ObjectHideFlags: 0

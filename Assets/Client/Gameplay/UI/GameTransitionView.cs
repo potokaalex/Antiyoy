@@ -25,7 +25,9 @@ namespace Client.Gameplay.UI
       _gameImage.texture = _rt;
     }
 
-    public void PlayGameTransition() => StartCoroutine(PlayGameTransitionCoroutine());
+    public void PlaToyGameTransition() => StartCoroutine(PlayGameTransitionCoroutine());
+
+    public void PlaOutGameTransition() => StartCoroutine(PlaOutGameTransitionCoroutine());
 
     private IEnumerator PlayGameTransitionCoroutine()
     {
@@ -36,15 +38,41 @@ namespace Client.Gameplay.UI
       _gameImage.color = new Color(1, 1, 1, 0);
 
       _menuView.Background.PlayHideAnimation();
+      _menuView.SetBlockInput(true);
 
       DOTween.Sequence()
         .Append(_gameImage.transform.DOScale(Vector3.one, 0.5f))
         .Join(_gameImage.DOFade(1, 0.5f))
-        .Join(_gameplayUI.Hud.PlayShow())
+        .Join(_gameplayUI.Hud.PlayShow())//? наоборот, эта анимация показа худа.
         .OnComplete(() =>
         {
           _gameImage.gameObject.SetActive(false);
+          _menuView.SetBlockInput(false);
           _menuView.SetActive(false);
+        })
+        .SetEase(AnimationsUtilities.MenuDefaultEase);
+    }
+    
+    private IEnumerator PlaOutGameTransitionCoroutine()
+    {
+      yield return StartCoroutine(_cameraController.CreateScreenshotCoroutine(_rt));
+
+      _gameImage.gameObject.SetActive(true);
+      _gameImage.transform.localScale = Vector3.one;
+      _gameImage.color = new Color(1, 1, 1, 1);
+
+      _menuView.SetActive(true);
+      _menuView.Background.PlayShowAnimation();
+      _menuView.SetBlockInput(true);
+
+      DOTween.Sequence()
+        .Append(_gameImage.transform.DOScale(Vector3.zero, 0.5f))
+        .Join(_gameImage.DOFade(0, 0.5f))
+        .Join(_gameplayUI.Hud.PlayHide())
+        .OnComplete(() =>
+        {
+          _gameImage.gameObject.SetActive(false);
+          _menuView.SetBlockInput(false);
         })
         .SetEase(AnimationsUtilities.MenuDefaultEase);
     }

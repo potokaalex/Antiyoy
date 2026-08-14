@@ -7,11 +7,14 @@ namespace Client.Menu
   {
     [SerializeField] private MenuBackgroundView _background;
     [SerializeField] private CanvasGroup _blockInput;
+    [SerializeField] private Transform _viewsRoot;
 
     public MenuBackgroundView Background => _background;
 
     public void SetBlockInput(bool blocked) => _blockInput.blocksRaycasts = blocked;
 
     public void SetActive(bool active) => gameObject.SetActive(active);
+
+    public T Spawn<T>(T prefab) where T : MonoBehaviour => Instantiate(prefab, _viewsRoot);
   }
 }

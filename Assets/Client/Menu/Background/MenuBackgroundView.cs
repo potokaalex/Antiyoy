@@ -36,5 +36,12 @@ namespace Client.Menu.Background
         .Join(_particlesAnimator.PlayHideAnimation())
         .SetEase(AnimationsUtilities.MenuDefaultEase);
     }
+
+    public void PlayShowAnimation()
+    {
+      DOTween.Sequence()
+        .Join(_particlesAnimator.PlayShowAnimation())
+        .SetEase(AnimationsUtilities.MenuDefaultEase);
+    }
   }
 }

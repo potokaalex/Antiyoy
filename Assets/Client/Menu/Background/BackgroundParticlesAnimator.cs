@@ -26,7 +26,7 @@ namespace Client.Menu.Background
       _particlesColor = _particleSystemMain.startColor.color;
     }
 
-    public void PlayShowAnimation() => PlayCircleMove(true);
+    public Tween PlayShowAnimation() => PlayCircleMove(true);
 
     public Tween PlayHideAnimation() => PlayCircleMove(false);
 

@@ -28,11 +28,14 @@ namespace Client.Menu
 
     public void Initialize()
     {
-      _topPanelStartPosition = _topPanel.anchoredPosition;
-      _topPanelEndPosition = _topPanelStartPosition + new Vector2(0, 250);
+      if (_topPanel)
+      {
+        _topPanelStartPosition = _topPanel.anchoredPosition;
+        _topPanelEndPosition = _topPanelStartPosition + new Vector2(0, 250);
+        _topPanel.anchoredPosition = _topPanelEndPosition;
+      }
 
       gameObject.SetActive(false);
-      _topPanel.anchoredPosition = _topPanelEndPosition;
       _body.localScale = Vector3.one * _bodyMinScale;
       _canvasGroup.alpha = 0;
     }
@@ -48,13 +51,18 @@ namespace Client.Menu
 
     private Sequence MenuAnimation(Vector3 topPosition, float bodyScale, float alpha)
     {
-      return DOTween.Sequence()
-        .Append(_topPanel.DOAnchorPos(topPosition, 0.5f))
-        .Join(_body.DOScale(bodyScale, 0.5f))
+      var sequence = DOTween.Sequence();
+
+      if (_topPanel)
+        sequence.Join(_topPanel.DOAnchorPos(topPosition, 0.5f));
+
+      sequence.Join(_body.DOScale(bodyScale, 0.5f))
         .Join(_canvasGroup.DOFade(alpha, 0.35f))
         .JoinCallback(() => _menuView.SetBlockInput(true))
         .AddOnComplete(() => _menuView.SetBlockInput(false))
         .SetEase(AnimationsUtilities.MenuDefaultEase);
+
+      return sequence;
     }
   }
 }
