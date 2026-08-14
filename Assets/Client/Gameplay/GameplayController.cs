@@ -56,6 +56,7 @@ namespace Client.Gameplay
       _bordersService.ViewRegionsBorders();
 
       _gameplayUI.ViewTurnsCount(_turnsCount);
+      _gameplayUI.PlayShow();
     }
 
     public void Tick()

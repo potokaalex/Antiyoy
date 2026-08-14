@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Client.Infrastructure;
-using Client.Menu;
 using Client.Utilities;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -66,7 +65,6 @@ namespace Client
     private void Awake()
     {
       _inputController = Locator.Get<InputController>();
-      Locator.Get<MenuView>().SetGameplayCamera(this);
       Clear();
     }
 

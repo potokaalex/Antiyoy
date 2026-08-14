@@ -12,7 +12,10 @@ namespace Client.Gameplay.UI
     [SerializeField] private GameObject _winPanel;
     [SerializeField] private TextMeshProUGUI _winText;
     [SerializeField] private Button _winNexButton;
+    [SerializeField] private GameTransitionView _gameTransitionView;
     private GameplayController _gameplayController;
+
+    public Hud Hud => _hud;
 
     private void Awake()
     {
@@ -21,6 +24,8 @@ namespace Client.Gameplay.UI
     }
 
     private void OnDestroy() => _winNexButton.onClick.RemoveListener(_gameplayController.EndGameplay);
+
+    public void PlayShow() => _gameTransitionView.PlayGameTransition();
 
     public void ActiveRegionUI(bool isActive) => _hud.Region.SetActive(isActive);
 

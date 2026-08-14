@@ -1,6 +1,7 @@
 using Client.Infrastructure;
 using Client.UI;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Client.Menu.MainMenu.Options
 {
@@ -10,11 +11,9 @@ namespace Client.Menu.MainMenu.Options
     [SerializeField] private CustomButton _battleButton;
     [SerializeField] private MenuAnimator _menuAnimator;
     private MainMenuView _mainMenuView;
-    private MenuView _mainView;
 
     private void Awake()
     {
-      _mainView = Locator.Get<MenuView>();
       _mainMenuView = Locator.Get<MainMenuView>();
       _backButton.OnClick += OnBackClick;
       _battleButton.OnClick += OnBattleClick;
@@ -37,7 +36,7 @@ namespace Client.Menu.MainMenu.Options
     private void OnBattleClick()
     {
       _menuAnimator.PlayHide();
-      _mainView.PlayGameTransition();
+      SceneManager.LoadScene(1);
     }
   }
 }

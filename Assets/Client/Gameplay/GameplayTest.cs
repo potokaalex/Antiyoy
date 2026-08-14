@@ -43,6 +43,8 @@ namespace Client.Gameplay
 
     private void OnGUI()
     {
+      return;
+      
       var labelStyle = new GUIStyle(GUI.skin.label);
       labelStyle.fontSize = 28;
 

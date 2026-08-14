@@ -54,7 +54,7 @@ namespace Client.Menu
         .Join(_canvasGroup.DOFade(alpha, 0.35f))
         .JoinCallback(() => _menuView.SetBlockInput(true))
         .AddOnComplete(() => _menuView.SetBlockInput(false))
-        .SetEase(Ease.InQuint);
+        .SetEase(AnimationsUtilities.MenuDefaultEase);
     }
   }
 }

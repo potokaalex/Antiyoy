@@ -5,6 +5,8 @@ namespace Client.Utilities
 {
   public static class AnimationsUtilities
   {
+    public static readonly Ease MenuDefaultEase = Ease.InQuint;
+    
     public static Tween DoAnchoredMove(RectTransform target, Vector2 from, Vector2 to, float duration = 0.25f)
     {
       target.anchoredPosition = from;
