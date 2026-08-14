@@ -10,7 +10,7 @@ namespace Client.Gameplay.UI
 {
   public class GameplayUI : MonoBehaviour
   {
-    [SerializeField] private Hud _hud;
+    [SerializeField] private Hud.Hud _hud;
     [SerializeField] private GameObject _winPanel;
     [SerializeField] private TextMeshProUGUI _winText;
     [SerializeField] private Button _winNexButton;
@@ -19,7 +19,7 @@ namespace Client.Gameplay.UI
     private GameplayController _gameplayController;
     private PauseView _pauseView;
 
-    public Hud Hud => _hud;
+    public Hud.Hud Hud => _hud;
 
     private void Awake()
     {

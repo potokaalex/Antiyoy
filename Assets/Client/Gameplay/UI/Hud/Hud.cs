@@ -4,7 +4,7 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
-namespace Client.Gameplay.UI
+namespace Client.Gameplay.UI.Hud
 {
   public class Hud : MonoBehaviour
   {
@@ -55,7 +55,7 @@ namespace Client.Gameplay.UI
       return DOTween.Sequence()
         .Append(_topPanel.DOAnchorPos(_topPanelStartPosition + new Vector2(0, 150), 0.5f))
         .Join(_bottomPanel.DOAnchorPos(_bottomPanelStartPosition - new Vector2(0, 150), 0.5f))
-        .Join(_canvasGroup.DOFade(1, 0.5f));
+        .Join(_canvasGroup.DOFade(0, 0.5f));
     }
   }
 }

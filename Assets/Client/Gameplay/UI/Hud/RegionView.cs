@@ -3,7 +3,7 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
-namespace Client.Gameplay.UI
+namespace Client.Gameplay.UI.Hud
 {
   public class RegionView : MonoBehaviour
   {

@@ -7,7 +7,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Client.Gameplay.UI
+namespace Client.Gameplay.UI.Hud
 {
   public class RegionCreationView : MonoBehaviour
   {
