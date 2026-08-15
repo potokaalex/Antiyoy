@@ -1,4 +1,7 @@
+using Client.Gameplay.UI.Hud;
+using Client.Gameplay.UI.Pause;
 using Client.Infrastructure;
+using Client.Menu;
 using Client.Region;
 using TMPro;
 using UnityEngine;
@@ -8,28 +11,43 @@ namespace Client.Gameplay.UI
 {
   public class GameplayUI : MonoBehaviour
   {
-    [SerializeField] private Hud _hud;
+    [SerializeField] private HudView _hudView;
     [SerializeField] private GameObject _winPanel;
     [SerializeField] private TextMeshProUGUI _winText;
     [SerializeField] private Button _winNexButton;
+    [SerializeField] private GameTransitionView _gameTransitionView;
+    [SerializeField] private PauseView _pauseViewPrefab;
     private GameplayController _gameplayController;
+    private PauseView _pauseView;
 
     private void Awake()
     {
       _gameplayController = Locator.Get<GameplayController>();
+      _pauseView = Locator.Get<MenuView>().Spawn(_pauseViewPrefab);
       _winNexButton.onClick.AddListener(_gameplayController.EndGameplay);
     }
 
-    private void OnDestroy() => _winNexButton.onClick.RemoveListener(_gameplayController.EndGameplay);
+    private void OnDestroy()
+    {
+      _winNexButton.onClick.RemoveListener(_gameplayController.EndGameplay);
+      if(_pauseView)
+        Destroy(_pauseView.gameObject);
+    }
 
-    public void ActiveRegionUI(bool isActive) => _hud.Region.SetActive(isActive);
+    public void PlayShow()
+    {
+      _hudView.PlayShow();
+      _gameTransitionView.PlaToyGameTransition();
+    }
 
-    public void ViewTurnsCount(int value) => _hud.ViewTurnsCount(value);
+    public void ActiveRegionUI(bool isActive) => _hudView.Region.SetActive(isActive);
+
+    public void ViewTurnsCount(int value) => _hudView.ViewTurnsCount(value);
 
     public void ViewRegionData(int money, int income)
     {
-      _hud.Region.ViewMoney(money);
-      _hud.Region.ViewIncome(income);
+      _hudView.Region.ViewMoney(money);
+      _hudView.Region.ViewIncome(income);
     }
 
     public void ShowEndScreen(RegionType winner)
@@ -38,6 +56,20 @@ namespace Client.Gameplay.UI
       _winText.SetText($"Winner: {winner}");
     }
 
-    public void ClearRegionCreation() => _hud.Region.Creation.Clear();
+    public void ClearRegionCreation() => _hudView.Region.Creation.Clear();
+
+    public void ShowPause()
+    {
+      _hudView.PlayHide();
+      _pauseView.PlayShow();
+      _gameTransitionView.PlaOutGameTransition();
+    }
+
+    public void HidePause()
+    {
+      _pauseView.PlayHide();
+      _hudView.PlayShow();
+      _gameTransitionView.PlaToyGameTransition();
+    }
   }
 }

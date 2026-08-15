@@ -9,14 +9,23 @@ namespace Client.UI
   public class CustomButton : MonoBehaviour, IPointerDownHandler
   {
     [SerializeField] private Image _background;
+    [SerializeField] private bool _hardFadeAnimation;
 
     public event Action OnClick;
 
     public void OnPointerDown(PointerEventData eventData)
     {
-      DOTween.Kill(this);
-      _background.color = new Color(0f, 0f, 0.3f, 0.75f);
-      _background.DOFade(0, 0.5f).SetEase(Ease.OutQuad).SetId(this);
+      if (_background)
+      {
+        DOTween.Kill(this);
+
+        _background.color = new Color(0f, 0f, 0.3f, 0.75f);
+        if (_hardFadeAnimation)
+          DOVirtual.Float(1, 0, 0.5f, _ => { }).OnComplete(() => _background.color = Color.clear).SetId(this);
+        else
+          _background.DOFade(0, 0.5f).SetEase(Ease.OutQuad).SetId(this);
+      }
+
       OnClick?.Invoke();
     }
   }

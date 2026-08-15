@@ -1,13 +1,16 @@
+using System;
 using System.Collections.Generic;
 using Client.ActionsHistory;
 using Client.Borders;
 using Client.Gameplay.UI;
 using Client.Government;
 using Client.Infrastructure;
+using Client.Menu.MainMenu;
 using Client.Protection;
 using Client.Region;
 using Client.TilesSelection;
 using Client.Unit.Code;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.SceneManagement;
@@ -32,6 +35,7 @@ namespace Client.Gameplay
     private InputController _inputController;
     private BordersService _bordersService;
     private ActionsHistoryController _actionsHistoryController;
+    private MainMenuView _mainMenuView;
     private GameplayMode _gameplayMode;
     private UnitType _creationUnitType;
     private int _turnsCount;
@@ -53,6 +57,7 @@ namespace Client.Gameplay
       _inputController = Locator.Get<InputController>();
       _bordersService = Locator.Get<BordersService>();
       _actionsHistoryController = Locator.Get<ActionsHistoryController>();
+      _mainMenuView = Locator.Get<MainMenuView>();
 
       _gridController.InitialCreateCells();
       _unitsService.InitialCreateUnits();
@@ -60,6 +65,7 @@ namespace Client.Gameplay
       _bordersService.ViewRegionsBorders();
 
       _gameplayUI.ViewTurnsCount(_turnsCount);
+      _gameplayUI.PlayShow();
     }
 
     public void Tick()
@@ -120,7 +126,27 @@ namespace Client.Gameplay
       _actionsHistoryController.Clear();
     }
 
-    public void EndGameplay() => SceneManager.LoadScene(0);
+    public void EndGameplay()
+    {
+      SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(0));
+      SceneManager.UnloadSceneAsync(1);
+    }
+
+    public void Pause()
+    {
+      Clear();
+      _gameplayUI.ShowPause();
+    }
+
+    public void UnPause() => _gameplayUI.HidePause();
+
+    public async void MainMenu()
+    {
+      _mainMenuView.ShowStart();
+
+      await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
+      EndGameplay();
+    }
 
     public void SelectLastSelectedRegion()
     {
