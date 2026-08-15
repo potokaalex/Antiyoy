@@ -1,12 +1,13 @@
 using Client.Infrastructure;
 using Client.UI;
+using Client.Utilities;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
 namespace Client.Gameplay.UI.Hud
 {
-  public class Hud : MonoBehaviour
+  public class HudView : MonoBehaviour
   {
     [SerializeField] private CustomButton _nextTurnButton;
     [SerializeField] private RegionView _regionView;
@@ -35,27 +36,32 @@ namespace Client.Gameplay.UI.Hud
     {
       _nextTurnButton.OnClick -= _gameplayController.NextTurn;
       _pauseButton.OnClick -= _gameplayController.Pause;
+      DOTween.Kill(this);
     }
 
     public void ViewTurnsCount(int value) => _turnsCount.SetText($"Turn {value}");
 
-    public Tween PlayShow()
+    public void PlayShow()
     {
       _topPanel.anchoredPosition = _topPanelStartPosition + new Vector2(0, 150);
       _bottomPanel.anchoredPosition = _bottomPanelStartPosition - new Vector2(0, 150);
 
-      return DOTween.Sequence()
+      DOTween.Sequence()
         .Append(_topPanel.DOAnchorPos(_topPanelStartPosition, 0.5f))
         .Join(_bottomPanel.DOAnchorPos(_bottomPanelStartPosition, 0.5f))
-        .Join(_canvasGroup.DOFade(1, 0.5f));
+        .Join(_canvasGroup.DOFade(1, 0.5f))
+        .SetEase(AnimationsUtilities.MenuDefaultEase)
+        .SetId(this);
     }
 
-    public Tween PlayHide()
+    public void PlayHide()
     {
-      return DOTween.Sequence()
-        .Append(_topPanel.DOAnchorPos(_topPanelStartPosition + new Vector2(0, 150), 0.5f))
-        .Join(_bottomPanel.DOAnchorPos(_bottomPanelStartPosition - new Vector2(0, 150), 0.5f))
-        .Join(_canvasGroup.DOFade(0, 0.5f));
+      DOTween.Sequence()
+        .Append(_topPanel.DOAnchorPos(_topPanelStartPosition + new Vector2(0, 150), 0.25f))
+        .Join(_bottomPanel.DOAnchorPos(_bottomPanelStartPosition - new Vector2(0, 150), 0.25f))
+        .Join(_canvasGroup.DOFade(0, 0.25f))
+        .SetEase(AnimationsUtilities.MenuDefaultEase)
+        .SetId(this);
     }
   }
 }

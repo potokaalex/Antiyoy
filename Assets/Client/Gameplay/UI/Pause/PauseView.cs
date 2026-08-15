@@ -1,3 +1,4 @@
+using Client.Infrastructure;
 using Client.Menu;
 using Client.UI;
 using UnityEngine;
@@ -9,9 +10,29 @@ namespace Client.Gameplay.UI.Pause
     [SerializeField] private CustomButton _continueButton;
     [SerializeField] private CustomButton _mainMenuButton;
     [SerializeField] private MenuAnimator _menuAnimator;
+    private GameplayController _gameplayController;
 
-    public void Show() => _menuAnimator.PlayShow();
+    private void Awake()
+    {
+      _gameplayController = Locator.Get<GameplayController>();
+      _continueButton.OnClick += _gameplayController.UnPause;
+      _mainMenuButton.OnClick += OnMainMenuClick;
+    }
 
-    public void Hide() => _menuAnimator.PlayHide();
+    private void OnDestroy()
+    {
+      _continueButton.OnClick -= _gameplayController.UnPause;
+      _mainMenuButton.OnClick -= OnMainMenuClick;
+    }
+
+    public void PlayShow() => _menuAnimator.PlayShow();
+
+    public void PlayHide() => _menuAnimator.PlayHide();
+
+    private void OnMainMenuClick()
+    {
+      PlayHide();
+      _gameplayController.MainMenu();
+    }
   }
 }

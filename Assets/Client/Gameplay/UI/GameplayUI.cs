@@ -1,3 +1,4 @@
+using Client.Gameplay.UI.Hud;
 using Client.Gameplay.UI.Pause;
 using Client.Infrastructure;
 using Client.Menu;
@@ -10,7 +11,7 @@ namespace Client.Gameplay.UI
 {
   public class GameplayUI : MonoBehaviour
   {
-    [SerializeField] private Hud.Hud _hud;
+    [SerializeField] private HudView _hudView;
     [SerializeField] private GameObject _winPanel;
     [SerializeField] private TextMeshProUGUI _winText;
     [SerializeField] private Button _winNexButton;
@@ -18,8 +19,6 @@ namespace Client.Gameplay.UI
     [SerializeField] private PauseView _pauseViewPrefab;
     private GameplayController _gameplayController;
     private PauseView _pauseView;
-
-    public Hud.Hud Hud => _hud;
 
     private void Awake()
     {
@@ -35,16 +34,20 @@ namespace Client.Gameplay.UI
         Destroy(_pauseView.gameObject);
     }
 
-    public void PlayShow() => _gameTransitionView.PlaToyGameTransition();
+    public void PlayShow()
+    {
+      _hudView.PlayShow();
+      _gameTransitionView.PlaToyGameTransition();
+    }
 
-    public void ActiveRegionUI(bool isActive) => _hud.Region.SetActive(isActive);
+    public void ActiveRegionUI(bool isActive) => _hudView.Region.SetActive(isActive);
 
-    public void ViewTurnsCount(int value) => _hud.ViewTurnsCount(value);
+    public void ViewTurnsCount(int value) => _hudView.ViewTurnsCount(value);
 
     public void ViewRegionData(int money, int income)
     {
-      _hud.Region.ViewMoney(money);
-      _hud.Region.ViewIncome(income);
+      _hudView.Region.ViewMoney(money);
+      _hudView.Region.ViewIncome(income);
     }
 
     public void ShowEndScreen(RegionType winner)
@@ -53,14 +56,20 @@ namespace Client.Gameplay.UI
       _winText.SetText($"Winner: {winner}");
     }
 
-    public void ClearRegionCreation() => _hud.Region.Creation.Clear();
+    public void ClearRegionCreation() => _hudView.Region.Creation.Clear();
 
     public void ShowPause()
     {
-      _pauseView.Show();
+      _hudView.PlayHide();
+      _pauseView.PlayShow();
       _gameTransitionView.PlaOutGameTransition();
     }
 
-    public void HidePause() => _pauseView.Hide();
+    public void HidePause()
+    {
+      _pauseView.PlayHide();
+      _hudView.PlayShow();
+      _gameTransitionView.PlaToyGameTransition();
+    }
   }
 }

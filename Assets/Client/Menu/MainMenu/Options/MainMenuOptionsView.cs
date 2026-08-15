@@ -1,3 +1,4 @@
+using System.Collections;
 using Client.Infrastructure;
 using Client.UI;
 using UnityEngine;
@@ -36,7 +37,15 @@ namespace Client.Menu.MainMenu.Options
     private void OnBattleClick()
     {
       _menuAnimator.PlayHide();
-      SceneManager.LoadScene(1);
+      StartCoroutine(LoadGameplay());
+    }
+
+    private IEnumerator LoadGameplay()
+    {
+      var operation = SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive);
+      yield return operation;
+      var loadedScene = SceneManager.GetSceneByBuildIndex(1);
+      SceneManager.SetActiveScene(loadedScene);
     }
   }
 }

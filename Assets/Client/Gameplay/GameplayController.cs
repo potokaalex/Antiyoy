@@ -1,12 +1,15 @@
+using System;
 using System.Collections.Generic;
 using Client.Borders;
 using Client.Gameplay.UI;
 using Client.Government;
 using Client.Infrastructure;
+using Client.Menu.MainMenu;
 using Client.Protection;
 using Client.Region;
 using Client.TilesSelection;
 using Client.Unit.Code;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.SceneManagement;
@@ -29,6 +32,7 @@ namespace Client.Gameplay
     private ProtectionView _protectionView;
     private InputController _inputController;
     private BordersService _bordersService;
+    private MainMenuView _mainMenuView;
     private GameplayMode _gameplayMode;
     private UnitType _creationUnitType;
     private int _turnsCount;
@@ -49,6 +53,7 @@ namespace Client.Gameplay
       _protectionView = Locator.Get<ProtectionView>();
       _inputController = Locator.Get<InputController>();
       _bordersService = Locator.Get<BordersService>();
+      _mainMenuView = Locator.Get<MainMenuView>();
 
       _gridController.InitialCreateCells();
       _unitsService.InitialCreateUnits();
@@ -116,9 +121,27 @@ namespace Client.Gameplay
       UpdatePlayerRegions();
     }
 
-    public void EndGameplay() => SceneManager.LoadScene(0);
+    public void EndGameplay()
+    {
+      SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(0));
+      SceneManager.UnloadSceneAsync(1);
+    }
 
-    public void Pause() => _gameplayUI.ShowPause();
+    public void Pause()
+    {
+      Clear();
+      _gameplayUI.ShowPause();
+    }
+
+    public void UnPause() => _gameplayUI.HidePause();
+
+    public async void MainMenu()
+    {
+      _mainMenuView.ShowStart();
+
+      await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
+      EndGameplay();
+    }
 
     private void UpdatePlayerRegions()
     {

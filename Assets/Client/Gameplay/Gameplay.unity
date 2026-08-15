@@ -826,7 +826,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd8dc66955bf49f0ba6162e77960147c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Client::Client.Gameplay.GameplayUI
-  _hud: {fileID: 872443098}
+  _hudView: {fileID: 872443098}
   _winPanel: {fileID: 62318053}
   _winText: {fileID: 1901806473}
   _winNexButton: {fileID: 799869980}

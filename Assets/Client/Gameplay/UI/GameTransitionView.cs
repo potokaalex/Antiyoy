@@ -13,17 +13,17 @@ namespace Client.Gameplay.UI
     [SerializeField] private RawImage _gameImage;
     private CameraController _cameraController;
     private MenuView _menuView;
-    private GameplayUI _gameplayUI;
     private RenderTexture _rt;
 
     private void Awake()
     {
       _menuView = Locator.Get<MenuView>();
       _cameraController = Locator.Get<CameraController>();
-      _gameplayUI = Locator.Get<GameplayUI>();
       _rt = new RenderTexture(Screen.width, Screen.height, 16);
       _gameImage.texture = _rt;
     }
+
+    private void OnDestroy() => DOTween.Kill(this);
 
     public void PlaToyGameTransition() => StartCoroutine(PlayGameTransitionCoroutine());
 
@@ -42,15 +42,15 @@ namespace Client.Gameplay.UI
 
       DOTween.Sequence()
         .Append(_gameImage.transform.DOScale(Vector3.one, 0.5f))
-        .Join(_gameImage.DOFade(1, 0.5f))
-        .Join(_gameplayUI.Hud.PlayShow())//? наоборот, эта анимация показа худа.
+        .Join(_gameImage.DOFade(1, 0.35f))
         .OnComplete(() =>
         {
           _gameImage.gameObject.SetActive(false);
           _menuView.SetBlockInput(false);
           _menuView.SetActive(false);
         })
-        .SetEase(AnimationsUtilities.MenuDefaultEase);
+        .SetEase(AnimationsUtilities.MenuDefaultEase)
+        .SetId(this);
     }
     
     private IEnumerator PlaOutGameTransitionCoroutine()
@@ -67,14 +67,14 @@ namespace Client.Gameplay.UI
 
       DOTween.Sequence()
         .Append(_gameImage.transform.DOScale(Vector3.zero, 0.5f))
-        .Join(_gameImage.DOFade(0, 0.5f))
-        .Join(_gameplayUI.Hud.PlayHide())
+        .Join(_gameImage.DOFade(0, 0.35f))
         .OnComplete(() =>
         {
           _gameImage.gameObject.SetActive(false);
           _menuView.SetBlockInput(false);
         })
-        .SetEase(AnimationsUtilities.MenuDefaultEase);
+        .SetEase(AnimationsUtilities.MenuDefaultEase)
+        .SetId(this);
     }
   }
 }

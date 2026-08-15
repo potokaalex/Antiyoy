@@ -26,6 +26,8 @@ namespace Client.Menu
         Initialize();
     }
 
+    private void OnDestroy() => DOTween.Kill(this);
+
     public void Initialize()
     {
       if (_topPanel)
@@ -60,7 +62,8 @@ namespace Client.Menu
         .Join(_canvasGroup.DOFade(alpha, 0.35f))
         .JoinCallback(() => _menuView.SetBlockInput(true))
         .AddOnComplete(() => _menuView.SetBlockInput(false))
-        .SetEase(AnimationsUtilities.MenuDefaultEase);
+        .SetEase(AnimationsUtilities.MenuDefaultEase)
+        .SetId(this);
 
       return sequence;
     }
