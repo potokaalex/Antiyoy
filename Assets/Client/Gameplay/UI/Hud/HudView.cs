@@ -1,4 +1,5 @@
 using Client.Infrastructure;
+using Client.Menu;
 using Client.UI;
 using Client.Utilities;
 using DG.Tweening;
@@ -19,17 +20,20 @@ namespace Client.Gameplay.UI.Hud
     private GameplayController _gameplayController;
     private Vector2 _topPanelStartPosition;
     private Vector2 _bottomPanelStartPosition;
+    private MenuView _menuView;
 
     public RegionView Region => _regionView;
 
     private void Awake()
     {
       _gameplayController = Locator.Get<GameplayController>();
+      _menuView = Locator.Get<MenuView>();
       _nextTurnButton.OnClick += _gameplayController.NextTurn;
       _pauseButton.OnClick += _gameplayController.Pause;
       _canvasGroup.alpha = 0;
       _topPanelStartPosition = _topPanel.anchoredPosition;
       _bottomPanelStartPosition = _bottomPanel.anchoredPosition;
+      gameObject.SetActive(false);
     }
 
     private void OnDestroy()
@@ -39,12 +43,19 @@ namespace Client.Gameplay.UI.Hud
       DOTween.Kill(this);
     }
 
+    private void Update()
+    {
+      if (_menuView.BackClicked)
+        _gameplayController.Pause();
+    }
+
     public void ViewTurnsCount(int value) => _turnsCount.SetText($"Turn {value}");
 
     public void PlayShow()
     {
       _topPanel.anchoredPosition = _topPanelStartPosition + new Vector2(0, 150);
       _bottomPanel.anchoredPosition = _bottomPanelStartPosition - new Vector2(0, 150);
+      gameObject.SetActive(true);
 
       DOTween.Sequence()
         .Append(_topPanel.DOAnchorPos(_topPanelStartPosition, 0.5f))
@@ -61,7 +72,8 @@ namespace Client.Gameplay.UI.Hud
         .Join(_bottomPanel.DOAnchorPos(_bottomPanelStartPosition - new Vector2(0, 150), 0.25f))
         .Join(_canvasGroup.DOFade(0, 0.25f))
         .SetEase(AnimationsUtilities.MenuDefaultEase)
-        .SetId(this);
+        .SetId(this)
+        .OnComplete(() => gameObject.SetActive(false));
     }
   }
 }

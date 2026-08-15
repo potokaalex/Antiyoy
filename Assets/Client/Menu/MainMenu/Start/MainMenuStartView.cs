@@ -28,7 +28,7 @@ namespace Client.Menu.MainMenu.Start
       _menuView = Locator.Get<MenuView>();
       _mainMenuView = Locator.Get<MainMenuView>();
       _playButton.OnClick += OnPlayClick;
-      _quitButton.OnClick += OnQuitClick;
+      _quitButton.OnClick += Quit;
       _menuAnimator.Initialize();
       _fade.gameObject.SetActive(true);
       _mask.gameObject.SetActive(false);
@@ -38,8 +38,30 @@ namespace Client.Menu.MainMenu.Start
     private void OnDestroy()
     {
       _playButton.OnClick -= OnPlayClick;
-      _quitButton.OnClick -= OnQuitClick;
+      _quitButton.OnClick -= Quit;
     }
+
+    private void Update()
+    {
+      if (_menuView.BackClicked)
+        Quit();
+    }
+
+    public Tween PlayAppearAnimation()
+    {
+      return DOTween.Sequence()
+        .AppendCallback(() =>
+        {
+          gameObject.SetActive(true);
+          _rootCanvasGroup.alpha = 1;
+          _playButtonTransform.transform.localScale = Vector3.one;
+        })
+        .Append(_menuView.Background.PlayAppearAnimation())
+        .Join(_fade.DOFade(0, 0.4f).OnComplete(() => _fade.gameObject.SetActive(false)))
+        .Join(DOTween.Sequence().AppendInterval(0.1f).Append(MoveAnimations()).Join(MaskAnimation()));
+    }
+
+    public void Show() => _menuAnimator.PlayShow();
 
     private void OnPlayClick()
     {
@@ -55,22 +77,6 @@ namespace Client.Menu.MainMenu.Start
       DOTween.Sequence()
         .Append(_playButtonAnimatedBackground.transform.DOScale(1.25f, 0.15f))
         .InsertCallback(0.5f, () => _playButtonAnimatedBackground.gameObject.SetActive(false));
-    }
-
-    public void Show() => _menuAnimator.PlayShow();
-
-    public Tween PlayAppearAnimation()
-    {
-      return DOTween.Sequence()
-        .AppendCallback(() =>
-        {
-          gameObject.SetActive(true);
-          _rootCanvasGroup.alpha = 1;
-          _playButtonTransform.transform.localScale = Vector3.one;
-        })
-        .Append(_menuView.Background.PlayAppearAnimation())
-        .Join(_fade.DOFade(0, 0.4f).OnComplete(() => _fade.gameObject.SetActive(false)))
-        .Join(DOTween.Sequence().AppendInterval(0.1f).Append(MoveAnimations()).Join(MaskAnimation()));
     }
 
     private Tween MoveAnimations()
@@ -102,7 +108,7 @@ namespace Client.Menu.MainMenu.Start
         }));
     }
 
-    private void OnQuitClick()
+    private void Quit()
     {
 #if UNITY_EDITOR
       UnityEditor.EditorApplication.isPlaying = false;

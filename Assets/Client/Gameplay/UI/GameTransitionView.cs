@@ -42,7 +42,7 @@ namespace Client.Gameplay.UI
 
       DOTween.Sequence()
         .Append(_gameImage.transform.DOScale(Vector3.one, 0.5f))
-        .Join(_gameImage.DOFade(1, 0.35f))
+        .Join(_gameImage.DOFade(1, 0.5f))
         .OnComplete(() =>
         {
           _gameImage.gameObject.SetActive(false);
@@ -67,7 +67,7 @@ namespace Client.Gameplay.UI
 
       DOTween.Sequence()
         .Append(_gameImage.transform.DOScale(Vector3.zero, 0.5f))
-        .Join(_gameImage.DOFade(0, 0.35f))
+        .Join(_gameImage.DOFade(0, 0.5f))
         .OnComplete(() =>
         {
           _gameImage.gameObject.SetActive(false);
