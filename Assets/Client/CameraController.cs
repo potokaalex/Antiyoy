@@ -53,13 +53,13 @@ namespace Client
 
     private void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
-      Graphics.Blit(source, destination);
-
       if (_screenshotRt != null)
       {
         Graphics.Blit(source, _screenshotRt);
         _returnScreenshotRequest = true;
       }
+
+      Graphics.Blit(source, destination);
     }
 
     private void Awake()

@@ -10,8 +10,13 @@ namespace Client.Menu.Background
     [SerializeField] private BackgroundParticlesAnimator _particlesAnimator;
     [SerializeField] private RectTransform _backgroundTransform;
     [SerializeField] private Image _background;
+    [SerializeField] private Image _fade;
 
-    private void Awake() => gameObject.SetActive(false);
+    private void Awake()
+    {
+      gameObject.SetActive(false);
+      _fade.color = Color.clear;
+    }
 
     public Tween PlayAppearAnimation()
     {
@@ -31,15 +36,20 @@ namespace Client.Menu.Background
 
     public void PlayHideAnimation()
     {
+      _fade.color = Color.clear;
+
       DOTween.Sequence()
-        .Append(PlayColorTransition(new Color(0.2078431f, 0.2078431f, 0.2078431f, 1), new Color(0.2078431f, 0.2078431f, 0.2078431f, 1)))
+        .Append(_fade.DOColor(AnimationsUtilities.GameplayBackgroundColor, 0.5f))
         .Join(_particlesAnimator.PlayHideAnimation())
         .SetEase(AnimationsUtilities.MenuDefaultEase);
     }
 
     public void PlayShowAnimation()
     {
+      _fade.color = AnimationsUtilities.GameplayBackgroundColor;
+
       DOTween.Sequence()
+        .Append(_fade.DOColor(Color.clear, 0.5f))
         .Join(_particlesAnimator.PlayShowAnimation())
         .SetEase(AnimationsUtilities.MenuDefaultEase);
     }
