@@ -210,10 +210,11 @@ namespace Client.Gameplay
       if (_selectedCells.Contains(cell) && _selectedUnit.CanMove(cell))
       {
         var oldCell = _selectedUnit.Cell;
+        var newCellUnitType = cell.Unit?.Type;
         var setRegionTypeResult = SetRegionTypeResult.Create();
 
         _selectedUnit.Move(cell, ref setRegionTypeResult);
-        _actionsHistoryController.MoveUnit(cell, oldCell, _selectedUnit.Type, setRegionTypeResult);
+        _actionsHistoryController.MoveUnit(cell, newCellUnitType, oldCell, _selectedUnit.Type, setRegionTypeResult);
 
         Clear(cell.Region.Type != CurrentPlayerRegionType);
         TrySelectRegion(cell);
@@ -230,12 +231,13 @@ namespace Client.Gameplay
         {
           var regionMoney = _selectedRegion.Money;
           var setRegionTypeResult = SetRegionTypeResult.Create();
+          var newCellUnitType = cell.Unit?.Type;
           var hasTurns = cell.Region.Type == CurrentPlayerRegionType;
 
           _regionsService.SetRegionType(cell, CurrentPlayerRegionType, ref setRegionTypeResult);
           _unitsService.Create(cell, _creationUnitType, hasTurns);
           _selectedRegion.Money -= cost;
-          _actionsHistoryController.CreateUnit(cell, regionMoney, setRegionTypeResult);
+          _actionsHistoryController.CreateUnit(cell, newCellUnitType, regionMoney, setRegionTypeResult);
 
           Clear(false);
           SelectRegion(cell.Region);
