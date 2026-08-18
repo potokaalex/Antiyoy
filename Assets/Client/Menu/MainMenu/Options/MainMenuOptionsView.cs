@@ -1,8 +1,7 @@
-using System.Collections;
 using Client.Infrastructure;
+using Client.Project;
 using Client.UI;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Client.Menu.MainMenu.Options
 {
@@ -13,6 +12,7 @@ namespace Client.Menu.MainMenu.Options
     [SerializeField] private MenuAnimator _menuAnimator;
     private MainMenuView _mainMenuView;
     private InputController _inputController;
+    private ProjectController _projectController;
 
     public void Show() => _menuAnimator.PlayShow();
 
@@ -20,6 +20,7 @@ namespace Client.Menu.MainMenu.Options
     {
       _mainMenuView = Locator.Get<MainMenuView>();
       _inputController = Locator.Get<InputController>();
+      _projectController = Locator.Get<ProjectController>();
       _backButton.OnClick += OnBackClick;
       _battleButton.OnClick += OnBattleClick;
     }
@@ -42,18 +43,6 @@ namespace Client.Menu.MainMenu.Options
       _mainMenuView.ShowStart();
     }
 
-    private void OnBattleClick()
-    {
-      StartCoroutine(LoadGameplay());
-    }
-
-    private IEnumerator LoadGameplay()
-    {
-      var operation = SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive);
-      yield return operation;
-      var loadedScene = SceneManager.GetSceneByBuildIndex(1);
-      SceneManager.SetActiveScene(loadedScene);
-      _menuAnimator.PlayHide();
-    }
+    private void OnBattleClick() => _projectController.LoadGameplay(_menuAnimator.PlayHide);
   }
 }

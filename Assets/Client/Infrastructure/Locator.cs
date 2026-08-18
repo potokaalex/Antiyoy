@@ -7,7 +7,7 @@ namespace Client.Infrastructure
   {
     private static readonly Dictionary<Type, object> _services = new();
 
-    public static void Set<T>(T service) => _services[typeof(T)] = service;
+    public static void Set<T>(Type contract, T service) => _services[contract] = service;
 
     public static void Remove(Type contract) => _services.Remove(contract);
 

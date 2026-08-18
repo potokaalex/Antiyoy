@@ -1,4 +1,5 @@
 using Client.Infrastructure;
+using Client.Project;
 using Client.UI;
 using Client.Utilities;
 using DG.Tweening;
@@ -22,6 +23,7 @@ namespace Client.Menu.MainMenu.Start
     private MenuView _menuView;
     private InputController _inputController;
     private MainMenuView _mainMenuView;
+    private ProjectController _projectController;
     private Vector2 _playButtonStartPosition;
 
     private void Awake()
@@ -29,8 +31,9 @@ namespace Client.Menu.MainMenu.Start
       _menuView = Locator.Get<MenuView>();
       _mainMenuView = Locator.Get<MainMenuView>();
       _inputController = Locator.Get<InputController>();
+      _projectController = Locator.Get<ProjectController>();
       _playButton.OnClick += OnPlayClick;
-      _quitButton.OnClick += Quit;
+      _quitButton.OnClick += _projectController.Quit;
       _menuAnimator.Initialize();
       _fade.gameObject.SetActive(true);
       _mask.gameObject.SetActive(false);
@@ -40,13 +43,13 @@ namespace Client.Menu.MainMenu.Start
     private void OnDestroy()
     {
       _playButton.OnClick -= OnPlayClick;
-      _quitButton.OnClick -= Quit;
+      _quitButton.OnClick -= _projectController.Quit;
     }
 
     private void Update()
     {
       if (_inputController.BackClicked)
-        Quit();
+        _projectController.Quit();
     }
 
     public Tween PlayAppearAnimation()
@@ -108,15 +111,6 @@ namespace Client.Menu.MainMenu.Start
           _underMask.localScale = Vector3.one / f;
           _underMask.anchoredPosition = initialPos / f;
         }));
-    }
-
-    private void Quit()
-    {
-#if UNITY_EDITOR
-      UnityEditor.EditorApplication.isPlaying = false;
-#else
-      Application.Quit();
-#endif
     }
   }
 }

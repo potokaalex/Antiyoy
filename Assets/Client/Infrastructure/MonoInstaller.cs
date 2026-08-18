@@ -11,10 +11,12 @@ namespace Client.Infrastructure
     private readonly List<ITickable> _tickables = new();
     private readonly List<Type> _registrations = new();
 
-    private protected void Register<T>(T service)
+    private protected void Register<T>(T service) => Register(typeof(T), service);
+
+    private protected void Register<T>(Type contract, T service)
     {
-      _registrations.Add(typeof(T));
-      Locator.Set(service);
+      _registrations.Add(contract);
+      Locator.Set(contract, service);
     }
 
     private void Awake() => Install();
