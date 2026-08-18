@@ -32,6 +32,9 @@ namespace Client.Unit.Code.Capital
 
     public void SetCapital(CellController cell)
     {
+      if(cell == null)
+        return;
+
       DestroyCapitals(cell.Region);
       _unitsService.Create(cell, UnitType.Capital);
     }

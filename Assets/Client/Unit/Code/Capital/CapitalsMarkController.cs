@@ -45,6 +45,8 @@ namespace Client.Unit.Code.Capital
           mark.position = position;
         }
       }).SetLoops(-1, LoopType.Yoyo).SetId(this);
+
+      Tick();
     }
 
     public void Dispose() => DOTween.Kill(this);

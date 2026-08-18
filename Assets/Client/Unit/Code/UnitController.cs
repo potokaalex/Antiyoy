@@ -59,8 +59,7 @@ namespace Client.Unit.Code
 
     public void Dispose()
     {
-      SetCellsProtection(false);
-      Cell.Unit = null;
+      ClearCell();
       _text.SetText(string.Empty);
     }
 
@@ -68,37 +67,31 @@ namespace Client.Unit.Code
 
     public void GetMoveArea(List<CellController> outList) => _areaCalculator.GetMoveArea(this, outList);
 
-    public bool Move(CellController cell)
-    {
-      if (IsFriendlyRegion(cell, Cell.Region.Type) && cell.HasUnit)
-        return false;
+    public bool CanMove(CellController cell) => !(IsFriendlyRegion(cell, Cell.Region.Type) && cell.HasUnit) && HasTurns;
 
-      SetCellsProtection(false);
-      Cell.Unit = null;
-      Conquer(cell, Cell.Region.Type);
+    public void Move(CellController cell, ref SetRegionTypeResult setRegionTypeResult)
+    {
+      ClearCell();
+      _regionsService.SetRegionType(cell, Cell.Region.Type, ref setRegionTypeResult);
+      _unitsService.Destroy(cell.Unit);
+      SetCell(cell);
       DecreaseTurnsCount();
-      return true;
     }
 
     public void GetProtectionArea(List<CellController> outList) => _areaCalculator.GetProtectionArea(this, outList, true);
-
-    private void Conquer(CellController cell, RegionType regionType)
-    {
-      if (!IsFriendlyRegion(cell, regionType))
-      {
-        _unitsService.Destroy(cell.Unit);
-        _regionsService.SetRegionType(cell, regionType);
-      }
-
-      SetCell(cell);
-      SetCellsProtection(true);
-    }
 
     private void SetCell(CellController cell)
     {
       Cell = cell;
       Cell.Unit = this;
       transform.position = _gridController.HexPositionToWorld(Cell.Position);
+      SetCellsProtection(true);
+    }
+
+    private void ClearCell()
+    {
+      SetCellsProtection(false);
+      Cell.Unit = null;
     }
 
     private bool IsFriendlyRegion(CellController cell, RegionType regionType) => cell.Region.Type == regionType;

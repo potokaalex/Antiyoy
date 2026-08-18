@@ -51,7 +51,7 @@ namespace Client.Region
       _regionsFactory.Create(regions[0], RegionType.Red);
       _regionsFactory.Create(regions[1], RegionType.Blue);
       _regionsFactory.Create(regions[2]);
-      
+
       foreach (var region in Regions)
         region.Money = 100;
     }
@@ -87,13 +87,38 @@ namespace Client.Region
       return _configsProvider.RegionsColors[region.Type];
     }
 
+    public void SetRegionType(CellController cell, RegionType type, ref SetRegionTypeResult result)
+    {
+      if (cell.Region.Type == type)
+        return;
+
+      using (ListPool<RegionController>.Get(out var affectedRegions))
+      {
+        GetUniqueRegionsAtAndAround(cell, affectedRegions);
+        foreach (var region in affectedRegions)
+          result.AffectedRegions.Add(RegionRecoveryData.Create(region));
+
+        SetRegionType(cell, type);
+      }
+    }
+
     public void SetRegionType(CellController cell, RegionType type)
     {
-      if(cell.Region.Type == type)
+      if (cell.Region.Type == type)
         return;
 
       RemoveFromRegion(cell);
-      AddToBestNeighbourRegion(type, cell); 
+      AddToBestNeighbourRegion(type, cell);
+    }
+
+    public void RestoreRegion(RegionRecoveryData recoveryData)
+    {
+      foreach (var cell in recoveryData.Cells)
+        SetRegionType(cell, recoveryData.Type);
+
+      var region = recoveryData.Cells[0].Region;
+      region.Money = recoveryData.Money;
+      region.SetCapital(recoveryData.CapitalPosition);
     }
 
     private void TryJoinRegions(HexCoordinates position, RegionType type)
@@ -210,6 +235,15 @@ namespace Client.Region
       }
 
       return result;
+    }
+
+    private void GetUniqueRegionsAtAndAround(CellController cell, List<RegionController> outList)
+    {
+      outList.Add(cell.Region);
+
+      foreach (var neighbour in _gridController.GetNeighbourCells(cell.Position))
+        if (!outList.Contains(neighbour.Region))
+          outList.Add(neighbour.Region);
     }
   }
 }

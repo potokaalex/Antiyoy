@@ -4,11 +4,10 @@ using Client.Gameplay;
 using Client.Infrastructure;
 using Client.Region;
 using Client.Unit.Code;
-using UnityEngine;
 
 namespace Client.ActionsHistory
 {
-  public class ActionsHistoryController : IInitializable, ITickable
+  public class ActionsHistoryController : IInitializable
   {
     private readonly Stack<IHistoryAction> _actions = new();
     private GameplayController _gameplayController;
@@ -24,24 +23,18 @@ namespace Client.ActionsHistory
       }
     }
 
-    public void Clear() => _actions.Clear();
-
-    public void CreateUnit(CellController cell, RegionType oldRegionType, int spentMoney) =>
-      _actions.Push(new CreateUnitAction(cell, oldRegionType, spentMoney));
-
-    public void MoveUnit(CellController newCell, CellController oldCell, RegionType oldRegionType, UnitType unitType) =>
-      _actions.Push(new MoveUnitAction(newCell, oldCell, oldRegionType, unitType));
-
-    public void Tick()
+    public void Clear()
     {
-      if (Input.GetKeyDown(KeyCode.Space))
-      {
-        var str = string.Empty;
-        foreach (var action in _actions)
-          str += $"{action.GetType().Name}\n";
+      foreach (var action in _actions)
+        action.Dispose();
 
-        UnityEngine.Debug.Log(str);
-      }
+      _actions.Clear();
     }
+
+    public void CreateUnit(CellController cell, int regionMoney, SetRegionTypeResult setRegionTypeResult) =>
+      _actions.Push(new CreateUnitAction(cell, regionMoney, setRegionTypeResult));
+
+    public void MoveUnit(CellController newCell, CellController oldCell, UnitType unitType, SetRegionTypeResult setRegionTypeResult) =>
+      _actions.Push(new MoveUnitAction(newCell, oldCell, unitType, setRegionTypeResult));
   }
 }

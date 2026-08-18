@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Client.Region;
 
 namespace Client.Unit.Code
 {
@@ -13,7 +14,8 @@ namespace Client.Unit.Code
     bool CanViewProtection { get; }
     void ResetTurnsCount();
     void GetMoveArea(List<CellController> outList);
-    bool Move(CellController cell);
+    bool CanMove(CellController cell);
+    void Move(CellController cell, ref SetRegionTypeResult setRegionTypeResult);
     void GetProtectionArea(List<CellController> outList);
   }
 }

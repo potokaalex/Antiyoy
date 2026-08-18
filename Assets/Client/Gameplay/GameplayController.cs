@@ -208,15 +208,17 @@ namespace Client.Gameplay
 
     private void TryMoveUnit(CellController cell)
     {
-      var oldRegion = cell.Region.Type;
-      var oldCell = _selectedUnit.Cell;
-
-      if (!_selectedCells.Contains(cell) || _selectedUnit.Move(cell))
+      if (_selectedCells.Contains(cell) && _selectedUnit.CanMove(cell))
       {
+        var oldCell = _selectedUnit.Cell;
+        var setRegionTypeResult = SetRegionTypeResult.Create();
+
+        _selectedUnit.Move(cell, ref setRegionTypeResult);
+        _actionsHistoryController.MoveUnit(cell, oldCell, _selectedUnit.Type, setRegionTypeResult);
+
         Clear(cell.Region.Type != _currentPlayer);
         TrySelectRegion(cell);
         TrySelectUnit(cell);
-        _actionsHistoryController.MoveUnit(cell, oldCell, oldRegion, _selectedUnit.Type);
       }
     }
 
@@ -227,20 +229,17 @@ namespace Client.Gameplay
       {
         if (_selectedCells.Contains(cell) && !(cell.HasUnit && cell.Region.Type == _currentPlayer))
         {
-          var hasTurns = true;
-          var oldRegion = cell.Region.Type;
+          var regionMoney = _selectedRegion.Money;
+          var setRegionTypeResult = SetRegionTypeResult.Create();
+          var hasTurns = cell.Region.Type == _currentPlayer;
           
-          if (cell.Region.Type != _currentPlayer)
-          {
-            _gridController.ReCreateCell(cell.Position, _currentPlayer);
-            hasTurns = false;
-          }
-
+          _regionsService.SetRegionType(cell, _currentPlayer, ref setRegionTypeResult);
           _unitsService.Create(cell, _creationUnitType, hasTurns);
           _selectedRegion.Money -= cost;
+          _actionsHistoryController.CreateUnit(cell, regionMoney, setRegionTypeResult);
+
           Clear(false);
           SelectRegion(cell.Region);
-          _actionsHistoryController.CreateUnit(cell, oldRegion, cost);
           return;
         }
       }

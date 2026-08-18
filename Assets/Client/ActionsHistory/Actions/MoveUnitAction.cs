@@ -8,26 +8,32 @@ namespace Client.ActionsHistory.Actions
   {
     private readonly UnitsService _unitsService;
     private readonly RegionsService _regionsService;
-    private readonly CellController _newCell;
     private readonly CellController _oldCell;
-    private readonly RegionType _oldRegionType;
+    private readonly CellController _newCell;
     private readonly UnitType _unitType;
+    private SetRegionTypeResult _setRegionTypeResult;
 
-    public MoveUnitAction(CellController newCell, CellController oldCell, RegionType oldRegionType, UnitType unitType)
+    public MoveUnitAction(CellController newCell, CellController oldCell, UnitType unitType, SetRegionTypeResult setRegionTypeResult)
     {
       _unitsService = Locator.Get<UnitsService>();
       _regionsService = Locator.Get<RegionsService>();
       _newCell = newCell;
       _oldCell = oldCell;
-      _oldRegionType = oldRegionType;
       _unitType = unitType;
+      _setRegionTypeResult = setRegionTypeResult;
     }
 
     public void Undo()
     {
       _unitsService.Destroy(_newCell.Unit);
-      _regionsService.SetRegionType(_newCell, _oldRegionType);
+
+      foreach (var region in _setRegionTypeResult.AffectedRegions)
+        _regionsService.RestoreRegion(region);
+      _setRegionTypeResult.Dispose();
+
       _unitsService.Create(_oldCell, _unitType);
     }
+
+    public void Dispose() => _setRegionTypeResult.Dispose();
   }
 }
