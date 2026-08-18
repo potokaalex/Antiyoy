@@ -26,7 +26,8 @@ namespace Client.Boot
       Application.targetFrameRate = 300;
       QualitySettings.vSyncCount = -1;
       DontDestroyOnLoad(this);
-      StartCoroutine(PlayAnimation());
+      UnityEngine.SceneManagement.SceneManager.LoadScene(1);
+      //StartCoroutine(PlayAnimation());
     }
 
     private IEnumerator PlayAnimation()
