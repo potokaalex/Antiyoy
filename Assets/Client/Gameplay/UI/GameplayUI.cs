@@ -30,7 +30,7 @@ namespace Client.Gameplay.UI
     private void OnDestroy()
     {
       _winNexButton.onClick.RemoveListener(_gameplayController.EndGameplay);
-      if(_pauseView)
+      if (_pauseView)
         Destroy(_pauseView.gameObject);
     }
 

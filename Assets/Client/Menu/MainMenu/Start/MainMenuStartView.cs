@@ -20,6 +20,7 @@ namespace Client.Menu.MainMenu.Start
     [SerializeField] private MenuAnimator _menuAnimator;
     [SerializeField] private CustomButton _quitButton;
     private MenuView _menuView;
+    private InputController _inputController;
     private MainMenuView _mainMenuView;
     private Vector2 _playButtonStartPosition;
 
@@ -27,6 +28,7 @@ namespace Client.Menu.MainMenu.Start
     {
       _menuView = Locator.Get<MenuView>();
       _mainMenuView = Locator.Get<MainMenuView>();
+      _inputController = Locator.Get<InputController>();
       _playButton.OnClick += OnPlayClick;
       _quitButton.OnClick += Quit;
       _menuAnimator.Initialize();
@@ -43,7 +45,7 @@ namespace Client.Menu.MainMenu.Start
 
     private void Update()
     {
-      if (_menuView.BackClicked)
+      if (_inputController.BackClicked)
         Quit();
     }
 

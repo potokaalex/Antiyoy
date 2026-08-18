@@ -22,7 +22,7 @@ namespace Client.Region
         CapitalPosition = region.Capital?.Cell
       };
     }
-    
+
     public void Dispose() => ListPool<CellController>.Release(Cells);
   }
 }

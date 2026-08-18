@@ -12,14 +12,14 @@ namespace Client.Menu.MainMenu.Options
     [SerializeField] private CustomButton _battleButton;
     [SerializeField] private MenuAnimator _menuAnimator;
     private MainMenuView _mainMenuView;
-    private MenuView _menuView;
+    private InputController _inputController;
 
     public void Show() => _menuAnimator.PlayShow();
 
     private void Awake()
     {
       _mainMenuView = Locator.Get<MainMenuView>();
-      _menuView = Locator.Get<MenuView>();
+      _inputController = Locator.Get<InputController>();
       _backButton.OnClick += OnBackClick;
       _battleButton.OnClick += OnBattleClick;
     }
@@ -32,7 +32,7 @@ namespace Client.Menu.MainMenu.Options
 
     private void Update()
     {
-      if (_menuView.BackClicked)
+      if (_inputController.BackClicked)
         OnBackClick();
     }
 

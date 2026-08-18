@@ -17,7 +17,7 @@ namespace Client.Region
 
     public void Dispose()
     {
-      foreach (var region in AffectedRegions) 
+      foreach (var region in AffectedRegions)
         region.Dispose();
 
       ListPool<RegionRecoveryData>.Release(AffectedRegions);

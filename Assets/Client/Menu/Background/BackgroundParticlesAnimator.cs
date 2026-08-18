@@ -38,11 +38,11 @@ namespace Client.Menu.Background
       {
         var count = _particleSystem.GetParticles(_particles);
         var c = Color.Lerp(_particlesColor, color, v);
-        
+
         main.startColor = new ParticleSystem.MinMaxGradient(c);
         for (var i = 0; i < count; i++)
           _particles[i].startColor = c;
-        
+
         _particleSystem.SetParticles(_particles, count);
       });
     }
@@ -77,7 +77,7 @@ namespace Client.Menu.Background
       return DOVirtual.Float(0, 1, _appearDuration, v =>
       {
         var p = moveToCenter ? v : 1 - v;
-        for (var i = 0; i < count; i++) 
+        for (var i = 0; i < count; i++)
           _particles[i].position = Vector3.Lerp(_startPositions[i], _endPositions[i], p);
         _particleSystem.SetParticles(_particles, count);
       }).AddOnComplete(_particleSystem.Play);

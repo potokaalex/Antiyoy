@@ -11,12 +11,12 @@ namespace Client.Gameplay.UI.Pause
     [SerializeField] private CustomButton _mainMenuButton;
     [SerializeField] private MenuAnimator _menuAnimator;
     private GameplayController _gameplayController;
-    private MenuView _menuView;
+    private InputController _inputController;
 
     private void Awake()
     {
       _gameplayController = Locator.Get<GameplayController>();
-      _menuView = Locator.Get<MenuView>();
+      _inputController = Locator.Get<InputController>();
       _continueButton.OnClick += _gameplayController.UnPause;
       _mainMenuButton.OnClick += ToMainMenu;
     }
@@ -29,7 +29,7 @@ namespace Client.Gameplay.UI.Pause
 
     private void Update()
     {
-      if (_menuView.BackClicked)
+      if (_inputController.BackClicked)
         ToMainMenu();
     }
 

@@ -13,7 +13,7 @@ namespace Client.Borders
 
     public void SetActive(bool isActive)
     {
-      foreach (var r in _spriteRenderers) 
+      foreach (var r in _spriteRenderers)
         r.enabled = isActive;
     }
 

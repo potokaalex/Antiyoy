@@ -16,6 +16,7 @@ namespace Client.Boot
 
     protected override void Install()
     {
+      Register(new InputController());
       Register(_menuView);
       Register(_mainMenuView);
     }

@@ -31,7 +31,6 @@ namespace Client.Gameplay
     protected override void Install()
     {
       Register(_configsProvider);
-      Register(new InputController());
       Register(_cameraController);
       Register(_tilemapController);
       Register(_gridController);

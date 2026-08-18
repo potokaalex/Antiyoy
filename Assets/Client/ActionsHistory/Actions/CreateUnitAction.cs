@@ -26,7 +26,7 @@ namespace Client.ActionsHistory.Actions
       _unitsService.Destroy(_cell.Unit);
       _cell.Region.Money = _regionMoney;
 
-      foreach (var region in _setRegionTypeResult.AffectedRegions) 
+      foreach (var region in _setRegionTypeResult.AffectedRegions)
         _regionsService.RestoreRegion(region);
 
       Dispose();

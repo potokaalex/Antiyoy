@@ -20,7 +20,6 @@ namespace Client.Gameplay
   public class GameplayController : IInitializable, ITickable
   {
     private readonly List<CellController> _selectedCells = new();
-    private RegionType _currentPlayer = RegionType.Red;
     private CameraController _cameraController;
     private GridController _gridController;
     private RegionController _selectedRegion;
@@ -40,7 +39,7 @@ namespace Client.Gameplay
     private UnitType _creationUnitType;
     private int _turnsCount;
 
-    public RegionType CurrentPlayerRegionType => _currentPlayer;
+    public RegionType CurrentPlayerRegionType { get; private set; } = RegionType.Red;
 
     public void Initialize()
     {
@@ -81,7 +80,7 @@ namespace Client.Gameplay
           if (_gameplayMode == GameplayMode.None || _gameplayMode == GameplayMode.SelectedRegion)
             TrySelectRegion(cell, false);
 
-          if (_gameplayMode == GameplayMode.SelectedRegion && cell.Region.Type != _currentPlayer)
+          if (_gameplayMode == GameplayMode.SelectedRegion && cell.Region.Type != CurrentPlayerRegionType)
             Clear();
           else if (_gameplayMode == GameplayMode.CreateUnit)
             TryCreateUnit(cell);
@@ -121,7 +120,7 @@ namespace Client.Gameplay
 
       _turnsCount++;
       _gameplayUI.ViewTurnsCount(_turnsCount);
-      _currentPlayer = RegionType.Red;
+      CurrentPlayerRegionType = RegionType.Red;
       UpdatePlayerRegions();
       _actionsHistoryController.Clear();
     }
@@ -160,17 +159,17 @@ namespace Client.Gameplay
         return;
 
       foreach (var region in _regionsService.Regions)
-        if (region.Type == _currentPlayer)
+        if (region.Type == CurrentPlayerRegionType)
           region.Update();
     }
 
     private bool MoveNextPlayer()
     {
-      var currentIndex = (int)_currentPlayer;
+      var currentIndex = (int)CurrentPlayerRegionType;
       var maxIndex = (int)RegionType.Blue;
       if (currentIndex < maxIndex)
       {
-        _currentPlayer = (RegionType)(currentIndex + 1);
+        CurrentPlayerRegionType = (RegionType)(currentIndex + 1);
         return true;
       }
 
@@ -216,7 +215,7 @@ namespace Client.Gameplay
         _selectedUnit.Move(cell, ref setRegionTypeResult);
         _actionsHistoryController.MoveUnit(cell, oldCell, _selectedUnit.Type, setRegionTypeResult);
 
-        Clear(cell.Region.Type != _currentPlayer);
+        Clear(cell.Region.Type != CurrentPlayerRegionType);
         TrySelectRegion(cell);
         TrySelectUnit(cell);
       }
@@ -227,13 +226,13 @@ namespace Client.Gameplay
       var cost = _unitsService.GetCost(_creationUnitType);
       if (_selectedRegion.Money >= cost)
       {
-        if (_selectedCells.Contains(cell) && !(cell.HasUnit && cell.Region.Type == _currentPlayer))
+        if (_selectedCells.Contains(cell) && !(cell.HasUnit && cell.Region.Type == CurrentPlayerRegionType))
         {
           var regionMoney = _selectedRegion.Money;
           var setRegionTypeResult = SetRegionTypeResult.Create();
-          var hasTurns = cell.Region.Type == _currentPlayer;
-          
-          _regionsService.SetRegionType(cell, _currentPlayer, ref setRegionTypeResult);
+          var hasTurns = cell.Region.Type == CurrentPlayerRegionType;
+
+          _regionsService.SetRegionType(cell, CurrentPlayerRegionType, ref setRegionTypeResult);
           _unitsService.Create(cell, _creationUnitType, hasTurns);
           _selectedRegion.Money -= cost;
           _actionsHistoryController.CreateUnit(cell, regionMoney, setRegionTypeResult);
@@ -256,19 +255,19 @@ namespace Client.Gameplay
 
     private void TrySelectRegion(CellController cell, bool forceBordersAnim = true)
     {
-      if (cell.Region.Type == _currentPlayer && cell.Region.IsAlive && _selectedRegion != cell.Region)
+      if (cell.Region.Type == CurrentPlayerRegionType && cell.Region.IsAlive && _selectedRegion != cell.Region)
         SelectRegion(cell.Region, forceBordersAnim);
     }
 
     private void TrySelectRegion(RegionController region, bool forceBordersAnim = true)
     {
-      if (region.Type == _currentPlayer && region.IsAlive && _selectedRegion != region)
+      if (region.Type == CurrentPlayerRegionType && region.IsAlive && _selectedRegion != region)
         SelectRegion(region, forceBordersAnim);
     }
 
     private void TrySelectUnit(CellController cell)
     {
-      if (cell.Region.Type == _currentPlayer && _unitsService.Get(cell, out _selectedUnit) && _selectedUnit.HasTurns)
+      if (cell.Region.Type == CurrentPlayerRegionType && _unitsService.Get(cell, out _selectedUnit) && _selectedUnit.HasTurns)
       {
         _selectedUnit.GetMoveArea(_selectedCells);
         _tilesSelectionView.ViewTiles(_selectedCells);
@@ -288,7 +287,7 @@ namespace Client.Gameplay
 
     private void ShowBuildingsProtection(CellController cell)
     {
-      if (cell.Region.Type == _currentPlayer && _unitsService.Get(cell, out _selectedUnit) && _selectedUnit.CanViewProtection)
+      if (cell.Region.Type == CurrentPlayerRegionType && _unitsService.Get(cell, out _selectedUnit) && _selectedUnit.CanViewProtection)
         _protectionView.ViewBuildingsProtection(cell.Region);
     }
   }

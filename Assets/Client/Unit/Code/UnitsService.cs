@@ -56,7 +56,7 @@ namespace Client.Unit.Code
       return unit != null;
     }
 
-    public void GetUnitCreationArea(RegionController region, List<CellController> outResult, UnitType unitType) => 
+    public void GetUnitCreationArea(RegionController region, List<CellController> outResult, UnitType unitType) =>
       _areaCalculator.GetCreationArea(region, outResult, unitType);
 
     public int GetCost(UnitType type)

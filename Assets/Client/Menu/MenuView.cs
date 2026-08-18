@@ -11,9 +11,7 @@ namespace Client.Menu
 
     public MenuBackgroundView Background => _background;
 
-    public bool BackClicked => Input.GetKeyDown(KeyCode.Escape) && !_blockInput.blocksRaycasts;
-
-    public void SetBlockInput(bool blocked) => _blockInput.blocksRaycasts = blocked;
+    public CanvasGroup BlockInput => _blockInput;
 
     public void SetActive(bool active) => gameObject.SetActive(active);
 

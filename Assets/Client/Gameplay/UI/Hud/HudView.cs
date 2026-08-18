@@ -1,6 +1,5 @@
 using Client.ActionsHistory;
 using Client.Infrastructure;
-using Client.Menu;
 using Client.UI;
 using Client.Utilities;
 using DG.Tweening;
@@ -23,14 +22,14 @@ namespace Client.Gameplay.UI.Hud
     private GameplayController _gameplayController;
     private Vector2 _topPanelStartPosition;
     private Vector2 _bottomPanelStartPosition;
-    private MenuView _menuView;
+    private InputController _inputController;
 
     public RegionView Region => _regionView;
 
     private void Awake()
     {
       _gameplayController = Locator.Get<GameplayController>();
-      _menuView = Locator.Get<MenuView>();
+      _inputController = Locator.Get<InputController>();
       _actionsHistoryController = Locator.Get<ActionsHistoryController>();
 
       _nextTurnButton.OnClick += _gameplayController.NextTurn;
@@ -53,7 +52,7 @@ namespace Client.Gameplay.UI.Hud
 
     private void Update()
     {
-      if (_menuView.BackClicked)
+      if (_inputController.BackClicked)
         _gameplayController.Pause();
     }
 

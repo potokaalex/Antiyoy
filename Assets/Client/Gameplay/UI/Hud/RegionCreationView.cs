@@ -71,7 +71,7 @@ namespace Client.Gameplay.UI.Hud
     private void SetActive(bool isActive)
     {
       DOTween.Kill(this);
-      
+
       if (isActive)
       {
         _variantPanel.gameObject.SetActive(true);

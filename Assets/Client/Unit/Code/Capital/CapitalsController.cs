@@ -32,7 +32,7 @@ namespace Client.Unit.Code.Capital
 
     public void SetCapital(CellController cell)
     {
-      if(cell == null)
+      if (cell == null)
         return;
 
       DestroyCapitals(cell.Region);
