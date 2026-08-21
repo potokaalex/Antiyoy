@@ -11,21 +11,16 @@ namespace Client.Project
     [SerializeField] private IntroView _introView;
     [SerializeField] private MainMenuView _mainMenuView;
     [SerializeField] private MenuView _menuView;
-
-    protected override void Install()
+    [SerializeField] private GameObject _gameplayPrefab;
+    
+    public override void Install(Context context)
     {
-      Register(typeof(ICoroutineRunner), this);
-      Register(new InputController());
-      Register(_introView);
-      Register(_menuView);
-      Register(_mainMenuView);
-      Register(new ProjectController());
-    }
-
-    protected override void Start()
-    {
-      base.Start();
-      DontDestroyOnLoad(this);
+      context.Register(typeof(ICoroutineRunner), this);
+      context.Register(new InputController());
+      context.Register(_introView);
+      context.Register(_menuView);
+      context.Register(_mainMenuView);
+      context.Register(new ProjectController(_gameplayPrefab));
     }
   }
 }

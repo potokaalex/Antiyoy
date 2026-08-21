@@ -13,13 +13,14 @@ using Client.Unit.Code;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Pool;
-using UnityEngine.SceneManagement;
+using Object = UnityEngine.Object;
 
 namespace Client.Gameplay
 {
   public class GameplayController : IInitializable, ITickable
   {
     private readonly List<CellController> _selectedCells = new();
+    private readonly GameObject _gameplayRoot;
     private CameraController _cameraController;
     private GridController _gridController;
     private RegionController _selectedRegion;
@@ -41,6 +42,8 @@ namespace Client.Gameplay
 
     public RegionType CurrentPlayerRegionType { get; private set; } = RegionType.Red;
 
+    public GameplayController(GameObject gameplayRoot) => _gameplayRoot = gameplayRoot;
+    
     public void Initialize()
     {
       Application.targetFrameRate = 300;
@@ -125,11 +128,7 @@ namespace Client.Gameplay
       _actionsHistoryController.Clear();
     }
 
-    public void EndGameplay()
-    {
-      SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(0));
-      SceneManager.UnloadSceneAsync(1);
-    }
+    public void EndGameplay() => Object.Destroy(_gameplayRoot);
 
     public void Pause()
     {

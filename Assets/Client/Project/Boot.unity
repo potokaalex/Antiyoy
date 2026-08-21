@@ -369,6 +369,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1436845851}
+  - component: {fileID: 1436845852}
   - component: {fileID: 1436845850}
   m_Layer: 0
   m_Name: ProjectInstaller
@@ -392,6 +393,7 @@ MonoBehaviour:
   _introView: {fileID: 1827324771}
   _mainMenuView: {fileID: 578499019}
   _menuView: {fileID: 3413446815629473738}
+  _gameplayPrefab: {fileID: 8857349345882956317, guid: c6b8aef4d9d3f9e4c9ae97b9ae1735e8, type: 3}
 --- !u!4 &1436845851
 Transform:
   m_ObjectHideFlags: 0
@@ -411,6 +413,20 @@ Transform:
   - {fileID: 137440174}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1436845852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1436845849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d6fb87b6a50427bb4a5b59d9d6b99af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::Client.Infrastructure.Context
+  _installers:
+  - {fileID: 1436845850}
 --- !u!114 &1827324771 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6512322957560912027, guid: 74ae161c6679e75449baf132659d6a63, type: 3}

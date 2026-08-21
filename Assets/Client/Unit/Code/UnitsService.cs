@@ -9,13 +9,12 @@ using UnityEngine.Pool;
 
 namespace Client.Unit.Code
 {
-  public class UnitsService : IInitializable
+  public class UnitsService : MonoBehaviour, IInitializable
   {
     private readonly List<IUnit> _units = new();
     private ConfigsProvider _configsProvider;
     private UnitsAreaCalculator _areaCalculator;
     private GridController _gridController;
-    private Transform _unitsRoot;
     private ObjectPool<UnitController> _pool;
 
     public void Initialize()
@@ -23,8 +22,7 @@ namespace Client.Unit.Code
       _configsProvider = Locator.Get<ConfigsProvider>();
       _areaCalculator = Locator.Get<UnitsAreaCalculator>();
       _gridController = Locator.Get<GridController>();
-      _unitsRoot = new GameObject("UnitsRoot").transform;
-      _pool = new(() => Object.Instantiate(_configsProvider.UnitPrefab, _unitsRoot), x => x.gameObject.SetActive(true),
+      _pool = new(() => Instantiate(_configsProvider.UnitPrefab, transform), x => x.gameObject.SetActive(true),
         x => x.gameObject.SetActive(false));
     }
 

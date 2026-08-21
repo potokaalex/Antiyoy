@@ -27,27 +27,28 @@ namespace Client.Gameplay
     [SerializeField] private ProtectionView _protectionView;
     [SerializeField] private BordersService _bordersService;
     [SerializeField] private CapitalsMarkController _capitalsMarkController;
+    [SerializeField] private UnitsService _unitsService;
 
-    protected override void Install()
+    public override void Install(Context context)
     {
-      Register(_configsProvider);
-      Register(_cameraController);
-      Register(_tilemapController);
-      Register(_gridController);
-      Register(_debugController);
-      Register(new CapitalsController());
-      Register(_bordersService);
-      Register(new RegionsFactory());
-      Register(new RegionsService());
-      Register(new GovernmentsService());
-      Register(new UnitsAreaCalculator());
-      Register(new UnitsService());
-      Register(_tilesSelectionView);
-      Register(_gameplayUI);
-      Register(_protectionView);
-      Register(_capitalsMarkController);
-      Register(new ActionsHistoryController());
-      Register(new GameplayController());
+      context.Register(_configsProvider);
+      context.Register(_cameraController);
+      context.Register(_tilemapController);
+      context.Register(_gridController);
+      context.Register(_debugController);
+      context.Register(new CapitalsController());
+      context.Register(_bordersService);
+      context.Register(new RegionsFactory());
+      context.Register(new RegionsService());
+      context.Register(new GovernmentsService());
+      context.Register(new UnitsAreaCalculator());
+      context.Register(_unitsService);
+      context.Register(_tilesSelectionView);
+      context.Register(_gameplayUI);
+      context.Register(_protectionView);
+      context.Register(_capitalsMarkController);
+      context.Register(new ActionsHistoryController());
+      context.Register(new GameplayController(transform.parent.gameObject));
     }
   }
 }

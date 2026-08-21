@@ -43,6 +43,10 @@ namespace Client.Menu.MainMenu.Options
       _mainMenuView.ShowStart();
     }
 
-    private void OnBattleClick() => _projectController.LoadGameplay(_menuAnimator.PlayHide);
+    private void OnBattleClick()
+    {
+      _projectController.LoadGameplay();
+      _menuAnimator.PlayHide();
+    }
   }
 }

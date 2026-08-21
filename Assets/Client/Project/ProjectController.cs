@@ -4,12 +4,16 @@ using Client.Infrastructure;
 using Client.Menu.Intro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Object = UnityEngine.Object;
 
 namespace Client.Project
 {
   public class ProjectController : IInitializable
   {
+    private readonly GameObject _gameplayPrefab;
     private ICoroutineRunner _coroutineRunner;
+
+    public ProjectController(GameObject gameplayPrefab) => _gameplayPrefab = gameplayPrefab;
 
     public void Initialize()
     {
@@ -17,11 +21,15 @@ namespace Client.Project
       var introView = Locator.Get<IntroView>();
       Application.targetFrameRate = 300;
       QualitySettings.vSyncCount = -1;
-      SceneManager.LoadScene(1);
-      //introView.Play();
+      //SceneManager.LoadScene(1);
+      introView.Play();
     }
 
-    public void LoadGameplay(Action onComplete) => _coroutineRunner.StartCoroutine(LoadGameplayCoroutine(onComplete));
+    public void LoadGameplay()
+    {
+      Object.Instantiate(_gameplayPrefab);
+      //_coroutineRunner.StartCoroutine(LoadGameplayCoroutine(onComplete));
+    }
 
     public void Quit()
     {
