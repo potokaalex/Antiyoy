@@ -1,23 +1,22 @@
 using System;
 using System.Collections;
+using Client.Gameplay;
 using Client.Infrastructure;
 using Client.Menu.Intro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Object = UnityEngine.Object;
 
 namespace Client.Project
 {
   public class ProjectController : IInitializable
   {
-    private readonly GameObject _gameplayPrefab;
     private ICoroutineRunner _coroutineRunner;
-
-    public ProjectController(GameObject gameplayPrefab) => _gameplayPrefab = gameplayPrefab;
+    private GameplayController _gameplayController;
 
     public void Initialize()
     {
       _coroutineRunner = Locator.Get<ICoroutineRunner>();
+      _gameplayController = Locator.Get<GameplayController>();
       var introView = Locator.Get<IntroView>();
       Application.targetFrameRate = 300;
       QualitySettings.vSyncCount = -1;
@@ -27,7 +26,7 @@ namespace Client.Project
 
     public void LoadGameplay()
     {
-      Object.Instantiate(_gameplayPrefab);
+      _gameplayController.Setup();
       //_coroutineRunner.StartCoroutine(LoadGameplayCoroutine(onComplete));
     }
 

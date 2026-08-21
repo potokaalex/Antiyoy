@@ -20,6 +20,7 @@ namespace Client.DebugFeatures
 
     private void Update()
     {
+      return;
       if (_gridController.GetCell(_position, out var cell))
       {
         if (cell.Region != null)

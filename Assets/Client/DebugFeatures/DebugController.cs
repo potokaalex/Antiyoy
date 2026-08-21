@@ -19,6 +19,7 @@ namespace Client.DebugFeatures
 
     private void CreateCells()
     {
+      return;
       _cellsDebugRoot = new GameObject("Debug").transform;
       var size = _gridController.Size;
       for (var y = 0; y < size.y; y++)

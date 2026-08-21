@@ -51,6 +51,13 @@ namespace Client
       _returnScreenshotRequest = false;
     }
 
+    public void Tick()
+    {
+      CalculateTouches();
+      MovePosition();
+      Zoom();
+    }
+
     private void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
       if (_screenshotRt != null)
@@ -66,13 +73,6 @@ namespace Client
     {
       _inputController = Locator.Get<InputController>();
       Clear();
-    }
-
-    private void Update()
-    {
-      CalculateTouches();
-      MovePosition();
-      Zoom();
     }
 
     private void CalculateTouches()

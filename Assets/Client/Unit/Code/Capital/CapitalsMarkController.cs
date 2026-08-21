@@ -10,7 +10,7 @@ using UnityEngine.Pool;
 
 namespace Client.Unit.Code.Capital
 {
-  public class CapitalsMarkController : MonoBehaviour, IInitializable, ITickable, IDisposable
+  public class CapitalsMarkController : MonoBehaviour, IInitializable, IDisposable
   {
     [SerializeField] private Transform _prefab;
     [SerializeField] private Vector2 _fromCellCenterOffset;

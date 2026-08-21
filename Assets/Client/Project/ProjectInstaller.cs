@@ -11,7 +11,6 @@ namespace Client.Project
     [SerializeField] private IntroView _introView;
     [SerializeField] private MainMenuView _mainMenuView;
     [SerializeField] private MenuView _menuView;
-    [SerializeField] private GameObject _gameplayPrefab;
     
     public override void Install(Context context)
     {
@@ -20,7 +19,7 @@ namespace Client.Project
       context.Register(_introView);
       context.Register(_menuView);
       context.Register(_mainMenuView);
-      context.Register(new ProjectController(_gameplayPrefab));
+      context.Register(new ProjectController());
     }
   }
 }

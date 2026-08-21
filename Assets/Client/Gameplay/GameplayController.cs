@@ -10,17 +10,15 @@ using Client.Protection;
 using Client.Region;
 using Client.TilesSelection;
 using Client.Unit.Code;
+using Client.Unit.Code.Capital;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
 using UnityEngine.Pool;
-using Object = UnityEngine.Object;
 
 namespace Client.Gameplay
 {
   public class GameplayController : IInitializable, ITickable
   {
     private readonly List<CellController> _selectedCells = new();
-    private readonly GameObject _gameplayRoot;
     private CameraController _cameraController;
     private GridController _gridController;
     private RegionController _selectedRegion;
@@ -35,19 +33,17 @@ namespace Client.Gameplay
     private InputController _inputController;
     private BordersService _bordersService;
     private ActionsHistoryController _actionsHistoryController;
+    private CapitalsMarkController _capitalsMarkController;
     private MainMenuView _mainMenuView;
     private GameplayMode _gameplayMode;
     private UnitType _creationUnitType;
     private int _turnsCount;
+    private bool _canTick;
 
     public RegionType CurrentPlayerRegionType { get; private set; } = RegionType.Red;
 
-    public GameplayController(GameObject gameplayRoot) => _gameplayRoot = gameplayRoot;
-    
     public void Initialize()
     {
-      Application.targetFrameRate = 300;
-
       _gridController = Locator.Get<GridController>();
       _cameraController = Locator.Get<CameraController>();
       _unitsService = Locator.Get<UnitsService>();
@@ -60,7 +56,11 @@ namespace Client.Gameplay
       _bordersService = Locator.Get<BordersService>();
       _actionsHistoryController = Locator.Get<ActionsHistoryController>();
       _mainMenuView = Locator.Get<MainMenuView>();
+      _capitalsMarkController = Locator.Get<CapitalsMarkController>();
+    }
 
+    public void Setup()
+    {
       _gridController.InitialCreateCells();
       _unitsService.InitialCreateUnits();
       _regionsService.InitialCreateRegions();
@@ -68,10 +68,18 @@ namespace Client.Gameplay
 
       _gameplayUI.ViewTurnsCount(_turnsCount);
       _gameplayUI.PlayShow();
+      _canTick = true;
     }
 
     public void Tick()
     {
+      if(!_canTick)
+        return;
+      
+      _cameraController.Tick();
+      _capitalsMarkController.Tick();
+      //
+      
       if (_inputController.IsClick && !_inputController.IsPointerOverUI())
       {
         if (_cameraController.GetHitFromMousePoint(out var hit) &&
@@ -128,7 +136,10 @@ namespace Client.Gameplay
       _actionsHistoryController.Clear();
     }
 
-    public void EndGameplay() => Object.Destroy(_gameplayRoot);
+    public void EndGameplay()
+    {
+      _canTick = false;
+    }
 
     public void Pause()
     {

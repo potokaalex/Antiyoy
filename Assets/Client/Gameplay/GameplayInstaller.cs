@@ -48,7 +48,7 @@ namespace Client.Gameplay
       context.Register(_protectionView);
       context.Register(_capitalsMarkController);
       context.Register(new ActionsHistoryController());
-      context.Register(new GameplayController(transform.parent.gameObject));
+      context.Register(new GameplayController());
     }
   }
 }
