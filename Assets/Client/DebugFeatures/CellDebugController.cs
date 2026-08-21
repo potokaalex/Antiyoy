@@ -1,3 +1,4 @@
+using Client.Gameplay;
 using Client.Hex;
 using Client.Infrastructure;
 using TMPro;
@@ -9,6 +10,7 @@ namespace Client.DebugFeatures
   {
     [SerializeField] private TextMeshPro _debugText;
     private GridController _gridController;
+    private GameplayController _gameplayController;
     private HexCoordinates _position;
     private string _currentText;
 
@@ -16,11 +18,14 @@ namespace Client.DebugFeatures
     {
       _position = position;
       _gridController = Locator.Get<GridController>();
+      _gameplayController = Locator.Get<GameplayController>();
     }
 
     private void Update()
     {
-      return;
+      if(!_gameplayController.CanTick)
+        return;
+      
       if (_gridController.GetCell(_position, out var cell))
       {
         if (cell.Region != null)

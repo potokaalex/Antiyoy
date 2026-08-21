@@ -42,6 +42,8 @@ namespace Client.Gameplay
 
     public RegionType CurrentPlayerRegionType { get; private set; } = RegionType.Red;
 
+    public bool CanTick => _canTick;
+
     public void Initialize()
     {
       _gridController = Locator.Get<GridController>();
@@ -61,6 +63,7 @@ namespace Client.Gameplay
 
     public void Setup()
     {
+      _cameraController.SetActive(true);
       _gridController.InitialCreateCells();
       _unitsService.InitialCreateUnits();
       _regionsService.InitialCreateRegions();
@@ -75,11 +78,10 @@ namespace Client.Gameplay
     {
       if(!_canTick)
         return;
-      
+
       _cameraController.Tick();
       _capitalsMarkController.Tick();
-      //
-      
+
       if (_inputController.IsClick && !_inputController.IsPointerOverUI())
       {
         if (_cameraController.GetHitFromMousePoint(out var hit) &&
@@ -139,6 +141,7 @@ namespace Client.Gameplay
     public void EndGameplay()
     {
       _canTick = false;
+      _cameraController.SetActive(false);
     }
 
     public void Pause()

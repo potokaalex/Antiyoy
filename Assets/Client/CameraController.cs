@@ -51,6 +51,8 @@ namespace Client
       _returnScreenshotRequest = false;
     }
 
+    public void SetActive(bool active) => _camera.enabled = active;
+
     public void Tick()
     {
       CalculateTouches();
@@ -71,6 +73,7 @@ namespace Client
 
     private void Awake()
     {
+      _camera.enabled = false;
       _inputController = Locator.Get<InputController>();
       Clear();
     }
