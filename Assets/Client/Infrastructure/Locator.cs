@@ -5,25 +5,31 @@ namespace Client.Infrastructure
 {
   public static class Locator
   {
-    private static readonly Dictionary<Type, object> _services = new();
+    private static readonly Dictionary<Type, List<object>> _services = new();
 
-    public static void Set<T>(Type contract, T service) => _services[contract] = service;
+    public static void Add<T>(Type contract, T service) => GetListOrCreate(contract).Add(service);
 
-    public static void Remove(Type contract) => _services.Remove(contract);
+    public static T Get<T>() => (T)_services[typeof(T)][0];
 
-    public static T Get<T>() => (T)_services[typeof(T)];
-
-    public static void GetAll<T>(List<T> outList, List<Type> contracts)
+    public static void GetAll<T>(List<T> outList)
     {
       outList.Clear();
-      var findType = typeof(T);
+      var contract = typeof(T);
 
-      foreach (var contract in contracts)
+      if (_services.TryGetValue(contract, out var list))
+        foreach (var item in list)
+          outList.Add((T)item);
+    }
+
+    private static List<object> GetListOrCreate(Type contract)
+    {
+      if (!_services.TryGetValue(contract, out var list))
       {
-        if (findType.IsAssignableFrom(contract))
-          if (_services.TryGetValue(contract, out var service))
-            outList.Add((T)service);
+        list = new List<object>();
+        _services[contract] = list;
       }
+
+      return list;
     }
   }
 }

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Client.Gameplay;
@@ -10,7 +9,7 @@ using UnityEngine.Pool;
 
 namespace Client.Unit.Code.Capital
 {
-  public class CapitalsMarkController : MonoBehaviour, IInitializable, IDisposable
+  public class CapitalsMarkController : MonoBehaviour, IInitializable
   {
     [SerializeField] private Transform _prefab;
     [SerializeField] private Vector2 _fromCellCenterOffset;
@@ -49,7 +48,7 @@ namespace Client.Unit.Code.Capital
       Tick();
     }
 
-    public void Dispose() => DOTween.Kill(this);
+    private void OnDestroy() => DOTween.Kill(this);
 
     public void Tick()
     {

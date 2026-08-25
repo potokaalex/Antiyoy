@@ -10,19 +10,23 @@ namespace Client.Infrastructure
   {
     [SerializeField] private MonoInstaller[] _installers;
     private readonly List<ITickable> _tickables = new();
-    private readonly List<Type> _registrations = new();
 
-    public void Register<T>(T service) => Register(typeof(T), service);
-
-    public void Register<T>(Type contract, T service)
+    public void Register(object service, params Type[] contracts)
     {
-      _registrations.Add(contract);
-      Locator.Set(contract, service);
+      var serviceType = service.GetType();
+
+      foreach (var contract in contracts)
+      {
+        if (!contract.IsAssignableFrom(serviceType))
+          Debug.LogError($"{serviceType} is not implementing {contract}");
+
+        Locator.Add(contract, service);
+      }
     }
 
     private void Awake()
     {
-      foreach (var installer in _installers) 
+      foreach (var installer in _installers)
         installer.Install(this);
     }
 
@@ -30,25 +34,12 @@ namespace Client.Infrastructure
     {
       using (ListPool<IInitializable>.Get(out var initializables))
       {
-        Locator.GetAll(initializables, _registrations);
+        Locator.GetAll(initializables);
         foreach (var initializable in initializables)
           initializable.Initialize();
       }
 
-      Locator.GetAll(_tickables, _registrations);
-    }
-
-    private void OnDestroy()
-    {
-      using (ListPool<IDisposable>.Get(out var disposables))
-      {
-        Locator.GetAll(disposables, _registrations);
-        foreach (var disposable in disposables)
-          disposable.Dispose();
-
-        foreach (var registration in _registrations)
-          Locator.Remove(registration);
-      }
+      Locator.GetAll(_tickables);
     }
 
     private void Update()
