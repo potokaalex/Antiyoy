@@ -11,16 +11,6 @@ namespace Client.Infrastructure
 
     public static T Get<T>() => (T)_services[typeof(T)][0];
 
-    public static void GetAll<T>(List<T> outList)
-    {
-      outList.Clear();
-      var contract = typeof(T);
-
-      if (_services.TryGetValue(contract, out var list))
-        foreach (var item in list)
-          outList.Add((T)item);
-    }
-
     private static List<object> GetListOrCreate(Type contract)
     {
       if (!_services.TryGetValue(contract, out var list))

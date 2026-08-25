@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Pool;
 
 namespace Client.Infrastructure
 {
@@ -9,7 +7,7 @@ namespace Client.Infrastructure
   public class Context : MonoBehaviour
   {
     [SerializeField] private MonoInstaller[] _installers;
-    private readonly List<ITickable> _tickables = new();
+    private readonly Systems _systems = new();
 
     public void Register(object service, params Type[] contracts)
     {
@@ -21,6 +19,11 @@ namespace Client.Infrastructure
           Debug.LogError($"{serviceType} is not implementing {contract}");
 
         Locator.Add(contract, service);
+
+        if (typeof(IInitializable) == contract) 
+          _systems.Add((IInitializable)service);
+        if (typeof(ITickable) == contract) 
+          _systems.Add((ITickable)service);
       }
     }
 
@@ -30,22 +33,8 @@ namespace Client.Infrastructure
         installer.Install(this);
     }
 
-    private void Start()
-    {
-      using (ListPool<IInitializable>.Get(out var initializables))
-      {
-        Locator.GetAll(initializables);
-        foreach (var initializable in initializables)
-          initializable.Initialize();
-      }
+    private void Start() => _systems.Initialize();
 
-      Locator.GetAll(_tickables);
-    }
-
-    private void Update()
-    {
-      foreach (var tickable in _tickables)
-        tickable.Tick();
-    }
+    private void Update() => _systems.Tick();
   }
 }
