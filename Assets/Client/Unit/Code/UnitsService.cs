@@ -35,6 +35,12 @@ namespace Client.Unit.Code
       CreateUnit(blueCapitalCell, UnitType.Capital, true);
     }
 
+    public void Clear()
+    {
+      for (var i = _units.Count - 1; i >= 0; i--)
+        Destroy(_units[i]);
+    }
+
     public void Create(CellController cell, UnitType type, bool hasTurns = true) => CreateUnit(cell, type, hasTurns);
 
     public void Destroy(IUnit unit)

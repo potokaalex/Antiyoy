@@ -56,6 +56,12 @@ namespace Client.Region
         region.Money = 100;
     }
 
+    public void Clear()
+    {
+      for (var i = Regions.Count - 1; i >= 0; i--) 
+        _regionsFactory.Destroy(Regions[i]);
+    }
+
     public void RemoveFromRegion(CellController cell)
     {
       var region = cell.Region;

@@ -33,7 +33,9 @@ namespace Client.Gameplay.UI
 
     private IEnumerator PlayGameTransitionCoroutine()
     {
+      _cameraController.CanRender(true);
       yield return StartCoroutine(_cameraController.CreateScreenshotCoroutine(_rt));
+      _cameraController.CanRender(false);
 
       _gameImage.gameObject.SetActive(true);
       _gameImage.transform.localScale = Vector3.zero;
@@ -50,6 +52,7 @@ namespace Client.Gameplay.UI
           _gameImage.gameObject.SetActive(false);
           _inputController.SetBlockInput(false);
           _menuView.SetActive(false);
+          _cameraController.CanRender(true);
         })
         .SetEase(AnimationsUtilities.MenuDefaultEase)
         .SetId(this);
@@ -57,7 +60,9 @@ namespace Client.Gameplay.UI
 
     private IEnumerator PlaOutGameTransitionCoroutine()
     {
+      _cameraController.CanRender(true);
       yield return StartCoroutine(_cameraController.CreateScreenshotCoroutine(_rt));
+      _cameraController.CanRender(false);
 
       _gameImage.gameObject.SetActive(true);
       _gameImage.transform.localScale = Vector3.one;

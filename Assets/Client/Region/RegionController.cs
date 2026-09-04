@@ -83,6 +83,12 @@ namespace Client.Region
 
     public void SetCapital(CellController capitalPosition) => _capitalsController.SetCapital(capitalPosition);
 
+    public void Clear()
+    {
+      Money = 0;
+      _cells.Clear();
+    }
+
     private void DestroyAllUnits()
     {
       foreach (var cell in _cells)

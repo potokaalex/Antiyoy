@@ -26,7 +26,7 @@ namespace Client.Project
 
     public void LoadGameplay()
     {
-      _gameplayController.Setup();
+      _gameplayController.Enable();
       //_coroutineRunner.StartCoroutine(LoadGameplayCoroutine(onComplete));
     }
 

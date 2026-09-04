@@ -44,11 +44,20 @@ namespace Client.Unit.Code.Capital
           mark.position = position;
         }
       }).SetLoops(-1, LoopType.Yoyo).SetId(this);
-
-      Tick();
     }
 
-    private void OnDestroy() => DOTween.Kill(this);
+    public void Enable() => Tick();
+
+    public void Disable()
+    {
+      for (var i = _regions.Count - 1; i >= 0; i--)
+      {
+        var region = _regions[i];
+        _regions.RemoveAt(i);
+        _pool.Release(_marks[region]);
+        _marks.Remove(region);
+      }
+    }
 
     public void Tick()
     {

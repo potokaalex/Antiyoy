@@ -21,5 +21,7 @@ namespace Client.Infrastructure
 
       return list;
     }
+
+    public static void Clear() => _services.Clear();
   }
 }

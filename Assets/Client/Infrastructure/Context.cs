@@ -36,5 +36,7 @@ namespace Client.Infrastructure
     private void Start() => _systems.Initialize();
 
     private void Update() => _systems.Tick();
+
+    private void OnDestroy() => Locator.Clear();
   }
 }

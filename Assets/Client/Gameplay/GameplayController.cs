@@ -61,14 +61,14 @@ namespace Client.Gameplay
       _capitalsMarkController = Locator.Get<CapitalsMarkController>();
     }
 
-    public void Setup()
+    public void Enable()
     {
-      _cameraController.SetActive(true);
       _gridController.InitialCreateCells();
       _unitsService.InitialCreateUnits();
       _regionsService.InitialCreateRegions();
-      _bordersService.ViewRegionsBorders();
+      _capitalsMarkController.Enable();
 
+      _bordersService.ViewRegionsBorders();
       _gameplayUI.ViewTurnsCount(_turnsCount);
       _gameplayUI.PlayShow();
       _canTick = true;
@@ -121,6 +121,7 @@ namespace Client.Gameplay
     public void NextTurn()
     {
       Clear();
+      _actionsHistoryController.Clear();
 
       if (CheckWin())
         return;
@@ -135,13 +136,15 @@ namespace Client.Gameplay
       _gameplayUI.ViewTurnsCount(_turnsCount);
       CurrentPlayerRegionType = RegionType.Red;
       UpdatePlayerRegions();
-      _actionsHistoryController.Clear();
     }
 
     public void EndGameplay()
     {
       _canTick = false;
-      _cameraController.SetActive(false);
+      _capitalsMarkController.Disable();
+      _unitsService.Clear();
+      _regionsService.Clear();
+      _actionsHistoryController.Clear();
     }
 
     public void Pause()
