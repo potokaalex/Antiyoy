@@ -15,11 +15,11 @@ namespace Client.Project
     public override void Install(Context context)
     {
       context.Register(this, typeof(ICoroutineRunner));
-      context.Register(new InputController(), typeof(InputController), typeof(IInitializable), typeof(ITickable));
-      context.Register(_introView, typeof(IntroView));
-      context.Register(_menuView, typeof(MenuView));
-      context.Register(_mainMenuView, typeof(MainMenuView));
-      context.Register(new ProjectController(), typeof(ProjectController), typeof(IInitializable));
+      context.Register(new InputController());
+      context.Register(_introView);
+      context.Register(_menuView);
+      context.Register(_mainMenuView);
+      context.Register(new ProjectController());
     }
   }
 }

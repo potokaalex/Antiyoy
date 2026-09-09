@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Client.Infrastructure
@@ -7,24 +8,19 @@ namespace Client.Infrastructure
   public class Context : MonoBehaviour
   {
     [SerializeField] private MonoInstaller[] _installers;
-    private readonly Systems _systems = new();
+    private readonly List<IInitializable> _initializables = new();
+    private readonly List<ITickable> _tickables = new();
 
-    public void Register(object service, params Type[] contracts)
+    public void Register(object service) => Register(service, service.GetType());
+
+    public void Register(object service, Type contract)
     {
-      var serviceType = service.GetType();
-
-      foreach (var contract in contracts)
-      {
-        if (!contract.IsAssignableFrom(serviceType))
-          Debug.LogError($"{serviceType} is not implementing {contract}");
-
-        Locator.Add(contract, service);
-
-        if (typeof(IInitializable) == contract) 
-          _systems.Add((IInitializable)service);
-        if (typeof(ITickable) == contract) 
-          _systems.Add((ITickable)service);
-      }
+      Locator.Set(contract, service);
+      
+      if(service is IInitializable initializable)
+        _initializables.Add(initializable);
+      if(service is ITickable tickable)
+        _tickables.Add(tickable);
     }
 
     private void Awake()
@@ -33,9 +29,17 @@ namespace Client.Infrastructure
         installer.Install(this);
     }
 
-    private void Start() => _systems.Initialize();
+    private void Start()
+    {
+      foreach (var initializable in _initializables) 
+        initializable.Initialize();
+    }
 
-    private void Update() => _systems.Tick();
+    private void Update()
+    {
+      foreach (var tickable in _tickables) 
+        tickable.Tick();
+    }
 
     private void OnDestroy() => Locator.Clear();
   }
