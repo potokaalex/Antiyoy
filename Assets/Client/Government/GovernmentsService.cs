@@ -17,7 +17,11 @@ namespace Client.Government
     public void RemoveRegion(RegionController region)
     {
       if (_governments.TryGetValue(region.Type, out var government))
+      {
         government.RemoveRegion(region);
+        if (government.Regions.Count == 0)
+          _governments.Remove(region.Type);
+      }
     }
 
     public void GetAll(List<GovernmentController> outList)

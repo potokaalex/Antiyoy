@@ -34,7 +34,7 @@ namespace Client.Gameplay.UI.Hud
 
       _nextTurnButton.OnClick += _gameplayController.NextTurn;
       _pauseButton.OnClick += _gameplayController.Pause;
-      _backButton.OnClick += _actionsHistoryController.Undo;
+      _backButton.OnClick += _gameplayController.Undo;
 
       _canvasGroup.alpha = 0;
       _topPanelStartPosition = _topPanel.anchoredPosition;
@@ -46,7 +46,7 @@ namespace Client.Gameplay.UI.Hud
     {
       _nextTurnButton.OnClick -= _gameplayController.NextTurn;
       _pauseButton.OnClick -= _gameplayController.Pause;
-      _backButton.OnClick -= _actionsHistoryController.Undo;
+      _backButton.OnClick -= _gameplayController.Undo;
       DOTween.Kill(this);
     }
 
