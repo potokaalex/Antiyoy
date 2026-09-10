@@ -67,7 +67,7 @@ namespace Client.Unit.Code
 
     public void GetMoveArea(List<CellController> outList) => _areaCalculator.GetMoveArea(this, outList);
 
-    public bool CanMove(CellController cell) => !(IsFriendlyRegion(cell, Cell.Region.Type) && cell.HasUnit) && HasTurns;
+    public bool CanMove(CellController cell) => _unitsService.CanMove(this, cell);
 
     public void Move(CellController cell, ref SetRegionTypeResult setRegionTypeResult)
     {
@@ -93,8 +93,6 @@ namespace Client.Unit.Code
       SetCellsProtection(false);
       Cell.Unit = null;
     }
-
-    private bool IsFriendlyRegion(CellController cell, RegionType regionType) => cell.Region.Type == regionType;
 
     private void UpdateDebugText()
     {

@@ -44,7 +44,7 @@ namespace Client.Gameplay.UI.Hud
     private void OnCreateWarrior()
     {
       _buildingType = UnitType.Peasant;
-      _gameplayController.SetCreateUnitMode(_buildingType);
+      _gameplayController.CurrentPlayer.SetCreateUnitMode(_buildingType);
       View(_buildingType);
     }
 
@@ -57,7 +57,7 @@ namespace Client.Gameplay.UI.Hud
       else if (_buildingType == UnitType.Tower)
         _buildingType = UnitType.Farm;
 
-      _gameplayController.SetCreateUnitMode(_buildingType);
+      _gameplayController.CurrentPlayer.SetCreateUnitMode(_buildingType);
       View(_buildingType);
     }
 

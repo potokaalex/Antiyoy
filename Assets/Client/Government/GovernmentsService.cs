@@ -37,5 +37,14 @@ namespace Client.Government
         if (government.IsAlive)
           outList.Add(government);
     }
+
+    public bool IsAlive(RegionType regionType)
+    {
+      foreach (var government in _governments.Values)
+        if (government.RegionsType == regionType && government.IsAlive)
+          return true;
+
+      return false;
+    }
   }
 }

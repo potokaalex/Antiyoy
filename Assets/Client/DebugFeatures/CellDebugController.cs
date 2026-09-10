@@ -23,7 +23,7 @@ namespace Client.DebugFeatures
 
     private void Update()
     {
-      if(!_gameplayController.CanTick)
+      if(!_gameplayController.Started)
         return;
       
       if (_gridController.GetCell(_position, out var cell))

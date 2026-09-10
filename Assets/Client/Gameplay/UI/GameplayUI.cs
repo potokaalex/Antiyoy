@@ -24,12 +24,12 @@ namespace Client.Gameplay.UI
     {
       _gameplayController = Locator.Get<GameplayController>();
       _pauseView = Locator.Get<MenuView>().Spawn(_pauseViewPrefab);
-      _winNexButton.onClick.AddListener(_gameplayController.EndGameplay);
+      _winNexButton.onClick.AddListener(_gameplayController.End);
     }
 
     private void OnDestroy()
     {
-      _winNexButton.onClick.RemoveListener(_gameplayController.EndGameplay);
+      _winNexButton.onClick.RemoveListener(_gameplayController.End);
       if (_pauseView)
         Destroy(_pauseView.gameObject);
     }

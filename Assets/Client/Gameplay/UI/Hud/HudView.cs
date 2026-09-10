@@ -1,4 +1,3 @@
-using Client.ActionsHistory;
 using Client.Infrastructure;
 using Client.UI;
 using Client.Utilities;
@@ -18,7 +17,6 @@ namespace Client.Gameplay.UI.Hud
     [SerializeField] private CanvasGroup _canvasGroup;
     [SerializeField] private CustomButton _pauseButton;
     [SerializeField] private CustomButton _backButton;
-    private ActionsHistoryController _actionsHistoryController;
     private GameplayController _gameplayController;
     private Vector2 _topPanelStartPosition;
     private Vector2 _bottomPanelStartPosition;
@@ -30,11 +28,10 @@ namespace Client.Gameplay.UI.Hud
     {
       _gameplayController = Locator.Get<GameplayController>();
       _inputController = Locator.Get<InputController>();
-      _actionsHistoryController = Locator.Get<ActionsHistoryController>();
 
       _nextTurnButton.OnClick += _gameplayController.NextTurn;
       _pauseButton.OnClick += _gameplayController.Pause;
-      _backButton.OnClick += _gameplayController.Undo;
+      _backButton.OnClick += OnUndoClick;
 
       _canvasGroup.alpha = 0;
       _topPanelStartPosition = _topPanel.anchoredPosition;
@@ -46,7 +43,7 @@ namespace Client.Gameplay.UI.Hud
     {
       _nextTurnButton.OnClick -= _gameplayController.NextTurn;
       _pauseButton.OnClick -= _gameplayController.Pause;
-      _backButton.OnClick -= _gameplayController.Undo;
+      _backButton.OnClick -= OnUndoClick;
       DOTween.Kill(this);
     }
 
@@ -82,5 +79,7 @@ namespace Client.Gameplay.UI.Hud
         .SetId(this)
         .OnComplete(() => gameObject.SetActive(false));
     }
+
+    private void OnUndoClick() => _gameplayController.CurrentPlayer.Undo();
   }
 }

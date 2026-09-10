@@ -92,6 +92,6 @@ namespace Client.Unit.Code.Capital
     }
 
     private bool RegionCheck(RegionController region) =>
-      region.IsAlive && region.Money >= _peasantCost && _gameplayController.CurrentPlayerRegionType == region.Type;
+      region.IsAlive && region.Money >= _peasantCost && _gameplayController.CurrentPlayer.RegionType == region.Type;
   }
 }

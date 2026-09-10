@@ -80,5 +80,9 @@ namespace Client.Unit.Code
       instance.Initialize(_configsProvider.UnitsConfigs[type], cell, hasTurns);
       _units.Add(instance);
     }
+
+    public bool CanMove(IUnit unit, CellController cell) => CanCreate(cell, unit.Cell.Region.Type) && unit.HasTurns;
+
+    public bool CanCreate(CellController cell, RegionType playerRegion) => !(cell.Region.Type == playerRegion && cell.HasUnit);
   }
 }

@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using Client.ActionsHistory;
 using Client.Borders;
 using Client.Gameplay.UI;
@@ -9,7 +9,6 @@ using Client.Menu.MainMenu;
 using Client.Region;
 using Client.Unit.Code;
 using Client.Unit.Code.Capital;
-using Cysharp.Threading.Tasks;
 using UnityEngine.Pool;
 
 namespace Client.Gameplay
@@ -27,13 +26,21 @@ namespace Client.Gameplay
     private ActionsHistoryController _actionsHistoryController;
     private CapitalsMarkController _capitalsMarkController;
     private MainMenuView _mainMenuView;
-    private PlayerController _currentPlayer;
     private int _turnsCount;
-    private bool _canTick;
 
-    public RegionType CurrentPlayerRegionType => _currentPlayer.RegionType;
+    private int TurnsCount
+    {
+      get => _turnsCount;
+      set
+      {
+        _turnsCount = value;
+        _gameplayUI.ViewTurnsCount(value);
+      }
+    }
 
-    public bool CanTick => _canTick;
+    public PlayerController CurrentPlayer { get; private set; }
+
+    public bool Started { get; private set; }
 
     public void Initialize()
     {
@@ -57,45 +64,41 @@ namespace Client.Gameplay
       CreatePlayers();
       _capitalsMarkController.Enable();
 
+      TurnsCount = 0;
       _bordersService.ViewRegionsBorders();
-      _gameplayUI.ViewTurnsCount(_turnsCount);
       _gameplayUI.PlayShow();
-      _canTick = true;
+      Started = true;
     }
 
     public void Tick()
     {
-      if (!_canTick)
+      if (!Started)
         return;
 
       _cameraController.Tick();
       _capitalsMarkController.Tick();
-      _currentPlayer.Tick();
+      CurrentPlayer.Tick();
     }
 
     public void NextTurn()
     {
-      _currentPlayer.Clear();
-      _actionsHistoryController.Clear();
+      CurrentPlayer.EndTurn();
 
       if (CheckWin())
         return;
 
-      if (MoveNextPlayer())
+      if (!MoveNextPlayer())
       {
-        UpdatePlayerRegions();
-        return;
+        TurnsCount++;
+        SetFirstPlayer();
       }
 
-      _turnsCount++;
-      _gameplayUI.ViewTurnsCount(_turnsCount);
-      SetFirstPlayer();
       UpdatePlayerRegions();
     }
 
-    public void EndGameplay()
+    public void End()
     {
-      _canTick = false;
+      Started = false;
       _capitalsMarkController.Disable();
       _unitsService.Clear();
       _regionsService.Clear();
@@ -104,32 +107,24 @@ namespace Client.Gameplay
 
     public void Pause()
     {
-      _currentPlayer.Clear();
+      CurrentPlayer.Pause();
       _gameplayUI.ShowPause();
     }
 
     public void UnPause() => _gameplayUI.HidePause();
 
-    public async void MainMenu()
+    public void MainMenu()
     {
       _mainMenuView.ShowStart();
-
-      await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
-      EndGameplay();
+      End();
     }
 
-    public void Undo()
-    {
-      _actionsHistoryController.Undo();
-      _currentPlayer.SelectLastSelectedRegion();
-    }
-
-    private void SetFirstPlayer() => _currentPlayer = _players[0];
-
-    public void SetCreateUnitMode(UnitType type) => _currentPlayer.SetCreateUnitMode(type);
+    private void SetFirstPlayer() => CurrentPlayer = _players[0];
 
     private void CreatePlayers()
     {
+      _players.Clear();
+
       using (ListPool<GovernmentController>.Get(out var governments))
       {
         _governmentsService.GetAllAlive(governments);
@@ -143,21 +138,21 @@ namespace Client.Gameplay
 
     private void UpdatePlayerRegions()
     {
-      if (_turnsCount <= 0)
+      if (TurnsCount <= 0)
         return;
 
       foreach (var region in _regionsService.Regions)
-        if (region.Type == CurrentPlayerRegionType)
+        if (region.Type == CurrentPlayer.RegionType)
           region.Update();
     }
 
     private bool MoveNextPlayer()
     {
-      var currentIndex = _players.IndexOf(_currentPlayer);
+      var currentIndex = _players.IndexOf(CurrentPlayer);
       var maxIndex = _players.Count - 1;
       if (currentIndex < maxIndex)
       {
-        _currentPlayer = _players[currentIndex + 1];
+        CurrentPlayer = _players[currentIndex + 1];
         return true;
       }
 
@@ -166,17 +161,13 @@ namespace Client.Gameplay
 
     private bool CheckWin()
     {
-      using (ListPool<GovernmentController>.Get(out var governments))
+      if(_players.Count(x => x.Alive) == 1)
       {
-        _governmentsService.GetAllAlive(governments);
-        if (governments.Count == 1)
-        {
-          _gameplayUI.ShowEndScreen(governments[0].RegionsType);
-          return true;
-        }
-
-        return false;
+        _gameplayUI.ShowEndScreen(_players.First(x => x.Alive).RegionType);
+        return true;
       }
+
+      return false;
     }
   }
 }
