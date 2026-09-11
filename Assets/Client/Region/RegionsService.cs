@@ -93,19 +93,21 @@ namespace Client.Region
       return _configsProvider.RegionsColors[region.Type];
     }
 
-    public void SetRegionType(CellController cell, RegionType type, ref SetRegionTypeResult result)
+    public SetRegionTypeRecoveryData CalculateSetRegionTypeRecoveryData(CellController cell, RegionType type)
     {
+      var result = SetRegionTypeRecoveryData.Create();
+      
       if (cell.Region.Type == type)
-        return;
-
+        return result;
+      
       using (ListPool<RegionController>.Get(out var affectedRegions))
       {
         GetUniqueRegionsAtAndAround(cell, affectedRegions);
         foreach (var region in affectedRegions)
           result.AffectedRegions.Add(RegionRecoveryData.Create(region));
-
-        SetRegionType(cell, type);
       }
+
+      return result;
     }
 
     public void SetRegionType(CellController cell, RegionType type)

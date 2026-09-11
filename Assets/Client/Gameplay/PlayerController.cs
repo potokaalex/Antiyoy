@@ -25,6 +25,7 @@ namespace Client.Gameplay
     private readonly ActionsHistoryController _actionsHistoryController;
     private readonly GovernmentsService _governmentService;
     private readonly GameFieldController _gameFieldController;
+    private readonly RegionsService _regionsService;
     private IUnit _selectedUnit;
     private RegionController _selectedRegion;
     private RegionController _lastSelectedRegion;
@@ -49,6 +50,7 @@ namespace Client.Gameplay
       _actionsHistoryController = Locator.Get<ActionsHistoryController>();
       _governmentService = Locator.Get<GovernmentsService>();
       _gameFieldController = Locator.Get<GameFieldController>();
+      _regionsService = Locator.Get<RegionsService>();
     }
 
     public void Tick() => UpdatePlayerInput();
@@ -127,13 +129,12 @@ namespace Client.Gameplay
 
     private void TryMoveUnit(CellController cell)
     {
-      if (_selectedCells.Contains(cell) && _selectedUnit.CanMove(cell))
+      if (_gameFieldController.CanMoveUnit(_selectedUnit, cell))
       {
         var oldCell = _selectedUnit.Cell;
         var newCellUnitType = cell.Unit?.Type;
-        var setRegionTypeResult = SetRegionTypeResult.Create();
-
-        _selectedUnit.Move(cell, ref setRegionTypeResult);
+        var setRegionTypeResult = _regionsService.CalculateSetRegionTypeRecoveryData(cell, RegionType);
+        _gameFieldController.MoveUnit(_selectedUnit, cell);
         _actionsHistoryController.MoveUnit(cell, newCellUnitType, oldCell, _selectedUnit.Type, setRegionTypeResult);
 
         Clear(cell.Region.Type != RegionType);
@@ -147,9 +148,9 @@ namespace Client.Gameplay
       if (_gameFieldController.CanCreateUnit(_creationUnitType, cell, _selectedRegion))
       {
         var regionMoney = _selectedRegion.Money;
-        var setRegionTypeResult = SetRegionTypeResult.Create();
+        var setRegionTypeResult = _regionsService.CalculateSetRegionTypeRecoveryData(cell, RegionType);
         var newCellUnitType = cell.Unit?.Type;
-        _gameFieldController.CreateUnit(_creationUnitType, cell, _selectedRegion, ref setRegionTypeResult);
+        _gameFieldController.CreateUnit(_creationUnitType, cell, _selectedRegion);
         _actionsHistoryController.CreateUnit(cell, newCellUnitType, regionMoney, setRegionTypeResult);
         Clear(false);
         SelectRegion(cell.Region);
@@ -171,11 +172,7 @@ namespace Client.Gameplay
         SelectRegion(region, forceBordersAnim);
     }
 
-    private void TrySelectRegion(CellController cell, bool forceBordersAnim = true)
-    {
-      if (cell.Region.Type == RegionType && cell.Region.IsAlive && _selectedRegion != cell.Region)
-        SelectRegion(cell.Region, forceBordersAnim);
-    }
+    private void TrySelectRegion(CellController cell, bool forceBordersAnim = true) => SelectRegion(cell.Region, forceBordersAnim);
 
     private void TrySelectUnit(CellController cell)
     {

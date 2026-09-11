@@ -69,10 +69,10 @@ namespace Client.Unit.Code
 
     public bool CanMove(CellController cell) => _unitsService.CanMove(this, cell);
 
-    public void Move(CellController cell, ref SetRegionTypeResult setRegionTypeResult)
+    public void Move(CellController cell)
     {
       ClearCell();
-      _regionsService.SetRegionType(cell, Cell.Region.Type, ref setRegionTypeResult);
+      _regionsService.SetRegionType(cell, Cell.Region.Type);
       _unitsService.Destroy(cell.Unit);
       SetCell(cell);
       DecreaseTurnsCount();

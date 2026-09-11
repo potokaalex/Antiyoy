@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Client.Region;
 
 namespace Client.Unit.Code
 {
@@ -15,7 +14,7 @@ namespace Client.Unit.Code
     void ResetTurnsCount();
     void GetMoveArea(List<CellController> outList);
     bool CanMove(CellController cell);
-    void Move(CellController cell, ref SetRegionTypeResult setRegionTypeResult);
+    void Move(CellController cell);
     void GetProtectionArea(List<CellController> outList);
   }
 }

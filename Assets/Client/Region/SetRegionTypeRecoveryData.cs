@@ -3,13 +3,13 @@ using UnityEngine.Pool;
 
 namespace Client.Region
 {
-  public struct SetRegionTypeResult
+  public struct SetRegionTypeRecoveryData
   {
     public List<RegionRecoveryData> AffectedRegions;
 
-    public static SetRegionTypeResult Create()
+    public static SetRegionTypeRecoveryData Create()
     {
-      return new SetRegionTypeResult
+      return new SetRegionTypeRecoveryData
       {
         AffectedRegions = ListPool<RegionRecoveryData>.Get()
       };

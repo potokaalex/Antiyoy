@@ -12,10 +12,10 @@ namespace Client.ActionsHistory.Actions
     private readonly CellController _newCell;
     private readonly UnitType? _newCellUnitType;
     private readonly UnitType _movingUnitType;
-    private SetRegionTypeResult _setRegionTypeResult;
+    private SetRegionTypeRecoveryData _setRegionTypeRecoveryData;
 
     public MoveUnitAction(CellController newCell, UnitType? newCellUnitType, CellController oldCell, UnitType movingUnitType,
-      SetRegionTypeResult setRegionTypeResult)
+      SetRegionTypeRecoveryData setRegionTypeRecoveryData)
     {
       _unitsService = Locator.Get<UnitsService>();
       _regionsService = Locator.Get<RegionsService>();
@@ -23,7 +23,7 @@ namespace Client.ActionsHistory.Actions
       _newCellUnitType = newCellUnitType;
       _oldCell = oldCell;
       _movingUnitType = movingUnitType;
-      _setRegionTypeResult = setRegionTypeResult;
+      _setRegionTypeRecoveryData = setRegionTypeRecoveryData;
     }
 
     public void Undo()
@@ -32,13 +32,13 @@ namespace Client.ActionsHistory.Actions
       if(_newCellUnitType.HasValue)
         _unitsService.Create(_newCell, _newCellUnitType.Value);
 
-      foreach (var region in _setRegionTypeResult.AffectedRegions)
+      foreach (var region in _setRegionTypeRecoveryData.AffectedRegions)
         _regionsService.RestoreRegion(region);
-      _setRegionTypeResult.Dispose();
+      _setRegionTypeRecoveryData.Dispose();
 
       _unitsService.Create(_oldCell, _movingUnitType);
     }
 
-    public void Dispose() => _setRegionTypeResult.Dispose();
+    public void Dispose() => _setRegionTypeRecoveryData.Dispose();
   }
 }
