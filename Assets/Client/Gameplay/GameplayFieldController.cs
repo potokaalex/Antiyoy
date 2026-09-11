@@ -1,13 +1,12 @@
-using System.Collections.Generic;
 using Client.Infrastructure;
 using Client.Region;
 using Client.Unit.Code;
+using Client.Utilities;
 
 namespace Client.Gameplay
 {
-  public class GameFieldController : IInitializable
+  public class GameplayFieldController : IInitializable
   {
-    private readonly List<CellController> _unitAreaBuffer = new();
     private UnitsService _unitsService;
     private RegionsService _regionsService;
 
@@ -20,8 +19,8 @@ namespace Client.Gameplay
     public bool CanCreateUnit(UnitType unitType, CellController cell, RegionController playerRegion)
     {
       var cost = _unitsService.GetCost(unitType);
-      _unitsService.GetUnitCreationArea(playerRegion, _unitAreaBuffer, unitType);
-      return playerRegion.Money >= cost && _unitAreaBuffer.Contains(cell) && _unitsService.CanCreate(cell, playerRegion.Type);
+      _unitsService.GetUnitCreationArea(playerRegion, GameConstants.AreaBuffer, unitType);
+      return playerRegion.Money >= cost && GameConstants.AreaBuffer.Contains(cell) && _unitsService.CanCreate(cell, playerRegion.Type);
     }
 
     public void CreateUnit(UnitType unitType, CellController cell, RegionController playerRegion)
@@ -38,8 +37,8 @@ namespace Client.Gameplay
 
     public bool CanMoveUnit(IUnit unit, CellController cell)
     {
-      unit.GetMoveArea(_unitAreaBuffer);
-      return _unitAreaBuffer.Contains(cell) && unit.CanMove(cell);
+      unit.GetMoveArea(GameConstants.AreaBuffer);
+      return GameConstants.AreaBuffer.Contains(cell) && unit.CanMove(cell);
     }
 
     public void MoveUnit(IUnit unit, CellController cell)

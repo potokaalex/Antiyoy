@@ -1,3 +1,4 @@
+using Client.Gameplay.Player;
 using Client.Infrastructure;
 using Client.UI;
 using Client.Utilities;
@@ -18,15 +19,17 @@ namespace Client.Gameplay.UI.Hud
     [SerializeField] private CustomButton _pauseButton;
     [SerializeField] private CustomButton _backButton;
     private GameplayController _gameplayController;
+    private InputController _inputController;
+    private PlayerViewController _playerViewController;
     private Vector2 _topPanelStartPosition;
     private Vector2 _bottomPanelStartPosition;
-    private InputController _inputController;
 
     public RegionView Region => _regionView;
 
     private void Awake()
     {
       _gameplayController = Locator.Get<GameplayController>();
+      _playerViewController = Locator.Get<PlayerViewController>();
       _inputController = Locator.Get<InputController>();
 
       _nextTurnButton.OnClick += _gameplayController.NextTurn;
@@ -80,6 +83,6 @@ namespace Client.Gameplay.UI.Hud
         .OnComplete(() => gameObject.SetActive(false));
     }
 
-    private void OnUndoClick() => _gameplayController.CurrentPlayer.Undo();
+    private void OnUndoClick() => _playerViewController.Undo();
   }
 }

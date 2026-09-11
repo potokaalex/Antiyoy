@@ -2642,7 +2642,7 @@ MonoBehaviour:
   _gameplayUI: {fileID: 3713321942024075769}
   _protectionView: {fileID: 2573045843340038628}
   _bordersService: {fileID: 1971083102176289642}
-  _capitalsMarkController: {fileID: 7613821254444413515}
+  _capitalsMarksController: {fileID: 7613821254444413515}
   _unitsService: {fileID: 5526087854336272962}
 --- !u!1 &9196643284797679814
 GameObject:

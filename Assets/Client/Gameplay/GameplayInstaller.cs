@@ -2,6 +2,7 @@ using Client.ActionsHistory;
 using Client.Borders;
 using Client.Configs;
 using Client.DebugFeatures;
+using Client.Gameplay.Player;
 using Client.Gameplay.UI;
 using Client.Government;
 using Client.Infrastructure;
@@ -26,7 +27,7 @@ namespace Client.Gameplay
     [SerializeField] private GameplayUI _gameplayUI;
     [SerializeField] private ProtectionView _protectionView;
     [SerializeField] private BordersService _bordersService;
-    [SerializeField] private CapitalsMarkController _capitalsMarkController;
+    [SerializeField] private CapitalsMarksController _capitalsMarksController;
     [SerializeField] private UnitsService _unitsService;
 
     public override void Install(Context context)
@@ -46,9 +47,10 @@ namespace Client.Gameplay
       context.Register(_tilesSelectionView);
       context.Register(_gameplayUI);
       context.Register(_protectionView);
-      context.Register(_capitalsMarkController);
+      context.Register(_capitalsMarksController);
       context.Register(new ActionsHistoryController());
-      context.Register(new GameFieldController());
+      context.Register(new GameplayFieldController());
+      context.Register(new PlayerViewController());
       context.Register(new GameplayController());
     }
   }

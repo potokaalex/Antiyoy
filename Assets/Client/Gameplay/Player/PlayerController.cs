@@ -1,31 +1,22 @@
-using System.Collections.Generic;
 using Client.ActionsHistory;
-using Client.Borders;
-using Client.Gameplay.UI;
 using Client.Government;
 using Client.Infrastructure;
-using Client.Protection;
 using Client.Region;
-using Client.TilesSelection;
 using Client.Unit.Code;
 
-namespace Client.Gameplay
+namespace Client.Gameplay.Player
 {
   public class PlayerController
   {
-    private readonly List<CellController> _selectedCells = new();
     private readonly CameraController _cameraController;
     private readonly GridController _gridController;
     private readonly UnitsService _unitsService;
-    private readonly TilesSelectionView _tilesSelectionView;
-    private readonly GameplayUI _gameplayUI;
-    private readonly ProtectionView _protectionView;
+    private readonly RegionsService _regionsService;
     private readonly InputController _inputController;
-    private readonly BordersService _bordersService;
     private readonly ActionsHistoryController _actionsHistoryController;
     private readonly GovernmentsService _governmentService;
-    private readonly GameFieldController _gameFieldController;
-    private readonly RegionsService _regionsService;
+    private readonly GameplayFieldController _gameplayFieldController;
+    private readonly PlayerViewController _playerViewController;
     private IUnit _selectedUnit;
     private RegionController _selectedRegion;
     private RegionController _lastSelectedRegion;
@@ -42,31 +33,26 @@ namespace Client.Gameplay
       _gridController = Locator.Get<GridController>();
       _cameraController = Locator.Get<CameraController>();
       _unitsService = Locator.Get<UnitsService>();
-      _tilesSelectionView = Locator.Get<TilesSelectionView>();
-      _gameplayUI = Locator.Get<GameplayUI>();
-      _protectionView = Locator.Get<ProtectionView>();
+      _regionsService = Locator.Get<RegionsService>();
       _inputController = Locator.Get<InputController>();
-      _bordersService = Locator.Get<BordersService>();
       _actionsHistoryController = Locator.Get<ActionsHistoryController>();
       _governmentService = Locator.Get<GovernmentsService>();
-      _gameFieldController = Locator.Get<GameFieldController>();
-      _regionsService = Locator.Get<RegionsService>();
+      _gameplayFieldController = Locator.Get<GameplayFieldController>();
+      _playerViewController = Locator.Get<PlayerViewController>();
     }
 
     public void Tick() => UpdatePlayerInput();
 
-    public void SetCreateUnitMode(UnitType type)
+    public void SetCreateUnitMode(UnitType unitType)
     {
       _gameplayMode = GameplayMode.CreateUnit;
-      _creationUnitType = type;
-      _unitsService.GetUnitCreationArea(_selectedRegion, _selectedCells, _creationUnitType);
-      _tilesSelectionView.ClearView();
-
-      if (type != UnitType.Tower)
-        _tilesSelectionView.ViewTiles(_selectedCells);
+      _creationUnitType = unitType;
+      _playerViewController.ViewUnitCreation(_selectedRegion, unitType);
     }
 
     public void Pause() => Clear();
+
+    public void StartTurn() => _playerViewController.SetPlayerController(this);
 
     public void EndTurn()
     {
@@ -84,14 +70,7 @@ namespace Client.Gameplay
     {
       _gameplayMode = GameplayMode.None;
       _selectedRegion = null;
-      _tilesSelectionView.ClearView();
-      if (clearRegionView)
-      {
-        _gameplayUI.ActiveRegionUI(false);
-        _bordersService.ClearRegionSelectionBorders();
-      }
-
-      _gameplayUI.ClearRegionCreation();
+      _playerViewController.Clear(clearRegionView);
     }
 
     private void SelectLastSelectedRegion()
@@ -111,7 +90,7 @@ namespace Client.Gameplay
             ShowBuildingsProtection(cell);
 
           if (_gameplayMode == GameplayMode.None || _gameplayMode == GameplayMode.SelectedRegion)
-            TrySelectRegion(cell, false);
+            TrySelectRegion(cell.Region, false);
 
           if (_gameplayMode == GameplayMode.SelectedRegion && cell.Region.Type != RegionType)
             Clear();
@@ -129,28 +108,26 @@ namespace Client.Gameplay
 
     private void TryMoveUnit(CellController cell)
     {
-      if (_gameFieldController.CanMoveUnit(_selectedUnit, cell))
+      if (_gameplayFieldController.CanMoveUnit(_selectedUnit, cell))
       {
         var oldCell = _selectedUnit.Cell;
         var newCellUnitType = cell.Unit?.Type;
         var setRegionTypeResult = _regionsService.CalculateSetRegionTypeRecoveryData(cell, RegionType);
-        _gameFieldController.MoveUnit(_selectedUnit, cell);
+        _gameplayFieldController.MoveUnit(_selectedUnit, cell);
         _actionsHistoryController.MoveUnit(cell, newCellUnitType, oldCell, _selectedUnit.Type, setRegionTypeResult);
-
         Clear(cell.Region.Type != RegionType);
-        TrySelectRegion(cell);
         TrySelectUnit(cell);
       }
     }
 
     private void TryCreateUnit(CellController cell)
     {
-      if (_gameFieldController.CanCreateUnit(_creationUnitType, cell, _selectedRegion))
+      if (_gameplayFieldController.CanCreateUnit(_creationUnitType, cell, _selectedRegion))
       {
         var regionMoney = _selectedRegion.Money;
         var setRegionTypeResult = _regionsService.CalculateSetRegionTypeRecoveryData(cell, RegionType);
         var newCellUnitType = cell.Unit?.Type;
-        _gameFieldController.CreateUnit(_creationUnitType, cell, _selectedRegion);
+        _gameplayFieldController.CreateUnit(_creationUnitType, cell, _selectedRegion);
         _actionsHistoryController.CreateUnit(cell, newCellUnitType, regionMoney, setRegionTypeResult);
         Clear(false);
         SelectRegion(cell.Region);
@@ -172,15 +149,14 @@ namespace Client.Gameplay
         SelectRegion(region, forceBordersAnim);
     }
 
-    private void TrySelectRegion(CellController cell, bool forceBordersAnim = true) => SelectRegion(cell.Region, forceBordersAnim);
-
     private void TrySelectUnit(CellController cell)
     {
+      TrySelectRegion(cell.Region);
+
       if (cell.Region.Type == RegionType && _unitsService.Get(cell, out _selectedUnit) && _selectedUnit.HasTurns)
       {
-        _selectedUnit.GetMoveArea(_selectedCells);
-        _tilesSelectionView.ViewTiles(_selectedCells);
         _gameplayMode = GameplayMode.SelectedUnit;
+        _playerViewController.ViewUnitSelection(_selectedUnit);
       }
     }
 
@@ -188,16 +164,14 @@ namespace Client.Gameplay
     {
       _lastSelectedRegion = region;
       _selectedRegion = region;
-      _gameplayUI.ActiveRegionUI(true);
-      _gameplayUI.ViewRegionData(_selectedRegion.Money, _selectedRegion.GetIncome());
-      _bordersService.ViewRegionSelectionBorders(region, forceBordersAnim);
       _gameplayMode = GameplayMode.SelectedRegion;
+      _playerViewController.ViewRegionSelection(_selectedRegion, forceBordersAnim);
     }
 
     private void ShowBuildingsProtection(CellController cell)
     {
       if (cell.Region.Type == RegionType && _unitsService.Get(cell, out _selectedUnit) && _selectedUnit.CanViewProtection)
-        _protectionView.ViewBuildingsProtection(cell.Region);
+        _playerViewController.ViewViewBuildingsProtection(cell.Region);
     }
   }
 }

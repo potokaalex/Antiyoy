@@ -1,3 +1,4 @@
+using Client.Gameplay.Player;
 using Client.Infrastructure;
 using Client.UI;
 using Client.Unit.Code;
@@ -18,12 +19,12 @@ namespace Client.Gameplay.UI.Hud
     [SerializeField] private TextMeshProUGUI _variantCost;
     [SerializeField] private Image _variantIcon;
     private UnitsService _unitsService;
+    private PlayerViewController _playerViewController;
     private UnitType _buildingType;
-    private GameplayController _gameplayController;
 
     private void Awake()
     {
-      _gameplayController = Locator.Get<GameplayController>();
+      _playerViewController = Locator.Get<PlayerViewController>();
       _unitsService = Locator.Get<UnitsService>();
       _createWarriorButton.OnClick += OnCreateWarrior;
       _createBuildingButton.OnClick += OnCreateBuilding;
@@ -44,7 +45,7 @@ namespace Client.Gameplay.UI.Hud
     private void OnCreateWarrior()
     {
       _buildingType = UnitType.Peasant;
-      _gameplayController.CurrentPlayer.SetCreateUnitMode(_buildingType);
+      _playerViewController.SetCreateUnitMode(_buildingType);
       View(_buildingType);
     }
 
@@ -57,7 +58,7 @@ namespace Client.Gameplay.UI.Hud
       else if (_buildingType == UnitType.Tower)
         _buildingType = UnitType.Farm;
 
-      _gameplayController.CurrentPlayer.SetCreateUnitMode(_buildingType);
+      _playerViewController.SetCreateUnitMode(_buildingType);
       View(_buildingType);
     }
 

@@ -40,15 +40,16 @@ namespace Client.Gameplay.UI
       _gameTransitionView.PlaToyGameTransition();
     }
 
-    public void ActiveRegionUI(bool isActive) => _hudView.Region.SetActive(isActive);
+    public void ShowRegionUI(RegionController region)
+    {
+      _hudView.Region.SetActive(true);
+      _hudView.Region.ViewMoney(region.Money);
+      _hudView.Region.ViewIncome(region.GetIncome());
+    }
+
+    public void HideRegionUI() => _hudView.Region.SetActive(false);
 
     public void ViewTurnsCount(int value) => _hudView.ViewTurnsCount(value);
-
-    public void ViewRegionData(int money, int income)
-    {
-      _hudView.Region.ViewMoney(money);
-      _hudView.Region.ViewIncome(income);
-    }
 
     public void ShowEndScreen(RegionType winner)
     {

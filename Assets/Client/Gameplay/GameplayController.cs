@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Client.ActionsHistory;
 using Client.Borders;
+using Client.Gameplay.Player;
 using Client.Gameplay.UI;
 using Client.Government;
 using Client.Infrastructure;
@@ -24,8 +25,9 @@ namespace Client.Gameplay
     private GovernmentsService _governmentsService;
     private BordersService _bordersService;
     private ActionsHistoryController _actionsHistoryController;
-    private CapitalsMarkController _capitalsMarkController;
+    private CapitalsMarksController _capitalsMarksController;
     private MainMenuView _mainMenuView;
+    private PlayerController _currentPlayer;
     private int _turnsCount;
 
     private int TurnsCount
@@ -37,8 +39,6 @@ namespace Client.Gameplay
         _gameplayUI.ViewTurnsCount(value);
       }
     }
-
-    public PlayerController CurrentPlayer { get; private set; }
 
     public bool Started { get; private set; }
 
@@ -53,7 +53,7 @@ namespace Client.Gameplay
       _bordersService = Locator.Get<BordersService>();
       _actionsHistoryController = Locator.Get<ActionsHistoryController>();
       _mainMenuView = Locator.Get<MainMenuView>();
-      _capitalsMarkController = Locator.Get<CapitalsMarkController>();
+      _capitalsMarksController = Locator.Get<CapitalsMarksController>();
     }
 
     public void Start()
@@ -62,7 +62,7 @@ namespace Client.Gameplay
       _unitsService.InitialCreateUnits();
       _regionsService.InitialCreateRegions();
       CreatePlayers();
-      _capitalsMarkController.Enable();
+      _capitalsMarksController.Enable();
 
       TurnsCount = 0;
       _bordersService.ViewRegionsBorders();
@@ -76,13 +76,13 @@ namespace Client.Gameplay
         return;
 
       _cameraController.Tick();
-      _capitalsMarkController.Tick();
-      CurrentPlayer.Tick();
+      _capitalsMarksController.Tick();
+      _currentPlayer.Tick();
     }
 
     public void NextTurn()
     {
-      CurrentPlayer.EndTurn();
+      _currentPlayer.EndTurn();
 
       if (CheckWin())
         return;
@@ -99,7 +99,7 @@ namespace Client.Gameplay
     public void End()
     {
       Started = false;
-      _capitalsMarkController.Disable();
+      _capitalsMarksController.Disable();
       _unitsService.Clear();
       _regionsService.Clear();
       _actionsHistoryController.Clear();
@@ -107,7 +107,7 @@ namespace Client.Gameplay
 
     public void Pause()
     {
-      CurrentPlayer.Pause();
+      _currentPlayer.Pause();
       _gameplayUI.ShowPause();
     }
 
@@ -119,7 +119,13 @@ namespace Client.Gameplay
       End();
     }
 
-    private void SetFirstPlayer() => CurrentPlayer = _players[0];
+    private void SetFirstPlayer() => SetCurrentPlayer(_players[0]);
+
+    private void SetCurrentPlayer(PlayerController playerController)
+    {
+      _currentPlayer = playerController;
+      _currentPlayer.StartTurn();
+    }
 
     private void CreatePlayers()
     {
@@ -142,17 +148,17 @@ namespace Client.Gameplay
         return;
 
       foreach (var region in _regionsService.Regions)
-        if (region.Type == CurrentPlayer.RegionType)
+        if (region.Type == _currentPlayer.RegionType)
           region.Update();
     }
 
     private bool MoveNextPlayer()
     {
-      var currentIndex = _players.IndexOf(CurrentPlayer);
+      var currentIndex = _players.IndexOf(_currentPlayer);
       var maxIndex = _players.Count - 1;
       if (currentIndex < maxIndex)
       {
-        CurrentPlayer = _players[currentIndex + 1];
+        SetCurrentPlayer(_players[currentIndex + 1]);
         return true;
       }
 
