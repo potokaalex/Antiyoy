@@ -14,13 +14,15 @@ namespace Client.Menu
     [SerializeField] private Color _particlesShowColor;
     [SerializeField] private bool _autoInitialize = true;
     private readonly float _bodyMinScale = 0.25f;
+    private MenuView _menuView;
+    private InputController _inputController;
     private Vector2 _topPanelStartPosition;
     private Vector2 _topPanelEndPosition;
-    private MenuView _menuView;
 
     private void Awake()
     {
       _menuView = Locator.Get<MenuView>();
+      _inputController = Locator.Get<InputController>();
 
       if (_autoInitialize)
         Initialize();
@@ -60,8 +62,8 @@ namespace Client.Menu
 
       sequence.Join(_body.DOScale(bodyScale, 0.5f))
         .Join(_canvasGroup.DOFade(alpha, 0.35f))
-        .JoinCallback(() => _menuView.SetBlockInput(true))
-        .AddOnComplete(() => _menuView.SetBlockInput(false))
+        .JoinCallback(() => _inputController.SetBlockInput(true))
+        .AddOnComplete(() => _inputController.SetBlockInput(false))
         .SetEase(AnimationsUtilities.MenuDefaultEase)
         .SetId(this);
 

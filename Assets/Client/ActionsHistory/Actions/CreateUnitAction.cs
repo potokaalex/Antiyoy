@@ -9,23 +9,33 @@ namespace Client.ActionsHistory.Actions
     private readonly UnitsService _unitsService;
     private readonly RegionsService _regionsService;
     private readonly CellController _cell;
-    private readonly RegionType _oldRegionType;
-    private readonly int _spentMoney;
+    private readonly UnitType? _oldUnitType;
+    private readonly int _regionMoney;
+    private SetRegionTypeRecoveryData _setRegionTypeRecoveryData;
 
-    public CreateUnitAction(CellController cell, RegionType oldRegionType, int spentMoney)
+    public CreateUnitAction(CellController cell, UnitType? oldUnitType, int regionMoney, SetRegionTypeRecoveryData setRegionTypeRecoveryData)
     {
       _unitsService = Locator.Get<UnitsService>();
       _regionsService = Locator.Get<RegionsService>();
       _cell = cell;
-      _oldRegionType = oldRegionType;
-      _spentMoney = spentMoney;
+      _oldUnitType = oldUnitType;
+      _regionMoney = regionMoney;
+      _setRegionTypeRecoveryData = setRegionTypeRecoveryData;
     }
 
     public void Undo()
     {
-      _cell.Region.Money += _spentMoney;
       _unitsService.Destroy(_cell.Unit);
-      _regionsService.SetRegionType(_cell, _oldRegionType);
+      if(_oldUnitType.HasValue)
+        _unitsService.Create(_cell, _oldUnitType.Value);
+
+      _cell.Region.Money = _regionMoney;
+      foreach (var region in _setRegionTypeRecoveryData.AffectedRegions)
+        _regionsService.RestoreRegion(region);
+
+      Dispose();
     }
+
+    public void Dispose() => _setRegionTypeRecoveryData.Dispose();
   }
 }

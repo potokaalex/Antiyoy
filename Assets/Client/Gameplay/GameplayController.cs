@@ -1,176 +1,164 @@
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using Client.ActionsHistory;
 using Client.Borders;
+using Client.Gameplay.Player;
 using Client.Gameplay.UI;
 using Client.Government;
 using Client.Infrastructure;
 using Client.Menu.MainMenu;
-using Client.Protection;
 using Client.Region;
-using Client.TilesSelection;
 using Client.Unit.Code;
-using Cysharp.Threading.Tasks;
-using UnityEngine;
+using Client.Unit.Code.Capital;
 using UnityEngine.Pool;
-using UnityEngine.SceneManagement;
 
 namespace Client.Gameplay
 {
   public class GameplayController : IInitializable, ITickable
   {
-    private readonly List<CellController> _selectedCells = new();
-    private RegionType _currentPlayer = RegionType.Red;
+    private readonly List<PlayerController> _players = new();
     private CameraController _cameraController;
     private GridController _gridController;
-    private RegionController _selectedRegion;
-    private RegionController _lastSelectedRegion;
     private UnitsService _unitsService;
-    private TilesSelectionView _tilesSelectionView;
-    private IUnit _selectedUnit;
     private GameplayUI _gameplayUI;
     private RegionsService _regionsService;
     private GovernmentsService _governmentsService;
-    private ProtectionView _protectionView;
-    private InputController _inputController;
     private BordersService _bordersService;
     private ActionsHistoryController _actionsHistoryController;
+    private CapitalsMarksController _capitalsMarksController;
     private MainMenuView _mainMenuView;
-    private GameplayMode _gameplayMode;
-    private UnitType _creationUnitType;
+    private PlayerController _currentPlayer;
     private int _turnsCount;
 
-    public RegionType CurrentPlayerRegionType => _currentPlayer;
+    private int TurnsCount
+    {
+      get => _turnsCount;
+      set
+      {
+        _turnsCount = value;
+        _gameplayUI.ViewTurnsCount(value);
+      }
+    }
+
+    public bool Started { get; private set; }
 
     public void Initialize()
     {
-      Application.targetFrameRate = 300;
-
       _gridController = Locator.Get<GridController>();
       _cameraController = Locator.Get<CameraController>();
       _unitsService = Locator.Get<UnitsService>();
-      _tilesSelectionView = Locator.Get<TilesSelectionView>();
       _gameplayUI = Locator.Get<GameplayUI>();
       _regionsService = Locator.Get<RegionsService>();
       _governmentsService = Locator.Get<GovernmentsService>();
-      _protectionView = Locator.Get<ProtectionView>();
-      _inputController = Locator.Get<InputController>();
       _bordersService = Locator.Get<BordersService>();
       _actionsHistoryController = Locator.Get<ActionsHistoryController>();
       _mainMenuView = Locator.Get<MainMenuView>();
+      _capitalsMarksController = Locator.Get<CapitalsMarksController>();
+    }
 
+    public void Start()
+    {
       _gridController.InitialCreateCells();
       _unitsService.InitialCreateUnits();
       _regionsService.InitialCreateRegions();
-      _bordersService.ViewRegionsBorders();
+      CreatePlayers();
+      _capitalsMarksController.Enable();
 
-      _gameplayUI.ViewTurnsCount(_turnsCount);
+      TurnsCount = 0;
+      _bordersService.ViewRegionsBorders();
       _gameplayUI.PlayShow();
+      Started = true;
     }
 
     public void Tick()
     {
-      if (_inputController.IsClick && !_inputController.IsPointerOverUI())
-      {
-        if (_cameraController.GetHitFromMousePoint(out var hit) &&
-            _gridController.GetCell(_gridController.WorldPositionToHex(hit.point), out var cell))
-        {
-          if (_gameplayMode == GameplayMode.SelectedRegion)
-            ShowBuildingsProtection(cell);
+      if (!Started)
+        return;
 
-          if (_gameplayMode == GameplayMode.None || _gameplayMode == GameplayMode.SelectedRegion)
-            TrySelectRegion(cell, false);
-
-          if (_gameplayMode == GameplayMode.SelectedRegion && cell.Region.Type != _currentPlayer)
-            Clear();
-          else if (_gameplayMode == GameplayMode.CreateUnit)
-            TryCreateUnit(cell);
-          else if (_gameplayMode != GameplayMode.SelectedUnit)
-            TrySelectUnit(cell);
-          else if (_gameplayMode == GameplayMode.SelectedUnit)
-            TryMoveUnit(cell);
-        }
-        else
-          Clear();
-      }
-    }
-
-    public void SetCreateUnitMode(UnitType type)
-    {
-      _gameplayMode = GameplayMode.CreateUnit;
-      _creationUnitType = type;
-      _unitsService.GetUnitCreationArea(_selectedRegion, _selectedCells, _creationUnitType);
-      _tilesSelectionView.ClearView();
-
-      if (type != UnitType.Tower)
-        _tilesSelectionView.ViewTiles(_selectedCells);
+      _cameraController.Tick();
+      _capitalsMarksController.Tick();
+      _currentPlayer.Tick();
     }
 
     public void NextTurn()
     {
-      Clear();
+      _currentPlayer.EndTurn();
 
       if (CheckWin())
         return;
 
-      if (MoveNextPlayer())
+      if (!MoveNextPlayer())
       {
-        UpdatePlayerRegions();
-        return;
+        TurnsCount++;
+        SetFirstPlayer();
       }
 
-      _turnsCount++;
-      _gameplayUI.ViewTurnsCount(_turnsCount);
-      _currentPlayer = RegionType.Red;
       UpdatePlayerRegions();
-      _actionsHistoryController.Clear();
     }
 
-    public void EndGameplay()
+    public void End()
     {
-      SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(0));
-      SceneManager.UnloadSceneAsync(1);
+      Started = false;
+      _capitalsMarksController.Disable();
+      _unitsService.Clear();
+      _regionsService.Clear();
+      _actionsHistoryController.Clear();
     }
 
     public void Pause()
     {
-      Clear();
+      _currentPlayer.Pause();
       _gameplayUI.ShowPause();
     }
 
     public void UnPause() => _gameplayUI.HidePause();
 
-    public async void MainMenu()
+    public void MainMenu()
     {
       _mainMenuView.ShowStart();
-
-      await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
-      EndGameplay();
+      End();
     }
 
-    public void SelectLastSelectedRegion()
+    private void SetFirstPlayer() => SetCurrentPlayer(_players[0]);
+
+    private void SetCurrentPlayer(PlayerController playerController)
     {
-      Clear();
-      TrySelectRegion(_lastSelectedRegion);
+      _currentPlayer = playerController;
+      _currentPlayer.StartTurn();
+    }
+
+    private void CreatePlayers()
+    {
+      _players.Clear();
+
+      using (ListPool<GovernmentController>.Get(out var governments))
+      {
+        _governmentsService.GetAllAlive(governments);
+        governments.Sort((x, y) => x.RegionsType.CompareTo(y.RegionsType));
+        foreach (var government in governments)
+          _players.Add(new PlayerController(government.RegionsType));
+      }
+
+      SetFirstPlayer();
     }
 
     private void UpdatePlayerRegions()
     {
-      if (_turnsCount <= 0)
+      if (TurnsCount <= 0)
         return;
 
       foreach (var region in _regionsService.Regions)
-        if (region.Type == _currentPlayer)
+        if (region.Type == _currentPlayer.RegionType)
           region.Update();
     }
 
     private bool MoveNextPlayer()
     {
-      var currentIndex = (int)_currentPlayer;
-      var maxIndex = (int)RegionType.Blue;
+      var currentIndex = _players.IndexOf(_currentPlayer);
+      var maxIndex = _players.Count - 1;
       if (currentIndex < maxIndex)
       {
-        _currentPlayer = (RegionType)(currentIndex + 1);
+        SetCurrentPlayer(_players[currentIndex + 1]);
         return true;
       }
 
@@ -179,118 +167,13 @@ namespace Client.Gameplay
 
     private bool CheckWin()
     {
-      using (ListPool<GovernmentController>.Get(out var governments))
+      if(_players.Count(x => x.Alive) == 1)
       {
-        _governmentsService.GetAllAlive(governments);
-        if (governments.Count == 1)
-        {
-          _gameplayUI.ShowEndScreen(governments[0].RegionsType);
-          return true;
-        }
-
-        return false;
-      }
-    }
-
-    private void Clear(bool clearRegionView = true)
-    {
-      _gameplayMode = GameplayMode.None;
-      _selectedRegion = null;
-      _tilesSelectionView.ClearView();
-      if (clearRegionView)
-      {
-        _gameplayUI.ActiveRegionUI(false);
-        _bordersService.ClearRegionSelectionBorders();
+        _gameplayUI.ShowEndScreen(_players.First(x => x.Alive).RegionType);
+        return true;
       }
 
-      _gameplayUI.ClearRegionCreation();
-    }
-
-    private void TryMoveUnit(CellController cell)
-    {
-      var oldRegion = cell.Region.Type;
-      var oldCell = _selectedUnit.Cell;
-
-      if (!_selectedCells.Contains(cell) || _selectedUnit.Move(cell))
-      {
-        Clear(cell.Region.Type != _currentPlayer);
-        TrySelectRegion(cell);
-        TrySelectUnit(cell);
-        _actionsHistoryController.MoveUnit(cell, oldCell, oldRegion, _selectedUnit.Type);
-      }
-    }
-
-    private void TryCreateUnit(CellController cell)
-    {
-      var cost = _unitsService.GetCost(_creationUnitType);
-      if (_selectedRegion.Money >= cost)
-      {
-        if (_selectedCells.Contains(cell) && !(cell.HasUnit && cell.Region.Type == _currentPlayer))
-        {
-          var hasTurns = true;
-          var oldRegion = cell.Region.Type;
-          
-          if (cell.Region.Type != _currentPlayer)
-          {
-            _gridController.ReCreateCell(cell.Position, _currentPlayer);
-            hasTurns = false;
-          }
-
-          _unitsService.Create(cell, _creationUnitType, hasTurns);
-          _selectedRegion.Money -= cost;
-          Clear(false);
-          SelectRegion(cell.Region);
-          _actionsHistoryController.CreateUnit(cell, oldRegion, cost);
-          return;
-        }
-      }
-
-      ReturnToSelectedRegion();
-    }
-
-    private void ReturnToSelectedRegion()
-    {
-      var region = _selectedRegion;
-      Clear(false);
-      SelectRegion(region);
-    }
-
-    private void TrySelectRegion(CellController cell, bool forceBordersAnim = true)
-    {
-      if (cell.Region.Type == _currentPlayer && cell.Region.IsAlive && _selectedRegion != cell.Region)
-        SelectRegion(cell.Region, forceBordersAnim);
-    }
-
-    private void TrySelectRegion(RegionController region, bool forceBordersAnim = true)
-    {
-      if (region.Type == _currentPlayer && region.IsAlive && _selectedRegion != region)
-        SelectRegion(region, forceBordersAnim);
-    }
-
-    private void TrySelectUnit(CellController cell)
-    {
-      if (cell.Region.Type == _currentPlayer && _unitsService.Get(cell, out _selectedUnit) && _selectedUnit.HasTurns)
-      {
-        _selectedUnit.GetMoveArea(_selectedCells);
-        _tilesSelectionView.ViewTiles(_selectedCells);
-        _gameplayMode = GameplayMode.SelectedUnit;
-      }
-    }
-
-    private void SelectRegion(RegionController region, bool forceBordersAnim = true)
-    {
-      _lastSelectedRegion = region;
-      _selectedRegion = region;
-      _gameplayUI.ActiveRegionUI(true);
-      _gameplayUI.ViewRegionData(_selectedRegion.Money, _selectedRegion.GetIncome());
-      _bordersService.ViewRegionSelectionBorders(region, forceBordersAnim);
-      _gameplayMode = GameplayMode.SelectedRegion;
-    }
-
-    private void ShowBuildingsProtection(CellController cell)
-    {
-      if (cell.Region.Type == _currentPlayer && _unitsService.Get(cell, out _selectedUnit) && _selectedUnit.CanViewProtection)
-        _protectionView.ViewBuildingsProtection(cell.Region);
+      return false;
     }
   }
 }

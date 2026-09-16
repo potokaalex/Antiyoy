@@ -14,10 +14,12 @@ namespace Client.Gameplay.UI
     private CameraController _cameraController;
     private MenuView _menuView;
     private RenderTexture _rt;
+    private InputController _inputController;
 
     private void Awake()
     {
       _menuView = Locator.Get<MenuView>();
+      _inputController = Locator.Get<InputController>();
       _cameraController = Locator.Get<CameraController>();
       _rt = new RenderTexture(Screen.width, Screen.height, 16);
       _gameImage.texture = _rt;
@@ -31,14 +33,16 @@ namespace Client.Gameplay.UI
 
     private IEnumerator PlayGameTransitionCoroutine()
     {
+      _cameraController.CanRender(true);
       yield return StartCoroutine(_cameraController.CreateScreenshotCoroutine(_rt));
+      _cameraController.CanRender(false);
 
       _gameImage.gameObject.SetActive(true);
       _gameImage.transform.localScale = Vector3.zero;
       _gameImage.color = new Color(1, 1, 1, 0);
 
       _menuView.Background.PlayHideAnimation();
-      _menuView.SetBlockInput(true);
+      _inputController.SetBlockInput(true);
 
       DOTween.Sequence()
         .Append(_gameImage.transform.DOScale(Vector3.one, 0.5f))
@@ -46,16 +50,19 @@ namespace Client.Gameplay.UI
         .OnComplete(() =>
         {
           _gameImage.gameObject.SetActive(false);
-          _menuView.SetBlockInput(false);
+          _inputController.SetBlockInput(false);
           _menuView.SetActive(false);
+          _cameraController.CanRender(true);
         })
         .SetEase(AnimationsUtilities.MenuDefaultEase)
         .SetId(this);
     }
-    
+
     private IEnumerator PlaOutGameTransitionCoroutine()
     {
+      _cameraController.CanRender(true);
       yield return StartCoroutine(_cameraController.CreateScreenshotCoroutine(_rt));
+      _cameraController.CanRender(false);
 
       _gameImage.gameObject.SetActive(true);
       _gameImage.transform.localScale = Vector3.one;
@@ -63,7 +70,7 @@ namespace Client.Gameplay.UI
 
       _menuView.SetActive(true);
       _menuView.Background.PlayShowAnimation();
-      _menuView.SetBlockInput(true);
+      _inputController.SetBlockInput(true);
 
       DOTween.Sequence()
         .Append(_gameImage.transform.DOScale(Vector3.zero, 0.5f))
@@ -71,11 +78,10 @@ namespace Client.Gameplay.UI
         .OnComplete(() =>
         {
           _gameImage.gameObject.SetActive(false);
-          _menuView.SetBlockInput(false);
+          _inputController.SetBlockInput(false);
         })
         .SetEase(AnimationsUtilities.MenuDefaultEase)
         .SetId(this);
     }
   }
 }
-

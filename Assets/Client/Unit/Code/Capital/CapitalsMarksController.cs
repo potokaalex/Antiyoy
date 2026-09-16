@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Client.Gameplay;
 using Client.Infrastructure;
 using Client.Region;
 using DG.Tweening;
@@ -10,7 +8,7 @@ using UnityEngine.Pool;
 
 namespace Client.Unit.Code.Capital
 {
-  public class CapitalsMarkController : MonoBehaviour, IInitializable, ITickable, IDisposable
+  public class CapitalsMarksController : MonoBehaviour, IInitializable
   {
     [SerializeField] private Transform _prefab;
     [SerializeField] private Vector2 _fromCellCenterOffset;
@@ -21,16 +19,15 @@ namespace Client.Unit.Code.Capital
     private UnitsService _unitsService;
     private CapitalsController _capitalsController;
     private GridController _gridController;
-    private GameplayController _gameplayController;
-    private int _peasantCost;
     private ObjectPool<Transform> _pool;
+    private int _peasantCost;
+    private RegionType _regionType;
 
     public void Initialize()
     {
       _regionsService = Locator.Get<RegionsService>();
       _capitalsController = Locator.Get<CapitalsController>();
       _gridController = Locator.Get<GridController>();
-      _gameplayController = Locator.Get<GameplayController>();
       _peasantCost = Locator.Get<UnitsService>().GetCost(UnitType.Peasant);
 
       _pool = new ObjectPool<Transform>(() => Instantiate(_prefab, transform), t => t.gameObject.SetActive(true), t => t.gameObject.SetActive(false));
@@ -47,7 +44,20 @@ namespace Client.Unit.Code.Capital
       }).SetLoops(-1, LoopType.Yoyo).SetId(this);
     }
 
-    public void Dispose() => DOTween.Kill(this);
+    public void SetRegionType(RegionType regionType) => _regionType = regionType;
+
+    public void Enable() => Tick();
+
+    public void Disable()
+    {
+      for (var i = _regions.Count - 1; i >= 0; i--)
+      {
+        var region = _regions[i];
+        _regions.RemoveAt(i);
+        _pool.Release(_marks[region]);
+        _marks.Remove(region);
+      }
+    }
 
     public void Tick()
     {
@@ -82,6 +92,6 @@ namespace Client.Unit.Code.Capital
     }
 
     private bool RegionCheck(RegionController region) =>
-      region.IsAlive && region.Money >= _peasantCost && _gameplayController.CurrentPlayerRegionType == region.Type;
+      region.IsAlive && region.Money >= _peasantCost && _regionType == region.Type;
   }
 }

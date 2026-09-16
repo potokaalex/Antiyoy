@@ -1,8 +1,7 @@
-using System.Collections;
 using Client.Infrastructure;
+using Client.Project;
 using Client.UI;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Client.Menu.MainMenu.Options
 {
@@ -12,14 +11,16 @@ namespace Client.Menu.MainMenu.Options
     [SerializeField] private CustomButton _battleButton;
     [SerializeField] private MenuAnimator _menuAnimator;
     private MainMenuView _mainMenuView;
-    private MenuView _menuView;
+    private InputController _inputController;
+    private ProjectController _projectController;
 
     public void Show() => _menuAnimator.PlayShow();
 
     private void Awake()
     {
       _mainMenuView = Locator.Get<MainMenuView>();
-      _menuView = Locator.Get<MenuView>();
+      _inputController = Locator.Get<InputController>();
+      _projectController = Locator.Get<ProjectController>();
       _backButton.OnClick += OnBackClick;
       _battleButton.OnClick += OnBattleClick;
     }
@@ -32,7 +33,7 @@ namespace Client.Menu.MainMenu.Options
 
     private void Update()
     {
-      if (_menuView.BackClicked)
+      if (_inputController.BackClicked)
         OnBackClick();
     }
 
@@ -44,15 +45,7 @@ namespace Client.Menu.MainMenu.Options
 
     private void OnBattleClick()
     {
-      StartCoroutine(LoadGameplay());
-    }
-
-    private IEnumerator LoadGameplay()
-    {
-      var operation = SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive);
-      yield return operation;
-      var loadedScene = SceneManager.GetSceneByBuildIndex(1);
-      SceneManager.SetActiveScene(loadedScene);
+      _projectController.LoadGameplay();
       _menuAnimator.PlayHide();
     }
   }

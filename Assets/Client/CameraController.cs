@@ -51,6 +51,15 @@ namespace Client
       _returnScreenshotRequest = false;
     }
 
+    public void Tick()
+    {
+      CalculateTouches();
+      MovePosition();
+      Zoom();
+    }
+
+    public void CanRender(bool can) => _camera.enabled = can;
+
     private void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
       if (_screenshotRt != null)
@@ -65,14 +74,8 @@ namespace Client
     private void Awake()
     {
       _inputController = Locator.Get<InputController>();
+      CanRender(false);
       Clear();
-    }
-
-    private void Update()
-    {
-      CalculateTouches();
-      MovePosition();
-      Zoom();
     }
 
     private void CalculateTouches()

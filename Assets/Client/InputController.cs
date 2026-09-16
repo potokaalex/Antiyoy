@@ -1,5 +1,6 @@
 using System;
 using Client.Infrastructure;
+using Client.Menu;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Pool;
@@ -12,11 +13,15 @@ namespace Client
     private EventSystem _eventSystem;
     private DateTime _startTime;
     private Vector3 _startPosition;
+    private MenuView _menuView;
 
     public bool IsClick { get; private set; }
 
+    public bool BackClicked => Input.GetKeyDown(KeyCode.Escape) && !_menuView.BlockInput.blocksRaycasts;
+
     public void Initialize()
     {
+      _menuView = Locator.Get<MenuView>();
       _eventSystem = EventSystem.current;
       _eventData = new PointerEventData(_eventSystem);
     }
@@ -33,6 +38,8 @@ namespace Client
         return results.Count > 0;
       }
     }
+
+    public void SetBlockInput(bool blocked) => _menuView.BlockInput.blocksRaycasts = blocked;
 
     public void Tick()
     {

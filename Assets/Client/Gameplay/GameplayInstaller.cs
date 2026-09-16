@@ -1,7 +1,7 @@
 using Client.ActionsHistory;
 using Client.Borders;
-using Client.Configs;
 using Client.DebugFeatures;
+using Client.Gameplay.Player;
 using Client.Gameplay.UI;
 using Client.Government;
 using Client.Infrastructure;
@@ -21,34 +21,35 @@ namespace Client.Gameplay
     [SerializeField] private GridController _gridController;
     [SerializeField] private CameraController _cameraController;
     [SerializeField] private DebugController _debugController;
-    [SerializeField] private ConfigsProvider _configsProvider;
+    [SerializeField] private RegionsService _regionsService;
     [SerializeField] private TilesSelectionView _tilesSelectionView;
     [SerializeField] private GameplayUI _gameplayUI;
     [SerializeField] private ProtectionView _protectionView;
     [SerializeField] private BordersService _bordersService;
-    [SerializeField] private CapitalsMarkController _capitalsMarkController;
+    [SerializeField] private CapitalsMarksController _capitalsMarksController;
+    [SerializeField] private UnitsService _unitsService;
 
-    protected override void Install()
+    public override void Install(Context context)
     {
-      Register(_configsProvider);
-      Register(new InputController());
-      Register(_cameraController);
-      Register(_tilemapController);
-      Register(_gridController);
-      Register(_debugController);
-      Register(new CapitalsController());
-      Register(_bordersService);
-      Register(new RegionsFactory());
-      Register(new RegionsService());
-      Register(new GovernmentsService());
-      Register(new UnitsAreaCalculator());
-      Register(new UnitsService());
-      Register(_tilesSelectionView);
-      Register(_gameplayUI);
-      Register(_protectionView);
-      Register(_capitalsMarkController);
-      Register(new ActionsHistoryController());
-      Register(new GameplayController());
+      context.Register(_cameraController);
+      context.Register(_tilemapController);
+      context.Register(_gridController);
+      context.Register(_debugController);
+      context.Register(new CapitalsController());
+      context.Register(_bordersService);
+      context.Register(new RegionsFactory());
+      context.Register(_regionsService);
+      context.Register(new GovernmentsService());
+      context.Register(new UnitsAreaCalculator());
+      context.Register(_unitsService);
+      context.Register(_tilesSelectionView);
+      context.Register(_gameplayUI);
+      context.Register(_protectionView);
+      context.Register(_capitalsMarksController);
+      context.Register(new ActionsHistoryController());
+      context.Register(new GameplayFieldController());
+      context.Register(new PlayerViewController());
+      context.Register(new GameplayController());
     }
   }
 }

@@ -1,6 +1,5 @@
-using Client.ActionsHistory;
+using Client.Gameplay.Player;
 using Client.Infrastructure;
-using Client.Menu;
 using Client.UI;
 using Client.Utilities;
 using DG.Tweening;
@@ -19,23 +18,23 @@ namespace Client.Gameplay.UI.Hud
     [SerializeField] private CanvasGroup _canvasGroup;
     [SerializeField] private CustomButton _pauseButton;
     [SerializeField] private CustomButton _backButton;
-    private ActionsHistoryController _actionsHistoryController;
     private GameplayController _gameplayController;
+    private InputController _inputController;
+    private PlayerViewController _playerViewController;
     private Vector2 _topPanelStartPosition;
     private Vector2 _bottomPanelStartPosition;
-    private MenuView _menuView;
 
     public RegionView Region => _regionView;
 
     private void Awake()
     {
       _gameplayController = Locator.Get<GameplayController>();
-      _menuView = Locator.Get<MenuView>();
-      _actionsHistoryController = Locator.Get<ActionsHistoryController>();
+      _playerViewController = Locator.Get<PlayerViewController>();
+      _inputController = Locator.Get<InputController>();
 
       _nextTurnButton.OnClick += _gameplayController.NextTurn;
       _pauseButton.OnClick += _gameplayController.Pause;
-      _backButton.OnClick += _actionsHistoryController.Undo;
+      _backButton.OnClick += OnUndoClick;
 
       _canvasGroup.alpha = 0;
       _topPanelStartPosition = _topPanel.anchoredPosition;
@@ -47,13 +46,13 @@ namespace Client.Gameplay.UI.Hud
     {
       _nextTurnButton.OnClick -= _gameplayController.NextTurn;
       _pauseButton.OnClick -= _gameplayController.Pause;
-      _backButton.OnClick -= _actionsHistoryController.Undo;
+      _backButton.OnClick -= OnUndoClick;
       DOTween.Kill(this);
     }
 
     private void Update()
     {
-      if (_menuView.BackClicked)
+      if (_inputController.BackClicked)
         _gameplayController.Pause();
     }
 
@@ -83,5 +82,7 @@ namespace Client.Gameplay.UI.Hud
         .SetId(this)
         .OnComplete(() => gameObject.SetActive(false));
     }
+
+    private void OnUndoClick() => _playerViewController.Undo();
   }
 }

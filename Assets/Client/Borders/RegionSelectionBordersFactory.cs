@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Client.Hex;
 using Client.Region;
+using Client.Utilities;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -18,6 +19,7 @@ namespace Client.Borders
     {
       _pool =
         new ObjectPool<BorderController>(() => Instantiate(_prefab, transform), x => x.SetActive(true), x => x.SetActive(false));
+      _pool.Prewarm(100);
     }
 
     public void ViewBorders(RegionController region, bool forceAnimation)

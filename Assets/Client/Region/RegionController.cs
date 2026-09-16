@@ -20,6 +20,8 @@ namespace Client.Region
 
     public bool IsAlive => _cells.Count >= 2 && Type != RegionType.Neutral;
 
+    public IUnit Capital => _capitalsController.GetCapital(this);
+
     public RegionController()
     {
       _regionsFactory = Locator.Get<RegionsFactory>();
@@ -77,6 +79,14 @@ namespace Client.Region
       foreach (var cell in _cells)
         if (cell.HasUnit)
           cell.Unit.ResetTurnsCount();
+    }
+
+    public void SetCapital(CellController capitalPosition) => _capitalsController.SetCapital(capitalPosition);
+
+    public void Clear()
+    {
+      Money = 0;
+      _cells.Clear();
     }
 
     private void DestroyAllUnits()

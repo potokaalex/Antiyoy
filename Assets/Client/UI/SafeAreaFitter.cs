@@ -19,7 +19,7 @@ namespace Client.UI
     private void Fit()
     {
 #if !UNITY_EDITOR
-      if (!Application.isPlaying) 
+      if (!Application.isPlaying)
         return;
 #endif
 

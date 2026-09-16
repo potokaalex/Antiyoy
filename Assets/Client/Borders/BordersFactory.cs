@@ -22,8 +22,8 @@ namespace Client.Borders
     {
       _regionsService = Locator.Get<RegionsService>();
       _gridController = Locator.Get<GridController>();
-      _pool =
-        new ObjectPool<BorderController>(() => Instantiate(_prefab, transform), x => x.SetActive(true), x => x.SetActive(false));
+      _pool = new ObjectPool<BorderController>(() => Instantiate(_prefab, transform), x => x.SetActive(true), x => x.SetActive(false));
+      _pool.Prewarm(100);
     }
 
     public void ViewRegionsBorders()

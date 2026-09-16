@@ -42,7 +42,7 @@ namespace Client.Region
     public void Destroy(RegionController instance)
     {
       _regions.Remove(instance);
-      instance.Money = 0;
+      instance.Clear();
       _pool.Release(instance);
       _governmentsService.RemoveRegion(instance);
     }
