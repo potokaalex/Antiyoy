@@ -1,6 +1,5 @@
 using Client.ActionsHistory;
 using Client.Borders;
-using Client.Configs;
 using Client.DebugFeatures;
 using Client.Gameplay.Player;
 using Client.Gameplay.UI;
@@ -22,7 +21,7 @@ namespace Client.Gameplay
     [SerializeField] private GridController _gridController;
     [SerializeField] private CameraController _cameraController;
     [SerializeField] private DebugController _debugController;
-    [SerializeField] private ConfigsProvider _configsProvider;
+    [SerializeField] private RegionsService _regionsService;
     [SerializeField] private TilesSelectionView _tilesSelectionView;
     [SerializeField] private GameplayUI _gameplayUI;
     [SerializeField] private ProtectionView _protectionView;
@@ -32,7 +31,6 @@ namespace Client.Gameplay
 
     public override void Install(Context context)
     {
-      context.Register(_configsProvider);
       context.Register(_cameraController);
       context.Register(_tilemapController);
       context.Register(_gridController);
@@ -40,7 +38,7 @@ namespace Client.Gameplay
       context.Register(new CapitalsController());
       context.Register(_bordersService);
       context.Register(new RegionsFactory());
-      context.Register(new RegionsService());
+      context.Register(_regionsService);
       context.Register(new GovernmentsService());
       context.Register(new UnitsAreaCalculator());
       context.Register(_unitsService);

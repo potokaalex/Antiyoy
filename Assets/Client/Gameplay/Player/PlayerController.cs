@@ -3,6 +3,7 @@ using Client.Government;
 using Client.Infrastructure;
 using Client.Region;
 using Client.Unit.Code;
+using Client.Utilities;
 
 namespace Client.Gameplay.Player
 {
@@ -62,14 +63,14 @@ namespace Client.Gameplay.Player
 
     public void Undo()
     {
-      _actionsHistoryController.Undo();
-      SelectLastSelectedRegion();
+      if(_actionsHistoryController.Undo())
+        SelectLastSelectedRegion();
     }
 
     private void Clear(bool clearRegionView = true)
     {
       _gameplayMode = GameplayMode.None;
-      _selectedRegion = null;
+      SetSelectedRegion(null);
       _playerViewController.Clear(clearRegionView);
     }
 
@@ -81,33 +82,41 @@ namespace Client.Gameplay.Player
 
     private void UpdatePlayerInput()
     {
-      if (_inputController.IsClick && !_inputController.IsPointerOverUI())
+      if (!(_inputController.IsClick && !_inputController.IsPointerOverUI()))
+        return;
+
+      if (!(_cameraController.GetHitFromMousePoint(out var hit) &&
+            _gridController.GetCell(_gridController.WorldPositionToHex(hit.point), out var cell)))
       {
-        if (_cameraController.GetHitFromMousePoint(out var hit) &&
-            _gridController.GetCell(_gridController.WorldPositionToHex(hit.point), out var cell))
-        {
-          if (_gameplayMode == GameplayMode.SelectedRegion)
-            ShowBuildingsProtection(cell);
-
-          if (_gameplayMode == GameplayMode.None || _gameplayMode == GameplayMode.SelectedRegion)
-            TrySelectRegion(cell.Region, false);
-
-          if (_gameplayMode == GameplayMode.SelectedRegion && cell.Region.Type != RegionType)
-            Clear();
-          else if (_gameplayMode == GameplayMode.CreateUnit)
-            TryCreateUnit(cell);
-          else if (_gameplayMode != GameplayMode.SelectedUnit)
-            TrySelectUnit(cell);
-          else if (_gameplayMode == GameplayMode.SelectedUnit)
-            TryMoveUnit(cell);
-        }
-        else
-          Clear();
+        Clear();
+        return;
       }
+
+      if (_gameplayMode == GameplayMode.SelectedRegion && ShowBuildingsProtection(cell))
+        return;
+
+      if (_gameplayMode == GameplayMode.None || _gameplayMode == GameplayMode.SelectedRegion)
+        TrySelectRegion(cell.Region, false);
+
+      if (_gameplayMode == GameplayMode.SelectedRegion && cell.Region.Type != RegionType)
+        Clear();
+      else if (_gameplayMode == GameplayMode.CreateUnit)
+        TryCreateUnit(cell);
+      else if (_gameplayMode != GameplayMode.SelectedUnit)
+        TrySelectUnit(cell);
+      else if (_gameplayMode == GameplayMode.SelectedUnit)
+        TryMoveUnit(cell);
     }
 
     private void TryMoveUnit(CellController cell)
     {
+      _selectedUnit.GetMoveArea(GameConstants.AreaBuffer);
+      if (!GameConstants.AreaBuffer.Contains(cell))
+      {
+        Clear();
+        return;
+      }
+
       if (_gameplayFieldController.CanMoveUnit(_selectedUnit, cell))
       {
         var oldCell = _selectedUnit.Cell;
@@ -162,16 +171,27 @@ namespace Client.Gameplay.Player
 
     private void SelectRegion(RegionController region, bool forceBordersAnim = true)
     {
-      _lastSelectedRegion = region;
-      _selectedRegion = region;
+      SetSelectedRegion(region);
       _gameplayMode = GameplayMode.SelectedRegion;
       _playerViewController.ViewRegionSelection(_selectedRegion, forceBordersAnim);
     }
 
-    private void ShowBuildingsProtection(CellController cell)
+    private bool ShowBuildingsProtection(CellController cell)
     {
       if (cell.Region.Type == RegionType && _unitsService.Get(cell, out _selectedUnit) && _selectedUnit.CanViewProtection)
+      {
         _playerViewController.ViewViewBuildingsProtection(cell.Region);
+        return true;
+      }
+
+      return false;
+    }
+
+    private void SetSelectedRegion(RegionController region)
+    {
+      if(_selectedRegion != null)
+        _lastSelectedRegion = _selectedRegion;
+      _selectedRegion = region;
     }
   }
 }

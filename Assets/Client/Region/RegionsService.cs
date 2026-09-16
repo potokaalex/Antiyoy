@@ -1,20 +1,20 @@
 using System.Collections.Generic;
 using Client.Borders;
-using Client.Configs;
 using Client.Hex;
 using Client.Infrastructure;
 using Client.Unit.Code;
 using Client.Utilities;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Pool;
 
 namespace Client.Region
 {
-  public class RegionsService : IInitializable
+  public class RegionsService : SerializedMonoBehaviour, IInitializable
   {
     private readonly RegionParts _regionPartsBuffer = new();
+    [SerializeField] private Dictionary<RegionType, Color> _regionsColors;
     private GridController _gridController;
-    private ConfigsProvider _configsProvider;
     private RegionsFactory _regionsFactory;
     private BordersService _bordersService;
 
@@ -23,7 +23,6 @@ namespace Client.Region
     public void Initialize()
     {
       _gridController = Locator.Get<GridController>();
-      _configsProvider = Locator.Get<ConfigsProvider>();
       _regionsFactory = Locator.Get<RegionsFactory>();
       _bordersService = Locator.Get<BordersService>();
     }
@@ -90,7 +89,7 @@ namespace Client.Region
     {
       if (region == null)
         return Color.black;
-      return _configsProvider.RegionsColors[region.Type];
+      return _regionsColors[region.Type];
     }
 
     public SetRegionTypeRecoveryData CalculateSetRegionTypeRecoveryData(CellController cell, RegionType type)

@@ -9,12 +9,15 @@ namespace Client.ActionsHistory
   {
     private readonly Stack<IHistoryAction> _actions = new();
 
-    public void Undo()
+    public bool Undo()
     {
       if (_actions.TryPop(out var action))
       {
         action.Undo();
+        return true;
       }
+
+      return false;
     }
 
     public void Clear()
