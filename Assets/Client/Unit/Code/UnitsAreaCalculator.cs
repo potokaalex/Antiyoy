@@ -8,8 +8,13 @@ namespace Client.Unit.Code
   public class UnitsAreaCalculator : IInitializable
   {
     private GridController _gridController;
+    private UnitsService _unitsService;
 
-    public void Initialize() => _gridController = Locator.Get<GridController>();
+    public void Initialize()
+    {
+      _gridController = Locator.Get<GridController>();
+      _unitsService = Locator.Get<UnitsService>();
+    }
 
     public void GetCreationArea(RegionController region, List<CellController> outResult, UnitType unitType)
     {
@@ -22,7 +27,7 @@ namespace Client.Unit.Code
         else if (unitType == UnitType.Tower)
           outResult.AddRange(region.Cells);
         else
-          GetDefaultCreationArea(region, front, outResult);
+          GetWarriorCreationArea(region, front, outResult, unitType);
       }
     }
 
@@ -89,7 +94,7 @@ namespace Client.Unit.Code
       }
     }
 
-    private void GetDefaultCreationArea(RegionController region, Stack<CellController> front, List<CellController> outResult)
+    private void GetWarriorCreationArea(RegionController region, Stack<CellController> front, List<CellController> outResult, UnitType unitType)
     {
       foreach (var cell in region.Cells)
       {
@@ -101,7 +106,8 @@ namespace Client.Unit.Code
       {
         var cell = front.Pop();
         foreach (var neighbour in _gridController.GetNeighbourCells(cell.Position))
-          if (neighbour.Region.Type != cell.Region.Type && !outResult.Contains(neighbour))
+          if (neighbour.Region.Type != cell.Region.Type && !outResult.Contains(neighbour) &&
+              _unitsService.CanCreate(neighbour, region.Type, unitType))
             outResult.Add(neighbour);
       }
     }

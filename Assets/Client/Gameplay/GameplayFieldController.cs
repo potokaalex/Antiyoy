@@ -20,7 +20,7 @@ namespace Client.Gameplay
     {
       var cost = _unitsService.GetCost(unitType);
       _unitsService.GetUnitCreationArea(playerRegion, GameConstants.AreaBuffer, unitType);
-      return playerRegion.Money >= cost && GameConstants.AreaBuffer.Contains(cell) && _unitsService.CanCreate(cell, playerRegion.Type);
+      return playerRegion.Money >= cost && GameConstants.AreaBuffer.Contains(cell) && _unitsService.CanCreate(cell, playerRegion.Type, unitType);
     }
 
     public void CreateUnit(UnitType unitType, CellController cell, RegionController playerRegion)

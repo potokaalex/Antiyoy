@@ -22,7 +22,7 @@ namespace Client.Unit.Code
       _areaCalculator = Locator.Get<UnitsAreaCalculator>();
       _gridController = Locator.Get<GridController>();
       foreach (var config in _unitsConfigs.Values)
-        _pools.Add(config.Type, new(() => Instantiate(config.Prefab, transform), 
+        _pools.Add(config.Type, new(() => Instantiate(config.Prefab, transform),
           x => x.gameObject.SetActive(true), x => x.gameObject.SetActive(false)));
     }
 
@@ -71,6 +71,20 @@ namespace Client.Unit.Code
       return creationCost;
     }
 
+    public bool CanMove(IUnit unit, CellController cell) => CanCreate(cell, unit.Cell.Region.Type, unit.Type) && unit.HasTurns;
+
+    public bool CanCreate(CellController cell, RegionType playerRegion, UnitType unitType)
+    {
+      if (cell.Region.Type == playerRegion)
+      {
+        if (cell.HasUnit)
+          return false; //объединение.
+        return true;
+      }
+
+      return cell.Protection <= GetAttack(unitType);
+    }
+
     private void CreateUnit(CellController cell, UnitType type, bool hasTurns)
     {
       Destroy(cell.Unit);
@@ -79,8 +93,6 @@ namespace Client.Unit.Code
       _units.Add(instance);
     }
 
-    public bool CanMove(IUnit unit, CellController cell) => CanCreate(cell, unit.Cell.Region.Type) && unit.HasTurns;
-
-    public bool CanCreate(CellController cell, RegionType playerRegion) => !(cell.Region.Type == playerRegion && cell.HasUnit);
+    private int GetAttack(UnitType type) => _unitsConfigs[type].Attack;
   }
 }
