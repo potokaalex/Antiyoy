@@ -38,13 +38,19 @@ namespace Client.Gameplay
     public bool CanMoveUnit(IUnit unit, CellController cell)
     {
       unit.GetMoveArea(GameConstants.AreaBuffer);
-      return GameConstants.AreaBuffer.Contains(cell) && unit.CanMove(cell);
+      return GameConstants.AreaBuffer.Contains(cell) && _unitsService.CanMove(unit, cell);
     }
 
     public void MoveUnit(IUnit unit, CellController cell)
     {
-      if (CanMoveUnit(unit, cell)) 
-        unit.Move(cell);
+      if (CanMoveUnit(unit, cell))
+      {
+        _unitsService.Destroy(cell.Unit);
+        _regionsService.SetRegionType(cell, unit.Cell.Region.Type);
+        unit.DecreaseTurnsCount();
+        _unitsService.Create(cell, unit.Type, unit.HasTurns);
+        _unitsService.Destroy(unit);
+      }
     }
   }
 }

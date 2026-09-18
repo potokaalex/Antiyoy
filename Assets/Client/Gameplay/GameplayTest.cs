@@ -43,19 +43,18 @@ namespace Client.Gameplay
 
     private void OnGUI()
     {
-      return;
-
+      /*
       var labelStyle = new GUIStyle(GUI.skin.label);
       labelStyle.fontSize = 28;
 
       //ViewMapEditor(labelStyle);
       ViewGovernmentDebug(labelStyle);
+    */
     }
 
     private void Update()
     {
-      return;
-      if (_mapEditorType == MapEditorType.None)
+      /*if (_mapEditorType == MapEditorType.None)
       {
         if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
         {
@@ -101,7 +100,7 @@ namespace Client.Gameplay
           else if (_mapEditorType == MapEditorType.CreateUnit && _gridController.GetCell(point, out var cell))
             _unitsService.Create(cell, UnitType.Peasant);
         }
-      }
+      }*/
     }
 
     private void ViewMapEditor(GUIStyle labelStyle)

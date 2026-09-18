@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Client.Infrastructure;
-using Client.Region;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -12,9 +11,7 @@ namespace Client.Unit.Code
     [SerializeField] private TextMeshPro _text;
     [SerializeField] private SpriteRenderer _renderer;
     private GridController _gridController;
-    private UnitsService _unitsService;
     private UnitsAreaCalculator _areaCalculator;
-    private RegionsService _regionsService;
     private UnitConfig _config;
     private int _turnsCount;
 
@@ -38,16 +35,15 @@ namespace Client.Unit.Code
       set
       {
         _turnsCount = value;
-        UpdateDebugText();
+        if (_config.TurnsCount > 0)
+          _text.SetText($"{TurnsCount}");
       }
     }
 
     public void Initialize(UnitConfig config, CellController cell, bool hasTurns)
     {
       _gridController = Locator.Get<GridController>();
-      _unitsService = Locator.Get<UnitsService>();
       _areaCalculator = Locator.Get<UnitsAreaCalculator>();
-      _regionsService = Locator.Get<RegionsService>();
       _config = config;
       SetCell(cell);
       if (hasTurns)
@@ -65,18 +61,9 @@ namespace Client.Unit.Code
 
     public void ResetTurnsCount() => TurnsCount = _config.TurnsCount;
 
+    public void DecreaseTurnsCount() => TurnsCount = Mathf.Max(0, TurnsCount - 1);
+
     public void GetMoveArea(List<CellController> outList) => _areaCalculator.GetMoveArea(this, outList);
-
-    public bool CanMove(CellController cell) => _unitsService.CanMove(this, cell);
-
-    public void Move(CellController cell)
-    {
-      ClearCell();
-      _regionsService.SetRegionType(cell, Cell.Region.Type);
-      _unitsService.Destroy(cell.Unit);
-      SetCell(cell);
-      DecreaseTurnsCount();
-    }
 
     public void GetProtectionArea(List<CellController> outList) => _areaCalculator.GetProtectionArea(this, outList, true);
 
@@ -94,12 +81,6 @@ namespace Client.Unit.Code
       Cell.Unit = null;
     }
 
-    private void UpdateDebugText()
-    {
-      if (Type == UnitType.Peasant)
-        _text.SetText($"{TurnsCount}");
-    }
-
     private void SetCellsProtection(bool active)
     {
       using (ListPool<CellController>.Get(out var cells))
@@ -114,7 +95,5 @@ namespace Client.Unit.Code
         }
       }
     }
-
-    private void DecreaseTurnsCount() => TurnsCount = Mathf.Max(0, TurnsCount - 1);
   }
 }

@@ -12,9 +12,8 @@ namespace Client.Unit.Code
     int Protection { get; }
     bool CanViewProtection { get; }
     void ResetTurnsCount();
+    void DecreaseTurnsCount();
     void GetMoveArea(List<CellController> outList);
-    bool CanMove(CellController cell);
-    void Move(CellController cell);
     void GetProtectionArea(List<CellController> outList);
   }
 }
