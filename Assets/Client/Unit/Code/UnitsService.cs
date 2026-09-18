@@ -78,11 +78,19 @@ namespace Client.Unit.Code
       if (cell.Region.Type == playerRegion)
       {
         if (cell.HasUnit)
-          return false; //объединение.
+          return JoinOrDefault(unitType, cell.Unit.Type, UnitType.None) != UnitType.None;
         return true;
       }
 
       return cell.Protection <= GetAttack(unitType);
+    }
+
+    public UnitType CalculateJoinedType(UnitType unit, CellController cell, RegionType playerRegion)
+    {
+      if (cell.Region.Type == playerRegion)
+        if (cell.HasUnit)
+          return JoinOrDefault(unit, cell.Unit.Type, unit);
+      return unit;
     }
 
     private void CreateUnit(CellController cell, UnitType type, bool hasTurns)
@@ -94,5 +102,20 @@ namespace Client.Unit.Code
     }
 
     private int GetAttack(UnitType type) => _unitsConfigs[type].Attack;
+
+    private UnitType JoinOrDefault(UnitType first, UnitType second, UnitType def)
+    {
+      if (first.IsWarrior() && second.IsWarrior())
+      {
+        var joinFactor = GetJoinId(first) + GetJoinId(second);
+        foreach (var config in _unitsConfigs.Values)
+          if (config.JoinFactor == joinFactor)
+            return config.Type;
+      }
+
+      return def;
+    }
+
+    private int GetJoinId(UnitType unitType) => _unitsConfigs[unitType].JoinFactor;
   }
 }

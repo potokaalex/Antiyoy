@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Client::Client.Unit.Scripts.UnitConfig
   Prefab: {fileID: 2409102043849407691, guid: 61d55ca0bfe79934f9ffb07035f7cca5, type: 3}
   Type: 6
-  Sprite: {fileID: 21300000, guid: b4b3cb470bb98e2468b2ffa9ba4ae5f9, type: 3}
   Income: -18
   CreationCost: 30
   TurnsCount: 1
   CapitalReplacementFactor: 3
   Protection: 3
   Attack: 2
+  JoinFactor: 3

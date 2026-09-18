@@ -28,9 +28,8 @@ namespace Client.Gameplay
       if (CanCreateUnit(unitType, cell, playerRegion))
       {
         var cost = _unitsService.GetCost(unitType);
-        var hasTurns = cell.Region.Type == playerRegion.Type;
+        _unitsService.Create(cell, _unitsService.CalculateJoinedType(unitType, cell, playerRegion.Type), WillHaveTurns(playerRegion.Type, cell));
         _regionsService.SetRegionType(cell, playerRegion.Type);
-        _unitsService.Create(cell, unitType, hasTurns);
         playerRegion.Money -= cost;
       }
     }
@@ -45,12 +44,20 @@ namespace Client.Gameplay
     {
       if (CanMoveUnit(unit, cell))
       {
-        _unitsService.Destroy(cell.Unit);
-        _regionsService.SetRegionType(cell, unit.Cell.Region.Type);
-        unit.DecreaseTurnsCount();
-        _unitsService.Create(cell, unit.Type, unit.HasTurns);
+        _unitsService.Create(cell, _unitsService.CalculateJoinedType(unit.Type, cell, unit.Cell.Region.Type),
+          WillHaveTurns(unit.Cell.Region.Type, cell));
         _unitsService.Destroy(unit);
+        _regionsService.SetRegionType(cell, unit.Cell.Region.Type);
       }
+    }
+
+    private bool WillHaveTurns(RegionType playerRegion, CellController cell)
+    {
+      if (cell.Region.Type != playerRegion)
+        return false;
+      if (cell.HasUnit)
+        return cell.Unit.HasTurns;
+      return true;
     }
   }
 }

@@ -121,11 +121,12 @@ namespace Client.Gameplay.Player
       {
         var oldCell = _selectedUnit.Cell;
         var newCellUnitType = cell.Unit?.Type;
+        var newCellUnitTurns = cell.Unit?.HasTurns;
         var setRegionTypeResult = _regionsService.CalculateSetRegionTypeRecoveryData(cell, RegionType);
         _gameplayFieldController.MoveUnit(_selectedUnit, cell);
-        _actionsHistoryController.MoveUnit(cell, newCellUnitType, oldCell, _selectedUnit.Type, setRegionTypeResult);
+        _actionsHistoryController.MoveUnit(cell, newCellUnitType, newCellUnitTurns, oldCell, _selectedUnit.Type, setRegionTypeResult);
         Clear(cell.Region.Type != RegionType);
-        TrySelectUnit(cell);
+        TrySelectRegion(cell.Region);
       }
     }
 
@@ -135,9 +136,10 @@ namespace Client.Gameplay.Player
       {
         var regionMoney = _selectedRegion.Money;
         var setRegionTypeResult = _regionsService.CalculateSetRegionTypeRecoveryData(cell, RegionType);
-        var newCellUnitType = cell.Unit?.Type;
+        var cellOldUnitType = cell.Unit?.Type;
+        var cellOldUnitTurns = cell.Unit?.HasTurns;
         _gameplayFieldController.CreateUnit(_creationUnitType, cell, _selectedRegion);
-        _actionsHistoryController.CreateUnit(cell, newCellUnitType, regionMoney, setRegionTypeResult);
+        _actionsHistoryController.CreateUnit(cell, cellOldUnitType, cellOldUnitTurns, regionMoney, setRegionTypeResult);
         Clear(false);
         SelectRegion(cell.Region);
       }

@@ -28,11 +28,12 @@ namespace Client.ActionsHistory
       _actions.Clear();
     }
 
-    public void CreateUnit(CellController cell, UnitType? oldUnitType, int regionMoney, SetRegionTypeRecoveryData setRegionTypeRecoveryData) =>
-      _actions.Push(new CreateUnitAction(cell, oldUnitType, regionMoney, setRegionTypeRecoveryData));
-
-    public void MoveUnit(CellController newCell, UnitType? newCellUnitType, CellController oldCell, UnitType movingUnitType,
+    public void CreateUnit(CellController cell, UnitType? cellOldUnitType, bool? cellOldUnitTurns, int regionMoney,
       SetRegionTypeRecoveryData setRegionTypeRecoveryData) =>
-      _actions.Push(new MoveUnitAction(newCell, newCellUnitType, oldCell, movingUnitType, setRegionTypeRecoveryData));
+      _actions.Push(new CreateUnitAction(cell, cellOldUnitType, cellOldUnitTurns, regionMoney, setRegionTypeRecoveryData));
+
+    public void MoveUnit(CellController newCell, UnitType? newCellUnitType, bool? newCellUnitTurns, CellController oldCell,
+      UnitType movingUnitType, SetRegionTypeRecoveryData setRegionTypeRecoveryData) =>
+      _actions.Push(new MoveUnitAction(newCell, newCellUnitType, newCellUnitTurns, oldCell, movingUnitType, setRegionTypeRecoveryData));
   }
 }

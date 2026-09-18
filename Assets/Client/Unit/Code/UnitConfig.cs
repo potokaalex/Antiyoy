@@ -13,5 +13,6 @@ namespace Client.Unit.Code
     public int CapitalReplacementFactor;
     public int Protection;
     public int Attack;
+    public int JoinFactor;
   }
 }
