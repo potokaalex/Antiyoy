@@ -27,7 +27,7 @@ namespace Client.Unit.Code
 
     public int Protection => _config.Protection;
 
-    public bool CanViewProtection => Type is UnitType.Capital or UnitType.Tower;
+    public bool CanViewProtection => Type is UnitType.Capital or UnitType.Tower or UnitType.StrongTower;
 
     private int TurnsCount
     {

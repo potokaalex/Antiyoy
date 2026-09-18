@@ -41,7 +41,7 @@ namespace Client.Gameplay.Player
       _unitsService.GetUnitCreationArea(region, GameConstants.AreaBuffer, unitType);
       _tilesSelectionView.ClearView();
 
-      if (unitType != UnitType.Tower)
+      if (unitType != UnitType.Tower && unitType != UnitType.StrongTower)
         _tilesSelectionView.ViewTiles(GameConstants.AreaBuffer);
     }
 

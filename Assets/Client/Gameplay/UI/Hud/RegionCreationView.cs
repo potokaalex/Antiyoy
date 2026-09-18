@@ -68,6 +68,8 @@ namespace Client.Gameplay.UI.Hud
       else if (_buildingType == UnitType.Farm)
         _buildingType = UnitType.Tower;
       else if (_buildingType == UnitType.Tower)
+        _buildingType = UnitType.StrongTower;
+      else if (_buildingType == UnitType.StrongTower)
         _buildingType = UnitType.Farm;
 
       _playerViewController.SetCreateUnitMode(_buildingType);

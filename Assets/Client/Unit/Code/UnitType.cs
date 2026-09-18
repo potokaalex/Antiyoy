@@ -9,6 +9,7 @@ namespace Client.Unit.Code
     Tower = 4,
     Spearman = 5,
     Infantryman = 6,
-    Knight = 7
+    Knight = 7,
+    StrongTower = 8
   }
 }

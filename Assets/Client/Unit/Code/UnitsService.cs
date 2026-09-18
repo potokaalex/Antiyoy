@@ -78,19 +78,19 @@ namespace Client.Unit.Code
       if (cell.Region.Type == playerRegion)
       {
         if (cell.HasUnit)
-          return JoinOrDefault(unitType, cell.Unit.Type, UnitType.None) != UnitType.None;
+          return JoinOrDefault(cell.Unit.Type, unitType, UnitType.None) != UnitType.None;
         return true;
       }
 
       return cell.Protection <= GetAttack(unitType);
     }
 
-    public UnitType CalculateJoinedType(UnitType unit, CellController cell, RegionType playerRegion)
+    public UnitType CalculateJoinedType(UnitType unitType, CellController cell, RegionType playerRegion)
     {
       if (cell.Region.Type == playerRegion)
         if (cell.HasUnit)
-          return JoinOrDefault(unit, cell.Unit.Type, unit);
-      return unit;
+          return JoinOrDefault(cell.Unit.Type, unitType, unitType);
+      return unitType;
     }
 
     private void CreateUnit(CellController cell, UnitType type, bool hasTurns)
@@ -103,11 +103,14 @@ namespace Client.Unit.Code
 
     private int GetAttack(UnitType type) => _unitsConfigs[type].Attack;
 
-    private UnitType JoinOrDefault(UnitType first, UnitType second, UnitType def)
+    private UnitType JoinOrDefault(UnitType current, UnitType next, UnitType def)
     {
-      if (first.IsWarrior() && second.IsWarrior())
+      if (current == UnitType.Tower && next == UnitType.StrongTower)
+        return UnitType.StrongTower;
+
+      if (current.IsWarrior() && next.IsWarrior())
       {
-        var joinFactor = GetJoinId(first) + GetJoinId(second);
+        var joinFactor = GetJoinId(current) + GetJoinId(next);
         foreach (var config in _unitsConfigs.Values)
           if (config.JoinFactor == joinFactor)
             return config.Type;

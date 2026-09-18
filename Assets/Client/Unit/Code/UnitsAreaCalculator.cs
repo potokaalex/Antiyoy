@@ -24,7 +24,7 @@ namespace Client.Unit.Code
 
         if (unitType == UnitType.Farm)
           GetFarmCreationArea(region, front, outResult);
-        else if (unitType == UnitType.Tower)
+        else if (unitType is UnitType.Tower or UnitType.StrongTower)
           outResult.AddRange(region.Cells);
         else
           GetWarriorCreationArea(region, front, outResult, unitType);
@@ -56,7 +56,7 @@ namespace Client.Unit.Code
               outList.Add(neighbour);
               front.Enqueue(new UnitMoveAreaCell(neighbour, areaCell.RemainingMove - 1));
             }
-            else
+            else if(_unitsService.CanMove(unit, neighbour))
             {
               outList.Add(neighbour);
             }
