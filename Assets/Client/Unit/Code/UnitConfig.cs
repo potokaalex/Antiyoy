@@ -5,6 +5,7 @@ namespace Client.Unit.Code
   [CreateAssetMenu(menuName = "Client/Configs/Unit", fileName = "UnitConfig", order = 0)]
   public class UnitConfig : ScriptableObject
   {
+    public UnitController Prefab;
     public UnitType Type;
     public Sprite Sprite;
     public int Income;

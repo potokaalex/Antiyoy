@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a8b44abab7543d684e4a749cad7f050, type: 3}
   m_Name: FarmConfig
   m_EditorClassIdentifier: Client::Client.Unit.Scripts.UnitConfig
+  Prefab: {fileID: 2409102043849407691, guid: 63de4b0743a624e4abb3d75adfc6c6b2, type: 3}
   Type: 2
   Sprite: {fileID: 21300000, guid: fd4ae562979f9bf46b2d22bb20fe12e4, type: 3}
   Income: 4

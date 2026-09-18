@@ -11,19 +11,19 @@ namespace Client.Unit.Code
 {
   public class UnitsService : SerializedMonoBehaviour, IInitializable
   {
-    [SerializeField] private UnitController _unitPrefab;
     [SerializeField] private Dictionary<UnitType, UnitConfig> _unitsConfigs;
     private readonly List<IUnit> _units = new();
+    private readonly Dictionary<UnitType, ObjectPool<UnitController>> _pools = new();
     private UnitsAreaCalculator _areaCalculator;
     private GridController _gridController;
-    private ObjectPool<UnitController> _pool;
 
     public void Initialize()
     {
       _areaCalculator = Locator.Get<UnitsAreaCalculator>();
       _gridController = Locator.Get<GridController>();
-      _pool = new(() => Instantiate(_unitPrefab, transform), x => x.gameObject.SetActive(true),
-        x => x.gameObject.SetActive(false));
+      foreach (var config in _unitsConfigs.Values)
+        _pools.Add(config.Type, new(() => Instantiate(config.Prefab, transform), 
+          x => x.gameObject.SetActive(true), x => x.gameObject.SetActive(false)));
     }
 
     public void InitialCreateUnits()
@@ -50,7 +50,7 @@ namespace Client.Unit.Code
         var unitController = (UnitController)unit;
         unitController.Dispose();
         _units.Remove(unit);
-        _pool.Release(unitController);
+        _pools[unit.Type].Release(unitController);
       }
     }
 
@@ -76,7 +76,7 @@ namespace Client.Unit.Code
     private void CreateUnit(CellController cell, UnitType type, bool hasTurns)
     {
       Destroy(cell.Unit);
-      var instance = _pool.Get();
+      var instance = _pools[type].Get();
       instance.Initialize(_unitsConfigs[type], cell, hasTurns);
       _units.Add(instance);
     }
