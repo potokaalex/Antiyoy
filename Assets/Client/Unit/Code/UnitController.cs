@@ -50,7 +50,6 @@ namespace Client.Unit.Code
         ResetTurnsCount();
       else
         TurnsCount = 0;
-      _renderer.sprite = config.Sprite;
     }
 
     public void Dispose()

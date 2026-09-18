@@ -7,7 +7,6 @@ namespace Client.Unit.Code
   {
     public UnitController Prefab;
     public UnitType Type;
-    public Sprite Sprite;
     public int Income;
     public int CreationCost;
     public int TurnsCount;

@@ -1,23 +1,25 @@
+using System.Collections.Generic;
 using Client.Gameplay.Player;
 using Client.Infrastructure;
 using Client.UI;
 using Client.Unit.Code;
 using Client.Utilities;
 using DG.Tweening;
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Client.Gameplay.UI.Hud
 {
-  public class RegionCreationView : MonoBehaviour
+  public class RegionCreationView : SerializedMonoBehaviour
   {
     [SerializeField] private CustomButton _createWarriorButton;
     [SerializeField] private CustomButton _createBuildingButton;
     [SerializeField] private RectTransform _variantPanel;
     [SerializeField] private CanvasGroup _variantPanelCanvasGroup;
     [SerializeField] private TextMeshProUGUI _variantCost;
-    [SerializeField] private Image _variantIcon;
+    [SerializeField] private Dictionary<UnitType, Image> _icons;
     private UnitsService _unitsService;
     private PlayerViewController _playerViewController;
     private UnitType _buildingType;
@@ -44,7 +46,17 @@ namespace Client.Gameplay.UI.Hud
 
     private void OnCreateWarrior()
     {
-      _buildingType = UnitType.Peasant;
+      if (!_buildingType.IsWarrior())
+        _buildingType = UnitType.Peasant;
+      else if (_buildingType == UnitType.Peasant)
+        _buildingType = UnitType.Spearman;
+      else if (_buildingType == UnitType.Spearman)
+        _buildingType = UnitType.Infantryman;
+      else if (_buildingType == UnitType.Infantryman)
+        _buildingType = UnitType.Knight;
+      else if (_buildingType == UnitType.Knight)
+        _buildingType = UnitType.Peasant;
+
       _playerViewController.SetCreateUnitMode(_buildingType);
       View(_buildingType);
     }
@@ -64,9 +76,20 @@ namespace Client.Gameplay.UI.Hud
 
     private void View(UnitType unitType)
     {
+      if(unitType == UnitType.None)
+        return;
+
       _variantCost.SetText($"${_unitsService.GetCost(unitType)}");
-      _variantIcon.sprite = _unitsService.GetSprite(unitType);
+      ActiveIcon(unitType);
       SetActive(true);
+    }
+
+    private void ActiveIcon(UnitType unitType)
+    {
+      foreach (var icon in _icons.Values) 
+        icon.gameObject.SetActive(false);
+
+      _icons[unitType].gameObject.SetActive(true);
     }
 
     private void SetActive(bool isActive)

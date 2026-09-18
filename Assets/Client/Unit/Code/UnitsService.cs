@@ -71,8 +71,6 @@ namespace Client.Unit.Code
       return creationCost;
     }
 
-    public Sprite GetSprite(UnitType unitType) => _unitsConfigs[unitType].Sprite;
-
     private void CreateUnit(CellController cell, UnitType type, bool hasTurns)
     {
       Destroy(cell.Unit);
