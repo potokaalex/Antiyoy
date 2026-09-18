@@ -12,10 +12,11 @@ namespace Client.Unit.Code
   public class UnitsService : SerializedMonoBehaviour, IInitializable
   {
     [SerializeField] private Dictionary<UnitType, UnitConfig> _unitsConfigs;
-    private readonly List<IUnit> _units = new();
     private readonly Dictionary<UnitType, ObjectPool<UnitController>> _pools = new();
     private UnitsAreaCalculator _areaCalculator;
     private GridController _gridController;
+
+    public List<IUnit> Units { get; } = new();
 
     public void Initialize()
     {
@@ -29,16 +30,26 @@ namespace Client.Unit.Code
     public void InitialCreateUnits()
     {
       _gridController.GetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(0, 0)), out var redCapitalCell);
-      CreateUnit(redCapitalCell, UnitType.Capital, true);
+      CreateUnit(redCapitalCell, UnitType.Capital, false);
 
       _gridController.GetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(8, 0)), out var blueCapitalCell);
-      CreateUnit(blueCapitalCell, UnitType.Capital, true);
+      CreateUnit(blueCapitalCell, UnitType.Capital, false);
+
+      _gridController.GetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(0, 8)), out var pine1);
+      CreateUnit(pine1, UnitType.Pine, false);
+      _gridController.GetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(1, 8)), out var pine2);
+      CreateUnit(pine2, UnitType.Pine, false);
+      
+      _gridController.GetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(7, 8)), out var palm1);
+      CreateUnit(palm1, UnitType.Palm, false);
+      _gridController.GetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(8, 8)), out var palm2);
+      CreateUnit(palm2, UnitType.Palm, false);
     }
 
     public void Clear()
     {
-      for (var i = _units.Count - 1; i >= 0; i--)
-        Destroy(_units[i]);
+      for (var i = Units.Count - 1; i >= 0; i--)
+        Destroy(Units[i]);
     }
 
     public void Create(CellController cell, UnitType type, bool hasTurns = true) => CreateUnit(cell, type, hasTurns);
@@ -49,7 +60,7 @@ namespace Client.Unit.Code
       {
         var unitController = (UnitController)unit;
         unitController.Dispose();
-        _units.Remove(unit);
+        Units.Remove(unit);
         _pools[unit.Type].Release(unitController);
       }
     }
@@ -67,7 +78,7 @@ namespace Client.Unit.Code
     {
       var creationCost = _unitsConfigs[type].CreationCost;
       if (type == UnitType.Farm)
-        return creationCost + _units.Count(x => x.Type == UnitType.Farm) * 2;
+        return creationCost + Units.Count(x => x.Type == UnitType.Farm) * 2;
       return creationCost;
     }
 
@@ -98,7 +109,7 @@ namespace Client.Unit.Code
       Destroy(cell.Unit);
       var instance = _pools[type].Get();
       instance.Initialize(_unitsConfigs[type], cell, hasTurns);
-      _units.Add(instance);
+      Units.Add(instance);
     }
 
     private int GetAttack(UnitType type) => _unitsConfigs[type].Attack;

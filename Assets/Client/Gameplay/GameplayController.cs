@@ -27,6 +27,7 @@ namespace Client.Gameplay
     private ActionsHistoryController _actionsHistoryController;
     private CapitalsMarksController _capitalsMarksController;
     private MainMenuView _mainMenuView;
+    private TreesController _treesController;
     private PlayerController _currentPlayer;
     private int _turnsCount;
 
@@ -54,6 +55,7 @@ namespace Client.Gameplay
       _actionsHistoryController = Locator.Get<ActionsHistoryController>();
       _mainMenuView = Locator.Get<MainMenuView>();
       _capitalsMarksController = Locator.Get<CapitalsMarksController>();
+      _treesController = Locator.Get<TreesController>();
     }
 
     public void Start()
@@ -91,6 +93,7 @@ namespace Client.Gameplay
       {
         TurnsCount++;
         SetFirstPlayer();
+        _treesController.UpdateTrees();
       }
 
       UpdatePlayerRegions();

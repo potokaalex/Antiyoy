@@ -42,6 +42,7 @@ namespace Client.Gameplay
       context.Register(new GovernmentsService());
       context.Register(new UnitsAreaCalculator());
       context.Register(_unitsService);
+      context.Register(new TreesController());
       context.Register(_tilesSelectionView);
       context.Register(_gameplayUI);
       context.Register(_protectionView);
