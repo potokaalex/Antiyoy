@@ -6,6 +6,7 @@ using Client.Gameplay.UI;
 using Client.Government;
 using Client.Infrastructure;
 using Client.Protection;
+using Client.Recovery;
 using Client.Region;
 using Client.Tile;
 using Client.TilesSelection;
@@ -48,6 +49,7 @@ namespace Client.Gameplay
       context.Register(_gameplayUI);
       context.Register(_protectionView);
       context.Register(_capitalsMarksController);
+      context.Register(new RecoveryController());
       context.Register(new ActionsHistoryController());
       context.Register(new GameplayFieldController());
       context.Register(_unitSelectionView);

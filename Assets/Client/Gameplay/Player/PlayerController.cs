@@ -12,7 +12,6 @@ namespace Client.Gameplay.Player
     private readonly CameraController _cameraController;
     private readonly GridController _gridController;
     private readonly UnitsService _unitsService;
-    private readonly RegionsService _regionsService;
     private readonly InputController _inputController;
     private readonly ActionsHistoryController _actionsHistoryController;
     private readonly GovernmentsService _governmentService;
@@ -34,7 +33,6 @@ namespace Client.Gameplay.Player
       _gridController = Locator.Get<GridController>();
       _cameraController = Locator.Get<CameraController>();
       _unitsService = Locator.Get<UnitsService>();
-      _regionsService = Locator.Get<RegionsService>();
       _inputController = Locator.Get<InputController>();
       _actionsHistoryController = Locator.Get<ActionsHistoryController>();
       _governmentService = Locator.Get<GovernmentsService>();
@@ -120,13 +118,8 @@ namespace Client.Gameplay.Player
 
       if (_gameplayFieldController.CanMoveUnit(_selectedUnit, cell))
       {
-        var oldCell = _selectedUnit.Cell;
-        var newCellUnitType = cell.Unit?.Type;
-        var newCellUnitTurns = cell.Unit?.HasTurns;
-        var setRegionTypeResult = _regionsService.CalculateSetRegionTypeRecoveryData(cell, RegionType);
-        var regionMoney = _selectedRegion.Money;
+        _actionsHistoryController.RegionsChange(cell);
         _gameplayFieldController.MoveUnit(_selectedUnit, cell);
-        _actionsHistoryController.MoveUnit(cell, newCellUnitType, newCellUnitTurns, oldCell, _selectedUnit.Type, setRegionTypeResult, regionMoney);
         Clear(cell.Region.Type != RegionType);
         TrySelectRegion(cell.Region);
       }
@@ -136,12 +129,8 @@ namespace Client.Gameplay.Player
     {
       if (_gameplayFieldController.CanCreateUnit(_creationUnitType, cell, _selectedRegion))
       {
-        var regionMoney = _selectedRegion.Money;
-        var setRegionTypeResult = _regionsService.CalculateSetRegionTypeRecoveryData(cell, RegionType);
-        var cellOldUnitType = cell.Unit?.Type;
-        var cellOldUnitTurns = cell.Unit?.HasTurns;
+        _actionsHistoryController.RegionsChange(cell);
         _gameplayFieldController.CreateUnit(_creationUnitType, cell, _selectedRegion);
-        _actionsHistoryController.CreateUnit(cell, cellOldUnitType, cellOldUnitTurns, regionMoney, setRegionTypeResult);
         Clear(false);
         SelectRegion(cell.Region);
       }
