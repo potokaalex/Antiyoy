@@ -12,6 +12,7 @@ namespace Client.Unit.Code
     Knight = 7,
     StrongTower = 8,
     Pine = 9,
-    Palm = 10
+    Palm = 10,
+    Grave = 11
   }
 }

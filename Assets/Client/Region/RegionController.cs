@@ -92,8 +92,13 @@ namespace Client.Region
     private void DestroyAllUnits()
     {
       foreach (var cell in _cells)
-        if (!_capitalsController.IsCapital(cell.Unit))
+      {
+        if (cell.HasUnit && cell.Unit.Type.IsWarrior())
+        {
           _unitsService.Destroy(cell.Unit);
+          _unitsService.Create(cell, UnitType.Grave);
+        }
+      }
     }
 
     private void UpdateBuildings()

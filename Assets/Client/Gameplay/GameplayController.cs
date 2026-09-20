@@ -147,12 +147,14 @@ namespace Client.Gameplay
 
     private void UpdatePlayerRegions()
     {
-      if (TurnsCount <= 0)
-        return;
-
       foreach (var region in _regionsService.Regions)
+      {
         if (region.Type == _currentPlayer.RegionType)
+        {
+          _treesController.UpdateGraves(region);
           region.Update();
+        }
+      }
     }
 
     private bool MoveNextPlayer()

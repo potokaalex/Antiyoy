@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Client.Infrastructure;
+using Client.Region;
 using Client.Utilities;
 using UnityEngine;
 
@@ -22,11 +23,23 @@ namespace Client.Unit.Code
       SpawnPalms();
     }
 
+    public void UpdateGraves(RegionController region)
+    {
+      foreach (var cell in region.Cells)
+      {
+        if (cell.HasUnit && cell.Unit.Type == UnitType.Grave)
+        {
+          _unitsService.Destroy(cell.Unit);
+          _unitsService.Create(cell, CountCellsAround(cell) != 6 ? UnitType.Palm : UnitType.Pine);
+        }
+      }
+    }
+
     private void SpawnPines()
     {
       GameConstants.AreaBuffer.Clear();
       foreach (var unit in _unitsService.Units)
-        if (unit.Type == UnitType.Pine) 
+        if (unit.Type == UnitType.Pine)
           MarkPines(unit, GameConstants.AreaBuffer);
       Spawn(UnitType.Pine, GameConstants.AreaBuffer);
     }
@@ -35,7 +48,7 @@ namespace Client.Unit.Code
     {
       GameConstants.AreaBuffer.Clear();
       foreach (var unit in _unitsService.Units)
-        if (unit.Type == UnitType.Palm) 
+        if (unit.Type == UnitType.Palm)
           MarkPalms(unit, GameConstants.AreaBuffer);
       Spawn(UnitType.Palm, GameConstants.AreaBuffer);
     }
@@ -43,7 +56,7 @@ namespace Client.Unit.Code
     private void Spawn(UnitType unitType, List<CellController> buffer)
     {
       foreach (var cell in buffer)
-        if (Random.value < 0.3333) 
+        if (Random.value < 0.3333)
           _unitsService.Create(cell, unitType, false);
     }
 
@@ -57,7 +70,7 @@ namespace Client.Unit.Code
     private void MarkPalms(IUnit unit, List<CellController> buffer)
     {
       foreach (var cell in _gridController.GetNeighbourCells(unit.Cell.Position))
-        if (!cell.HasUnit && CountCellsAround(cell) != 6  && !buffer.Contains(cell))
+        if (!cell.HasUnit && CountCellsAround(cell) != 6 && !buffer.Contains(cell))
           buffer.Add(cell);
     }
 
