@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a8b44abab7543d684e4a749cad7f050, type: 3}
   m_Name: CapitalConfig
   m_EditorClassIdentifier: Client::Client.Unit.Scripts.UnitConfig
-  Prefab: {fileID: 2409102043849407691, guid: 0cf9da66d8f7cef4ebe8d3f98a6cf91e, type: 3}
   Type: 3
+  Prefab: {fileID: 5325725391586102747, guid: 9a960f9f2005c8c45a720bf59f8a2e27, type: 3}
   Sprite: {fileID: 21300000, guid: fb9576ff5e765bd46b503d6dbae9c3d2, type: 3}
   Income: 0
   CreationCost: 0
@@ -21,3 +21,4 @@ MonoBehaviour:
   CapitalReplacementFactor: 0
   Protection: 1
   Attack: 0
+  JoinFactor: 0

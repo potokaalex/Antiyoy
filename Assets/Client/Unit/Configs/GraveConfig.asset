@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a8b44abab7543d684e4a749cad7f050, type: 3}
   m_Name: GraveConfig
   m_EditorClassIdentifier: Client::Client.Unit.Scripts.UnitConfig
-  Prefab: {fileID: 2409102043849407691, guid: 212b544e57eddb44bb9e653714742e18, type: 3}
   Type: 11
+  Prefab: {fileID: 5325725391586102747, guid: 9a960f9f2005c8c45a720bf59f8a2e27, type: 3}
+  Sprite: {fileID: 21300000, guid: 179aa5cfce9f9634e9aaf1418940d01f, type: 3}
   Income: 0
   CreationCost: 0
   TurnsCount: 0

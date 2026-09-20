@@ -29,6 +29,8 @@ namespace Client.Unit.Code
 
     public bool CanViewProtection => Type is UnitType.Capital or UnitType.Tower or UnitType.StrongTower;
 
+    protected SpriteRenderer Renderer => _renderer;
+
     private int TurnsCount
     {
       get => _turnsCount;
@@ -40,7 +42,7 @@ namespace Client.Unit.Code
       }
     }
 
-    public void Initialize(UnitConfig config, CellController cell, bool hasTurns)
+    public void Setup(UnitConfig config, CellController cell, bool hasTurns)
     {
       _gridController = Locator.Get<GridController>();
       _areaCalculator = Locator.Get<UnitsAreaCalculator>();
@@ -50,9 +52,10 @@ namespace Client.Unit.Code
         ResetTurnsCount();
       else
         TurnsCount = 0;
+      SetupSprite();
     }
 
-    public void Dispose()
+    public void Clear()
     {
       ClearCell();
       _text.SetText(string.Empty);
@@ -65,6 +68,8 @@ namespace Client.Unit.Code
     public void GetMoveArea(List<CellController> outList) => _areaCalculator.GetMoveArea(this, outList);
 
     public void GetProtectionArea(List<CellController> outList) => _areaCalculator.GetProtectionArea(this, outList, true);
+
+    protected virtual void SetupSprite() => _renderer.sprite = _config.Sprite;
 
     private void SetCell(CellController cell)
     {

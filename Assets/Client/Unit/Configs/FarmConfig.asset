@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a8b44abab7543d684e4a749cad7f050, type: 3}
   m_Name: FarmConfig
   m_EditorClassIdentifier: Client::Client.Unit.Scripts.UnitConfig
-  Prefab: {fileID: 2409102043849407691, guid: 63de4b0743a624e4abb3d75adfc6c6b2, type: 3}
   Type: 2
-  Sprite: {fileID: 21300000, guid: fd4ae562979f9bf46b2d22bb20fe12e4, type: 3}
+  Prefab: {fileID: 8992892096993277640, guid: dea57d376d755234a9840ab2968ce2be, type: 3}
+  Sprite: {fileID: 21300000, guid: ea647e6290ecde04190194c20e6abbf0, type: 3}
   Income: 4
   CreationCost: 12
   TurnsCount: 0
   CapitalReplacementFactor: 1000
   Protection: 0
   Attack: 0
+  JoinFactor: 0

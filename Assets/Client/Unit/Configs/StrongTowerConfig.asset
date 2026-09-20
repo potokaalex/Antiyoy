@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a8b44abab7543d684e4a749cad7f050, type: 3}
   m_Name: StrongTowerConfig
   m_EditorClassIdentifier: Client::Client.Unit.Scripts.UnitConfig
-  Prefab: {fileID: 2409102043849407691, guid: c2980828a432a0e4ca8a01fe3387431d, type: 3}
   Type: 8
+  Prefab: {fileID: 5325725391586102747, guid: 9a960f9f2005c8c45a720bf59f8a2e27, type: 3}
+  Sprite: {fileID: 21300000, guid: 0b6b11726e2f61149b969415f2f8605e, type: 3}
   Income: -6
   CreationCost: 35
   TurnsCount: 0

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a8b44abab7543d684e4a749cad7f050, type: 3}
   m_Name: TowerConfig
   m_EditorClassIdentifier: Client::Client.Unit.Scripts.UnitConfig
-  Prefab: {fileID: 2409102043849407691, guid: 8c7ef37616d7f4e4a9887861c295826f, type: 3}
   Type: 4
+  Prefab: {fileID: 5325725391586102747, guid: 9a960f9f2005c8c45a720bf59f8a2e27, type: 3}
   Sprite: {fileID: 21300000, guid: 146069738ba82d649b3e14ad919c80d6, type: 3}
   Income: -1
   CreationCost: 15
@@ -21,3 +21,4 @@ MonoBehaviour:
   CapitalReplacementFactor: 100
   Protection: 2
   Attack: 0
+  JoinFactor: 0

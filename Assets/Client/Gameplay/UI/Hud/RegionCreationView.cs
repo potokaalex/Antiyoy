@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Client.Gameplay.Player;
 using Client.Infrastructure;
 using Client.UI;
@@ -19,7 +18,7 @@ namespace Client.Gameplay.UI.Hud
     [SerializeField] private RectTransform _variantPanel;
     [SerializeField] private CanvasGroup _variantPanelCanvasGroup;
     [SerializeField] private TextMeshProUGUI _variantCost;
-    [SerializeField] private Dictionary<UnitType, Image> _icons;
+    [SerializeField] private Image _variantIcon;
     private UnitsService _unitsService;
     private PlayerViewController _playerViewController;
     private UnitType _buildingType;
@@ -82,16 +81,8 @@ namespace Client.Gameplay.UI.Hud
         return;
 
       _variantCost.SetText($"${_unitsService.GetCost(unitType)}");
-      ActiveIcon(unitType);
+      _variantIcon.sprite = _unitsService.GetSprite(unitType);
       SetActive(true);
-    }
-
-    private void ActiveIcon(UnitType unitType)
-    {
-      foreach (var icon in _icons.Values) 
-        icon.gameObject.SetActive(false);
-
-      _icons[unitType].gameObject.SetActive(true);
     }
 
     private void SetActive(bool isActive)

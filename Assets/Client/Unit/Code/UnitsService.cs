@@ -59,7 +59,7 @@ namespace Client.Unit.Code
       if (unit != null)
       {
         var unitController = (UnitController)unit;
-        unitController.Dispose();
+        unitController.Clear();
         Units.Remove(unit);
         _pools[unit.Type].Release(unitController);
       }
@@ -104,11 +104,13 @@ namespace Client.Unit.Code
       return unitType;
     }
 
+    public Sprite GetSprite(UnitType unitType) => _unitsConfigs[unitType].Sprite;
+
     private void CreateUnit(CellController cell, UnitType type, bool hasTurns)
     {
       Destroy(cell.Unit);
       var instance = _pools[type].Get();
-      instance.Initialize(_unitsConfigs[type], cell, hasTurns);
+      instance.Setup(_unitsConfigs[type], cell, hasTurns);
       Units.Add(instance);
     }
 
