@@ -48,6 +48,7 @@ namespace Client.Gameplay.Player
     {
       _gameplayMode = GameplayMode.CreateUnit;
       _creationUnitType = unitType;
+      _playerViewController.ClearUnitSelectionView();
       _playerViewController.ViewUnitCreation(_selectedRegion, unitType);
     }
 

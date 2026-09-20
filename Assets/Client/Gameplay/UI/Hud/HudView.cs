@@ -65,9 +65,9 @@ namespace Client.Gameplay.UI.Hud
       gameObject.SetActive(true);
 
       DOTween.Sequence()
-        .Append(_topPanel.DOAnchorPos(_topPanelStartPosition, 0.5f))
-        .Join(_bottomPanel.DOAnchorPos(_bottomPanelStartPosition, 0.5f))
-        .Join(_canvasGroup.DOFade(1, 0.5f))
+        .Append(_topPanel.DOAnchorPos(_topPanelStartPosition, 0.25f))
+        .Join(_bottomPanel.DOAnchorPos(_bottomPanelStartPosition, 0.25f))
+        .Join(_canvasGroup.DOFade(1, 0.25f))
         .SetEase(AnimationsUtilities.MenuDefaultEase)
         .SetId(this);
     }

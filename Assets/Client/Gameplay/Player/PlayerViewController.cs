@@ -19,6 +19,7 @@ namespace Client.Gameplay.Player
     private ProtectionView _protectionView;
     private PlayerController _playerController;
     private CapitalsMarksController _capitalsMarksController;
+    private UnitSelectionView _unitSelectionViw;
 
     public void Initialize()
     {
@@ -28,6 +29,7 @@ namespace Client.Gameplay.Player
       _bordersService = Locator.Get<BordersService>();
       _protectionView = Locator.Get<ProtectionView>();
       _capitalsMarksController = Locator.Get<CapitalsMarksController>();
+      _unitSelectionViw = Locator.Get<UnitSelectionView>();
     }
 
     public void SetPlayerController(PlayerController playerController)
@@ -49,6 +51,7 @@ namespace Client.Gameplay.Player
     {
       unit.GetMoveArea(GameConstants.AreaBuffer);
       _tilesSelectionView.ViewTiles(GameConstants.AreaBuffer);
+      _unitSelectionViw.View(unit);
     }
 
     public void ViewRegionSelection(RegionController region, bool forceBordersAnim)
@@ -69,10 +72,13 @@ namespace Client.Gameplay.Player
       }
 
       _gameplayUI.ClearRegionCreation();
+      ClearUnitSelectionView();
     }
 
     public void Undo() => _playerController.Undo();
 
     public void SetCreateUnitMode(UnitType unitType) => _playerController.SetCreateUnitMode(unitType);
+
+    public void ClearUnitSelectionView() => _unitSelectionViw.Hide();
   }
 }

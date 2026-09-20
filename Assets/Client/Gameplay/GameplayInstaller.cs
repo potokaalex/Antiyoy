@@ -28,6 +28,7 @@ namespace Client.Gameplay
     [SerializeField] private BordersService _bordersService;
     [SerializeField] private CapitalsMarksController _capitalsMarksController;
     [SerializeField] private UnitsService _unitsService;
+    [SerializeField] private UnitSelectionView _unitSelectionView;
 
     public override void Install(Context context)
     {
@@ -49,6 +50,7 @@ namespace Client.Gameplay
       context.Register(_capitalsMarksController);
       context.Register(new ActionsHistoryController());
       context.Register(new GameplayFieldController());
+      context.Register(_unitSelectionView);
       context.Register(new PlayerViewController());
       context.Register(new GameplayController());
     }
