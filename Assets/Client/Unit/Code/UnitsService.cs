@@ -116,7 +116,7 @@ namespace Client.Unit.Code
 
     private UnitType JoinOrDefault(UnitType current, UnitType next, UnitType def)
     {
-      if (current is UnitType.Pine or UnitType.Palm or UnitType.Grave && next.IsWarrior())
+      if ((current.IsTree() || current == UnitType.Grave) && next.IsWarrior())
         return next;
 
       if (current == UnitType.Tower && next == UnitType.StrongTower)

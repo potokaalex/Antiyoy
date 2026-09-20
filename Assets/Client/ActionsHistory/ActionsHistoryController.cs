@@ -33,7 +33,8 @@ namespace Client.ActionsHistory
       _actions.Push(new CreateUnitAction(cell, cellOldUnitType, cellOldUnitTurns, regionMoney, setRegionTypeRecoveryData));
 
     public void MoveUnit(CellController newCell, UnitType? newCellUnitType, bool? newCellUnitTurns, CellController oldCell,
-      UnitType movingUnitType, SetRegionTypeRecoveryData setRegionTypeRecoveryData) =>
-      _actions.Push(new MoveUnitAction(newCell, newCellUnitType, newCellUnitTurns, oldCell, movingUnitType, setRegionTypeRecoveryData));
+      UnitType movingUnitType, SetRegionTypeRecoveryData setRegionTypeRecoveryData, int oldRegionMoney) =>
+      _actions.Push(
+        new MoveUnitAction(newCell, newCellUnitType, newCellUnitTurns, oldCell, movingUnitType, setRegionTypeRecoveryData, oldRegionMoney));
   }
 }

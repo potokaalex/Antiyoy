@@ -13,11 +13,11 @@ namespace Client.ActionsHistory.Actions
     private readonly UnitType? _newCellUnitType;
     private readonly bool? _newCellUnitHasTurns;
     private readonly UnitType _movingUnitType;
+    private readonly int _oldRegionMoney;
     private SetRegionTypeRecoveryData _setRegionTypeRecoveryData;
 
     public MoveUnitAction(CellController newCell, UnitType? newCellUnitType, bool? newCellUnitHasTurns, CellController oldCell,
-      UnitType movingUnitType,
-      SetRegionTypeRecoveryData setRegionTypeRecoveryData)
+      UnitType movingUnitType, SetRegionTypeRecoveryData setRegionTypeRecoveryData, int oldRegionMoney)
     {
       _unitsService = Locator.Get<UnitsService>();
       _regionsService = Locator.Get<RegionsService>();
@@ -27,6 +27,7 @@ namespace Client.ActionsHistory.Actions
       _oldCell = oldCell;
       _movingUnitType = movingUnitType;
       _setRegionTypeRecoveryData = setRegionTypeRecoveryData;
+      _oldRegionMoney = oldRegionMoney;
     }
 
     public void Undo()
@@ -40,6 +41,7 @@ namespace Client.ActionsHistory.Actions
       _setRegionTypeRecoveryData.Dispose();
 
       _unitsService.Create(_oldCell, _movingUnitType);
+      _oldCell.Region.Money = _oldRegionMoney;
     }
 
     public void Dispose() => _setRegionTypeRecoveryData.Dispose();

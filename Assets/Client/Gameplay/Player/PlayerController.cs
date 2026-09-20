@@ -123,8 +123,9 @@ namespace Client.Gameplay.Player
         var newCellUnitType = cell.Unit?.Type;
         var newCellUnitTurns = cell.Unit?.HasTurns;
         var setRegionTypeResult = _regionsService.CalculateSetRegionTypeRecoveryData(cell, RegionType);
+        var regionMoney = _selectedRegion.Money;
         _gameplayFieldController.MoveUnit(_selectedUnit, cell);
-        _actionsHistoryController.MoveUnit(cell, newCellUnitType, newCellUnitTurns, oldCell, _selectedUnit.Type, setRegionTypeResult);
+        _actionsHistoryController.MoveUnit(cell, newCellUnitType, newCellUnitTurns, oldCell, _selectedUnit.Type, setRegionTypeResult, regionMoney);
         Clear(cell.Region.Type != RegionType);
         TrySelectRegion(cell.Region);
       }

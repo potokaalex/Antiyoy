@@ -28,6 +28,7 @@ namespace Client.Gameplay
       if (CanCreateUnit(unitType, cell, playerRegion))
       {
         var cost = _unitsService.GetCost(unitType);
+        AddConqueredMoney(cell, playerRegion);
         _unitsService.Create(cell, _unitsService.CalculateJoinedType(unitType, cell, playerRegion.Type), WillHaveTurns(playerRegion.Type, cell));
         _regionsService.SetRegionType(cell, playerRegion.Type);
         playerRegion.Money -= cost;
@@ -44,6 +45,7 @@ namespace Client.Gameplay
     {
       if (CanMoveUnit(unit, cell))
       {
+        AddConqueredMoney(cell, unit.Cell.Region);
         _unitsService.Create(cell, _unitsService.CalculateJoinedType(unit.Type, cell, unit.Cell.Region.Type),
           WillHaveTurns(unit.Cell.Region.Type, cell));
         _unitsService.Destroy(unit);
@@ -58,6 +60,13 @@ namespace Client.Gameplay
       if (cell.HasUnit)
         return cell.Unit.HasTurns;
       return true;
+    }
+
+    private void AddConqueredMoney(CellController cell, RegionController playerRegion)
+    {
+      if (cell.Region.Type == playerRegion.Type)
+        if (cell.HasUnit && cell.Unit.Type.IsTree())
+          playerRegion.Money += 3;
     }
   }
 }
