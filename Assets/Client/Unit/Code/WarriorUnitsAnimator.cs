@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Client.Infrastructure;
 using Client.Region;
+using Client.Utilities;
 using DG.Tweening;
 using UnityEngine;
 
@@ -35,7 +36,7 @@ namespace Client.Unit.Code
           }
 
           var position = _gridController.HexPositionToWorld(unit.Cell.Position);
-          position.y += Mathf.Lerp(0, 0.05f, v);
+          position.y += Mathf.Lerp(0, AnimationsUtilities.GameplayUnitsYoyoAnimationOffset, v);
           unit.Position = position;
         }
       }).SetLoops(-1, LoopType.Yoyo).SetId(this).Pause();
@@ -57,8 +58,8 @@ namespace Client.Unit.Code
 
     public void SetPlayerType(RegionType playerType)
     {
-      _animation.Restart();
       _playerType = playerType;
+      _animation.Restart();
     }
 
     public void ClearPlayerType()

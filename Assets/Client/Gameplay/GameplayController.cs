@@ -63,11 +63,11 @@ namespace Client.Gameplay
     public void Start()
     {
       _warriorUnitsAnimator.Enable();
+      _capitalsMarksController.Enable();
       _gridController.InitialCreateCells();
       _unitsService.InitialCreateUnits();
       _regionsService.InitialCreateRegions();
       CreatePlayers();
-      _capitalsMarksController.Enable();
 
       TurnsCount = 0;
       _bordersService.ViewRegionsBorders();
@@ -81,7 +81,6 @@ namespace Client.Gameplay
         return;
 
       _cameraController.Tick();
-      _capitalsMarksController.Tick();
       _currentPlayer.Tick();
     }
 
@@ -105,8 +104,8 @@ namespace Client.Gameplay
     public void End()
     {
       Started = false;
-      _capitalsMarksController.Disable();
       _warriorUnitsAnimator.Disable();
+      _capitalsMarksController.Disable();
       _unitsService.Clear();
       _regionsService.Clear();
       _actionsHistoryController.Clear();

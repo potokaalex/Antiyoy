@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using System.Linq;
 using Client.Infrastructure;
 using Client.Region;
+using Client.Utilities;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -12,86 +12,93 @@ namespace Client.Unit.Code.Capital
   {
     [SerializeField] private Transform _prefab;
     [SerializeField] private Vector2 _fromCellCenterOffset;
-    [SerializeField] private float _animationOffset;
-    private readonly List<RegionController> _regions = new();
-    private readonly Dictionary<RegionController, Transform> _marks = new();
-    private RegionsService _regionsService;
+    private readonly List<Transform> _marks = new();
+    private readonly List<IUnit> _units = new();
     private UnitsService _unitsService;
-    private CapitalsController _capitalsController;
     private GridController _gridController;
     private ObjectPool<Transform> _pool;
     private int _peasantCost;
-    private RegionType _regionType;
+    private Tween _animation;
+    private RegionType? _playerType;
 
     public void Initialize()
     {
-      _regionsService = Locator.Get<RegionsService>();
-      _capitalsController = Locator.Get<CapitalsController>();
+      _unitsService = Locator.Get<UnitsService>();
       _gridController = Locator.Get<GridController>();
       _peasantCost = Locator.Get<UnitsService>().GetCost(UnitType.Peasant);
 
       _pool = new ObjectPool<Transform>(() => Instantiate(_prefab, transform), t => t.gameObject.SetActive(true), t => t.gameObject.SetActive(false));
-      DOVirtual.Float(0, 1, 0.25f, v =>
+      _animation = DOVirtual.Float(0, 1, 0.25f, v =>
       {
-        foreach ((var region, var mark) in _marks)
+        if (!_playerType.HasValue)
+          return;
+
+        ClearMarks();
+
+        foreach (var unit in _units)
         {
-          var cellCenter = _gridController.HexPositionToWorld(_capitalsController.GetCapital(region).Cell.Position);
+          if (!RegionCheck(unit.Cell.Region))
+            continue;
+
+          var cellCenter = _gridController.HexPositionToWorld(unit.Cell.Position);
           var offset = (Vector3)_fromCellCenterOffset;
           var position = cellCenter + offset;
-          position.y += Mathf.Lerp(0, _animationOffset, v);
-          mark.position = position;
+          position.y += Mathf.Lerp(0, AnimationsUtilities.GameplayUnitsYoyoAnimationOffset, v);
+          CreateMark(position);
         }
-      }).SetLoops(-1, LoopType.Yoyo).SetId(this);
+      }).SetLoops(-1, LoopType.Yoyo).SetId(this).Pause();
     }
 
-    public void SetRegionType(RegionType regionType) => _regionType = regionType;
-
-    public void Enable() => Tick();
+    public void Enable()
+    {
+      _unitsService.OnCreate += AddUnit;
+      _unitsService.OnDestroy += DestroyUnit;
+    }
 
     public void Disable()
     {
-      for (var i = _regions.Count - 1; i >= 0; i--)
-      {
-        var region = _regions[i];
-        _regions.RemoveAt(i);
-        _pool.Release(_marks[region]);
-        _marks.Remove(region);
-      }
+      _unitsService.OnCreate -= AddUnit;
+      _unitsService.OnDestroy -= DestroyUnit;
+      _units.Clear();
+      ClearPlayerType();
     }
 
-    public void Tick()
+    public void SetPlayerType(RegionType playerType)
     {
-      ClearRegions();
-      CreateMarks();
+      _playerType = playerType;
+      _animation.Restart();
     }
 
-    private void ClearRegions()
+    public void ClearPlayerType()
     {
-      for (var i = _regions.Count - 1; i >= 0; i--)
-      {
-        var region = _regions[i];
-        if (!_regionsService.Regions.Contains(region) || !RegionCheck(region))
-        {
-          _regions.RemoveAt(i);
-          _pool.Release(_marks[region]);
-          _marks.Remove(region);
-        }
-      }
+      ClearMarks();
+      _playerType = null;
+      _animation.Pause();
     }
 
-    private void CreateMarks()
+    private void ClearMarks()
     {
-      foreach (var region in _regionsService.Regions)
-      {
-        if (RegionCheck(region) && !_regions.Contains(region))
-        {
-          _regions.Add(region);
-          _marks.Add(region, _pool.Get());
-        }
-      }
+      foreach (var mark in _marks)
+        _pool.Release(mark);
+      _marks.Clear();
     }
+
+    private void CreateMark(Vector3 position)
+    {
+      var mark = _pool.Get();
+      mark.position = position;
+      _marks.Add(mark);
+    }
+
+    private void AddUnit(IUnit unit)
+    {
+      if (unit.Type == UnitType.Capital)
+        _units.Add(unit);
+    }
+
+    private void DestroyUnit(IUnit unit) => _units.Remove(unit);
 
     private bool RegionCheck(RegionController region) =>
-      region.IsAlive && region.Money >= _peasantCost && _regionType == region.Type;
+      region.IsAlive && region.Money >= _peasantCost && _playerType == region.Type;
   }
 }

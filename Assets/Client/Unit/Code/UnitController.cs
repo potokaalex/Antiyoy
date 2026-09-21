@@ -11,13 +11,12 @@ namespace Client.Unit.Code
     private GridController _gridController;
     private UnitsAreaCalculator _areaCalculator;
     private UnitConfig _config;
-    private int _turnsCount;
 
     public CellController Cell { get; private set; }
 
     public UnitType Type => _config.Type;
 
-    public bool HasTurns => _turnsCount > 0;
+    public bool HasTurns { get; private set; }
 
     public int Income => _config.Income;
 
@@ -38,15 +37,15 @@ namespace Client.Unit.Code
       _config = config;
       SetCell(cell);
       if (hasTurns)
-        ResetTurnsCount();
+        ResetTurns();
       else
-        _turnsCount = 0;
+        HasTurns = false;
       SetupSprite();
     }
 
     public void Clear() => ClearCell();
 
-    public void ResetTurnsCount() => _turnsCount = _config.TurnsCount;
+    public void ResetTurns() => HasTurns = _config.HasTurns;
 
     public void GetMoveArea(List<CellController> outList) => _areaCalculator.GetMoveArea(this, outList);
 

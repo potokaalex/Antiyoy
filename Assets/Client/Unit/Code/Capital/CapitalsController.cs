@@ -41,14 +41,6 @@ namespace Client.Unit.Code.Capital
 
     public bool IsCapital(IUnit unit) => unit != null && unit.Type == UnitType.Capital;
 
-    public IUnit GetCapital(RegionController region)
-    {
-      foreach (var cell in region.Cells)
-        if (IsCapital(cell.Unit))
-          return cell.Unit;
-      return null;
-    }
-
     private bool HasCapital(RegionController region)
     {
       foreach (var cell in region.Cells)

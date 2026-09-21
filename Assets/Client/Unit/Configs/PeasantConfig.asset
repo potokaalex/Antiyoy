@@ -17,7 +17,7 @@ MonoBehaviour:
   Sprite: {fileID: 21300000, guid: 65fbe7c9b876d914a873758d900d1d6e, type: 3}
   Income: -2
   CreationCost: 10
-  TurnsCount: 1
+  HasTurns: 1
   CapitalReplacementFactor: 1
   Protection: 1
   Attack: 0

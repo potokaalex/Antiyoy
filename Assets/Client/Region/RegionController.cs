@@ -76,7 +76,7 @@ namespace Client.Region
 
       foreach (var cell in _cells)
         if (cell.HasUnit)
-          cell.Unit.ResetTurnsCount();
+          cell.Unit.ResetTurns();
     }
 
     public void Clear()

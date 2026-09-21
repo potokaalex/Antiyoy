@@ -37,14 +37,15 @@ namespace Client.Gameplay.Player
     public void SetPlayerController(PlayerController playerController)
     {
       _playerController = playerController;
-      _capitalsMarksController.SetRegionType(playerController.RegionType);
       _warriorUnitsAnimator.SetPlayerType(playerController.RegionType);
+      _capitalsMarksController.SetPlayerType(playerController.RegionType);
     }
 
     public void ClearPlayerController()
     {
       _playerController = null;
       _warriorUnitsAnimator.ClearPlayerType();
+      _capitalsMarksController.ClearPlayerType();
     }
 
     public void ViewUnitCreation(RegionController region, UnitType unitType)

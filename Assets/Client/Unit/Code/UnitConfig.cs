@@ -10,7 +10,7 @@ namespace Client.Unit.Code
     public Sprite Sprite;
     public int Income;
     public int CreationCost;
-    public int TurnsCount;
+    public bool HasTurns;
     public int CapitalReplacementFactor;
     public int Protection;
     public int Attack;
