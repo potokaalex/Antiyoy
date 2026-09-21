@@ -368,6 +368,7 @@ Transform:
   - {fileID: 2018554504194096766}
   - {fileID: 2294666417626260118}
   - {fileID: 1143372528521369199}
+  - {fileID: 740006794798290925}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1853635301331806987
@@ -1110,11 +1111,51 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Client::Client.UnitSelection.UnitSelectionView
   _icon: {fileID: 6389101462966810095}
-  _allSprites:
-  - {fileID: 123284652751311951}
-  - {fileID: 2816583645888733635}
-  - {fileID: 6389101462966810095}
-  - {fileID: 0}
+--- !u!1 &4547550292775992706
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 740006794798290925}
+  - component: {fileID: 700005100727883959}
+  m_Layer: 0
+  m_Name: UnitsMoveAnimator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &740006794798290925
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4547550292775992706}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1376374734287290357}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &700005100727883959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4547550292775992706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40240e8b951546e09b1f110e3fb9b5ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::Client.Unit.Code.UnitsMoveAnimator
+  _movementPrefab: {fileID: 3601418608984927783, guid: ebf7d4d6ef6fb9c41bd3b503eea279e0, type: 3}
 --- !u!1 &4741619941258177199
 GameObject:
   m_ObjectHideFlags: 0
@@ -1420,7 +1461,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Client::Client.Unit.Code.Capital.CapitalsMarkController
   _prefab: {fileID: 4877965541181541766, guid: cd10c36d45176b945be1375817c18698, type: 3}
   _fromCellCenterOffset: {x: -0.17, y: 0.15}
-  _animationOffset: 0.05
 --- !u!1 &5396474791223660746
 GameObject:
   m_ObjectHideFlags: 0

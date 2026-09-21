@@ -287,6 +287,17 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 689856307}
   m_Enabled: 1
+--- !u!114 &942020195 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 700005100727883959, guid: 9542a04324c10444b8e5b281060eb12e, type: 3}
+  m_PrefabInstance: {fileID: 7667927162433574180}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40240e8b951546e09b1f110e3fb9b5ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::Client.Unit.Code.UnitsMoveAnimator
 --- !u!1 &1013819458
 GameObject:
   m_ObjectHideFlags: 0
@@ -481,6 +492,7 @@ MonoBehaviour:
   _capitalsMarksController: {fileID: 7613821254444413515}
   _unitsService: {fileID: 5526087854336272962}
   _unitSelectionView: {fileID: 1334356660}
+  _unitsMoveAnimator: {fileID: 942020195}
 --- !u!114 &1827324771 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6512322957560912027, guid: 74ae161c6679e75449baf132659d6a63, type: 3}

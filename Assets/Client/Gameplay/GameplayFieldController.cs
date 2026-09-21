@@ -19,8 +19,8 @@ namespace Client.Gameplay
     public bool CanCreateUnit(UnitType unitType, CellController cell, RegionController playerRegion)
     {
       var cost = _unitsService.GetCost(unitType);
-      _unitsService.GetUnitCreationArea(playerRegion, GameConstants.AreaBuffer, unitType);
-      return playerRegion.Money >= cost && GameConstants.AreaBuffer.Contains(cell) && _unitsService.CanCreate(cell, playerRegion.Type, unitType);
+      _unitsService.GetUnitCreationArea(playerRegion, GameUtilities.AreaBuffer, unitType);
+      return playerRegion.Money >= cost && GameUtilities.AreaBuffer.Contains(cell) && _unitsService.CanCreate(cell, playerRegion.Type, unitType);
     }
 
     public void CreateUnit(UnitType unitType, CellController cell, RegionController playerRegion)
@@ -37,14 +37,15 @@ namespace Client.Gameplay
 
     public bool CanMoveUnit(IUnit unit, CellController cell)
     {
-      unit.GetMoveArea(GameConstants.AreaBuffer);
-      return GameConstants.AreaBuffer.Contains(cell) && _unitsService.CanMove(unit, cell);
+      unit.GetMoveArea(GameUtilities.AreaBuffer);
+      return GameUtilities.AreaBuffer.Contains(cell) && _unitsService.CanMove(unit, cell);
     }
 
     public void MoveUnit(IUnit unit, CellController cell)
     {
       if (CanMoveUnit(unit, cell))
       {
+        unit.RemoveTurns();
         AddConqueredMoney(cell, unit.Cell.Region);
         _unitsService.Create(cell, _unitsService.CalculateJoinedType(unit.Type, cell, unit.Cell.Region.Type),
           WillHaveTurns(unit.Cell.Region.Type, cell));

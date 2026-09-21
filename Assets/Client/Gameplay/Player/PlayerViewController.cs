@@ -50,17 +50,17 @@ namespace Client.Gameplay.Player
 
     public void ViewUnitCreation(RegionController region, UnitType unitType)
     {
-      _unitsService.GetUnitCreationArea(region, GameConstants.AreaBuffer, unitType);
+      _unitsService.GetUnitCreationArea(region, GameUtilities.AreaBuffer, unitType);
       _tilesSelectionView.ClearView();
 
       if (unitType != UnitType.Tower && unitType != UnitType.StrongTower)
-        _tilesSelectionView.ViewTiles(GameConstants.AreaBuffer);
+        _tilesSelectionView.ViewTiles(GameUtilities.AreaBuffer);
     }
 
     public void ViewUnitSelection(IUnit unit)
     {
-      unit.GetMoveArea(GameConstants.AreaBuffer);
-      _tilesSelectionView.ViewTiles(GameConstants.AreaBuffer);
+      unit.GetMoveArea(GameUtilities.AreaBuffer);
+      _tilesSelectionView.ViewTiles(GameUtilities.AreaBuffer);
       _unitSelectionViw.View(unit);
     }
 

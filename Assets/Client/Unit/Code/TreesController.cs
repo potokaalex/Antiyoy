@@ -39,20 +39,20 @@ namespace Client.Unit.Code
 
     private void SpawnPines()
     {
-      GameConstants.AreaBuffer.Clear();
+      GameUtilities.AreaBuffer.Clear();
       foreach (var unit in _unitsService.Units)
         if (unit.Type == UnitType.Pine)
-          MarkPines(unit, GameConstants.AreaBuffer);
-      Spawn(UnitType.Pine, GameConstants.AreaBuffer);
+          MarkPines(unit, GameUtilities.AreaBuffer);
+      Spawn(UnitType.Pine, GameUtilities.AreaBuffer);
     }
 
     private void SpawnPalms()
     {
-      GameConstants.AreaBuffer.Clear();
+      GameUtilities.AreaBuffer.Clear();
       foreach (var unit in _unitsService.Units)
         if (unit.Type == UnitType.Palm)
-          MarkPalms(unit, GameConstants.AreaBuffer);
-      Spawn(UnitType.Palm, GameConstants.AreaBuffer);
+          MarkPalms(unit, GameUtilities.AreaBuffer);
+      Spawn(UnitType.Palm, GameUtilities.AreaBuffer);
     }
 
     private void Spawn(UnitType unitType, List<CellController> buffer)

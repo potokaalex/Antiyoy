@@ -17,6 +17,7 @@ namespace Client.Gameplay.Player
     private readonly GovernmentsService _governmentService;
     private readonly GameplayFieldController _gameplayFieldController;
     private readonly PlayerViewController _playerViewController;
+    private readonly UnitsMoveAnimator _unitsMoveAnimator;
     private IUnit _selectedUnit;
     private RegionController _selectedRegion;
     private RegionController _lastSelectedRegion;
@@ -38,6 +39,7 @@ namespace Client.Gameplay.Player
       _governmentService = Locator.Get<GovernmentsService>();
       _gameplayFieldController = Locator.Get<GameplayFieldController>();
       _playerViewController = Locator.Get<PlayerViewController>();
+      _unitsMoveAnimator = Locator.Get<UnitsMoveAnimator>();
     }
 
     public void Tick() => UpdatePlayerInput();
@@ -110,8 +112,8 @@ namespace Client.Gameplay.Player
 
     private void TryMoveUnit(CellController cell)
     {
-      _selectedUnit.GetMoveArea(GameConstants.AreaBuffer);
-      if (!GameConstants.AreaBuffer.Contains(cell))
+      _selectedUnit.GetMoveArea(GameUtilities.AreaBuffer);
+      if (!GameUtilities.AreaBuffer.Contains(cell))
       {
         Clear();
         return;
@@ -119,10 +121,12 @@ namespace Client.Gameplay.Player
 
       if (_gameplayFieldController.CanMoveUnit(_selectedUnit, cell))
       {
+        var unitType = _selectedUnit.Type;
         _actionsHistoryController.RegionsChange(cell);
         _gameplayFieldController.MoveUnit(_selectedUnit, cell);
         Clear(cell.Region.Type != RegionType);
         TrySelectRegion(cell.Region);
+        _unitsMoveAnimator.PlayMove(_selectedUnit.Cell, cell, unitType);
       }
     }
 

@@ -26,7 +26,7 @@ namespace Client.Unit.Code
 
     public bool CanViewProtection => Type is UnitType.Capital or UnitType.Tower or UnitType.StrongTower;
 
-    public Vector3 Position { set => transform.position = value; }
+    public Vector3 Position { get => transform.position; set => transform.position = value; }
 
     protected SpriteRenderer Renderer => _renderer;
 
@@ -41,15 +41,20 @@ namespace Client.Unit.Code
       else
         HasTurns = false;
       SetupSprite();
+      SetActiveRenderer(true);
     }
 
     public void Clear() => ClearCell();
 
     public void ResetTurns() => HasTurns = _config.HasTurns;
 
+    public void RemoveTurns() => HasTurns = false;
+
     public void GetMoveArea(List<CellController> outList) => _areaCalculator.GetMoveArea(this, outList);
 
     public void GetProtectionArea(List<CellController> outList) => _areaCalculator.GetProtectionArea(this, outList, true);
+
+    public void SetActiveRenderer(bool isActive) => Renderer.enabled = isActive;
 
     protected virtual void SetupSprite() => _renderer.sprite = _config.Sprite;
 

@@ -30,6 +30,7 @@ namespace Client.Gameplay
     [SerializeField] private CapitalsMarksController _capitalsMarksController;
     [SerializeField] private UnitsService _unitsService;
     [SerializeField] private UnitSelectionView _unitSelectionView;
+    [SerializeField] private UnitsMoveAnimator _unitsMoveAnimator;
 
     public override void Install(Context context)
     {
@@ -55,6 +56,7 @@ namespace Client.Gameplay
       context.Register(new GameplayFieldController());
       context.Register(_unitSelectionView);
       context.Register(new PlayerViewController());
+      context.Register(_unitsMoveAnimator);
       context.Register(new GameplayController());
     }
   }
