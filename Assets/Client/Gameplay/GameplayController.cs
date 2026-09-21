@@ -29,6 +29,7 @@ namespace Client.Gameplay
     private MainMenuView _mainMenuView;
     private TreesController _treesController;
     private PlayerController _currentPlayer;
+    private WarriorUnitsAnimator _warriorUnitsAnimator;
     private int _turnsCount;
 
     private int TurnsCount
@@ -56,10 +57,12 @@ namespace Client.Gameplay
       _mainMenuView = Locator.Get<MainMenuView>();
       _capitalsMarksController = Locator.Get<CapitalsMarksController>();
       _treesController = Locator.Get<TreesController>();
+      _warriorUnitsAnimator = Locator.Get<WarriorUnitsAnimator>();
     }
 
     public void Start()
     {
+      _warriorUnitsAnimator.Enable();
       _gridController.InitialCreateCells();
       _unitsService.InitialCreateUnits();
       _regionsService.InitialCreateRegions();
@@ -103,6 +106,7 @@ namespace Client.Gameplay
     {
       Started = false;
       _capitalsMarksController.Disable();
+      _warriorUnitsAnimator.Disable();
       _unitsService.Clear();
       _regionsService.Clear();
       _actionsHistoryController.Clear();

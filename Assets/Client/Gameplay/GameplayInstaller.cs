@@ -42,6 +42,7 @@ namespace Client.Gameplay
       context.Register(new RegionsFactory());
       context.Register(_regionsService);
       context.Register(new GovernmentsService());
+      context.Register(new WarriorUnitsAnimator());
       context.Register(new UnitsAreaCalculator());
       context.Register(_unitsService);
       context.Register(new TreesController());

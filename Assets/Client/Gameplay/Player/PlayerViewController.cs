@@ -20,6 +20,7 @@ namespace Client.Gameplay.Player
     private PlayerController _playerController;
     private CapitalsMarksController _capitalsMarksController;
     private UnitSelectionView _unitSelectionViw;
+    private WarriorUnitsAnimator _warriorUnitsAnimator;
 
     public void Initialize()
     {
@@ -30,12 +31,20 @@ namespace Client.Gameplay.Player
       _protectionView = Locator.Get<ProtectionView>();
       _capitalsMarksController = Locator.Get<CapitalsMarksController>();
       _unitSelectionViw = Locator.Get<UnitSelectionView>();
+      _warriorUnitsAnimator = Locator.Get<WarriorUnitsAnimator>();
     }
 
     public void SetPlayerController(PlayerController playerController)
     {
       _playerController = playerController;
       _capitalsMarksController.SetRegionType(playerController.RegionType);
+      _warriorUnitsAnimator.SetPlayerType(playerController.RegionType);
+    }
+
+    public void ClearPlayerController()
+    {
+      _playerController = null;
+      _warriorUnitsAnimator.ClearPlayerType();
     }
 
     public void ViewUnitCreation(RegionController region, UnitType unitType)

@@ -58,6 +58,7 @@ namespace Client.Gameplay.Player
     {
       Clear();
       _actionsHistoryController.Clear();
+      _playerViewController.ClearPlayerController();
     }
 
     public void Undo()

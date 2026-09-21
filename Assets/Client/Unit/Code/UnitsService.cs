@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Client.Hex;
@@ -15,6 +16,10 @@ namespace Client.Unit.Code
     private readonly Dictionary<UnitType, ObjectPool<UnitController>> _pools = new();
     private UnitsAreaCalculator _areaCalculator;
     private GridController _gridController;
+
+    public event Action<IUnit> OnCreate;
+
+    public event Action<IUnit> OnDestroy;
 
     public List<IUnit> Units { get; } = new();
 
@@ -39,7 +44,7 @@ namespace Client.Unit.Code
       CreateUnit(pine1, UnitType.Pine, false);
       _gridController.GetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(1, 8)), out var pine2);
       CreateUnit(pine2, UnitType.Pine, false);
-      
+
       _gridController.GetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(7, 8)), out var palm1);
       CreateUnit(palm1, UnitType.Palm, false);
       _gridController.GetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(8, 8)), out var palm2);
@@ -58,6 +63,7 @@ namespace Client.Unit.Code
     {
       if (unit != null)
       {
+        OnDestroy?.Invoke(unit);
         var unitController = (UnitController)unit;
         unitController.Clear();
         Units.Remove(unit);
@@ -109,9 +115,10 @@ namespace Client.Unit.Code
     private void CreateUnit(CellController cell, UnitType type, bool hasTurns)
     {
       Destroy(cell.Unit);
-      var instance = _pools[type].Get();
-      instance.Setup(_unitsConfigs[type], cell, hasTurns);
-      Units.Add(instance);
+      var unit = _pools[type].Get();
+      unit.Setup(_unitsConfigs[type], cell, hasTurns);
+      Units.Add(unit);
+      OnCreate?.Invoke(unit);
     }
 
     private int GetAttack(UnitType type) => _unitsConfigs[type].Attack;

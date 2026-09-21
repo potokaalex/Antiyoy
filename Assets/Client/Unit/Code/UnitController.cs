@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Client.Infrastructure;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -8,7 +7,6 @@ namespace Client.Unit.Code
 {
   public class UnitController : MonoBehaviour, IUnit
   {
-    [SerializeField] private TextMeshPro _text;
     [SerializeField] private SpriteRenderer _renderer;
     private GridController _gridController;
     private UnitsAreaCalculator _areaCalculator;
@@ -19,7 +17,7 @@ namespace Client.Unit.Code
 
     public UnitType Type => _config.Type;
 
-    public bool HasTurns => TurnsCount > 0;
+    public bool HasTurns => _turnsCount > 0;
 
     public int Income => _config.Income;
 
@@ -29,18 +27,9 @@ namespace Client.Unit.Code
 
     public bool CanViewProtection => Type is UnitType.Capital or UnitType.Tower or UnitType.StrongTower;
 
-    protected SpriteRenderer Renderer => _renderer;
+    public Vector3 Position { set => transform.position = value; }
 
-    private int TurnsCount
-    {
-      get => _turnsCount;
-      set
-      {
-        _turnsCount = value;
-        if (_config.TurnsCount > 0)
-          _text.SetText($"{TurnsCount}");
-      }
-    }
+    protected SpriteRenderer Renderer => _renderer;
 
     public void Setup(UnitConfig config, CellController cell, bool hasTurns)
     {
@@ -51,19 +40,13 @@ namespace Client.Unit.Code
       if (hasTurns)
         ResetTurnsCount();
       else
-        TurnsCount = 0;
+        _turnsCount = 0;
       SetupSprite();
     }
 
-    public void Clear()
-    {
-      ClearCell();
-      _text.SetText(string.Empty);
-    }
+    public void Clear() => ClearCell();
 
-    public void ResetTurnsCount() => TurnsCount = _config.TurnsCount;
-
-    public void DecreaseTurnsCount() => TurnsCount = Mathf.Max(0, TurnsCount - 1);
+    public void ResetTurnsCount() => _turnsCount = _config.TurnsCount;
 
     public void GetMoveArea(List<CellController> outList) => _areaCalculator.GetMoveArea(this, outList);
 
