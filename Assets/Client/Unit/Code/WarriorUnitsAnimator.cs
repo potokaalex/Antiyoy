@@ -12,7 +12,7 @@ namespace Client.Unit.Code
     private readonly List<IUnit> _units = new();
     private UnitsService _unitsService;
     private GridController _gridController;
-    private RegionType? _playerType;
+    private RegionType _playerType;
     private Tween _animation;
 
     public void Initialize()
@@ -21,12 +21,9 @@ namespace Client.Unit.Code
       _gridController = Locator.Get<GridController>();
       _animation = DOVirtual.Float(0, 1, 0.25f, v =>
       {
-        if (!_playerType.HasValue)
-          return;
-
         foreach (var unit in _units)
         {
-          if (unit.Cell.Region.Type != _playerType.Value)
+          if (unit.Cell.Region.Type != _playerType)
             continue;
 
           if (!unit.HasTurns)
@@ -53,20 +50,19 @@ namespace Client.Unit.Code
       _unitsService.OnCreate -= AddUnit;
       _unitsService.OnDestroy -= DestroyUnit;
       _units.Clear();
-      ClearPlayerType();
+      StopAnimations();
     }
 
-    public void SetPlayerType(RegionType playerType)
+    public void StartAnimations(RegionType playerType)
     {
       _playerType = playerType;
       _animation.Restart();
     }
 
-    public void ClearPlayerType()
+    public void StopAnimations()
     {
       foreach (var unit in _units)
         SetUnitCellCenterPosition(unit);
-      _playerType = null;
       _animation.Pause();
     }
 

@@ -19,7 +19,7 @@ namespace Client.Unit.Code.Capital
     private ObjectPool<Transform> _pool;
     private int _peasantCost;
     private Tween _animation;
-    private RegionType? _playerType;
+    private RegionType _playerType;
 
     public void Initialize()
     {
@@ -30,9 +30,6 @@ namespace Client.Unit.Code.Capital
       _pool = new ObjectPool<Transform>(() => Instantiate(_prefab, transform), t => t.gameObject.SetActive(true), t => t.gameObject.SetActive(false));
       _animation = DOVirtual.Float(0, 1, 0.25f, v =>
       {
-        if (!_playerType.HasValue)
-          return;
-
         ClearMarks();
 
         foreach (var unit in _units)
@@ -60,19 +57,18 @@ namespace Client.Unit.Code.Capital
       _unitsService.OnCreate -= AddUnit;
       _unitsService.OnDestroy -= DestroyUnit;
       _units.Clear();
-      ClearPlayerType();
+      StopAnimations();
     }
 
-    public void SetPlayerType(RegionType playerType)
+    public void StartAnimations(RegionType playerType)
     {
       _playerType = playerType;
       _animation.Restart();
     }
 
-    public void ClearPlayerType()
+    public void StopAnimations()
     {
       ClearMarks();
-      _playerType = null;
       _animation.Pause();
     }
 
