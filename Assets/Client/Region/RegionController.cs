@@ -11,6 +11,7 @@ namespace Client.Region
     private readonly RegionsFactory _regionsFactory;
     private readonly UnitsService _unitsService;
     private readonly CapitalsController _capitalsController;
+    private readonly TreesController _treesController;
 
     public IReadOnlyList<CellController> Cells => _cells;
 
@@ -25,11 +26,13 @@ namespace Client.Region
       _regionsFactory = Locator.Get<RegionsFactory>();
       _unitsService = Locator.Get<UnitsService>();
       _capitalsController = Locator.Get<CapitalsController>();
+      _treesController = Locator.Get<TreesController>();
     }
 
     public void Add(CellController cell)
     {
-      _capitalsController.DestroyCapital(cell);
+      if(_cells.Count >= 1)
+        _capitalsController.DestroyCapital(cell);
       cell.Region = this;
       _cells.Add(cell);
       UpdateBuildings();
@@ -110,8 +113,15 @@ namespace Client.Region
     private void DestroyBuildings()
     {
       foreach (var c in _cells)
+      {
         if (c.HasUnit && c.Unit.Type.IsBuilding())
-          _unitsService.Destroy(c.Unit);
+        {
+          if (c.Unit.Type == UnitType.Capital)
+            _unitsService.Create(c, _treesController.GetCreationTreeType(c));
+          else
+            _unitsService.Destroy(c.Unit);
+        }
+      }
     }
   }
 }

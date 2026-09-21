@@ -30,10 +30,12 @@ namespace Client.Unit.Code
         if (cell.HasUnit && cell.Unit.Type == UnitType.Grave)
         {
           _unitsService.Destroy(cell.Unit);
-          _unitsService.Create(cell, CountCellsAround(cell) != 6 ? UnitType.Palm : UnitType.Pine);
+          _unitsService.Create(cell, GetCreationTreeType(cell));
         }
       }
     }
+
+    public UnitType GetCreationTreeType(CellController cell) => CountCellsAround(cell) != 6 ? UnitType.Palm : UnitType.Pine;
 
     private void SpawnPines()
     {
