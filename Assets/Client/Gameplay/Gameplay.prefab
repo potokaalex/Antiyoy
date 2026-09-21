@@ -1414,7 +1414,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c34f9944bda46eb81f7373d45a28b1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Client::Client.Protection.ProtectionView
-  _icon: {fileID: 3984962226042294778, guid: 70ffdc9ad3a7df841bc71cab853914f8, type: 3}
+  _icon: {fileID: 2596712696134460170, guid: 70ffdc9ad3a7df841bc71cab853914f8, type: 3}
 --- !u!1 &5272330502820813544
 GameObject:
   m_ObjectHideFlags: 0
