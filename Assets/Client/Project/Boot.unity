@@ -493,6 +493,7 @@ MonoBehaviour:
   _unitsService: {fileID: 5526087854336272962}
   _unitSelectionView: {fileID: 1334356660}
   _unitsMoveAnimator: {fileID: 942020195}
+  _tileClickView: {fileID: 7667927162433574181}
 --- !u!114 &1827324771 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6512322957560912027, guid: 74ae161c6679e75449baf132659d6a63, type: 3}
@@ -860,6 +861,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9542a04324c10444b8e5b281060eb12e, type: 3}
+--- !u!114 &7667927162433574181 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4235455247837551214, guid: 9542a04324c10444b8e5b281060eb12e, type: 3}
+  m_PrefabInstance: {fileID: 7667927162433574180}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e5168e5ad074fdeaec6a011972f4118, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::Client.Gameplay.TView
 --- !u!114 &8647123830375422940 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1233859896093750046, guid: 9542a04324c10444b8e5b281060eb12e, type: 3}

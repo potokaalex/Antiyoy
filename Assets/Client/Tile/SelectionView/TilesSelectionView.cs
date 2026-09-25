@@ -5,7 +5,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Pool;
 
-namespace Client.TilesSelection
+namespace Client.Tile.SelectionView
 {
   public class TilesSelectionView : MonoBehaviour
   {

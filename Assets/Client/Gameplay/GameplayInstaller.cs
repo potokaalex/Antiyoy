@@ -9,7 +9,7 @@ using Client.Protection;
 using Client.Recovery;
 using Client.Region;
 using Client.Tile;
-using Client.TilesSelection;
+using Client.Tile.SelectionView;
 using Client.Unit.Code;
 using Client.Unit.Code.Capital;
 using UnityEngine;
@@ -31,6 +31,7 @@ namespace Client.Gameplay
     [SerializeField] private UnitsService _unitsService;
     [SerializeField] private UnitSelectionView _unitSelectionView;
     [SerializeField] private UnitsMoveAnimator _unitsMoveAnimator;
+    [SerializeField] private TileClickView _tileClickView;
 
     public override void Install(Context context)
     {
@@ -55,8 +56,9 @@ namespace Client.Gameplay
       context.Register(new ActionsHistoryController());
       context.Register(new GameplayFieldController());
       context.Register(_unitSelectionView);
-      context.Register(new PlayerViewController());
       context.Register(_unitsMoveAnimator);
+      context.Register(_tileClickView);
+      context.Register(new PlayerViewController());
       context.Register(new GameplayController());
     }
   }

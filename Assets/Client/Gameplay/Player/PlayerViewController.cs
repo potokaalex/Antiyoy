@@ -3,7 +3,8 @@ using Client.Gameplay.UI;
 using Client.Infrastructure;
 using Client.Protection;
 using Client.Region;
-using Client.TilesSelection;
+using Client.Tile;
+using Client.Tile.SelectionView;
 using Client.Unit.Code;
 using Client.Unit.Code.Capital;
 using Client.Utilities;
@@ -21,6 +22,7 @@ namespace Client.Gameplay.Player
     private CapitalsMarksController _capitalsMarksController;
     private UnitSelectionView _unitSelectionViw;
     private WarriorUnitsAnimator _warriorUnitsAnimator;
+    private TileClickView _tileClickView;
 
     public void Initialize()
     {
@@ -32,6 +34,7 @@ namespace Client.Gameplay.Player
       _capitalsMarksController = Locator.Get<CapitalsMarksController>();
       _unitSelectionViw = Locator.Get<UnitSelectionView>();
       _warriorUnitsAnimator = Locator.Get<WarriorUnitsAnimator>();
+      _tileClickView = Locator.Get<TileClickView>();
     }
 
     public void SetPlayerController(PlayerController playerController)
@@ -90,5 +93,7 @@ namespace Client.Gameplay.Player
     public void SetCreateUnitMode(UnitType unitType) => _playerController.SetCreateUnitMode(unitType);
 
     public void ClearUnitSelectionView() => _unitSelectionViw.Hide();
+
+    public void ViewTileClick(CellController cell) => _tileClickView.View(cell);
   }
 }

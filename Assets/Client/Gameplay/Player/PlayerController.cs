@@ -116,6 +116,7 @@ namespace Client.Gameplay.Player
       if (!GameUtilities.AreaBuffer.Contains(cell))
       {
         Clear();
+        _playerViewController.ViewTileClick(cell);
         return;
       }
 
@@ -128,6 +129,8 @@ namespace Client.Gameplay.Player
         TrySelectRegion(cell.Region);
         _unitsMoveAnimator.PlayMove(_selectedUnit.Cell, cell, unitType);
       }
+      else
+        _playerViewController.ViewTileClick(cell);
     }
 
     private void TryCreateUnit(CellController cell)
@@ -140,7 +143,10 @@ namespace Client.Gameplay.Player
         SelectRegion(cell.Region);
       }
       else
+      {
+        _playerViewController.ViewTileClick(cell);
         ReturnToSelectedRegion();
+      }
     }
 
     private void ReturnToSelectedRegion()
