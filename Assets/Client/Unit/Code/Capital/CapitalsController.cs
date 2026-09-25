@@ -11,10 +11,16 @@ namespace Client.Unit.Code.Capital
 
     public void Initialize() => _unitsService = Locator.Get<UnitsService>();
 
-    public void DestroyCapital(CellController cell)
+    public void Enable() => _unitsService.OnCreate += OnCreateUnit;
+
+    public void Disable() => _unitsService.OnCreate -= OnCreateUnit;
+
+    private void OnCreateUnit(IUnit unit)
     {
-      if (IsCapital(cell.Unit))
-        _unitsService.Destroy(cell.Unit);
+      if (unit.Type == UnitType.Capital)
+        foreach (var cell in unit.Cell.Region.Cells)
+          if (IsCapital(cell.Unit) && cell != unit.Cell)
+            _unitsService.Destroy(cell.Unit);
     }
 
     public void CreateCapital(RegionController region)
@@ -30,24 +36,7 @@ namespace Client.Unit.Code.Capital
       }
     }
 
-    public void SetCapital(CellController cell)
-    {
-      if (cell == null)
-        return;
-
-      DestroyCapitals(cell.Region);
-      _unitsService.Create(cell, UnitType.Capital);
-    }
-
-    public bool IsCapital(IUnit unit) => unit != null && unit.Type == UnitType.Capital;
-
-    public IUnit GetCapital(RegionController region)
-    {
-      foreach (var cell in region.Cells)
-        if (IsCapital(cell.Unit))
-          return cell.Unit;
-      return null;
-    }
+    private bool IsCapital(IUnit unit) => unit != null && unit.Type == UnitType.Capital;
 
     private bool HasCapital(RegionController region)
     {
@@ -55,13 +44,6 @@ namespace Client.Unit.Code.Capital
         if (IsCapital(cell.Unit))
           return true;
       return false;
-    }
-
-    private void DestroyCapitals(RegionController region)
-    {
-      foreach (var cell in region.Cells)
-        if (IsCapital(cell.Unit))
-          _unitsService.Destroy(cell.Unit);
     }
   }
 }

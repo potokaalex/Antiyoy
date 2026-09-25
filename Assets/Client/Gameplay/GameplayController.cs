@@ -27,7 +27,11 @@ namespace Client.Gameplay
     private ActionsHistoryController _actionsHistoryController;
     private CapitalsMarksController _capitalsMarksController;
     private MainMenuView _mainMenuView;
+    private TreesController _treesController;
     private PlayerController _currentPlayer;
+    private WarriorUnitsAnimator _warriorUnitsAnimator;
+    private CapitalsController _capitalsController;
+    private GameplayRegionsController _gameplayRegionsController;
     private int _turnsCount;
 
     private int TurnsCount
@@ -54,15 +58,23 @@ namespace Client.Gameplay
       _actionsHistoryController = Locator.Get<ActionsHistoryController>();
       _mainMenuView = Locator.Get<MainMenuView>();
       _capitalsMarksController = Locator.Get<CapitalsMarksController>();
+      _treesController = Locator.Get<TreesController>();
+      _warriorUnitsAnimator = Locator.Get<WarriorUnitsAnimator>();
+      _capitalsController = Locator.Get<CapitalsController>();
+      _gameplayRegionsController = Locator.Get<GameplayRegionsController>();
     }
 
     public void Start()
     {
+      _warriorUnitsAnimator.Enable();
+      _capitalsMarksController.Enable();
       _gridController.InitialCreateCells();
       _unitsService.InitialCreateUnits();
       _regionsService.InitialCreateRegions();
+      _gameplayRegionsController.Enable();
+      _capitalsController.Enable();
+
       CreatePlayers();
-      _capitalsMarksController.Enable();
 
       TurnsCount = 0;
       _bordersService.ViewRegionsBorders();
@@ -76,7 +88,6 @@ namespace Client.Gameplay
         return;
 
       _cameraController.Tick();
-      _capitalsMarksController.Tick();
       _currentPlayer.Tick();
     }
 
@@ -91,6 +102,7 @@ namespace Client.Gameplay
       {
         TurnsCount++;
         SetFirstPlayer();
+        _treesController.UpdateTrees();
       }
 
       UpdatePlayerRegions();
@@ -99,7 +111,10 @@ namespace Client.Gameplay
     public void End()
     {
       Started = false;
+      _warriorUnitsAnimator.Disable();
       _capitalsMarksController.Disable();
+      _capitalsController.Disable();
+      _gameplayRegionsController.Disable();
       _unitsService.Clear();
       _regionsService.Clear();
       _actionsHistoryController.Clear();
@@ -144,12 +159,14 @@ namespace Client.Gameplay
 
     private void UpdatePlayerRegions()
     {
-      if (TurnsCount <= 0)
-        return;
-
       foreach (var region in _regionsService.Regions)
+      {
         if (region.Type == _currentPlayer.RegionType)
-          region.Update();
+        {
+          _treesController.UpdateGraves(region);
+          _gameplayRegionsController.Update(region);
+        }
+      }
     }
 
     private bool MoveNextPlayer()

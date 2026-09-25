@@ -1,13 +1,15 @@
 using System.Collections.Generic;
-using Client.ActionsHistory.Actions;
-using Client.Region;
-using Client.Unit.Code;
+using Client.Infrastructure;
+using Client.Recovery;
 
 namespace Client.ActionsHistory
 {
-  public class ActionsHistoryController
+  public class ActionsHistoryController : IInitializable
   {
     private readonly Stack<IHistoryAction> _actions = new();
+    private RecoveryController _recoveryController;
+
+    public void Initialize() => _recoveryController = Locator.Get<RecoveryController>();
 
     public bool Undo()
     {
@@ -28,11 +30,6 @@ namespace Client.ActionsHistory
       _actions.Clear();
     }
 
-    public void CreateUnit(CellController cell, UnitType? oldUnitType, int regionMoney, SetRegionTypeRecoveryData setRegionTypeRecoveryData) =>
-      _actions.Push(new CreateUnitAction(cell, oldUnitType, regionMoney, setRegionTypeRecoveryData));
-
-    public void MoveUnit(CellController newCell, UnitType? newCellUnitType, CellController oldCell, UnitType movingUnitType,
-      SetRegionTypeRecoveryData setRegionTypeRecoveryData) =>
-      _actions.Push(new MoveUnitAction(newCell, newCellUnitType, oldCell, movingUnitType, setRegionTypeRecoveryData));
+    public void RegionsChange(CellController cell) => _actions.Push(new RegionsChangeAction(_recoveryController.RecoveryRegionsAround(cell)));
   }
 }

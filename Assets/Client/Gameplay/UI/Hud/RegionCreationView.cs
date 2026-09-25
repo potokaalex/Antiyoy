@@ -4,13 +4,14 @@ using Client.UI;
 using Client.Unit.Code;
 using Client.Utilities;
 using DG.Tweening;
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Client.Gameplay.UI.Hud
 {
-  public class RegionCreationView : MonoBehaviour
+  public class RegionCreationView : SerializedMonoBehaviour
   {
     [SerializeField] private CustomButton _createWarriorButton;
     [SerializeField] private CustomButton _createBuildingButton;
@@ -44,7 +45,17 @@ namespace Client.Gameplay.UI.Hud
 
     private void OnCreateWarrior()
     {
-      _buildingType = UnitType.Peasant;
+      if (!_buildingType.IsWarrior())
+        _buildingType = UnitType.Peasant;
+      else if (_buildingType == UnitType.Peasant)
+        _buildingType = UnitType.Spearman;
+      else if (_buildingType == UnitType.Spearman)
+        _buildingType = UnitType.Infantryman;
+      else if (_buildingType == UnitType.Infantryman)
+        _buildingType = UnitType.Knight;
+      else if (_buildingType == UnitType.Knight)
+        _buildingType = UnitType.Peasant;
+
       _playerViewController.SetCreateUnitMode(_buildingType);
       View(_buildingType);
     }
@@ -56,6 +67,8 @@ namespace Client.Gameplay.UI.Hud
       else if (_buildingType == UnitType.Farm)
         _buildingType = UnitType.Tower;
       else if (_buildingType == UnitType.Tower)
+        _buildingType = UnitType.StrongTower;
+      else if (_buildingType == UnitType.StrongTower)
         _buildingType = UnitType.Farm;
 
       _playerViewController.SetCreateUnitMode(_buildingType);
@@ -64,6 +77,9 @@ namespace Client.Gameplay.UI.Hud
 
     private void View(UnitType unitType)
     {
+      if(unitType == UnitType.None)
+        return;
+
       _variantCost.SetText($"${_unitsService.GetCost(unitType)}");
       _variantIcon.sprite = _unitsService.GetSprite(unitType);
       SetActive(true);

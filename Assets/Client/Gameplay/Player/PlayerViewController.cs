@@ -3,7 +3,8 @@ using Client.Gameplay.UI;
 using Client.Infrastructure;
 using Client.Protection;
 using Client.Region;
-using Client.TilesSelection;
+using Client.Tile;
+using Client.Tile.SelectionView;
 using Client.Unit.Code;
 using Client.Unit.Code.Capital;
 using Client.Utilities;
@@ -19,6 +20,9 @@ namespace Client.Gameplay.Player
     private ProtectionView _protectionView;
     private PlayerController _playerController;
     private CapitalsMarksController _capitalsMarksController;
+    private UnitSelectionView _unitSelectionViw;
+    private WarriorUnitsAnimator _warriorUnitsAnimator;
+    private TileClickView _tileClickView;
 
     public void Initialize()
     {
@@ -28,27 +32,39 @@ namespace Client.Gameplay.Player
       _bordersService = Locator.Get<BordersService>();
       _protectionView = Locator.Get<ProtectionView>();
       _capitalsMarksController = Locator.Get<CapitalsMarksController>();
+      _unitSelectionViw = Locator.Get<UnitSelectionView>();
+      _warriorUnitsAnimator = Locator.Get<WarriorUnitsAnimator>();
+      _tileClickView = Locator.Get<TileClickView>();
     }
 
     public void SetPlayerController(PlayerController playerController)
     {
       _playerController = playerController;
-      _capitalsMarksController.SetRegionType(playerController.RegionType);
+      _warriorUnitsAnimator.StartAnimations(playerController.RegionType);
+      _capitalsMarksController.StartAnimations(playerController.RegionType);
+    }
+
+    public void ClearPlayerController()
+    {
+      _playerController = null;
+      _warriorUnitsAnimator.StopAnimations();
+      _capitalsMarksController.StopAnimations();
     }
 
     public void ViewUnitCreation(RegionController region, UnitType unitType)
     {
-      _unitsService.GetUnitCreationArea(region, GameConstants.AreaBuffer, unitType);
+      _unitsService.GetUnitCreationArea(region, GameUtilities.AreaBuffer, unitType);
       _tilesSelectionView.ClearView();
 
-      if (unitType != UnitType.Tower)
-        _tilesSelectionView.ViewTiles(GameConstants.AreaBuffer);
+      if (unitType != UnitType.Tower && unitType != UnitType.StrongTower)
+        _tilesSelectionView.ViewTiles(GameUtilities.AreaBuffer);
     }
 
     public void ViewUnitSelection(IUnit unit)
     {
-      unit.GetMoveArea(GameConstants.AreaBuffer);
-      _tilesSelectionView.ViewTiles(GameConstants.AreaBuffer);
+      unit.GetMoveArea(GameUtilities.AreaBuffer);
+      _tilesSelectionView.ViewTiles(GameUtilities.AreaBuffer);
+      _unitSelectionViw.View(unit);
     }
 
     public void ViewRegionSelection(RegionController region, bool forceBordersAnim)
@@ -69,10 +85,15 @@ namespace Client.Gameplay.Player
       }
 
       _gameplayUI.ClearRegionCreation();
+      ClearUnitSelectionView();
     }
 
     public void Undo() => _playerController.Undo();
 
     public void SetCreateUnitMode(UnitType unitType) => _playerController.SetCreateUnitMode(unitType);
+
+    public void ClearUnitSelectionView() => _unitSelectionViw.Hide();
+
+    public void ViewTileClick(CellController cell) => _tileClickView.View(cell);
   }
 }

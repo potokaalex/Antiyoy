@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Client.Infrastructure;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -8,18 +7,16 @@ namespace Client.Unit.Code
 {
   public class UnitController : MonoBehaviour, IUnit
   {
-    [SerializeField] private TextMeshPro _text;
     [SerializeField] private SpriteRenderer _renderer;
     private GridController _gridController;
     private UnitsAreaCalculator _areaCalculator;
     private UnitConfig _config;
-    private int _turnsCount;
 
     public CellController Cell { get; private set; }
 
     public UnitType Type => _config.Type;
 
-    public bool HasTurns => TurnsCount > 0;
+    public bool HasTurns { get; private set; }
 
     public int Income => _config.Income;
 
@@ -27,45 +24,39 @@ namespace Client.Unit.Code
 
     public int Protection => _config.Protection;
 
-    public bool CanViewProtection => Type is UnitType.Capital or UnitType.Tower;
+    public bool CanViewProtection => Type is UnitType.Capital or UnitType.Tower or UnitType.StrongTower;
 
-    private int TurnsCount
-    {
-      get => _turnsCount;
-      set
-      {
-        _turnsCount = value;
-        if (_config.TurnsCount > 0)
-          _text.SetText($"{TurnsCount}");
-      }
-    }
+    public Vector3 Position { get => transform.position; set => transform.position = value; }
 
-    public void Initialize(UnitConfig config, CellController cell, bool hasTurns)
+    protected SpriteRenderer Renderer => _renderer;
+
+    public void Setup(UnitConfig config, CellController cell, bool hasTurns)
     {
       _gridController = Locator.Get<GridController>();
       _areaCalculator = Locator.Get<UnitsAreaCalculator>();
       _config = config;
       SetCell(cell);
       if (hasTurns)
-        ResetTurnsCount();
+        ResetTurns();
       else
-        TurnsCount = 0;
-      _renderer.sprite = config.Sprite;
+        HasTurns = false;
+      SetupSprite();
+      SetActiveRenderer(true);
     }
 
-    public void Dispose()
-    {
-      ClearCell();
-      _text.SetText(string.Empty);
-    }
+    public void Clear() => ClearCell();
 
-    public void ResetTurnsCount() => TurnsCount = _config.TurnsCount;
+    public void ResetTurns() => HasTurns = _config.HasTurns;
 
-    public void DecreaseTurnsCount() => TurnsCount = Mathf.Max(0, TurnsCount - 1);
+    public void RemoveTurns() => HasTurns = false;
 
     public void GetMoveArea(List<CellController> outList) => _areaCalculator.GetMoveArea(this, outList);
 
     public void GetProtectionArea(List<CellController> outList) => _areaCalculator.GetProtectionArea(this, outList, true);
+
+    public void SetActiveRenderer(bool isActive) => Renderer.enabled = isActive;
+
+    protected virtual void SetupSprite() => _renderer.sprite = _config.Sprite;
 
     private void SetCell(CellController cell)
     {

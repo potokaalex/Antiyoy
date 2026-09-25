@@ -10,17 +10,20 @@ namespace Client.Infrastructure
     [SerializeField] private MonoInstaller[] _installers;
     private readonly List<IInitializable> _initializables = new();
     private readonly List<ITickable> _tickables = new();
+    private readonly List<IDisposable> _disposables = new();
 
     public void Register(object service) => Register(service, service.GetType());
 
     public void Register(object service, Type contract)
     {
       Locator.Set(contract, service);
-      
-      if(service is IInitializable initializable)
+
+      if (service is IInitializable initializable)
         _initializables.Add(initializable);
-      if(service is ITickable tickable)
+      if (service is ITickable tickable)
         _tickables.Add(tickable);
+      if (service is IDisposable disposable)
+        _disposables.Add(disposable);
     }
 
     private void Awake()
@@ -31,16 +34,21 @@ namespace Client.Infrastructure
 
     private void Start()
     {
-      foreach (var initializable in _initializables) 
+      foreach (var initializable in _initializables)
         initializable.Initialize();
     }
 
     private void Update()
     {
-      foreach (var tickable in _tickables) 
+      foreach (var tickable in _tickables)
         tickable.Tick();
     }
 
-    private void OnDestroy() => Locator.Clear();
+    private void OnDestroy()
+    {
+      foreach (var disposable in _disposables)
+        disposable.Dispose();
+      Locator.Clear();
+    }
   }
 }

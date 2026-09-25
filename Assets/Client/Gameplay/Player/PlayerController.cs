@@ -12,12 +12,12 @@ namespace Client.Gameplay.Player
     private readonly CameraController _cameraController;
     private readonly GridController _gridController;
     private readonly UnitsService _unitsService;
-    private readonly RegionsService _regionsService;
     private readonly InputController _inputController;
     private readonly ActionsHistoryController _actionsHistoryController;
     private readonly GovernmentsService _governmentService;
     private readonly GameplayFieldController _gameplayFieldController;
     private readonly PlayerViewController _playerViewController;
+    private readonly UnitsMoveAnimator _unitsMoveAnimator;
     private IUnit _selectedUnit;
     private RegionController _selectedRegion;
     private RegionController _lastSelectedRegion;
@@ -34,12 +34,12 @@ namespace Client.Gameplay.Player
       _gridController = Locator.Get<GridController>();
       _cameraController = Locator.Get<CameraController>();
       _unitsService = Locator.Get<UnitsService>();
-      _regionsService = Locator.Get<RegionsService>();
       _inputController = Locator.Get<InputController>();
       _actionsHistoryController = Locator.Get<ActionsHistoryController>();
       _governmentService = Locator.Get<GovernmentsService>();
       _gameplayFieldController = Locator.Get<GameplayFieldController>();
       _playerViewController = Locator.Get<PlayerViewController>();
+      _unitsMoveAnimator = Locator.Get<UnitsMoveAnimator>();
     }
 
     public void Tick() => UpdatePlayerInput();
@@ -48,6 +48,7 @@ namespace Client.Gameplay.Player
     {
       _gameplayMode = GameplayMode.CreateUnit;
       _creationUnitType = unitType;
+      _playerViewController.ClearUnitSelectionView();
       _playerViewController.ViewUnitCreation(_selectedRegion, unitType);
     }
 
@@ -59,6 +60,7 @@ namespace Client.Gameplay.Player
     {
       Clear();
       _actionsHistoryController.Clear();
+      _playerViewController.ClearPlayerController();
     }
 
     public void Undo()
@@ -110,39 +112,41 @@ namespace Client.Gameplay.Player
 
     private void TryMoveUnit(CellController cell)
     {
-      _selectedUnit.GetMoveArea(GameConstants.AreaBuffer);
-      if (!GameConstants.AreaBuffer.Contains(cell))
+      _selectedUnit.GetMoveArea(GameUtilities.AreaBuffer);
+      if (!GameUtilities.AreaBuffer.Contains(cell))
       {
         Clear();
+        _playerViewController.ViewTileClick(cell);
         return;
       }
 
       if (_gameplayFieldController.CanMoveUnit(_selectedUnit, cell))
       {
-        var oldCell = _selectedUnit.Cell;
-        var newCellUnitType = cell.Unit?.Type;
-        var setRegionTypeResult = _regionsService.CalculateSetRegionTypeRecoveryData(cell, RegionType);
+        var unitType = _selectedUnit.Type;
+        _actionsHistoryController.RegionsChange(cell);
         _gameplayFieldController.MoveUnit(_selectedUnit, cell);
-        _actionsHistoryController.MoveUnit(cell, newCellUnitType, oldCell, _selectedUnit.Type, setRegionTypeResult);
         Clear(cell.Region.Type != RegionType);
-        TrySelectUnit(cell);
+        TrySelectRegion(cell.Region);
+        _unitsMoveAnimator.PlayMove(_selectedUnit.Cell, cell, unitType);
       }
+      else
+        _playerViewController.ViewTileClick(cell);
     }
 
     private void TryCreateUnit(CellController cell)
     {
       if (_gameplayFieldController.CanCreateUnit(_creationUnitType, cell, _selectedRegion))
       {
-        var regionMoney = _selectedRegion.Money;
-        var setRegionTypeResult = _regionsService.CalculateSetRegionTypeRecoveryData(cell, RegionType);
-        var newCellUnitType = cell.Unit?.Type;
+        _actionsHistoryController.RegionsChange(cell);
         _gameplayFieldController.CreateUnit(_creationUnitType, cell, _selectedRegion);
-        _actionsHistoryController.CreateUnit(cell, newCellUnitType, regionMoney, setRegionTypeResult);
         Clear(false);
         SelectRegion(cell.Region);
       }
       else
+      {
+        _playerViewController.ViewTileClick(cell);
         ReturnToSelectedRegion();
+      }
     }
 
     private void ReturnToSelectedRegion()

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Client.Unit.Code
 {
@@ -11,9 +12,11 @@ namespace Client.Unit.Code
     int CapitalReplacementFactor { get; }
     int Protection { get; }
     bool CanViewProtection { get; }
-    void ResetTurnsCount();
-    void DecreaseTurnsCount();
+    Vector3 Position { get; set; }
+    void ResetTurns();
+    void RemoveTurns();
     void GetMoveArea(List<CellController> outList);
     void GetProtectionArea(List<CellController> outList);
+    void SetActiveRenderer(bool isActive);
   }
 }

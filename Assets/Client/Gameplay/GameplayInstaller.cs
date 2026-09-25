@@ -6,9 +6,10 @@ using Client.Gameplay.UI;
 using Client.Government;
 using Client.Infrastructure;
 using Client.Protection;
+using Client.Recovery;
 using Client.Region;
 using Client.Tile;
-using Client.TilesSelection;
+using Client.Tile.SelectionView;
 using Client.Unit.Code;
 using Client.Unit.Code.Capital;
 using UnityEngine;
@@ -28,6 +29,9 @@ namespace Client.Gameplay
     [SerializeField] private BordersService _bordersService;
     [SerializeField] private CapitalsMarksController _capitalsMarksController;
     [SerializeField] private UnitsService _unitsService;
+    [SerializeField] private UnitSelectionView _unitSelectionView;
+    [SerializeField] private UnitsMoveAnimator _unitsMoveAnimator;
+    [SerializeField] private TileClickView _tileClickView;
 
     public override void Install(Context context)
     {
@@ -39,15 +43,22 @@ namespace Client.Gameplay
       context.Register(_bordersService);
       context.Register(new RegionsFactory());
       context.Register(_regionsService);
+      context.Register(new GameplayRegionsController());
       context.Register(new GovernmentsService());
+      context.Register(new WarriorUnitsAnimator());
       context.Register(new UnitsAreaCalculator());
       context.Register(_unitsService);
+      context.Register(new TreesController());
       context.Register(_tilesSelectionView);
       context.Register(_gameplayUI);
       context.Register(_protectionView);
       context.Register(_capitalsMarksController);
+      context.Register(new RecoveryController());
       context.Register(new ActionsHistoryController());
       context.Register(new GameplayFieldController());
+      context.Register(_unitSelectionView);
+      context.Register(_unitsMoveAnimator);
+      context.Register(_tileClickView);
       context.Register(new PlayerViewController());
       context.Register(new GameplayController());
     }

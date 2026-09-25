@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using Client.Infrastructure;
-using Client.Unit.Code;
-using Client.Unit.Code.Capital;
 
 namespace Client.Region
 {
@@ -9,8 +7,6 @@ namespace Client.Region
   {
     private readonly List<CellController> _cells = new();
     private readonly RegionsFactory _regionsFactory;
-    private readonly UnitsService _unitsService;
-    private readonly CapitalsController _capitalsController;
 
     public IReadOnlyList<CellController> Cells => _cells;
 
@@ -20,28 +16,18 @@ namespace Client.Region
 
     public bool IsAlive => _cells.Count >= 2 && Type != RegionType.Neutral;
 
-    public IUnit Capital => _capitalsController.GetCapital(this);
-
-    public RegionController()
-    {
-      _regionsFactory = Locator.Get<RegionsFactory>();
-      _unitsService = Locator.Get<UnitsService>();
-      _capitalsController = Locator.Get<CapitalsController>();
-    }
+    public RegionController() => _regionsFactory = Locator.Get<RegionsFactory>();
 
     public void Add(CellController cell)
     {
-      _capitalsController.DestroyCapital(cell);
       cell.Region = this;
       _cells.Add(cell);
-      UpdateBuildings();
     }
 
     public void Remove(CellController cell)
     {
       cell.Region = null;
       _cells.Remove(cell);
-      UpdateBuildings();
 
       if (Cells.Count == 0)
         _regionsFactory.Destroy(this);
@@ -61,54 +47,12 @@ namespace Client.Region
       return result;
     }
 
-    public void Update()
-    {
-      if (_cells.Count <= 1)
-      {
-        Money = 0;
-        DestroyAllUnits();
-      }
-
-      Money += GetIncome();
-      if (Money < 0)
-      {
-        Money = 0;
-        DestroyAllUnits();
-      }
-
-      foreach (var cell in _cells)
-        if (cell.HasUnit)
-          cell.Unit.ResetTurnsCount();
-    }
-
-    public void SetCapital(CellController capitalPosition) => _capitalsController.SetCapital(capitalPosition);
-
     public void Clear()
     {
       Money = 0;
       _cells.Clear();
     }
 
-    private void DestroyAllUnits()
-    {
-      foreach (var cell in _cells)
-        if (!_capitalsController.IsCapital(cell.Unit))
-          _unitsService.Destroy(cell.Unit);
-    }
-
-    private void UpdateBuildings()
-    {
-      if (_cells.Count <= 1)
-        DestroyBuildings();
-      else
-        _capitalsController.CreateCapital(this);
-    }
-
-    private void DestroyBuildings()
-    {
-      foreach (var c in _cells)
-        if (c.HasUnit && c.Unit.Type.IsBuilding())
-          _unitsService.Destroy(c.Unit);
-    }
+    public void SetCell(CellController cell, int index) => _cells[index] = cell;
   }
 }

@@ -3,7 +3,7 @@ using System.Linq;
 using Client.Government;
 using Client.Infrastructure;
 using Client.Region;
-using Client.TilesSelection;
+using Client.Tile.SelectionView;
 using Client.Unit.Code;
 using UnityEngine;
 using UnityEngine.EventSystems;

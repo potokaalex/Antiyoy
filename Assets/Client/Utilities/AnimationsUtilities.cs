@@ -7,6 +7,7 @@ namespace Client.Utilities
   {
     public static readonly Ease MenuDefaultEase = Ease.InQuart;
     public static readonly Color GameplayBackgroundColor = new(0.2078431f, 0.2078431f, 0.2078431f, 1);
+    public static readonly float GameplayUnitsYoyoAnimationOffset = 0.05f;
 
     public static Tween DoAnchoredMove(RectTransform target, Vector2 from, Vector2 to, float duration = 0.25f)
     {
