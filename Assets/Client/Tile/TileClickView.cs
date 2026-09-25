@@ -26,7 +26,7 @@ namespace Client.Tile
       DOTween.Kill(this);
 
       DOTween.Sequence()
-        .Append(transform.DOScale(1.1f, 0.1f))
+        .Append(transform.DOScale(1.2f, 0.1f))
         .Append(transform.DOScale(1f, 0.15f))
         .Append(_spriteRenderer.DOFade(0, 0.15f))
         .SetId(this).OnComplete(() => gameObject.SetActive(false));

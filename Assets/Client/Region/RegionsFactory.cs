@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Client.Government;
 using Client.Infrastructure;
@@ -19,21 +20,21 @@ namespace Client.Region
       _pool = new ObjectPool<RegionController>(() => new RegionController());
     }
 
-    public void Create(CellController cell, RegionType type = RegionType.Neutral)
+    public void Create(CellController cell, Action<RegionController, CellController> addFunc, RegionType type = RegionType.Neutral)
     {
       using (ListPool<CellController>.Get(out var list))
       {
         list.Add(cell);
-        Create(list, type);
+        Create(list, addFunc, type);
       }
     }
 
-    public void Create(List<CellController> cells, RegionType type = RegionType.Neutral)
+    public void Create(List<CellController> cells, Action<RegionController, CellController> addFunc, RegionType type = RegionType.Neutral)
     {
       _pool.Get(out var instance);
       instance.Type = type;
       foreach (var cell in cells)
-        instance.Add(cell);
+        addFunc(instance, cell);
 
       _governmentsService.AddRegion(instance);
       _regions.Add(instance);

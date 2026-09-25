@@ -37,7 +37,7 @@ namespace Client.Unit.Code
       _gridController.GetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(0, 0)), out var redCapitalCell);
       CreateUnit(redCapitalCell, UnitType.Capital, false);
 
-      _gridController.GetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(8, 0)), out var blueCapitalCell);
+      _gridController.GetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(4, 0)), out var blueCapitalCell);
       CreateUnit(blueCapitalCell, UnitType.Capital, false);
 
       _gridController.GetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(0, 8)), out var pine1);

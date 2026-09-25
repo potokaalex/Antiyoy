@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Client.Infrastructure;
 using Client.Region;
 using Client.Unit.Code;
-using Client.Unit.Code.Capital;
 using UnityEngine.Pool;
 
 namespace Client.Recovery
@@ -11,13 +10,11 @@ namespace Client.Recovery
   {
     private RegionsService _regionsService;
     private UnitsService _unitsService;
-    private CapitalsController _capitalsService;
 
     public void Initialize()
     {
       _regionsService = Locator.Get<RegionsService>();
       _unitsService = Locator.Get<UnitsService>();
-      _capitalsService = Locator.Get<CapitalsController>();
     }
 
     public RegionsRecoveryData RecoveryRegionsAround(CellController cell)
@@ -41,27 +38,22 @@ namespace Client.Recovery
     {
       foreach (var region in data.Regions)
       {
-        foreach (var cell in region.Cells) 
-          _regionsService.SetRegionType(cell.Cell, region.Type);
-
-        for (var i = 0; i < region.Cells.Count; i++)
-        {
-          var cell = region.Cells[i].Cell;
-          cell.Region.SetCell(cell, i);
-        }
-
         foreach (var cell in region.Cells)
         {
+          _regionsService.SetRegionType(cell.Cell, region.Type);
           _unitsService.Destroy(cell.Cell.Unit);
 
           if (cell.Unit.HasValue)
           {
             var unit = cell.Unit.Value;
-            if (unit.Type == UnitType.Capital)
-              _capitalsService.SetCapital(cell.Cell);
-            else
-              _unitsService.Create(cell.Cell, unit.Type, unit.HasTurns);
+            _unitsService.Create(cell.Cell, unit.Type, unit.HasTurns);
           }
+        }
+
+        for (var i = 0; i < region.Cells.Count; i++)
+        {
+          var cell = region.Cells[i].Cell;
+          cell.Region.SetCell(cell, i);
         }
 
         region.Cells[0].Cell.Region.Money = region.Money;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Client.Borders;
 using Client.Hex;
@@ -17,6 +18,10 @@ namespace Client.Region
     private GridController _gridController;
     private RegionsFactory _regionsFactory;
     private BordersService _bordersService;
+
+    public event Action<RegionController> OnRegionAddCell;
+    
+    public event Action<RegionController> OnRegionRemoveCell;
 
     public IReadOnlyList<RegionController> Regions => _regionsFactory.ActiveRegions;
 
@@ -47,9 +52,9 @@ namespace Client.Region
           regions[2].Add(cell);
       }
 
-      _regionsFactory.Create(regions[0], RegionType.Red);
-      _regionsFactory.Create(regions[1], RegionType.Blue);
-      _regionsFactory.Create(regions[2]);
+      _regionsFactory.Create(regions[0], AddCell, RegionType.Red);
+      _regionsFactory.Create(regions[1], AddCell, RegionType.Blue);
+      _regionsFactory.Create(regions[2], AddCell);
 
       foreach (var region in Regions)
         region.Money = 100;
@@ -64,7 +69,7 @@ namespace Client.Region
     public void RemoveFromRegion(CellController cell)
     {
       var region = cell.Region;
-      cell.Region.Remove(cell);
+      RemoveCell(region, cell);
       TryDivideRegion(region);
     }
 
@@ -77,9 +82,9 @@ namespace Client.Region
           region = neighbour.Region;
 
       if (region != null)
-        region.Add(cell);
+        AddCell(region, cell);
       else
-        _regionsFactory.Create(cell, type);
+        _regionsFactory.Create(cell, AddCell, type);
 
       TryJoinRegions(cell.Position, type);
       _bordersService.ViewRegionsBorders();
@@ -181,8 +186,8 @@ namespace Client.Region
         while (region.Cells.Count > 0)
         {
           var cell = region.Cells[0];
-          region.Remove(cell);
-          mainRegion.Add(cell);
+          RemoveCell(region, cell);
+          AddCell(mainRegion, cell);
         }
       }
     }
@@ -192,9 +197,9 @@ namespace Client.Region
       for (var i = 1; i < regionParts.Items.Count; i++)
       {
         foreach (var cell in regionParts.Items[i])
-          region.Remove(cell);
+          RemoveCell(region, cell);
 
-        _regionsFactory.Create(regionParts.Items[i], region.Type);
+        _regionsFactory.Create(regionParts.Items[i], AddCell, region.Type);
       }
     }
 
@@ -224,6 +229,18 @@ namespace Client.Region
       }
 
       return result;
+    }
+
+    private void AddCell(RegionController region, CellController cell)
+    {
+      region.Add(cell);
+      OnRegionAddCell?.Invoke(region);
+    }
+
+    private void RemoveCell(RegionController region, CellController cell)
+    {
+      region.Remove(cell);
+      OnRegionRemoveCell?.Invoke(region);
     }
   }
 }

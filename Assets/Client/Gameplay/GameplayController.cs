@@ -30,6 +30,8 @@ namespace Client.Gameplay
     private TreesController _treesController;
     private PlayerController _currentPlayer;
     private WarriorUnitsAnimator _warriorUnitsAnimator;
+    private CapitalsController _capitalsController;
+    private GameplayRegionsController _gameplayRegionsController;
     private int _turnsCount;
 
     private int TurnsCount
@@ -58,6 +60,8 @@ namespace Client.Gameplay
       _capitalsMarksController = Locator.Get<CapitalsMarksController>();
       _treesController = Locator.Get<TreesController>();
       _warriorUnitsAnimator = Locator.Get<WarriorUnitsAnimator>();
+      _capitalsController = Locator.Get<CapitalsController>();
+      _gameplayRegionsController = Locator.Get<GameplayRegionsController>();
     }
 
     public void Start()
@@ -67,6 +71,9 @@ namespace Client.Gameplay
       _gridController.InitialCreateCells();
       _unitsService.InitialCreateUnits();
       _regionsService.InitialCreateRegions();
+      _gameplayRegionsController.Enable();
+      _capitalsController.Enable();
+
       CreatePlayers();
 
       TurnsCount = 0;
@@ -106,6 +113,8 @@ namespace Client.Gameplay
       Started = false;
       _warriorUnitsAnimator.Disable();
       _capitalsMarksController.Disable();
+      _capitalsController.Disable();
+      _gameplayRegionsController.Disable();
       _unitsService.Clear();
       _regionsService.Clear();
       _actionsHistoryController.Clear();
@@ -155,7 +164,7 @@ namespace Client.Gameplay
         if (region.Type == _currentPlayer.RegionType)
         {
           _treesController.UpdateGraves(region);
-          region.Update();
+          _gameplayRegionsController.Update(region);
         }
       }
     }

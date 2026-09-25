@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using Client.Infrastructure;
-using Client.Unit.Code;
-using Client.Unit.Code.Capital;
 
 namespace Client.Region
 {
@@ -9,9 +7,6 @@ namespace Client.Region
   {
     private readonly List<CellController> _cells = new();
     private readonly RegionsFactory _regionsFactory;
-    private readonly UnitsService _unitsService;
-    private readonly CapitalsController _capitalsController;
-    private readonly TreesController _treesController;
 
     public IReadOnlyList<CellController> Cells => _cells;
 
@@ -21,28 +16,18 @@ namespace Client.Region
 
     public bool IsAlive => _cells.Count >= 2 && Type != RegionType.Neutral;
 
-    public RegionController()
-    {
-      _regionsFactory = Locator.Get<RegionsFactory>();
-      _unitsService = Locator.Get<UnitsService>();
-      _capitalsController = Locator.Get<CapitalsController>();
-      _treesController = Locator.Get<TreesController>();
-    }
+    public RegionController() => _regionsFactory = Locator.Get<RegionsFactory>();
 
     public void Add(CellController cell)
     {
-      if(_cells.Count >= 1)
-        _capitalsController.DestroyCapital(cell);
       cell.Region = this;
       _cells.Add(cell);
-      UpdateBuildings();
     }
 
     public void Remove(CellController cell)
     {
       cell.Region = null;
       _cells.Remove(cell);
-      UpdateBuildings();
 
       if (Cells.Count == 0)
         _regionsFactory.Destroy(this);
@@ -62,26 +47,6 @@ namespace Client.Region
       return result;
     }
 
-    public void Update()
-    {
-      if (_cells.Count <= 1)
-      {
-        Money = 0;
-        DestroyAllUnits();
-      }
-
-      Money += GetIncome();
-      if (Money < 0)
-      {
-        Money = 0;
-        DestroyAllUnits();
-      }
-
-      foreach (var cell in _cells)
-        if (cell.HasUnit)
-          cell.Unit.ResetTurns();
-    }
-
     public void Clear()
     {
       Money = 0;
@@ -89,39 +54,5 @@ namespace Client.Region
     }
 
     public void SetCell(CellController cell, int index) => _cells[index] = cell;
-
-    private void DestroyAllUnits()
-    {
-      foreach (var cell in _cells)
-      {
-        if (cell.HasUnit && cell.Unit.Type.IsWarrior())
-        {
-          _unitsService.Destroy(cell.Unit);
-          _unitsService.Create(cell, UnitType.Grave);
-        }
-      }
-    }
-
-    private void UpdateBuildings()
-    {
-      if (_cells.Count <= 1)
-        DestroyBuildings();
-      else
-        _capitalsController.CreateCapital(this);
-    }
-
-    private void DestroyBuildings()
-    {
-      foreach (var c in _cells)
-      {
-        if (c.HasUnit && c.Unit.Type.IsBuilding())
-        {
-          if (c.Unit.Type == UnitType.Capital)
-            _unitsService.Create(c, _treesController.GetCreationTreeType(c));
-          else
-            _unitsService.Destroy(c.Unit);
-        }
-      }
-    }
   }
 }
