@@ -1,5 +1,6 @@
 using Client.ActionsHistory;
 using Client.Borders;
+using Client.CameraFeatures;
 using Client.DebugFeatures;
 using Client.Gameplay.Player;
 using Client.Gameplay.UI;

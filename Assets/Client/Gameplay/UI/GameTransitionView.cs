@@ -1,4 +1,5 @@
 using System.Collections;
+using Client.CameraFeatures;
 using Client.Infrastructure;
 using Client.Menu;
 using Client.Utilities;
@@ -13,7 +14,8 @@ namespace Client.Gameplay.UI
     [SerializeField] private RawImage _gameImage;
     private CameraController _cameraController;
     private MenuView _menuView;
-    private RenderTexture _rt;
+    private RenderTexture _screenshotRt;
+    private RenderTexture _freezeRt;
     private InputController _inputController;
 
     private void Awake()
@@ -21,21 +23,28 @@ namespace Client.Gameplay.UI
       _menuView = Locator.Get<MenuView>();
       _inputController = Locator.Get<InputController>();
       _cameraController = Locator.Get<CameraController>();
-      _rt = new RenderTexture(Screen.width, Screen.height, 16);
-      _gameImage.texture = _rt;
+      _screenshotRt = new RenderTexture(Screen.width, Screen.height, 16);
+      _freezeRt = new RenderTexture(Screen.width, Screen.height, 16);
+      _gameImage.texture = _screenshotRt;
     }
 
     private void OnDestroy() => DOTween.Kill(this);
 
-    public void PlaToyGameTransition() => StartCoroutine(PlayGameTransitionCoroutine());
+    public void PlayToyGameTransition() => StartCoroutine(PlayToyGameTransitionCoroutine());
 
-    public void PlaOutGameTransition() => StartCoroutine(PlaOutGameTransitionCoroutine());
+    public void PlayOutGameTransition() => StartCoroutine(PlayOutGameTransitionCoroutine());
 
-    private IEnumerator PlayGameTransitionCoroutine()
+    private IEnumerator PlayToyGameTransitionCoroutine()
     {
-      _cameraController.CanRender(true);
-      yield return StartCoroutine(_cameraController.CreateScreenshotCoroutine(_rt));
-      _cameraController.CanRender(false);
+      _cameraController.RenderMenu();
+      _cameraController.SetImageRt(_freezeRt);
+      yield return StartCoroutine(_cameraController.CreateScreenshotCoroutine(_freezeRt));
+
+      _cameraController.RenderGameplay();
+      yield return StartCoroutine(_cameraController.CreateScreenshotCoroutine(_screenshotRt));
+
+      _cameraController.ClearImageRt();
+      _cameraController.RenderMenu();
 
       _gameImage.gameObject.SetActive(true);
       _gameImage.transform.localScale = Vector3.zero;
@@ -52,17 +61,20 @@ namespace Client.Gameplay.UI
           _gameImage.gameObject.SetActive(false);
           _inputController.SetBlockInput(false);
           _menuView.SetActive(false);
-          _cameraController.CanRender(true);
+          _cameraController.RenderGameplay();
+          _cameraController.CanMove = true;
         })
         .SetEase(AnimationsUtilities.MenuDefaultEase)
         .SetId(this);
     }
 
-    private IEnumerator PlaOutGameTransitionCoroutine()
+    private IEnumerator PlayOutGameTransitionCoroutine()
     {
-      _cameraController.CanRender(true);
-      yield return StartCoroutine(_cameraController.CreateScreenshotCoroutine(_rt));
-      _cameraController.CanRender(false);
+      _cameraController.CanMove = false;
+
+      _cameraController.RenderGameplay();
+      yield return StartCoroutine(_cameraController.CreateScreenshotCoroutine(_screenshotRt));
+      _cameraController.RenderMenu();
 
       _gameImage.gameObject.SetActive(true);
       _gameImage.transform.localScale = Vector3.one;

@@ -1,4 +1,5 @@
 using Client.ActionsHistory;
+using Client.CameraFeatures;
 using Client.Government;
 using Client.Infrastructure;
 using Client.Region;

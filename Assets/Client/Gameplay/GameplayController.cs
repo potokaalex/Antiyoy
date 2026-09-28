@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Client.ActionsHistory;
 using Client.Borders;
+using Client.CameraFeatures;
 using Client.Gameplay.Player;
 using Client.Gameplay.UI;
 using Client.Government;
@@ -73,6 +74,7 @@ namespace Client.Gameplay
       _regionsService.InitialCreateRegions();
       _gameplayRegionsController.Enable();
       _capitalsController.Enable();
+      _cameraController.CanMove = true;
 
       CreatePlayers();
 
@@ -87,7 +89,6 @@ namespace Client.Gameplay
       if (!Started)
         return;
 
-      _cameraController.Tick();
       _currentPlayer.Tick();
     }
 

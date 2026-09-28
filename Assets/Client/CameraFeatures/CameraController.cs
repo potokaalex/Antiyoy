@@ -5,17 +5,20 @@ using Client.Utilities;
 using UnityEngine;
 using UnityEngine.Pool;
 
-namespace Client
+namespace Client.CameraFeatures
 {
-  public class CameraController : MonoBehaviour
+  public class CameraController : MonoBehaviour, ITickable
   {
     [SerializeField] private Camera _camera;
+    [SerializeField] private CameraImageController _imageController;
     [SerializeField] private float _positionDragMultiplier;
     [SerializeField] private float _positionLerpFactor;
     [SerializeField] private float _positionInertiaFactor;
     [SerializeField] private float _positionInertiaLerpFactor;
     [SerializeField] private float _zoomDragMultiplier;
     [SerializeField] private float _zoomLerpFactor;
+    [SerializeField] private LayerMask _gameplayLayers;
+    [SerializeField] private LayerMask _menuLayers;
     private readonly List<Touch> _touches = new();
     private readonly List<int> _ignoredTouches = new();
     private InputController _inputController;
@@ -24,16 +27,10 @@ namespace Client
     private Vector3 _startPosition;
     private Vector3 _targetPosition;
     private Vector3 _inertiaTargetPosition;
-    private bool _canMove;
+    private bool _canMovePosition;
     private float _targetSize;
-    private RenderTexture _screenshotRt;
-    private bool _returnScreenshotRequest;
 
-    public RaycastHit2D GetHitFromMousePoint()
-    {
-      var ray = _camera.ScreenPointToRay(Input.mousePosition);
-      return Physics2D.Raycast(ray.origin, ray.direction);
-    }
+    public bool CanMove { get; set; }
 
     public bool GetHitFromMousePoint(out RaycastHit2D hit)
     {
@@ -42,39 +39,30 @@ namespace Client
       return hit;
     }
 
-    public IEnumerator CreateScreenshotCoroutine(RenderTexture rt)
-    {
-      _screenshotRt = rt;
-      while (!_returnScreenshotRequest)
-        yield return null;
-      _screenshotRt = null;
-      _returnScreenshotRequest = false;
-    }
-
     public void Tick()
     {
-      CalculateTouches();
-      MovePosition();
-      Zoom();
-    }
-
-    public void CanRender(bool can) => _camera.enabled = can;
-
-    private void OnRenderImage(RenderTexture source, RenderTexture destination)
-    {
-      if (_screenshotRt != null)
+      if (CanMove)
       {
-        Graphics.Blit(source, _screenshotRt);
-        _returnScreenshotRequest = true;
+        CalculateTouches();
+        MovePosition();
+        Zoom();
       }
-
-      Graphics.Blit(source, destination);
     }
+
+    public void RenderGameplay() => _camera.cullingMask = _gameplayLayers;
+
+    public void RenderMenu() => _camera.cullingMask = _menuLayers;
+
+    public void SetImageRt(RenderTexture rt) => _imageController.SetImageRt(rt);
+
+    public void ClearImageRt() => _imageController.ClearImageRt();
+
+    public IEnumerator CreateScreenshotCoroutine(RenderTexture rt) => _imageController.CreateScreenshotCoroutine(rt);
 
     private void Awake()
     {
       _inputController = Locator.Get<InputController>();
-      CanRender(false);
+      RenderMenu();
       Clear();
     }
 
@@ -117,14 +105,14 @@ namespace Client
     {
       if (_touches.Count > 1)
       {
-        _canMove = false;
+        _canMovePosition = false;
         ClearPositionMove();
       }
 
       if (_touches.Count == 0 || !_mousePosition.HasValue)
-        _canMove = true;
+        _canMovePosition = true;
 
-      if (!_canMove)
+      if (!_canMovePosition)
         return;
 
       Vector3 position;

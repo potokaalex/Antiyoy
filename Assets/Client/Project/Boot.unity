@@ -527,6 +527,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da42b3ce7d3046c88897ae8ee8527849, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Client::Client.CameraController
+--- !u!20 &1324446757414692858 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 5081175412118619335, guid: 9542a04324c10444b8e5b281060eb12e, type: 3}
+  m_PrefabInstance: {fileID: 7667927162433574180}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1971083102176289642 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2316918724896770478, guid: 9542a04324c10444b8e5b281060eb12e, type: 3}
@@ -568,6 +573,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 149245257724884954, guid: 74ae161c6679e75449baf132659d6a63, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 1324446757414692858}
     - target: {fileID: 1245379426662399762, guid: 74ae161c6679e75449baf132659d6a63, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -644,6 +653,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3035076879334019723, guid: 74ae161c6679e75449baf132659d6a63, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 1324446757414692858}
     - target: {fileID: 4846707815524976558, guid: 74ae161c6679e75449baf132659d6a63, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -668,6 +681,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7755106558531192414, guid: 74ae161c6679e75449baf132659d6a63, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 1324446757414692858}
     - target: {fileID: 7841104660341323593, guid: 74ae161c6679e75449baf132659d6a63, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

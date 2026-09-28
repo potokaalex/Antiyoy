@@ -37,7 +37,7 @@ namespace Client.Gameplay.UI
     public void PlayShow()
     {
       _hudView.PlayShow();
-      _gameTransitionView.PlaToyGameTransition();
+      _gameTransitionView.PlayToyGameTransition();
     }
 
     public void ShowRegionUI(RegionController region)
@@ -63,14 +63,14 @@ namespace Client.Gameplay.UI
     {
       _hudView.PlayHide();
       _pauseView.PlayShow();
-      _gameTransitionView.PlaOutGameTransition();
+      _gameTransitionView.PlayOutGameTransition();
     }
 
     public void HidePause()
     {
       _pauseView.PlayHide();
       _hudView.PlayShow();
-      _gameTransitionView.PlaToyGameTransition();
+      _gameTransitionView.PlayToyGameTransition();
     }
   }
 }
