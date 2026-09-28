@@ -46,5 +46,14 @@ namespace Client.Government
 
       return false;
     }
+
+    public GovernmentController Get(RegionType regionType)
+    {
+      foreach (var government in _governments.Values)
+        if (government.RegionsType == regionType)
+          return government;
+
+      return null;
+    }
   }
 }

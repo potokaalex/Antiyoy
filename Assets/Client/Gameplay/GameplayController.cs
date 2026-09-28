@@ -74,8 +74,7 @@ namespace Client.Gameplay
       _regionsService.InitialCreateRegions();
       _gameplayRegionsController.Enable();
       _capitalsController.Enable();
-      _cameraController.CanMove = true;
-
+      _cameraController.Setup();
       CreatePlayers();
 
       TurnsCount = 0;
@@ -107,6 +106,7 @@ namespace Client.Gameplay
       }
 
       UpdatePlayerRegions();
+      _cameraController.Focus(_capitalsController.GetCapital(_governmentsService.Get(_currentPlayer.RegionType).Regions[0]).Position);
     }
 
     public void End()

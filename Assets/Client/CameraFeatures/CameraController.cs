@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Client.Hex;
 using Client.Infrastructure;
 using Client.Utilities;
 using UnityEngine;
@@ -21,14 +22,21 @@ namespace Client.CameraFeatures
     [SerializeField] private LayerMask _menuLayers;
     private readonly List<Touch> _touches = new();
     private readonly List<int> _ignoredTouches = new();
+    private readonly float _positionZ = -10;
+    private readonly float _minSize = 4;
     private InputController _inputController;
+    private GridController _gridController;
     private Vector2? _mousePosition;
     private Vector2? _firstTouchPosition;
     private Vector3 _startPosition;
     private Vector3 _targetPosition;
     private Vector3 _inertiaTargetPosition;
+    private Vector2 _minPosition;
+    private Vector2 _maxPosition;
     private bool _canMovePosition;
     private float _targetSize;
+    private float _maxSize;
+    private Vector2 _center;
 
     public bool CanMove { get; set; }
 
@@ -46,6 +54,7 @@ namespace Client.CameraFeatures
         CalculateTouches();
         MovePosition();
         Zoom();
+        _camera.transform.position = ClampPosition(_camera.transform.position);
       }
     }
 
@@ -59,9 +68,32 @@ namespace Client.CameraFeatures
 
     public IEnumerator CreateScreenshotCoroutine(RenderTexture rt) => _imageController.CreateScreenshotCoroutine(rt);
 
+    public void Setup()
+    {
+      var gridMin = (Vector2)_gridController.HexPositionToWorld(HexCoordinates.FromArray2DIndex(Vector2Int.zero));
+      var gridMax = (Vector2)_gridController.HexPositionToWorld(HexCoordinates.FromArray2DIndex(_gridController.Size - Vector2Int.one));
+      _center = (gridMin + gridMax) / 2f;
+
+      var maxVisibleUnits = (gridMax.y - gridMin.y) * 2f;
+      _maxSize = Mathf.Max(maxVisibleUnits / 2f, _minSize);
+      SetSize(_maxSize);
+
+      _minPosition = _center - Vector2.one * _maxSize;
+      _maxPosition = _center + Vector2.one * _maxSize;
+      SetPosition(_center);
+    }
+
+    public void Focus(Vector3 position)
+    {
+      position.z = _positionZ;
+      _targetPosition = position;
+      _inertiaTargetPosition = position;
+    }
+
     private void Awake()
     {
       _inputController = Locator.Get<InputController>();
+      _gridController = Locator.Get<GridController>();
       RenderMenu();
       Clear();
     }
@@ -169,7 +201,7 @@ namespace Client.CameraFeatures
           _targetSize = _camera.orthographicSize - delta * _zoomDragMultiplier / 7.5f;
       }
 
-      _targetSize = Mathf.Clamp(_targetSize, 4, 10);
+      _targetSize = Mathf.Clamp(_targetSize, _minSize, _maxSize);
       _camera.orthographicSize = Mathf.Lerp(_camera.orthographicSize, _targetSize, _zoomLerpFactor * Time.deltaTime);
     }
 
@@ -187,21 +219,35 @@ namespace Client.CameraFeatures
 
     private Vector3 ClampPosition(Vector3 position)
     {
-      position.x = Mathf.Clamp(position.x, -4, 10);
-      position.y = Mathf.Clamp(position.y, -4, 10);
+      var halfHeight = _camera.orthographicSize;
+      var halfWidth = halfHeight * _camera.aspect;
+      position.x = Mathf.Clamp(position.x, _minPosition.x + halfWidth, _maxPosition.x - halfWidth);
+      position.y = Mathf.Clamp(position.y, _minPosition.y + halfHeight, _maxPosition.y - halfHeight);
       return position;
     }
 
-    private void ClearPositionMove()
-    {
-      _startPosition = _targetPosition = _inertiaTargetPosition = _camera.transform.position;
-      _firstTouchPosition = null;
-    }
+    private void ClearPositionMove() => SetPosition(_camera.transform.position);
 
     private void Clear()
     {
       ClearPositionMove();
-      _targetSize = _camera.orthographicSize;
+      SetSize(_camera.orthographicSize);
+    }
+
+    private void SetPosition(Vector3 value)
+    {
+      value.z = _positionZ;
+      _startPosition = value;
+      _targetPosition = value;
+      _inertiaTargetPosition = value; 
+      _camera.transform.position = value;
+      _firstTouchPosition = null;
+    }
+
+    private void SetSize(float value)
+    {
+      _targetSize = value;
+      _camera.orthographicSize = value;
     }
   }
 }

@@ -45,5 +45,14 @@ namespace Client.Unit.Code.Capital
           return true;
       return false;
     }
+
+    public IUnit GetCapital(RegionController region)
+    {
+      foreach (var cell in region.Cells)
+        if (IsCapital(cell.Unit))
+          return cell.Unit;
+
+      return null;
+    }
   }
 }
