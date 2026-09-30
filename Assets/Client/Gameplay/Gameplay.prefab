@@ -1522,12 +1522,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Client::Client.CameraController
   _camera: {fileID: 5081175412118619335}
   _imageController: {fileID: 4114119956447706717}
-  _positionDragMultiplier: 1.25
-  _positionLerpFactor: 20
-  _positionInertiaFactor: 2
-  _positionInertiaLerpFactor: 15
+  _positionDragMultiplier: 0.2
+  _positionLerpFactor: 30
+  _positionInertiaFactor: 0.8
   _zoomDragMultiplier: 15
-  _zoomLerpFactor: 12
+  _zoomLerpFactor: 15
   _gameplayLayers:
     serializedVersion: 2
     m_Bits: 33

@@ -12,10 +12,9 @@ namespace Client.CameraFeatures
   {
     [SerializeField] private Camera _camera;
     [SerializeField] private CameraImageController _imageController;
-    [SerializeField] private float _positionDragMultiplier;
+    [SerializeField] private float _positionDragMultiplier; //The smaller the value, the smaller the drag.
     [SerializeField] private float _positionLerpFactor;
-    [SerializeField] private float _positionInertiaFactor;
-    [SerializeField] private float _positionInertiaLerpFactor;
+    [SerializeField] private float _positionInertiaFactor; //The smaller the value, the smaller the inertia.
     [SerializeField] private float _zoomDragMultiplier;
     [SerializeField] private float _zoomLerpFactor;
     [SerializeField] private LayerMask _gameplayLayers;
@@ -30,13 +29,13 @@ namespace Client.CameraFeatures
     private Vector2? _firstTouchPosition;
     private Vector3 _startPosition;
     private Vector3 _targetPosition;
-    private Vector3 _inertiaTargetPosition;
     private Vector2 _minPosition;
     private Vector2 _maxPosition;
-    private bool _canMovePosition;
+    private bool _canDrag;
     private float _targetSize;
     private float _maxSize;
     private Vector2 _center;
+    private Vector3 _dragInertia;
 
     public bool CanMove { get; set; }
 
@@ -52,7 +51,8 @@ namespace Client.CameraFeatures
       if (CanMove)
       {
         CalculateTouches();
-        MovePosition();
+        MoveKinetics();
+        Drag();
         Zoom();
         _camera.transform.position = ClampPosition(_camera.transform.position);
       }
@@ -87,7 +87,6 @@ namespace Client.CameraFeatures
     {
       position.z = _positionZ;
       _targetPosition = position;
-      _inertiaTargetPosition = position;
     }
 
     private void Awake()
@@ -133,21 +132,19 @@ namespace Client.CameraFeatures
       }
     }
 
-    private void MovePosition()
+    private void Drag()
     {
       if (_touches.Count > 1)
       {
-        _canMovePosition = false;
-        ClearPositionMove();
+        _canDrag = false;
+        ClearDrag();
       }
 
       if (_touches.Count == 0 || !_mousePosition.HasValue)
-        _canMovePosition = true;
+        _canDrag = true;
 
-      if (!_canMovePosition)
+      if (!_canDrag)
         return;
-
-      Vector3 position;
 
       if (_mousePosition.HasValue || _touches.Count == 1)
       {
@@ -160,23 +157,27 @@ namespace Client.CameraFeatures
 
         var pixelDelta = touchPosition - _firstTouchPosition.Value;
         var screenDelta = pixelDelta * PixelToScreenSizeFactor();
-        var dragMultiplier = _positionDragMultiplier * (_camera.orthographicSize / 6);
-        var fromStartDelta = -new Vector3(screenDelta.x, screenDelta.y, 0) * dragMultiplier;
+        var worldDelta = -screenDelta * (_positionDragMultiplier * _camera.orthographicSize);
 
-        _targetPosition = _startPosition + fromStartDelta;
+        var previousTargetPosition = _targetPosition;
+        _targetPosition = _startPosition + (Vector3)worldDelta;
         _targetPosition = ClampPosition(_targetPosition);
-        var fromCurrentDelta = _targetPosition - _camera.transform.position;
-        _inertiaTargetPosition = _camera.transform.position + fromCurrentDelta * _positionInertiaFactor;
-        _inertiaTargetPosition = ClampPosition(_inertiaTargetPosition);
-        position = Vector3.Lerp(_camera.transform.position, _targetPosition, _positionLerpFactor * Time.deltaTime);
+        _dragInertia = _targetPosition - previousTargetPosition;
       }
       else
-      {
         _firstTouchPosition = null;
-        position = Vector3.Lerp(_camera.transform.position, _inertiaTargetPosition, _positionInertiaLerpFactor * Time.deltaTime);
-      }
 
-      _camera.transform.position = position;
+      _camera.transform.position = Vector3.Lerp(_camera.transform.position, _targetPosition, _positionLerpFactor * Time.deltaTime);
+    }
+
+    private void MoveKinetics()
+    {
+      if (_touches.Count > 0 || _mousePosition.HasValue || _dragInertia == Vector3.zero)
+        return;
+
+      _targetPosition += _dragInertia;
+      _dragInertia *= Mathf.Clamp01(Mathf.Pow(_positionInertiaFactor, Time.deltaTime * 60f));
+      _targetPosition = ClampPosition(_targetPosition);
     }
 
     private void Zoom()
@@ -191,7 +192,7 @@ namespace Client.CameraFeatures
         var currentDistance = Vector2.Distance(touch0.position, touch1.position);
         var pixelDelta = currentDistance - prevDistance;
         var screenDelta = pixelDelta * PixelToScreenSizeFactor();
-        _targetSize = _camera.orthographicSize - screenDelta * _zoomDragMultiplier; //better use startSize like in movePosition?
+        _targetSize = _camera.orthographicSize - screenDelta * _zoomDragMultiplier;
       }
 
       if (PlatformUtilities.IsEditor)
@@ -226,11 +227,11 @@ namespace Client.CameraFeatures
       return position;
     }
 
-    private void ClearPositionMove() => SetPosition(_camera.transform.position);
+    private void ClearDrag() => SetPosition(_camera.transform.position);
 
     private void Clear()
     {
-      ClearPositionMove();
+      ClearDrag();
       SetSize(_camera.orthographicSize);
     }
 
@@ -239,9 +240,9 @@ namespace Client.CameraFeatures
       value.z = _positionZ;
       _startPosition = value;
       _targetPosition = value;
-      _inertiaTargetPosition = value; 
       _camera.transform.position = value;
       _firstTouchPosition = null;
+      _dragInertia = Vector3.zero;
     }
 
     private void SetSize(float value)
