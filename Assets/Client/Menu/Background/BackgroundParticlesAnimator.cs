@@ -1,4 +1,5 @@
 using Client.Utilities;
+using Coffee.UIExtensions;
 using DG.Tweening;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ namespace Client.Menu.Background
 {
   public class BackgroundParticlesAnimator : MonoBehaviour
   {
+    [SerializeField] private UIParticle _uiParticle;
     [SerializeField] private ParticleSystem _particleSystem;
     [SerializeField] private Vector3 _appearStartOffsetCenter;
     [SerializeField] float _appearStartOffsetValue;
@@ -49,38 +51,43 @@ namespace Client.Menu.Background
 
     private Tween PlayCircleMove(bool moveToCenter)
     {
-      _particleSystem.Pause();
+      var count = 0;
 
-      var count = _particleSystem.GetParticles(_particles);
-      _startPositions = new Vector3[count];
-      _endPositions = new Vector3[count];
+      return DOTween.Sequence()
+        .AppendCallback(() =>
+        {
+          _uiParticle.Pause();
 
-      for (var i = 0; i < count; i++)
-      {
-        var endPosition = _particles[i].position;
-        _endPositions[i] = endPosition;
+          count = _particleSystem.GetParticles(_particles);
+          _startPositions = new Vector3[count];
+          _endPositions = new Vector3[count];
 
-        var dir = _appearStartOffsetCenter - endPosition;
-        dir.y = 0;
-        if (dir == Vector3.zero)
-          dir = new Vector3(1, 0, 1);
-        dir.Normalize();
+          for (var i = 0; i < count; i++)
+          {
+            var endPosition = _particles[i].position;
+            _endPositions[i] = endPosition;
 
-        var startPosition = endPosition - dir * _appearStartOffsetValue;
+            var dir = _appearStartOffsetCenter - endPosition;
+            dir.y = 0;
+            if (dir == Vector3.zero)
+              dir = new Vector3(1, 0, 1);
+            dir.Normalize();
 
-        _startPositions[i] = startPosition;
-        _particles[i].position = moveToCenter ? startPosition : endPosition;
-      }
+            var startPosition = endPosition - dir * _appearStartOffsetValue;
 
-      _particleSystem.SetParticles(_particles, count);
+            _startPositions[i] = startPosition;
+            _particles[i].position = moveToCenter ? startPosition : endPosition;
+          }
 
-      return DOVirtual.Float(0, 1, _appearDuration, v =>
-      {
-        var p = moveToCenter ? v : 1 - v;
-        for (var i = 0; i < count; i++)
-          _particles[i].position = Vector3.Lerp(_startPositions[i], _endPositions[i], p);
-        _particleSystem.SetParticles(_particles, count);
-      }).AddOnComplete(_particleSystem.Play);
+          _particleSystem.SetParticles(_particles, count);
+        })
+        .Append(DOVirtual.Float(0, 1, _appearDuration, v =>
+        {
+          var p = moveToCenter ? v : 1 - v;
+          for (var i = 0; i < count; i++)
+            _particles[i].position = Vector3.Lerp(_startPositions[i], _endPositions[i], p);
+          _particleSystem.SetParticles(_particles, count);
+        }).AddOnComplete(_uiParticle.Resume));
     }
   }
 }
