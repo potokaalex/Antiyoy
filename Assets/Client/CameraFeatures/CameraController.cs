@@ -74,7 +74,7 @@ namespace Client.CameraFeatures
       var gridMax = (Vector2)_gridController.HexPositionToWorld(HexCoordinates.FromArray2DIndex(_gridController.Size - Vector2Int.one));
       _center = (gridMin + gridMax) / 2f;
 
-      var maxVisibleUnits = (gridMax.y - gridMin.y) * 2f;
+      var maxVisibleUnits = (gridMax.y - gridMin.y) + 5;
       _maxSize = Mathf.Max(maxVisibleUnits / 2f, _minSize);
       SetSize(_maxSize);
 
@@ -182,6 +182,8 @@ namespace Client.CameraFeatures
 
     private void Zoom()
     {
+      var zoomDragMultiplier = _zoomDragMultiplier * _maxSize / 6f;
+
       if (_touches.Count == 2)
       {
         var touch0 = _touches[0];
@@ -192,14 +194,14 @@ namespace Client.CameraFeatures
         var currentDistance = Vector2.Distance(touch0.position, touch1.position);
         var pixelDelta = currentDistance - prevDistance;
         var screenDelta = pixelDelta * PixelToScreenSizeFactor();
-        _targetSize = _camera.orthographicSize - screenDelta * _zoomDragMultiplier;
+        _targetSize = _camera.orthographicSize - screenDelta * zoomDragMultiplier;
       }
 
       if (PlatformUtilities.IsEditor)
       {
         var delta = Input.mouseScrollDelta.y;
         if (Mathf.Abs(delta) > 0)
-          _targetSize = _camera.orthographicSize - delta * _zoomDragMultiplier / 7.5f;
+          _targetSize = _camera.orthographicSize - delta * zoomDragMultiplier / 5f;
       }
 
       _targetSize = Mathf.Clamp(_targetSize, _minSize, _maxSize);

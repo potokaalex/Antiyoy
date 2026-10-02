@@ -47,6 +47,8 @@ namespace Client.Region
             regions[0].Add(cell);
           else if (x <= 9)
             regions[1].Add(cell);
+          else
+            regions[2].Add(cell);
         }
         else
           regions[2].Add(cell);
