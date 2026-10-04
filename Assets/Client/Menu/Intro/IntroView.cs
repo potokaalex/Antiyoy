@@ -16,7 +16,7 @@ namespace Client.Menu.Intro
     public void Play()
     {
       DOTween.Sequence()
-        .Append(AnimationsUtilities.DoAnchoredMove(_textRoot, new Vector2(0, -50), Vector2.zero))
+        .Append(_textRoot.DOAnchorPos(new Vector2(0, -50), Vector2.zero, 0.25f))
         .Join(_fade.DOFade(0, 0.3f))
         .AppendInterval(0.65f)
         .AppendCallback(() => gameObject.SetActive(false))

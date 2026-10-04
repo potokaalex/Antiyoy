@@ -28,9 +28,11 @@ namespace Client.Menu.Background
       _particlesColor = _particleSystemMain.startColor.color;
     }
 
-    public Tween PlayShowAnimation() => PlayCircleMove(true);
+    public Tween PlayShowAnimation() => PlayCircleMove(true, _appearDuration);
 
-    public Tween PlayHideAnimation() => PlayCircleMove(false);
+    public Tween PlayShowAnimation(float duration) => PlayCircleMove(true, duration);
+
+    public Tween PlayHideAnimation() => PlayCircleMove(false, _appearDuration);
 
     public Tween PlayColorTransition(Color color)
     {
@@ -49,7 +51,7 @@ namespace Client.Menu.Background
       });
     }
 
-    private Tween PlayCircleMove(bool moveToCenter)
+    private Tween PlayCircleMove(bool moveToCenter, float duration)
     {
       var count = 0;
 
@@ -81,7 +83,7 @@ namespace Client.Menu.Background
 
           _particleSystem.SetParticles(_particles, count);
         })
-        .Append(DOVirtual.Float(0, 1, _appearDuration, v =>
+        .Append(DOVirtual.Float(0, 1, duration, v =>
         {
           var p = moveToCenter ? v : 1 - v;
           for (var i = 0; i < count; i++)

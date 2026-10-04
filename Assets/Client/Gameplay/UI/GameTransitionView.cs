@@ -13,6 +13,7 @@ namespace Client.Gameplay.UI
   public class GameTransitionView : MonoBehaviour
   {
     [SerializeField] private RawImage _gameImage;
+    [SerializeField] private CanvasGroup _canvasGroup;
     private CameraController _cameraController;
     private MenuView _menuView;
     private RenderTexture _screenshotRt;
@@ -27,6 +28,7 @@ namespace Client.Gameplay.UI
       _screenshotRt = new RenderTexture(Screen.width, Screen.height, 16);
       _freezeRt = new RenderTexture(Screen.width, Screen.height, 16);
       _gameImage.texture = _screenshotRt;
+      _canvasGroup.alpha = 0;
     }
 
     private void OnDestroy() => DOTween.Kill(this);
@@ -47,19 +49,18 @@ namespace Client.Gameplay.UI
       _cameraController.ClearImageRt();
       _cameraController.RenderMenu();
 
-      _gameImage.gameObject.SetActive(true);
-      _gameImage.transform.localScale = Vector3.zero;
-      _gameImage.color = new Color(1, 1, 1, 0);
+      _canvasGroup.alpha = 1;
+      _canvasGroup.transform.localScale = Vector3.zero;
 
       _menuView.Background.PlayHideAnimation();
       _inputController.SetBlockInput(true);
 
       DOTween.Sequence()
-        .Append(_gameImage.transform.DOScale(Vector3.one, 0.5f))
-        .Join(_gameImage.DOFade(1, 0.5f))
+        .Append(_canvasGroup.transform.DOScale(Vector3.one, 0.5f))
+        .Join(_canvasGroup.DOFade(1, 0.5f))
         .OnComplete(() =>
         {
-          _gameImage.gameObject.SetActive(false);
+          _canvasGroup.alpha = 0;
           _inputController.SetBlockInput(false);
           _menuView.Background.SetActive(false);
           _cameraController.RenderGameplay();
@@ -77,20 +78,19 @@ namespace Client.Gameplay.UI
       yield return StartCoroutine(_cameraController.CreateScreenshotCoroutine(_screenshotRt));
       _cameraController.RenderMenu();
 
-      _gameImage.gameObject.SetActive(true);
-      _gameImage.transform.localScale = Vector3.one;
-      _gameImage.color = new Color(1, 1, 1, 1);
+      _canvasGroup.alpha = 1;
+      _canvasGroup.transform.localScale = Vector3.one;
 
       _menuView.Background.SetActive(true);
       _menuView.Background.PlayShowAnimation();
       _inputController.SetBlockInput(true);
 
       DOTween.Sequence()
-        .Append(_gameImage.transform.DOScale(Vector3.zero, 0.5f))
-        .Join(_gameImage.DOFade(0, 0.5f))
+        .Append(_canvasGroup.transform.DOScale(Vector3.zero, 0.5f))
+        .Join(_canvasGroup.DOFade(0, 0.5f))
         .OnComplete(() =>
         {
-          _gameImage.gameObject.SetActive(false);
+          _canvasGroup.alpha = 0;
           _inputController.SetBlockInput(false);
         })
         .SetEase(AnimationsUtilities.MenuDefaultEase)

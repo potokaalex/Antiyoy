@@ -50,8 +50,11 @@ namespace Client.Menu.Background
 
       DOTween.Sequence()
         .Append(_fade.DOColor(Color.clear, 0.5f))
-        .Join(_particlesAnimator.PlayShowAnimation())
         .SetEase(AnimationsUtilities.MenuDefaultEase);
+
+      DOTween.Sequence()
+        .Append(_particlesAnimator.PlayShowAnimation(0.5f))
+        .SetEase(Ease.InCubic);
     }
 
     public void SetActive(bool isActive) => gameObject.SetActive(isActive);

@@ -1,3 +1,4 @@
+using Client.Project.Utilities;
 using DG.Tweening;
 using UnityEngine;
 
@@ -26,7 +27,7 @@ namespace Client.Project.Borders
       }
 
       Transform.position = targetPosition - direction * 0.05f;
-      return Transform.DOMove(targetPosition, 0.25f);
+      return Transform.DOMove(targetPosition, AnimationsUtilities.GameplayUIDefaultDuration);
     }
   }
 }

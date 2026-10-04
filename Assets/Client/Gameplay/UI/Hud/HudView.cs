@@ -62,14 +62,12 @@ namespace Client.Gameplay.UI.Hud
 
     public void PlayShow()
     {
-      _topPanel.anchoredPosition = _topPanelStartPosition + new Vector2(0, 150);
-      _bottomPanel.anchoredPosition = _bottomPanelStartPosition - new Vector2(0, 150);
       gameObject.SetActive(true);
 
       DOTween.Sequence()
-        .Append(_topPanel.DOAnchorPos(_topPanelStartPosition, 0.25f))
-        .Join(_bottomPanel.DOAnchorPos(_bottomPanelStartPosition, 0.25f))
-        .Join(_canvasGroup.DOFade(1, 0.25f))
+        .Append(_topPanel.DOAnchorPos(_topPanelStartPosition + new Vector2(0, 150), _topPanelStartPosition, 0.4f))
+        .Join(_bottomPanel.DOAnchorPos(_bottomPanelStartPosition - new Vector2(0, 150), _bottomPanelStartPosition, 0.4f))
+        .Join(_canvasGroup.DOFade(1, 0.4f))
         .SetEase(AnimationsUtilities.MenuDefaultEase)
         .SetId(this);
     }

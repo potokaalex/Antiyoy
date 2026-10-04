@@ -37,19 +37,19 @@ namespace Client.Gameplay.UI.Hud
       {
         _isActive = true;
         gameObject.SetActive(true);
-        AnimationsUtilities.DoAnchoredMove(_topPanel, _topPanel.anchoredPosition, new Vector2(0, 0));
-        AnimationsUtilities.DoAnchoredMove(_creationPanel, _creationPanel.anchoredPosition, new Vector2(0, 0));
-        AnimationsUtilities.DoFade(_topPanelCanvasGroup, _topPanelCanvasGroup.alpha, 1);
-        AnimationsUtilities.DoFade(_creationPanelCanvasGroup, _creationPanelCanvasGroup.alpha, 1);
+        _topPanel.DOAnchorPos(new Vector2(0, 0), AnimationsUtilities.GameplayUIDefaultDuration);
+        _creationPanel.DOAnchorPos(new Vector2(0, 0), AnimationsUtilities.GameplayUIDefaultDuration);
+        _topPanelCanvasGroup.DOFade(1, AnimationsUtilities.GameplayUIDefaultDuration);
+        _creationPanelCanvasGroup.DOFade(1, AnimationsUtilities.GameplayUIDefaultDuration);
       }
       else
       {
         _isActive = false;
         DOTween.Sequence().SetId(this)
-          .Append(AnimationsUtilities.DoAnchoredMove(_topPanel, _topPanel.anchoredPosition, new Vector2(0, 150)))
-          .Join(AnimationsUtilities.DoAnchoredMove(_creationPanel, _creationPanel.anchoredPosition, new Vector2(0, -150)))
-          .Join(AnimationsUtilities.DoFade(_topPanelCanvasGroup, _topPanelCanvasGroup.alpha, 0))
-          .Join(AnimationsUtilities.DoFade(_creationPanelCanvasGroup, _creationPanelCanvasGroup.alpha, 0))
+          .Append(_topPanel.DOAnchorPos(new Vector2(0, 150), AnimationsUtilities.GameplayUIDefaultDuration))
+          .Join(_creationPanel.DOAnchorPos(new Vector2(0, -150), AnimationsUtilities.GameplayUIDefaultDuration))
+          .Join(_topPanelCanvasGroup.DOFade(0, AnimationsUtilities.GameplayUIDefaultDuration))
+          .Join(_creationPanelCanvasGroup.DOFade(0, AnimationsUtilities.GameplayUIDefaultDuration))
           .onComplete += () => gameObject.SetActive(false);
       }
     }

@@ -1,5 +1,6 @@
 using DG.Tweening;
 using UnityEngine;
+// ReSharper disable InconsistentNaming
 
 namespace Client.Project.Utilities
 {
@@ -8,18 +9,7 @@ namespace Client.Project.Utilities
     public static readonly Ease MenuDefaultEase = Ease.InQuart;
     public static readonly Color GameplayBackgroundColor = new(0.2078431f, 0.2078431f, 0.2078431f, 1);
     public static readonly float GameplayUnitsYoyoAnimationOffset = 0.05f;
-
-    public static Tween DoAnchoredMove(RectTransform target, Vector2 from, Vector2 to, float duration = 0.25f)
-    {
-      target.anchoredPosition = from;
-      return DOVirtual.Vector2(target.anchoredPosition, to, duration, x => target.anchoredPosition = x).SetEase(Ease.OutQuad);
-    }
-
-    public static Tween DoFade(CanvasGroup canvasGroup, float from, float to, float duration = 0.25f)
-    {
-      canvasGroup.alpha = from;
-      return canvasGroup.DOFade(to, duration).SetEase(Ease.OutQuad);
-    }
+    public static readonly float GameplayUIDefaultDuration = 0.25f;
 
     public static T AddOnComplete<T>(this T tween, TweenCallback action) where T : Tween
     {
@@ -27,6 +17,18 @@ namespace Client.Project.Utilities
         return tween;
       tween.onComplete += action;
       return tween;
+    }
+
+    public static Tween DOAnchorPos(this RectTransform target, Vector2 from, Vector2 to, float duration)
+    {
+      target.anchoredPosition = from;
+      return target.DOAnchorPos(to, duration);
+    }
+
+    public static Tween DOFade(this CanvasGroup target, float from, float to, float duration)
+    {
+      target.alpha = from;
+      return target.DOFade(to, duration);
     }
   }
 }
