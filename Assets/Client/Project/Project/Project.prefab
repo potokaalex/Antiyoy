@@ -879,8 +879,8 @@ MonoBehaviour:
   _positionDragMultiplier: 0.2
   _positionLerpFactor: 30
   _positionInertiaFactor: 0.8
-  _zoomDragMultiplier: 5
-  _zoomLerpFactor: 12
+  _zoomDragMultiplier: 7
+  _zoomLerpFactor: 9
   _gameplayLayers:
     serializedVersion: 2
     m_Bits: 33
