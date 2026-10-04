@@ -1,0 +1,74 @@
+using Client.Project;
+using Client.Project.Infrastructure;
+using Client.Project.Region;
+using Client.Project.Unit.Code;
+using Client.Project.Utilities;
+
+namespace Client.Gameplay.Gameplay
+{
+  public class GameplayFieldController : IInitializable
+  {
+    private UnitsService _unitsService;
+    private RegionsService _regionsService;
+
+    public void Initialize()
+    {
+      _unitsService = Locator.Get<UnitsService>();
+      _regionsService = Locator.Get<RegionsService>();
+    }
+
+    public bool CanCreateUnit(UnitType unitType, CellController cell, RegionController playerRegion)
+    {
+      var cost = _unitsService.GetCost(unitType);
+      _unitsService.GetUnitCreationArea(playerRegion, GameUtilities.AreaBuffer, unitType);
+      return playerRegion.Money >= cost && GameUtilities.AreaBuffer.Contains(cell) && _unitsService.CanCreate(cell, playerRegion.Type, unitType);
+    }
+
+    public void CreateUnit(UnitType unitType, CellController cell, RegionController playerRegion)
+    {
+      if (CanCreateUnit(unitType, cell, playerRegion))
+      {
+        var cost = _unitsService.GetCost(unitType);
+        AddConqueredMoney(cell, playerRegion);
+        _unitsService.Create(cell, _unitsService.CalculateJoinedType(unitType, cell, playerRegion.Type), WillHaveTurns(playerRegion.Type, cell));
+        _regionsService.SetRegionType(cell, playerRegion.Type);
+        playerRegion.Money -= cost;
+      }
+    }
+
+    public bool CanMoveUnit(IUnit unit, CellController cell)
+    {
+      unit.GetMoveArea(GameUtilities.AreaBuffer);
+      return GameUtilities.AreaBuffer.Contains(cell) && _unitsService.CanMove(unit, cell);
+    }
+
+    public void MoveUnit(IUnit unit, CellController cell)
+    {
+      if (CanMoveUnit(unit, cell))
+      {
+        unit.RemoveTurns();
+        AddConqueredMoney(cell, unit.Cell.Region);
+        _unitsService.Create(cell, _unitsService.CalculateJoinedType(unit.Type, cell, unit.Cell.Region.Type),
+          WillHaveTurns(unit.Cell.Region.Type, cell));
+        _unitsService.Destroy(unit);
+        _regionsService.SetRegionType(cell, unit.Cell.Region.Type);
+      }
+    }
+
+    private bool WillHaveTurns(RegionType playerRegion, CellController cell)
+    {
+      if (cell.Region.Type != playerRegion)
+        return false;
+      if (cell.HasUnit)
+        return cell.Unit.HasTurns;
+      return true;
+    }
+
+    private void AddConqueredMoney(CellController cell, RegionController playerRegion)
+    {
+      if (cell.Region.Type == playerRegion.Type)
+        if (cell.HasUnit && cell.Unit.Type.IsTree())
+          playerRegion.Money += 3;
+    }
+  }
+}

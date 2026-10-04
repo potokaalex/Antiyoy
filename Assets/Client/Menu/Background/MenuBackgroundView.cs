@@ -1,4 +1,4 @@
-using Client.Utilities;
+using Client.Project.Utilities;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;

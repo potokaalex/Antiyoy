@@ -1,10 +1,12 @@
-using Client.ActionsHistory;
-using Client.CameraFeatures;
-using Client.Government;
-using Client.Infrastructure;
-using Client.Region;
-using Client.Unit.Code;
-using Client.Utilities;
+using Client.Gameplay.ActionsHistory;
+using Client.Gameplay.Gameplay;
+using Client.Project;
+using Client.Project.CameraFeatures;
+using Client.Project.Government;
+using Client.Project.Infrastructure;
+using Client.Project.Region;
+using Client.Project.Unit.Code;
+using Client.Project.Utilities;
 
 namespace Client.Gameplay.Player
 {
@@ -66,7 +68,7 @@ namespace Client.Gameplay.Player
 
     public void Undo()
     {
-      if(_actionsHistoryController.Undo())
+      if (_actionsHistoryController.Undo())
         SelectLastSelectedRegion();
     }
 
@@ -194,7 +196,7 @@ namespace Client.Gameplay.Player
 
     private void SetSelectedRegion(RegionController region)
     {
-      if(_selectedRegion != null)
+      if (_selectedRegion != null)
         _lastSelectedRegion = _selectedRegion;
       _selectedRegion = region;
     }

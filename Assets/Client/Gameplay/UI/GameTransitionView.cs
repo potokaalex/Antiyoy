@@ -1,8 +1,9 @@
 using System.Collections;
-using Client.CameraFeatures;
-using Client.Infrastructure;
 using Client.Menu;
-using Client.Utilities;
+using Client.Project;
+using Client.Project.CameraFeatures;
+using Client.Project.Infrastructure;
+using Client.Project.Utilities;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;

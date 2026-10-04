@@ -1,8 +1,8 @@
 using Client.Gameplay.Player;
-using Client.Infrastructure;
-using Client.UI;
-using Client.Unit.Code;
-using Client.Utilities;
+using Client.Project.Infrastructure;
+using Client.Project.UI;
+using Client.Project.Unit.Code;
+using Client.Project.Utilities;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using TMPro;
@@ -77,7 +77,7 @@ namespace Client.Gameplay.UI.Hud
 
     private void View(UnitType unitType)
     {
-      if(unitType == UnitType.None)
+      if (unitType == UnitType.None)
         return;
 
       _variantCost.SetText($"${_unitsService.GetCost(unitType)}");

@@ -1,5 +1,6 @@
-using Client.Infrastructure;
-using Client.Utilities;
+using Client.Project;
+using Client.Project.Infrastructure;
+using Client.Project.Utilities;
 using DG.Tweening;
 using UnityEngine;
 

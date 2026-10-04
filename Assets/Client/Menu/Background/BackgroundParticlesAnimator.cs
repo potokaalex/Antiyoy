@@ -1,4 +1,4 @@
-using Client.Utilities;
+using Client.Project.Utilities;
 using Coffee.UIExtensions;
 using DG.Tweening;
 using UnityEngine;

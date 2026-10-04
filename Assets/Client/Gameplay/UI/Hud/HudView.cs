@@ -1,7 +1,9 @@
+using Client.Gameplay.Gameplay;
 using Client.Gameplay.Player;
-using Client.Infrastructure;
-using Client.UI;
-using Client.Utilities;
+using Client.Project;
+using Client.Project.Infrastructure;
+using Client.Project.UI;
+using Client.Project.Utilities;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;

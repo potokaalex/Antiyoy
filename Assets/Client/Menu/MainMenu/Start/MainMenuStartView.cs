@@ -1,7 +1,8 @@
-using Client.Infrastructure;
 using Client.Project;
-using Client.UI;
-using Client.Utilities;
+using Client.Project.Infrastructure;
+using Client.Project.Project;
+using Client.Project.UI;
+using Client.Project.Utilities;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;

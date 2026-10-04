@@ -1,6 +1,6 @@
-using Client.Infrastructure;
 using Client.Menu.MainMenu;
-using Client.Utilities;
+using Client.Project.Infrastructure;
+using Client.Project.Utilities;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;

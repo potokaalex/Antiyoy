@@ -1,6 +1,6 @@
-using Client.Infrastructure;
 using Client.Menu;
-using Client.Region;
+using Client.Project.Infrastructure;
+using Client.Project.Region;
 using UnityEngine;
 
 namespace Client.Gameplay.UI

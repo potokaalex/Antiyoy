@@ -1,7 +1,8 @@
+using Client.Gameplay.Gameplay;
 using Client.Gameplay.UI.Hud;
 using Client.Gameplay.UI.Pause;
-using Client.Infrastructure;
-using Client.Region;
+using Client.Project.Infrastructure;
+using Client.Project.Region;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
