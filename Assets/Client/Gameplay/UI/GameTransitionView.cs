@@ -60,7 +60,7 @@ namespace Client.Gameplay.UI
         {
           _gameImage.gameObject.SetActive(false);
           _inputController.SetBlockInput(false);
-          _menuView.SetActive(false);
+          _menuView.Background.SetActive(false);
           _cameraController.RenderGameplay();
           _cameraController.CanMove = true;
         })
@@ -80,7 +80,7 @@ namespace Client.Gameplay.UI
       _gameImage.transform.localScale = Vector3.one;
       _gameImage.color = new Color(1, 1, 1, 1);
 
-      _menuView.SetActive(true);
+      _menuView.Background.SetActive(true);
       _menuView.Background.PlayShowAnimation();
       _inputController.SetBlockInput(true);
 

@@ -52,7 +52,7 @@ namespace Client.Gameplay
       _gridController = Locator.Get<GridController>();
       _cameraController = Locator.Get<CameraController>();
       _unitsService = Locator.Get<UnitsService>();
-      _gameplayUI = Locator.Get<GameplayUI>();
+      _gameplayUI = Locator.Get<GameplayUI>();//дефакто мы должны создать эту херню.
       _regionsService = Locator.Get<RegionsService>();
       _governmentsService = Locator.Get<GovernmentsService>();
       _bordersService = Locator.Get<BordersService>();

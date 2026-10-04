@@ -53,5 +53,7 @@ namespace Client.Menu.Background
         .Join(_particlesAnimator.PlayShowAnimation())
         .SetEase(AnimationsUtilities.MenuDefaultEase);
     }
+
+    public void SetActive(bool isActive) => gameObject.SetActive(isActive);
   }
 }
