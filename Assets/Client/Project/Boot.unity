@@ -532,6 +532,30 @@ PrefabInstance:
       value: '"path":"_regionsColors.{2es}","value":{"$id":0,"$type":"UnityEngine.Color,
         UnityEngine.CoreModule",0.360784322,0.709803939,0.6901961,1}'
       objectReference: {fileID: 0}
+    - target: {fileID: 3146268636949199500, guid: de2618af98cc6ad4f89432b995a43a40, type: 3}
+      propertyPath: serializationData.SerializationNodes.Array.data[18].Data
+      value: 0.6509804
+      objectReference: {fileID: 0}
+    - target: {fileID: 3146268636949199500, guid: de2618af98cc6ad4f89432b995a43a40, type: 3}
+      propertyPath: serializationData.SerializationNodes.Array.data[19].Data
+      value: 0.305882365
+      objectReference: {fileID: 0}
+    - target: {fileID: 3146268636949199500, guid: de2618af98cc6ad4f89432b995a43a40, type: 3}
+      propertyPath: serializationData.SerializationNodes.Array.data[20].Data
+      value: 0.2509804
+      objectReference: {fileID: 0}
+    - target: {fileID: 3146268636949199500, guid: de2618af98cc6ad4f89432b995a43a40, type: 3}
+      propertyPath: serializationData.SerializationNodes.Array.data[27].Data
+      value: 0.360784322
+      objectReference: {fileID: 0}
+    - target: {fileID: 3146268636949199500, guid: de2618af98cc6ad4f89432b995a43a40, type: 3}
+      propertyPath: serializationData.SerializationNodes.Array.data[28].Data
+      value: 0.709803939
+      objectReference: {fileID: 0}
+    - target: {fileID: 3146268636949199500, guid: de2618af98cc6ad4f89432b995a43a40, type: 3}
+      propertyPath: serializationData.SerializationNodes.Array.data[29].Data
+      value: 0.6901961
+      objectReference: {fileID: 0}
     - target: {fileID: 5090457157583211816, guid: de2618af98cc6ad4f89432b995a43a40, type: 3}
       propertyPath: _menuView
       value: 
