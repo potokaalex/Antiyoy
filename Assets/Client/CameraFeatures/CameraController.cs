@@ -85,8 +85,8 @@ namespace Client.CameraFeatures
 
     public void Focus(Vector3 position)
     {
-      position.z = _positionZ;
-      _targetPosition = position;
+      ClearDrag();
+      _targetPosition = ClampPosition(position);
     }
 
     private void Awake()
@@ -129,6 +129,9 @@ namespace Client.CameraFeatures
           _mousePosition = null;
         else if (_mousePosition.HasValue)
           _mousePosition = position;
+
+        if (_mousePosition.HasValue)
+          _touches.Add(new Touch { position = _mousePosition.Value });
       }
     }
 
@@ -140,15 +143,15 @@ namespace Client.CameraFeatures
         ClearDrag();
       }
 
-      if (_touches.Count == 0 || !_mousePosition.HasValue)
+      if (_touches.Count == 0)
         _canDrag = true;
 
       if (!_canDrag)
         return;
 
-      if (_mousePosition.HasValue || _touches.Count == 1)
+      if (_touches.Count == 1)
       {
-        var touchPosition = _mousePosition ?? _touches[0].position;
+        var touchPosition = _touches[0].position;
         if (_firstTouchPosition == null)
         {
           _firstTouchPosition = touchPosition;
@@ -172,7 +175,7 @@ namespace Client.CameraFeatures
 
     private void MoveKinetics()
     {
-      if (_touches.Count > 0 || _mousePosition.HasValue || _dragInertia == Vector3.zero)
+      if (_touches.Count > 0 || _dragInertia == Vector3.zero)
         return;
 
       _targetPosition += _dragInertia;
@@ -226,6 +229,7 @@ namespace Client.CameraFeatures
       var halfWidth = halfHeight * _camera.aspect;
       position.x = Mathf.Clamp(position.x, _minPosition.x + halfWidth, _maxPosition.x - halfWidth);
       position.y = Mathf.Clamp(position.y, _minPosition.y + halfHeight, _maxPosition.y - halfHeight);
+      position.z = _positionZ;
       return position;
     }
 
