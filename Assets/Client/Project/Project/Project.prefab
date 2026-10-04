@@ -66,11 +66,11 @@ MonoBehaviour:
     SerializationNodes:
     - Name: _unitsConfigs
       Entry: 7
-      Data: 0|System.Collections.Generic.Dictionary`2[[Client.Unit.Code.UnitType,
-        Client],[Client.Unit.Code.UnitConfig, Client]], mscorlib
+      Data: 0|System.Collections.Generic.Dictionary`2[[Client.Project.Unit.Code.UnitType,
+        Client],[Client.Project.Unit.Code.UnitConfig, Client]], mscorlib
     - Name: comparer
       Entry: 7
-      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Client.Unit.Code.UnitType,
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Client.Project.Unit.Code.UnitType,
         Client]], mscorlib
     - Name: 
       Entry: 12
@@ -579,11 +579,11 @@ MonoBehaviour:
     SerializationNodes:
     - Name: _regionsColors
       Entry: 7
-      Data: 0|System.Collections.Generic.Dictionary`2[[Client.Region.RegionType,
+      Data: 0|System.Collections.Generic.Dictionary`2[[Client.Project.Region.RegionType,
         Client],[UnityEngine.Color, UnityEngine.CoreModule]], mscorlib
     - Name: comparer
       Entry: 7
-      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Client.Region.RegionType,
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Client.Project.Region.RegionType,
         Client]], mscorlib
     - Name: 
       Entry: 12
@@ -1176,7 +1176,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.EventSystem
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
-  m_DragThreshold: 10
+  m_DragThreshold: 20
 --- !u!114 &8393466444807356892
 MonoBehaviour:
   m_ObjectHideFlags: 0

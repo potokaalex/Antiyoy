@@ -21,15 +21,15 @@ namespace Client.Gameplay.UI
     {
       transform.position = _gridController.HexPositionToWorld(cell.Position);
       transform.localScale = Vector3.one;
-      _spriteRenderer.SetAlpha(0.75f);
+      _spriteRenderer.SetAlpha(0.7f);
       gameObject.SetActive(true);
 
       DOTween.Kill(this);
 
       DOTween.Sequence()
-        .Append(transform.DOScale(1.2f, 0.1f))
-        .Append(transform.DOScale(1f, 0.15f))
-        .Append(_spriteRenderer.DOFade(0, 0.15f))
+        .Append(transform.DOScale(1.1f, 0.15f))
+        .Append(transform.DOScale(1f, 0.1f))
+        .Append(_spriteRenderer.DOFade(0, 0.2f))
         .SetId(this).OnComplete(() => gameObject.SetActive(false));
     }
   }

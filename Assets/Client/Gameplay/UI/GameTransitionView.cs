@@ -49,8 +49,8 @@ namespace Client.Gameplay.UI
       _cameraController.ClearImageRt();
       _cameraController.RenderMenu();
 
-      _canvasGroup.alpha = 1;
       _canvasGroup.transform.localScale = Vector3.zero;
+      _canvasGroup.alpha = 0;
 
       _menuView.Background.PlayHideAnimation();
       _inputController.SetBlockInput(true);
