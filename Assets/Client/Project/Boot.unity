@@ -513,6 +513,25 @@ PrefabInstance:
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 3146268636949199500, guid: de2618af98cc6ad4f89432b995a43a40, type: 3}
+    - target: {fileID: 3146268636949199500, guid: de2618af98cc6ad4f89432b995a43a40, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3146268636949199500, guid: de2618af98cc6ad4f89432b995a43a40, type: 3}
+      propertyPath: 'serializationData.PrefabModifications.Array.data[0]'
+      value: '"path":"_regionsColors.{0es}","value":{"$id":0,"$type":"UnityEngine.Color,
+        UnityEngine.CoreModule",0.4,0.4,0.4,1}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 3146268636949199500, guid: de2618af98cc6ad4f89432b995a43a40, type: 3}
+      propertyPath: 'serializationData.PrefabModifications.Array.data[1]'
+      value: '"path":"_regionsColors.{1es}","value":{"$id":0,"$type":"UnityEngine.Color,
+        UnityEngine.CoreModule",0.6509804,0.305882365,0.2509804,1}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 3146268636949199500, guid: de2618af98cc6ad4f89432b995a43a40, type: 3}
+      propertyPath: 'serializationData.PrefabModifications.Array.data[2]'
+      value: '"path":"_regionsColors.{2es}","value":{"$id":0,"$type":"UnityEngine.Color,
+        UnityEngine.CoreModule",0.360784322,0.709803939,0.6901961,1}'
+      objectReference: {fileID: 0}
     - target: {fileID: 5090457157583211816, guid: de2618af98cc6ad4f89432b995a43a40, type: 3}
       propertyPath: _menuView
       value: 

@@ -364,7 +364,7 @@ SpriteRenderer:
   m_SortingOrder: -2
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.20784314, g: 0.20784314, b: 0.20784314, a: 1}
+  m_Color: {r: 0.21568628, g: 0.21568628, b: 0.21568628, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -608,13 +608,13 @@ MonoBehaviour:
       Data: UnityEngine.Color, UnityEngine.CoreModule
     - Name: 
       Entry: 4
-      Data: 0.3962264
+      Data: 0.4
     - Name: 
       Entry: 4
-      Data: 0.3962264
+      Data: 0.4
     - Name: 
       Entry: 4
-      Data: 0.3962264
+      Data: 0.4
     - Name: 
       Entry: 4
       Data: 1
@@ -635,13 +635,13 @@ MonoBehaviour:
       Data: UnityEngine.Color, UnityEngine.CoreModule
     - Name: 
       Entry: 4
-      Data: 0.8301887
+      Data: 0.6509804
     - Name: 
       Entry: 4
-      Data: 0.3798505
+      Data: 0.305882365
     - Name: 
       Entry: 4
-      Data: 0.3798505
+      Data: 0.2509804
     - Name: 
       Entry: 4
       Data: 1
@@ -662,13 +662,13 @@ MonoBehaviour:
       Data: UnityEngine.Color, UnityEngine.CoreModule
     - Name: 
       Entry: 4
-      Data: 0.2775454
+      Data: 0.360784322
     - Name: 
       Entry: 4
-      Data: 0.471271366
+      Data: 0.709803939
     - Name: 
       Entry: 4
-      Data: 0.764151
+      Data: 0.6901961
     - Name: 
       Entry: 4
       Data: 1

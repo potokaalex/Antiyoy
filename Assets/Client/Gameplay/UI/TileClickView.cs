@@ -21,7 +21,7 @@ namespace Client.Gameplay.UI
     {
       transform.position = _gridController.HexPositionToWorld(cell.Position);
       transform.localScale = Vector3.one;
-      _spriteRenderer.SetAlpha(0.7f);
+      _spriteRenderer.SetAlpha(0.6f);
       gameObject.SetActive(true);
 
       DOTween.Kill(this);

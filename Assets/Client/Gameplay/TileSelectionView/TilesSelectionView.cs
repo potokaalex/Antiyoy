@@ -35,7 +35,7 @@ namespace Client.Gameplay.TileSelectionView
 
       DOTween.Kill(this);
       _hidePanel.enabled = true;
-      _hidePanel.DOFade(0.5f, 0.2f).SetEase(Ease.OutQuad);
+      _hidePanel.DOFade(0.4f, 0.2f).SetEase(Ease.OutQuad);
       _bordersService.ViewTilesSelectionBorders(cells);
     }
 
