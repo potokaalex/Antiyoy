@@ -39,7 +39,7 @@ namespace Client.Gameplay.Gameplay
     public bool CanMoveUnit(IUnit unit, CellController cell)
     {
       unit.GetMoveArea(GameUtilities.AreaBuffer);
-      return GameUtilities.AreaBuffer.Contains(cell) && _unitsService.CanMove(unit, cell);
+      return GameUtilities.AreaBuffer.Contains(cell) && cell != unit.Cell && _unitsService.CanMove(unit, cell);
     }
 
     public void MoveUnit(IUnit unit, CellController cell)
