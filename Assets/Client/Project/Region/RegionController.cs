@@ -56,7 +56,7 @@ namespace Client.Project.Region
     public int WarriorsIncome() => _cells.Sum(x => x.HasUnit && x.Unit.Type.IsWarrior() ? x.Unit.Income : 0);
 
     public int TowersIncome() => _cells.Sum(x => x.HasUnit && x.Unit.Type.IsTower() ? x.Unit.Income : 0);
-   
+
     public int TressIncome() => _cells.Sum(x => x.HasUnit && x.Unit.Type.IsTree() ? x.Unit.Income : 0);
 
     public void Clear()

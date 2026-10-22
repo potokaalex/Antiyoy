@@ -1,5 +1,6 @@
 using DG.Tweening;
 using UnityEngine;
+
 // ReSharper disable InconsistentNaming
 
 namespace Client.Project.Utilities

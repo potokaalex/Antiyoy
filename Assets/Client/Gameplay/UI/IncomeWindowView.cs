@@ -6,7 +6,7 @@ using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 
-namespace Client.Gameplay.UI.Hud
+namespace Client.Gameplay.UI
 {
   public class IncomeWindowView : MonoBehaviour
   {
