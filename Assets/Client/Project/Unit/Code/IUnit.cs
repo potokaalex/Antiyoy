@@ -12,7 +12,7 @@ namespace Client.Project.Unit.Code
     int CapitalReplacementFactor { get; }
     int Protection { get; }
     bool CanViewProtection { get; }
-    Vector3 Position { get; set; }
+    Vector3 WorldPosition { get; set; }
     void ResetTurns();
     void RemoveTurns();
     void GetMoveArea(List<CellController> outList);

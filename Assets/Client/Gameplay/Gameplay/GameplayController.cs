@@ -107,7 +107,7 @@ namespace Client.Gameplay.Gameplay
       }
 
       UpdatePlayerRegions();
-      _cameraController.Focus(_capitalsController.GetCapital(_governmentsService.Get(_currentPlayer.RegionType).Regions[0]).Position);
+      _cameraController.Focus(_capitalsController.GetCapital(_governmentsService.Get(_currentPlayer.RegionType).Regions[0]).WorldPosition);
     }
 
     public void End()

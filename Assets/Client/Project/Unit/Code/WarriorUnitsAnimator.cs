@@ -11,14 +11,12 @@ namespace Client.Project.Unit.Code
   {
     private readonly List<IUnit> _units = new();
     private UnitsService _unitsService;
-    private GridController _gridController;
     private RegionType _playerType;
     private Tween _animation;
 
     public void Initialize()
     {
       _unitsService = Locator.Get<UnitsService>();
-      _gridController = Locator.Get<GridController>();
       _animation = DOVirtual.Float(0, 1, 0.25f, v =>
       {
         foreach (var unit in _units)
@@ -32,9 +30,9 @@ namespace Client.Project.Unit.Code
             continue;
           }
 
-          var position = _gridController.HexPositionToWorld(unit.Cell.Position);
+          var position = unit.Cell.WorldPosition;
           position.y += Mathf.Lerp(0, AnimationsUtilities.GameplayUnitsYoyoAnimationOffset, v);
-          unit.Position = position;
+          unit.WorldPosition = position;
         }
       }).SetLoops(-1, LoopType.Yoyo).SetId(this).Pause();
     }
@@ -74,6 +72,6 @@ namespace Client.Project.Unit.Code
 
     private void DestroyUnit(IUnit unit) => _units.Remove(unit);
 
-    private void SetUnitCellCenterPosition(IUnit unit) => unit.Position = _gridController.HexPositionToWorld(unit.Cell.Position);
+    private void SetUnitCellCenterPosition(IUnit unit) => unit.WorldPosition = unit.Cell.WorldPosition;
   }
 }

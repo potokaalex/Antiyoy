@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Client.Project;
-using Client.Project.Infrastructure;
 using Client.Project.Region;
 using Client.Project.Unit.Code;
 using Client.Project.Utilities;
@@ -14,13 +13,11 @@ namespace Client.Gameplay.Protection
   {
     [SerializeField] private SpriteRenderer _icon;
     private readonly List<ProtectionIconData> _icons = new();
-    private GridController _gridController;
     private ObjectPool<SpriteRenderer> _pool;
     private Tween _animation;
 
     private void Awake()
     {
-      _gridController = Locator.Get<GridController>();
       _pool = new ObjectPool<SpriteRenderer>(() => Instantiate(_icon, transform), x => x.enabled = true, x => x.enabled = false);
 
       _animation = DOTween.Sequence()
@@ -67,7 +64,6 @@ namespace Client.Gameplay.Protection
         foreach (var unit in units)
         {
           var cell = unit.Cell;
-          var cellPosition = _gridController.HexPositionToWorld(cell.Position);
           unit.GetProtectionArea(GameUtilities.AreaBuffer);
           foreach (var areaCell in GameUtilities.AreaBuffer)
           {
@@ -80,8 +76,8 @@ namespace Client.Gameplay.Protection
               {
                 Renderer = instance,
                 Transform = instanceTransform,
-                StartPosition = cellPosition,
-                EndPosition = _gridController.HexPositionToWorld(areaCell.Position)
+                StartPosition = cell.WorldPosition,
+                EndPosition = areaCell.WorldPosition
               });
               passedCells.Add(areaCell);
             }

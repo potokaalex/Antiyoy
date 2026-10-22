@@ -9,17 +9,12 @@ namespace Client.Gameplay.UI
   public class TileClickView : MonoBehaviour, IInitializable
   {
     [SerializeField] private SpriteRenderer _spriteRenderer;
-    private GridController _gridController;
 
-    public void Initialize()
-    {
-      _gridController = Locator.Get<GridController>();
-      gameObject.SetActive(false);
-    }
+    public void Initialize() => gameObject.SetActive(false);
 
     public void View(CellController cell)
     {
-      transform.position = _gridController.HexPositionToWorld(cell.Position);
+      transform.position = cell.WorldPosition;
       transform.localScale = Vector3.one;
       _spriteRenderer.SetAlpha(0.6f);
       gameObject.SetActive(true);

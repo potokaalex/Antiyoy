@@ -15,7 +15,6 @@ namespace Client.Project.Unit.Code.Capital
     private readonly List<Transform> _marks = new();
     private readonly List<IUnit> _units = new();
     private UnitsService _unitsService;
-    private GridController _gridController;
     private ObjectPool<Transform> _pool;
     private int _peasantCost;
     private Tween _animation;
@@ -24,7 +23,6 @@ namespace Client.Project.Unit.Code.Capital
     public void Initialize()
     {
       _unitsService = Locator.Get<UnitsService>();
-      _gridController = Locator.Get<GridController>();
       _peasantCost = Locator.Get<UnitsService>().GetCost(UnitType.Peasant);
 
       _pool = new ObjectPool<Transform>(() => Instantiate(_prefab, transform), t => t.gameObject.SetActive(true), t => t.gameObject.SetActive(false));
@@ -37,7 +35,7 @@ namespace Client.Project.Unit.Code.Capital
           if (!RegionCheck(unit.Cell.Region))
             continue;
 
-          var cellCenter = _gridController.HexPositionToWorld(unit.Cell.Position);
+          var cellCenter = unit.Cell.WorldPosition;
           var offset = (Vector3)_fromCellCenterOffset;
           var position = cellCenter + offset;
           position.y += Mathf.Lerp(0, AnimationsUtilities.GameplayUnitsYoyoAnimationOffset, v);

@@ -48,7 +48,7 @@ namespace Client.Project.Borders
 
     public void CreateAroundRegion(CellController cell, RegionType regionType, Action<Vector2, HexCoordinates> create)
     {
-      var cellWorldPosition = (Vector2)_gridController.HexPositionToWorld(cell.Position);
+      var cellWorldPosition = (Vector2)cell.WorldPosition;
       foreach (var direction in HexUtilities.Directions)
       {
         if (_gridController.GetCell(cell.Position + direction, out var neighbourCell))
@@ -63,7 +63,7 @@ namespace Client.Project.Borders
 
     public void CreateAround(CellController cell, List<CellController> cells, Action<Vector2, HexCoordinates> create)
     {
-      var cellWorldPosition = (Vector2)_gridController.HexPositionToWorld(cell.Position);
+      var cellWorldPosition = (Vector2)cell.WorldPosition;
       foreach (var direction in HexUtilities.Directions)
       {
         if (_gridController.GetCell(cell.Position + direction, out var neighbourCell))

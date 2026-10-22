@@ -4,6 +4,7 @@ using Client.Project.Infrastructure;
 using Client.Project.Region;
 using Client.Project.Tile;
 using Client.Project.Unit.Code;
+using UnityEngine;
 
 namespace Client.Project
 {
@@ -16,6 +17,8 @@ namespace Client.Project
     private UnitsService _unitsService;
 
     public HexCoordinates Position { get; private set; }
+
+    public Vector3 WorldPosition { get; private set; }
 
     public RegionController Region
     {
@@ -49,6 +52,7 @@ namespace Client.Project
       _regionsService = Locator.Get<RegionsService>();
       _unitsService = Locator.Get<UnitsService>();
       Position = position;
+      WorldPosition = Locator.Get<GridController>().HexPositionToWorld(position);
     }
 
     public void Dispose()

@@ -8,7 +8,6 @@ namespace Client.Project.Unit.Code
   public class UnitController : MonoBehaviour, IUnit
   {
     [SerializeField] private SpriteRenderer _renderer;
-    private GridController _gridController;
     private UnitsAreaCalculator _areaCalculator;
     private UnitConfig _config;
 
@@ -26,13 +25,12 @@ namespace Client.Project.Unit.Code
 
     public bool CanViewProtection => Type is UnitType.Capital or UnitType.Tower or UnitType.StrongTower;
 
-    public Vector3 Position { get => transform.position; set => transform.position = value; }
+    public Vector3 WorldPosition { get => transform.position; set => transform.position = value; }
 
     protected SpriteRenderer Renderer => _renderer;
 
     public void Setup(UnitConfig config, CellController cell, bool hasTurns)
     {
-      _gridController = Locator.Get<GridController>();
       _areaCalculator = Locator.Get<UnitsAreaCalculator>();
       _config = config;
       SetCell(cell);
@@ -62,7 +60,7 @@ namespace Client.Project.Unit.Code
     {
       Cell = cell;
       Cell.Unit = this;
-      transform.position = _gridController.HexPositionToWorld(Cell.Position);
+      transform.position = Cell.WorldPosition;
       SetCellsProtection(true);
     }
 

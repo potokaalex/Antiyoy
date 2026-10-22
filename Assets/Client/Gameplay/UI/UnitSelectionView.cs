@@ -1,4 +1,3 @@
-using Client.Project;
 using Client.Project.Infrastructure;
 using Client.Project.Unit.Code;
 using DG.Tweening;
@@ -10,19 +9,17 @@ namespace Client.Gameplay.UI
   {
     [SerializeField] private SpriteRenderer _icon;
     private UnitsService _unitsService;
-    private GridController _gridController;
 
     public void Initialize()
     {
       _unitsService = Locator.Get<UnitsService>();
-      _gridController = Locator.Get<GridController>();
       gameObject.SetActive(false);
     }
 
     public void View(IUnit unit)
     {
       _icon.sprite = _unitsService.GetSprite(unit.Type);
-      transform.position = _gridController.HexPositionToWorld(unit.Cell.Position);
+      transform.position = unit.Cell.WorldPosition;
       gameObject.SetActive(true);
       DOTween.Kill(this);
       transform.localScale = Vector3.one * 0.75f;

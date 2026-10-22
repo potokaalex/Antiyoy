@@ -13,13 +13,11 @@ namespace Client.Gameplay.TileSelectionView
     [SerializeField] private GameObject _tileMaskPrefab;
     [SerializeField] private SpriteRenderer _hidePanel;
     private readonly List<GameObject> _activeMasks = new();
-    private GridController _gridController;
     private BordersService _bordersService;
     private ObjectPool<GameObject> _pool;
 
     private void Awake()
     {
-      _gridController = Locator.Get<GridController>();
       _bordersService = Locator.Get<BordersService>();
       _pool = new ObjectPool<GameObject>(() => Instantiate(_tileMaskPrefab, transform), x => x.SetActive(true), x => x.SetActive(false));
     }
@@ -29,7 +27,7 @@ namespace Client.Gameplay.TileSelectionView
       foreach (var cell in cells)
       {
         var mask = _pool.Get();
-        mask.transform.position = _gridController.HexPositionToWorld(cell.Position);
+        mask.transform.position = cell.WorldPosition;
         _activeMasks.Add(mask);
       }
 
