@@ -1,5 +1,6 @@
 using Client.Gameplay.Gameplay;
 using Client.Gameplay.UI.Hud;
+using Client.Gameplay.UI.MoneyWindow;
 using Client.Gameplay.UI.Pause;
 using Client.Project.Infrastructure;
 using Client.Project.Region;
@@ -18,6 +19,7 @@ namespace Client.Gameplay.UI
     [SerializeField] private GameTransitionView _gameTransitionView;
     [SerializeField] private PauseView _pauseView;
     [SerializeField] private IncomeWindowView _incomeWindowView;
+    [SerializeField] private MoneyWindowView _moneyWindowView;
     private GameplayController _gameplayController;
 
     private void Awake()
@@ -68,5 +70,7 @@ namespace Client.Gameplay.UI
     }
 
     public void OpenIncomeWindow() => _incomeWindowView.Open();
+
+    public void OpenMoneyWindow() => _moneyWindowView.Open();
   }
 }

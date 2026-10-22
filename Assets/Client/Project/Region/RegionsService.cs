@@ -96,8 +96,10 @@ namespace Client.Project.Region
     {
       if (region == null)
         return Color.black;
-      return _regionsColors[region.Type];
+      return GetColorFor(region.Type);
     }
+
+    public Color GetColorFor(RegionType regionType) => _regionsColors[regionType];
 
     public void SetRegionType(CellController cell, RegionType type)
     {

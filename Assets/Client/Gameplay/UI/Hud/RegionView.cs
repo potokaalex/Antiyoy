@@ -10,6 +10,7 @@ namespace Client.Gameplay.UI.Hud
   public class RegionView : MonoBehaviour
   {
     [SerializeField] private TextMeshProUGUI _moneyCount;
+    [SerializeField] private CustomButton _openMoneyWindowButton;
     [SerializeField] private TextMeshProUGUI _incomeCount;
     [SerializeField] private CustomButton _openIncomeWindowButton;
     [SerializeField] private RegionCreationView _creationView;
@@ -30,9 +31,14 @@ namespace Client.Gameplay.UI.Hud
       _topPanelCanvasGroup.alpha = 0;
       _creationPanelCanvasGroup.alpha = 0;
       _openIncomeWindowButton.OnClick += _gameplayUI.OpenIncomeWindow;
+      _openMoneyWindowButton.OnClick += _gameplayUI.OpenMoneyWindow;
     }
 
-    private void OnDestroy() => _openIncomeWindowButton.OnClick -= _gameplayUI.OpenIncomeWindow;
+    private void OnDestroy()
+    {
+      _openIncomeWindowButton.OnClick -= _gameplayUI.OpenIncomeWindow;
+      _openMoneyWindowButton.OnClick += _gameplayUI.OpenMoneyWindow;
+    }
 
     public void SetActive(bool isActive)
     {

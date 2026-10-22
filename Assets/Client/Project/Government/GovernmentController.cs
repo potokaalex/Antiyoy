@@ -25,5 +25,13 @@ namespace Client.Project.Government
     public void AddRegion(RegionController region) => _regions.Add(region);
 
     public void RemoveRegion(RegionController region) => _regions.Remove(region);
+
+    public int GetIncome()
+    {
+      var result = 0;
+      foreach (var region in _regions)
+        result += region.GetIncome();
+      return result;
+    }
   }
 }
