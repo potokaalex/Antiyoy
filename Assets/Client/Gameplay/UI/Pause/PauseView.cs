@@ -1,6 +1,8 @@
-using Client.Infrastructure;
+using Client.Gameplay.Gameplay;
 using Client.Menu;
-using Client.UI;
+using Client.Project;
+using Client.Project.Infrastructure;
+using Client.Project.UI;
 using UnityEngine;
 
 namespace Client.Gameplay.UI.Pause

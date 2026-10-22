@@ -1,8 +1,8 @@
 using Client.Gameplay.Player;
-using Client.Infrastructure;
-using Client.UI;
-using Client.Unit.Code;
-using Client.Utilities;
+using Client.Project.Infrastructure;
+using Client.Project.UI;
+using Client.Project.Unit.Code;
+using Client.Project.Utilities;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using TMPro;
@@ -77,7 +77,7 @@ namespace Client.Gameplay.UI.Hud
 
     private void View(UnitType unitType)
     {
-      if(unitType == UnitType.None)
+      if (unitType == UnitType.None)
         return;
 
       _variantCost.SetText($"${_unitsService.GetCost(unitType)}");
@@ -92,14 +92,18 @@ namespace Client.Gameplay.UI.Hud
       if (isActive)
       {
         _variantPanel.gameObject.SetActive(true);
-        AnimationsUtilities.DoAnchoredMove(_variantPanel, new Vector2(0, -150), new Vector2(0, 0));
-        AnimationsUtilities.DoFade(_variantPanelCanvasGroup, 0, 1);
+
+        DOTween.Sequence()
+          .Append(_variantPanel.DOAnchorPos(new Vector2(0, -150), new Vector2(0, 0), AnimationsUtilities.GameplayUIDefaultDuration))
+          .Join(_variantPanelCanvasGroup.DOFade(0, 1, AnimationsUtilities.GameplayUIDefaultDuration))
+          .SetId(this);
       }
       else
       {
-        AnimationsUtilities.DoAnchoredMove(_variantPanel, new Vector2(0, 0), new Vector2(0, -150));
-        AnimationsUtilities.DoFade(_variantPanelCanvasGroup, 1, 0).SetId(this)
-          .onComplete += () => _variantPanel.gameObject.SetActive(false);
+        DOTween.Sequence()
+          .Append(_variantPanel.DOAnchorPos(new Vector2(0, 0), new Vector2(0, -150), AnimationsUtilities.GameplayUIDefaultDuration))
+          .Join(_variantPanelCanvasGroup.DOFade(1, 0, AnimationsUtilities.GameplayUIDefaultDuration))
+          .SetId(this).onComplete += () => _variantPanel.gameObject.SetActive(false);
       }
     }
   }

@@ -13,8 +13,6 @@ namespace Client.Menu
 
     public CanvasGroup BlockInput => _blockInput;
 
-    public void SetActive(bool active) => gameObject.SetActive(active);
-
     public T Spawn<T>(T prefab) where T : MonoBehaviour => Instantiate(prefab, _viewsRoot);
   }
 }

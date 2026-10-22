@@ -1,13 +1,13 @@
-using Client.Borders;
+using Client.Gameplay.Protection;
+using Client.Gameplay.TileSelectionView;
 using Client.Gameplay.UI;
-using Client.Infrastructure;
-using Client.Protection;
-using Client.Region;
-using Client.Tile;
-using Client.Tile.SelectionView;
-using Client.Unit.Code;
-using Client.Unit.Code.Capital;
-using Client.Utilities;
+using Client.Project;
+using Client.Project.Borders;
+using Client.Project.Infrastructure;
+using Client.Project.Region;
+using Client.Project.Unit.Code;
+using Client.Project.Unit.Code.Capital;
+using Client.Project.Utilities;
 
 namespace Client.Gameplay.Player
 {

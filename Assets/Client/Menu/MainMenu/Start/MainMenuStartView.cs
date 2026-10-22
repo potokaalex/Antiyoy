@@ -1,7 +1,8 @@
-using Client.Infrastructure;
 using Client.Project;
-using Client.UI;
-using Client.Utilities;
+using Client.Project.Infrastructure;
+using Client.Project.Project;
+using Client.Project.UI;
+using Client.Project.Utilities;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
@@ -88,9 +89,8 @@ namespace Client.Menu.MainMenu.Start
     {
       return DOTween.Sequence()
         .AppendCallback(() => _topPanel.gameObject.SetActive(true))
-        .Append(AnimationsUtilities.DoAnchoredMove(_topPanel, new Vector2(0, 250), new Vector2(0, 0), 0.3f))
-        .Join(AnimationsUtilities.DoAnchoredMove(_playButtonTransform, _playButtonStartPosition + new Vector2(0, 150),
-          _playButtonStartPosition, 0.3f));
+        .Append(_topPanel.DOAnchorPos(new Vector2(0, 250), new Vector2(0, 0), 0.3f))
+        .Join(_playButtonTransform.DOAnchorPos(_playButtonStartPosition + new Vector2(0, 150), _playButtonStartPosition, 0.3f));
     }
 
     private Tween MaskAnimation()

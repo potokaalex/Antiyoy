@@ -1,0 +1,52 @@
+using Client.Gameplay.Gameplay;
+using Client.Project;
+using Client.Project.Hex;
+using Client.Project.Infrastructure;
+using TMPro;
+using UnityEngine;
+
+namespace Client.Gameplay.DebugFeatures
+{
+  public class CellDebugController : MonoBehaviour
+  {
+    [SerializeField] private TextMeshPro _debugText;
+    private GridController _gridController;
+    private GameplayController _gameplayController;
+    private HexCoordinates _position;
+    private string _currentText;
+
+    public void Initialize(HexCoordinates position)
+    {
+      _position = position;
+      _gridController = Locator.Get<GridController>();
+      _gameplayController = Locator.Get<GameplayController>();
+    }
+
+    private void Update()
+    {
+      if (!_gameplayController.Started)
+        return;
+
+      if (_gridController.GetCell(_position, out var cell))
+      {
+        if (cell.Region != null)
+        {
+          SetText(cell.Region.Cells.Count.ToString());
+          //SetText(cell.Protection.ToString());
+          return;
+        }
+      }
+
+      SetText(string.Empty);
+    }
+
+    private void SetText(string value)
+    {
+      if (_currentText != value)
+      {
+        _debugText.SetText(value);
+        _currentText = value;
+      }
+    }
+  }
+}
