@@ -1,3 +1,5 @@
+using Client.Project.Infrastructure;
+using Client.Project.UI;
 using Client.Project.Utilities;
 using DG.Tweening;
 using TMPro;
@@ -9,22 +11,28 @@ namespace Client.Gameplay.UI.Hud
   {
     [SerializeField] private TextMeshProUGUI _moneyCount;
     [SerializeField] private TextMeshProUGUI _incomeCount;
+    [SerializeField] private CustomButton _openIncomeWindowButton;
     [SerializeField] private RegionCreationView _creationView;
     [SerializeField] private RectTransform _topPanel;
     [SerializeField] private CanvasGroup _topPanelCanvasGroup;
     [SerializeField] private RectTransform _creationPanel;
     [SerializeField] private CanvasGroup _creationPanelCanvasGroup;
+    private GameplayUI _gameplayUI;
     private bool _isActive;
 
     public RegionCreationView Creation => _creationView;
 
     private void Awake()
     {
+      _gameplayUI = Locator.Get<GameplayUI>();
       _topPanel.anchoredPosition = new Vector2(0, 150);
       _creationPanel.anchoredPosition = new Vector2(0, -150);
       _topPanelCanvasGroup.alpha = 0;
       _creationPanelCanvasGroup.alpha = 0;
+      _openIncomeWindowButton.OnClick += _gameplayUI.OpenIncomeWindow;
     }
+
+    private void OnDestroy() => _openIncomeWindowButton.OnClick -= _gameplayUI.OpenIncomeWindow;
 
     public void SetActive(bool isActive)
     {

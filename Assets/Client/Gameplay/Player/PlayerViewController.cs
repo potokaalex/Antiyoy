@@ -24,6 +24,8 @@ namespace Client.Gameplay.Player
     private WarriorUnitsAnimator _warriorUnitsAnimator;
     private TileClickView _tileClickView;
 
+    public RegionController SelectedRegion => _playerController.SelectedRegion;
+
     public void Initialize()
     {
       _unitsService = Locator.Get<UnitsService>();
@@ -56,7 +58,7 @@ namespace Client.Gameplay.Player
       _unitsService.GetUnitCreationArea(region, GameUtilities.AreaBuffer, unitType);
       _tilesSelectionView.ClearView();
 
-      if (unitType != UnitType.Tower && unitType != UnitType.StrongTower)
+      if (!unitType.IsTower())
         _tilesSelectionView.ViewTiles(GameUtilities.AreaBuffer);
     }
 

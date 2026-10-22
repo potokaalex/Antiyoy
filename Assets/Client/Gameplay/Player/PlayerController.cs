@@ -22,7 +22,6 @@ namespace Client.Gameplay.Player
     private readonly PlayerViewController _playerViewController;
     private readonly UnitsMoveAnimator _unitsMoveAnimator;
     private IUnit _selectedUnit;
-    private RegionController _selectedRegion;
     private RegionController _lastSelectedRegion;
     private GameplayMode _gameplayMode;
     private UnitType _creationUnitType;
@@ -30,6 +29,8 @@ namespace Client.Gameplay.Player
     public RegionType RegionType { get; }
 
     public bool Alive => _governmentService.IsAlive(RegionType);
+
+    public RegionController SelectedRegion { get; private set; }
 
     public PlayerController(RegionType regionType)
     {
@@ -52,7 +53,7 @@ namespace Client.Gameplay.Player
       _gameplayMode = GameplayMode.CreateUnit;
       _creationUnitType = unitType;
       _playerViewController.ClearUnitSelectionView();
-      _playerViewController.ViewUnitCreation(_selectedRegion, unitType);
+      _playerViewController.ViewUnitCreation(SelectedRegion, unitType);
     }
 
     public void Pause() => Clear();
@@ -138,10 +139,10 @@ namespace Client.Gameplay.Player
 
     private void TryCreateUnit(CellController cell)
     {
-      if (_gameplayFieldController.CanCreateUnit(_creationUnitType, cell, _selectedRegion))
+      if (_gameplayFieldController.CanCreateUnit(_creationUnitType, cell, SelectedRegion))
       {
         _actionsHistoryController.RegionsChange(cell);
-        _gameplayFieldController.CreateUnit(_creationUnitType, cell, _selectedRegion);
+        _gameplayFieldController.CreateUnit(_creationUnitType, cell, SelectedRegion);
         Clear(false);
         SelectRegion(cell.Region);
       }
@@ -154,14 +155,14 @@ namespace Client.Gameplay.Player
 
     private void ReturnToSelectedRegion()
     {
-      var region = _selectedRegion;
+      var region = SelectedRegion;
       Clear(false);
       SelectRegion(region);
     }
 
     private void TrySelectRegion(RegionController region, bool forceBordersAnim = true)
     {
-      if (region.Type == RegionType && region.IsAlive && _selectedRegion != region)
+      if (region.Type == RegionType && region.IsAlive && SelectedRegion != region)
         SelectRegion(region, forceBordersAnim);
     }
 
@@ -180,7 +181,7 @@ namespace Client.Gameplay.Player
     {
       SetSelectedRegion(region);
       _gameplayMode = GameplayMode.SelectedRegion;
-      _playerViewController.ViewRegionSelection(_selectedRegion, forceBordersAnim);
+      _playerViewController.ViewRegionSelection(SelectedRegion, forceBordersAnim);
     }
 
     private bool ShowBuildingsProtection(CellController cell)
@@ -196,9 +197,9 @@ namespace Client.Gameplay.Player
 
     private void SetSelectedRegion(RegionController region)
     {
-      if (_selectedRegion != null)
-        _lastSelectedRegion = _selectedRegion;
-      _selectedRegion = region;
+      if (SelectedRegion != null)
+        _lastSelectedRegion = SelectedRegion;
+      SelectedRegion = region;
     }
   }
 }

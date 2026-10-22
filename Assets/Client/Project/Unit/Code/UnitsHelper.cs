@@ -7,5 +7,7 @@ namespace Client.Project.Unit.Code
     public static bool IsWarrior(this UnitType type) => type is UnitType.Peasant or UnitType.Spearman or UnitType.Infantryman or UnitType.Knight;
 
     public static bool IsTree(this UnitType type) => type is UnitType.Pine or UnitType.Palm;
+
+    public static bool IsTower(this UnitType type) => type is UnitType.Tower or UnitType.StrongTower;
   }
 }

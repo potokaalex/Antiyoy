@@ -17,6 +17,7 @@ namespace Client.Gameplay.UI
     [SerializeField] private Button _winNexButton;
     [SerializeField] private GameTransitionView _gameTransitionView;
     [SerializeField] private PauseView _pauseView;
+    [SerializeField] private IncomeWindowView _incomeWindowView;
     private GameplayController _gameplayController;
 
     private void Awake()
@@ -65,5 +66,7 @@ namespace Client.Gameplay.UI
       _hudView.PlayShow();
       _gameTransitionView.PlayToyGameTransition();
     }
+
+    public void OpenIncomeWindow() => _incomeWindowView.Open();
   }
 }

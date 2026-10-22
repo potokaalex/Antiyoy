@@ -24,7 +24,7 @@ namespace Client.Project.Unit.Code
 
         if (unitType == UnitType.Farm)
           GetFarmCreationArea(region, front, outResult);
-        else if (unitType is UnitType.Tower or UnitType.StrongTower)
+        else if (unitType.IsTower())
           outResult.AddRange(region.Cells);
         else
           GetWarriorCreationArea(region, front, outResult, unitType);
