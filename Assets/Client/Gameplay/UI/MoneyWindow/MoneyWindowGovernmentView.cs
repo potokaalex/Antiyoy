@@ -1,6 +1,8 @@
 using Client.Project.Government;
 using Client.Project.Infrastructure;
 using Client.Project.Region;
+using Client.Project.Utilities;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,10 +24,24 @@ namespace Client.Gameplay.UI.MoneyWindow
       if (income < 0)
         income = 0;
       _moneyCount.SetText(income.ToString());
-      _column.sizeDelta = new Vector2(_column.sizeDelta.x, income * columnSizeFactor);
-      _columnImage.color = _regionsService.GetColorFor(government.RegionsType);
+      ViewColumn(government, income * columnSizeFactor);
     }
 
     public void SetActive(bool isActive) => gameObject.SetActive(isActive);
+
+    private void ViewColumn(GovernmentController government, float maxSize)
+    {
+      DOTween.Kill(this);
+
+      SetColumnSize(0);
+      _columnImage.color = _regionsService.GetColorFor(government.RegionsType);
+
+      DOTween.Sequence()
+        .AppendInterval(AnimationsUtilities.GameplayUIDefaultDuration)
+        .Append(DOVirtual.Float(0, 1, AnimationsUtilities.GameplayUIDefaultDuration, v => SetColumnSize(Mathf.Lerp(0, maxSize, v))))
+        .SetId(this);
+    }
+
+    private void SetColumnSize(float value) => _column.sizeDelta = new Vector2(_column.sizeDelta.x, value);
   }
 }
