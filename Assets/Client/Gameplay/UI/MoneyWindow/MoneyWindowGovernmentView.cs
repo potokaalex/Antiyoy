@@ -14,10 +14,7 @@ namespace Client.Gameplay.UI.MoneyWindow
     [SerializeField] private Image _columnImage;
     private RegionsService _regionsService;
 
-    private void Awake()
-    {
-      _regionsService = Locator.Get<RegionsService>();
-    }
+    private void Awake() => _regionsService = Locator.Get<RegionsService>();
 
     public void Initialize(GovernmentController government, float columnSizeFactor)
     {

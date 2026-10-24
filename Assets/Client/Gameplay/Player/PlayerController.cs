@@ -88,7 +88,7 @@ namespace Client.Gameplay.Player
 
     private void UpdatePlayerInput()
     {
-      if (!(_inputController.IsClick && !_inputController.IsPointerOverUI()))
+      if (!_inputController.IsClick)
         return;
 
       if (!(_cameraController.GetHitFromMousePoint(out var hit) &&

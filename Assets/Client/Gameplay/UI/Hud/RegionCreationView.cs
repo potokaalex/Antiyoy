@@ -3,7 +3,6 @@ using Client.Project.Infrastructure;
 using Client.Project.UI;
 using Client.Project.Unit.Code;
 using Client.Project.Utilities;
-using DG.Tweening;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -85,26 +84,7 @@ namespace Client.Gameplay.UI.Hud
       SetActive(true);
     }
 
-    private void SetActive(bool isActive)
-    {
-      DOTween.Kill(this);
-
-      if (isActive)
-      {
-        _variantPanel.gameObject.SetActive(true);
-
-        DOTween.Sequence()
-          .Append(_variantPanel.DOAnchorPos(new Vector2(0, -150), new Vector2(0, 0), AnimationsUtilities.GameplayUIDefaultDuration))
-          .Join(_variantPanelCanvasGroup.DOFade(0, 1, AnimationsUtilities.GameplayUIDefaultDuration))
-          .SetId(this);
-      }
-      else
-      {
-        DOTween.Sequence()
-          .Append(_variantPanel.DOAnchorPos(new Vector2(0, 0), new Vector2(0, -150), AnimationsUtilities.GameplayUIDefaultDuration))
-          .Join(_variantPanelCanvasGroup.DOFade(1, 0, AnimationsUtilities.GameplayUIDefaultDuration))
-          .SetId(this).onComplete += () => _variantPanel.gameObject.SetActive(false);
-      }
-    }
+    private void SetActive(bool isActive) =>
+      AnimationsUtilities.GameplayFlashUpAnimation(isActive, -150, _variantPanel, _variantPanelCanvasGroup, this);
   }
 }

@@ -1,8 +1,7 @@
-using System;
 using Client.Gameplay.Player;
 using Client.Project.Infrastructure;
 using Client.Project.UI;
-using Cysharp.Threading.Tasks;
+using Client.Project.Utilities;
 using TMPro;
 using UnityEngine;
 
@@ -11,12 +10,14 @@ namespace Client.Gameplay.UI
   public class IncomeWindowView : MonoBehaviour
   {
     [SerializeField] private CustomButton _closeButton;
-    [SerializeField] private GameObject _root;
+    [SerializeField] private RectTransform _root;
     [SerializeField] private TextMeshProUGUI _cellsCount;
     [SerializeField] private TextMeshProUGUI _farmsCount;
     [SerializeField] private TextMeshProUGUI _warriorsCount;
     [SerializeField] private TextMeshProUGUI _towersCount;
     [SerializeField] private TextMeshProUGUI _tressCount;
+    [SerializeField] private CanvasGroup _canvasGroup;
+
     private PlayerViewController _playerViewController;
 
     private void Awake()
@@ -30,7 +31,7 @@ namespace Client.Gameplay.UI
 
     public void Open()
     {
-      _root.gameObject.SetActive(true);
+      SetActive(true);
       _cellsCount.SetText(FormatValue(_playerViewController.SelectedRegion.CellsIncome()));
       _farmsCount.SetText(FormatValue(_playerViewController.SelectedRegion.FarmsIncome()));
       _warriorsCount.SetText(FormatValue(_playerViewController.SelectedRegion.WarriorsIncome()));
@@ -45,13 +46,8 @@ namespace Client.Gameplay.UI
       return value.ToString();
     }
 
-    private void Close()
-    {
-      UniTask.Create(async () =>
-      {
-        await UniTask.Delay(TimeSpan.FromSeconds(0.15f));
-        _root.gameObject.SetActive(false);
-      });
-    }
+    private void Close() => SetActive(false);
+
+    private void SetActive(bool isActive) => AnimationsUtilities.GameplayFlashUpAnimation(isActive, -1230, _root, _canvasGroup, this);
   }
 }

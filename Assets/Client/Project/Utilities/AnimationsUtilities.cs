@@ -31,5 +31,27 @@ namespace Client.Project.Utilities
       target.alpha = from;
       return target.DOFade(to, duration);
     }
+
+    public static void GameplayFlashUpAnimation(bool isActive, float minValue, RectTransform root, CanvasGroup canvasGroup, object id)
+    {
+      DOTween.Kill(id);
+
+      if (isActive)
+      {
+        root.gameObject.SetActive(true);
+
+        DOTween.Sequence()
+          .Append(root.DOAnchorPos(new Vector2(0, minValue), new Vector2(0, 0), GameplayUIDefaultDuration))
+          .Join(canvasGroup.DOFade(0, 1, GameplayUIDefaultDuration))
+          .SetId(id);
+      }
+      else
+      {
+        DOTween.Sequence()
+          .Append(root.DOAnchorPos(new Vector2(0, 0), new Vector2(0, minValue), GameplayUIDefaultDuration))
+          .Join(canvasGroup.DOFade(1, 0, GameplayUIDefaultDuration))
+          .SetId(id).onComplete += () => root.gameObject.SetActive(false);
+      }
+    }
   }
 }

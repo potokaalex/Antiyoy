@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Client.Gameplay.Player;
@@ -6,7 +5,7 @@ using Client.Project.Government;
 using Client.Project.Infrastructure;
 using Client.Project.Region;
 using Client.Project.UI;
-using Cysharp.Threading.Tasks;
+using Client.Project.Utilities;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -15,7 +14,8 @@ namespace Client.Gameplay.UI.MoneyWindow
   public class MoneyWindowView : MonoBehaviour
   {
     [SerializeField] private CustomButton _closeButton;
-    [SerializeField] private GameObject _root;
+    [SerializeField] private RectTransform _root;
+    [SerializeField] private CanvasGroup _canvasGroup;
     [SerializeField] private MoneyWindowGovernmentView _viewPrefab;
     [SerializeField] private Transform _viewsRoot;
     private readonly List<MoneyWindowGovernmentView> _views = new();
@@ -36,19 +36,12 @@ namespace Client.Gameplay.UI.MoneyWindow
 
     public void Open()
     {
-      _root.gameObject.SetActive(true);
+      SetActive(true);
       ClearViews();
       CreateViews();
     }
 
-    private void Close()
-    {
-      UniTask.Create(async () =>
-      {
-        await UniTask.Delay(TimeSpan.FromSeconds(0.15f));
-        _root.gameObject.SetActive(false);
-      });
-    }
+    private void Close() => SetActive(false);
 
     private void CreateViews()
     {
@@ -82,5 +75,7 @@ namespace Client.Gameplay.UI.MoneyWindow
         _pool.Release(view);
       _views.Clear();
     }
+
+    private void SetActive(bool isActive) => AnimationsUtilities.GameplayFlashUpAnimation(isActive, -1230, _root, _canvasGroup, this);
   }
 }

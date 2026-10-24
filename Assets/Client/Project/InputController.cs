@@ -17,13 +17,31 @@ namespace Client.Project
 
     public bool IsClick { get; private set; }
 
-    public bool BackClicked => Input.GetKeyDown(KeyCode.Escape) && !_menuView.BlockInput.blocksRaycasts;
+    public bool BackClicked => Input.GetKeyDown(KeyCode.Escape) && !BlockInput;
+
+    private bool BlockInput { get => _menuView.BlockInput.blocksRaycasts; set => _menuView.BlockInput.blocksRaycasts = value; }
 
     public void Initialize()
     {
       _menuView = Locator.Get<MenuView>();
       _eventSystem = EventSystem.current;
       _eventData = new PointerEventData(_eventSystem);
+    }
+
+    public void Tick()
+    {
+      IsClick = false;
+
+      if (Input.GetMouseButtonDown(0) && !IsPointerOverUI())
+      {
+        _startTime = DateTime.UtcNow;
+        _startPosition = Input.mousePosition;
+      }
+
+      if (Input.GetMouseButtonUp(0))
+        if ((DateTime.UtcNow - _startTime).TotalSeconds < 0.3f &&
+            Vector2.Distance(_startPosition, Input.mousePosition) < _eventSystem.pixelDragThreshold)
+          IsClick = true;
     }
 
     public bool IsPointerOverUI() => IsPointerOverUI(Input.mousePosition);
@@ -39,22 +57,6 @@ namespace Client.Project
       }
     }
 
-    public void SetBlockInput(bool blocked) => _menuView.BlockInput.blocksRaycasts = blocked;
-
-    public void Tick()
-    {
-      IsClick = false;
-
-      if (Input.GetMouseButtonDown(0))
-      {
-        _startTime = DateTime.UtcNow;
-        _startPosition = Input.mousePosition;
-      }
-
-      if (Input.GetMouseButtonUp(0))
-        if ((DateTime.UtcNow - _startTime).TotalSeconds < 0.3f &&
-            Vector2.Distance(_startPosition, Input.mousePosition) < _eventSystem.pixelDragThreshold)
-          IsClick = true;
-    }
+    public void SetBlockInput(bool blocked) => BlockInput = blocked;
   }
 }
