@@ -1,3 +1,4 @@
+using Client.Menu.MainMenu.GameplayModes;
 using Client.Menu.MainMenu.Options;
 using Client.Menu.MainMenu.Start;
 using DG.Tweening;
@@ -9,11 +10,14 @@ namespace Client.Menu.MainMenu
   {
     [SerializeField] private MainMenuStartView _start;
     [SerializeField] private MainMenuOptionsView _options;
+    [SerializeField] private MainMenuGameplayModesView _gameplayModesView;
 
     public Tween PlayAppearAnimation() => _start.PlayAppearAnimation();
 
     public void ShowOptions() => _options.Show();
 
     public void ShowStart() => _start.Show();
+
+    public void ShowGameplayModes() => _gameplayModesView.Show();
   }
 }
