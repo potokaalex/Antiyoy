@@ -19,6 +19,7 @@ namespace Client.Menu
     private InputController _inputController;
     private Vector2 _topPanelStartPosition;
     private Vector2 _topPanelEndPosition;
+    private bool _initialized;
 
     private void Awake()
     {
@@ -33,6 +34,11 @@ namespace Client.Menu
 
     public void Initialize()
     {
+      if (_initialized)
+        return;
+      _initialized = true;
+      gameObject.SetActive(true);
+
       if (_topPanel)
       {
         _topPanelStartPosition = _topPanel.anchoredPosition;
@@ -47,6 +53,7 @@ namespace Client.Menu
 
     public void PlayShow()
     {
+      Initialize();
       MenuAnimation(_topPanelStartPosition, 1, 1)
         .JoinCallback(() => gameObject.SetActive(true))
         .Join(_menuView.Background.PlayColorTransition(_backgroundShowColor, _particlesShowColor));

@@ -5,7 +5,7 @@ using Client.Project.Utilities;
 using TMPro;
 using UnityEngine;
 
-namespace Client.Gameplay.UI
+namespace Client.Gameplay.UI.IncomeWindow
 {
   public class IncomeWindowView : MonoBehaviour
   {
