@@ -2975,7 +2975,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7866581061948486584, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
       propertyPath: m_text
-      value: Player levels
+      value: User levels
       objectReference: {fileID: 0}
     - target: {fileID: 8413538365283385888, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
       propertyPath: m_Layer
@@ -3719,7 +3719,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7866581061948486584, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
       propertyPath: m_text
-      value: Company
+      value: Campaign
       objectReference: {fileID: 0}
     - target: {fileID: 8413538365283385888, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
       propertyPath: m_Layer
@@ -4036,7 +4036,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7866581061948486584, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
       propertyPath: m_text
-      value: Load
+      value: Load game
       objectReference: {fileID: 0}
     - target: {fileID: 8413538365283385888, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
       propertyPath: m_Layer
@@ -4170,7 +4170,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7866581061948486584, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
       propertyPath: m_text
-      value: Battle
+      value: Skirmish
       objectReference: {fileID: 0}
     - target: {fileID: 7866581061948486584, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
       propertyPath: m_fontSizeBase

@@ -11,6 +11,7 @@ namespace Client.Gameplay.UI.MoneyWindow
 {
   public class MoneyWindowGovernmentView : MonoBehaviour
   {
+    [SerializeField] private RectTransform _root;
     [SerializeField] private TextMeshProUGUI _moneyCount;
     [SerializeField] private RectTransform _column;
     [SerializeField] private Image _columnImage;
@@ -18,13 +19,15 @@ namespace Client.Gameplay.UI.MoneyWindow
 
     private void Awake() => _regionsService = Locator.Get<RegionsService>();
 
-    public void Initialize(GovernmentController government, float columnSizeFactor)
+    public void Initialize(GovernmentController government, float columnSizeFactor, float width)
     {
-      var income = government.GetIncome();
-      if (income < 0)
+      var income = government.GetInfoIncome();
+      if (income < 0 || !government.IsAlive)
         income = 0;
+
       _moneyCount.SetText(income.ToString());
       ViewColumn(government, income * columnSizeFactor);
+      _root.sizeDelta = new Vector2(width, _root.sizeDelta.y);
     }
 
     public void SetActive(bool isActive) => gameObject.SetActive(isActive);

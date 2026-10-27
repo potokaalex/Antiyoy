@@ -120,6 +120,7 @@ namespace Client.Gameplay.Gameplay
       _unitsService.Clear();
       _regionsService.Clear();
       _actionsHistoryController.Clear();
+      _governmentsService.Clear();
     }
 
     public void Pause()

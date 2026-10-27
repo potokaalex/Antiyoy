@@ -54,18 +54,20 @@ namespace Client.Gameplay.UI.MoneyWindow
         governments.Insert(0, playerGovernment);
 
         var maxColumnSize = 631f;
-        var maxIncome = Mathf.Max(0, governments.Max(x => x.GetIncome()));
+        var maxIncome = Mathf.Max(0, governments.Max(x => x.GetInfoIncome()));
         var columnSizeFactor = maxColumnSize / maxIncome;
+        var width = Mathf.Min(875f / governments.Count, 110f);
 
-        foreach (var government in governments)
-          CreateView(government, columnSizeFactor);
+        for (var i = 0; i < governments.Count; i++) 
+          CreateView(governments[i], columnSizeFactor, width, i);
       }
     }
 
-    private void CreateView(GovernmentController government, float columnSizeFactor)
+    private void CreateView(GovernmentController government, float columnSizeFactor, float width, int index)
     {
       var instance = _pool.Get();
-      instance.Initialize(government, columnSizeFactor);
+      instance.transform.SetSiblingIndex(index);
+      instance.Initialize(government, columnSizeFactor, width);
       _views.Add(instance);
     }
 

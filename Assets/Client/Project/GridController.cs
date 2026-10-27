@@ -13,7 +13,7 @@ namespace Client.Project
     private CellController[] _cells;
     private RegionsService _regionsService;
 
-    public Vector2Int Size { get; } = new(9, 9);
+    public Vector2Int Size { get; } = new(10, 9);
 
     public void Initialize() => _regionsService = Locator.Get<RegionsService>();
 

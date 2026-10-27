@@ -26,11 +26,11 @@ namespace Client.Project.Government
 
     public void RemoveRegion(RegionController region) => _regions.Remove(region);
 
-    public int GetIncome()
+    public int GetInfoIncome()
     {
       var result = 0;
       foreach (var region in _regions)
-        result += region.GetIncome();
+        result += region.GetCellsIncome() + region.GetFarmsIncome() + region.GetTressIncome();
       return result;
     }
   }

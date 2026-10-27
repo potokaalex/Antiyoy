@@ -32,11 +32,11 @@ namespace Client.Gameplay.UI.IncomeWindow
     public void Open()
     {
       SetActive(true);
-      _cellsCount.SetText(FormatValue(_playerViewController.SelectedRegion.CellsIncome()));
-      _farmsCount.SetText(FormatValue(_playerViewController.SelectedRegion.FarmsIncome()));
-      _warriorsCount.SetText(FormatValue(_playerViewController.SelectedRegion.WarriorsIncome()));
-      _towersCount.SetText(FormatValue(_playerViewController.SelectedRegion.TowersIncome()));
-      _tressCount.SetText(FormatValue(_playerViewController.SelectedRegion.TressIncome()));
+      _cellsCount.SetText(FormatValue(_playerViewController.SelectedRegion.GetCellsIncome()));
+      _farmsCount.SetText(FormatValue(_playerViewController.SelectedRegion.GetFarmsIncome()));
+      _warriorsCount.SetText(FormatValue(_playerViewController.SelectedRegion.GetWarriorsIncome()));
+      _towersCount.SetText(FormatValue(_playerViewController.SelectedRegion.GetTowersIncome()));
+      _tressCount.SetText(FormatValue(_playerViewController.SelectedRegion.GetTressIncome()));
     }
 
     private string FormatValue(int value)
