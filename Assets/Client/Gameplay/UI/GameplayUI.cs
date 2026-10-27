@@ -27,5 +27,9 @@ namespace Client.Gameplay.UI
     public void ShowPause() => _view.ShowPause();
 
     public void HidePause() => _view.HidePause();
+
+    public void OpenIncomeWindow() => _view.OpenIncomeWindow();
+
+    public void OpenMoneyWindow() => _view.OpenMoneyWindow();
   }
 }

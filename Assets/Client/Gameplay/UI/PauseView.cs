@@ -5,7 +5,7 @@ using Client.Project.Infrastructure;
 using Client.Project.UI;
 using UnityEngine;
 
-namespace Client.Gameplay.UI.Pause
+namespace Client.Gameplay.UI
 {
   public class PauseView : MonoBehaviour
   {

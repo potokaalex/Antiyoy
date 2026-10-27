@@ -1,6 +1,5 @@
 using Client.Project;
 using Client.Project.Infrastructure;
-using Client.Project.Project;
 using Client.Project.UI;
 using UnityEngine;
 
@@ -13,7 +12,6 @@ namespace Client.Menu.MainMenu.Options
     [SerializeField] private MenuAnimator _menuAnimator;
     private MainMenuView _mainMenuView;
     private InputController _inputController;
-    private ProjectController _projectController;
 
     public void Show() => _menuAnimator.PlayShow();
 
@@ -21,7 +19,6 @@ namespace Client.Menu.MainMenu.Options
     {
       _mainMenuView = Locator.Get<MainMenuView>();
       _inputController = Locator.Get<InputController>();
-      _projectController = Locator.Get<ProjectController>();
       _backButton.OnClick += OnBackClick;
       _battleButton.OnClick += OnBattleClick;
     }
@@ -46,7 +43,7 @@ namespace Client.Menu.MainMenu.Options
 
     private void OnBattleClick()
     {
-      _projectController.LoadGameplay();
+      _mainMenuView.ShowGameplayModes();
       _menuAnimator.PlayHide();
     }
   }

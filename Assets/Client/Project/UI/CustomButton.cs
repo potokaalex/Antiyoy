@@ -10,6 +10,7 @@ namespace Client.Project.UI
   {
     [SerializeField] private Image _background;
     [SerializeField] private bool _hardFadeAnimation;
+    [SerializeField] private Color _backgroundColor = new(0f, 0f, 0.3f, 0.75f);
 
     public event Action OnClick;
 
@@ -19,7 +20,7 @@ namespace Client.Project.UI
       {
         DOTween.Kill(this);
 
-        _background.color = new Color(0f, 0f, 0.3f, 0.75f);
+        _background.color = _backgroundColor;
         if (_hardFadeAnimation)
           DOVirtual.Float(1, 0, 0.5f, _ => { }).OnComplete(() => _background.color = Color.clear).SetId(this);
         else

@@ -23,7 +23,7 @@ namespace Client.Project.Unit.Code
 
     public int Protection => _config.Protection;
 
-    public bool CanViewProtection => Type is UnitType.Capital or UnitType.Tower or UnitType.StrongTower;
+    public bool CanViewProtection => Type == UnitType.Capital || Type.IsTower();
 
     public Vector3 WorldPosition { get => transform.position; set => transform.position = value; }
 

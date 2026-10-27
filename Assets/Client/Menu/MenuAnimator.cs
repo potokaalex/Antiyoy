@@ -19,6 +19,7 @@ namespace Client.Menu
     private InputController _inputController;
     private Vector2 _topPanelStartPosition;
     private Vector2 _topPanelEndPosition;
+    private bool _initialized;
 
     private void Awake()
     {
@@ -33,6 +34,12 @@ namespace Client.Menu
 
     public void Initialize()
     {
+      if (_initialized)
+        return;
+      _initialized = true;
+
+      gameObject.SetActive(true);
+
       if (_topPanel)
       {
         _topPanelStartPosition = _topPanel.anchoredPosition;
@@ -41,12 +48,14 @@ namespace Client.Menu
       }
 
       gameObject.SetActive(false);
-      _body.localScale = Vector3.one * _bodyMinScale;
+      if (_body)
+        _body.localScale = Vector3.one * _bodyMinScale;
       _canvasGroup.alpha = 0;
     }
 
     public void PlayShow()
     {
+      Initialize();
       MenuAnimation(_topPanelStartPosition, 1, 1)
         .JoinCallback(() => gameObject.SetActive(true))
         .Join(_menuView.Background.PlayColorTransition(_backgroundShowColor, _particlesShowColor));
@@ -61,7 +70,10 @@ namespace Client.Menu
       if (_topPanel)
         sequence.Join(_topPanel.DOAnchorPos(topPosition, 0.5f));
 
-      sequence.Join(_body.DOScale(bodyScale, 0.5f))
+      if (_body)
+        sequence.Join(_body.DOScale(bodyScale, 0.5f));
+
+      sequence
         .Join(_canvasGroup.DOFade(alpha, 0.35f))
         .JoinCallback(() => _inputController.SetBlockInput(true))
         .AddOnComplete(() => _inputController.SetBlockInput(false))

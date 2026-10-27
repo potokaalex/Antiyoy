@@ -1,31 +1,19 @@
-using Client.Gameplay.Gameplay;
 using Client.Gameplay.UI.Hud;
-using Client.Gameplay.UI.Pause;
-using Client.Project.Infrastructure;
+using Client.Gameplay.UI.IncomeWindow;
+using Client.Gameplay.UI.MoneyWindow;
 using Client.Project.Region;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Client.Gameplay.UI
 {
   public class GameplayUIView : MonoBehaviour
   {
     [SerializeField] private HudView _hudView;
-    [SerializeField] private GameObject _winPanel;
-    [SerializeField] private TextMeshProUGUI _winText;
-    [SerializeField] private Button _winNexButton;
     [SerializeField] private GameTransitionView _gameTransitionView;
     [SerializeField] private PauseView _pauseView;
-    private GameplayController _gameplayController;
-
-    private void Awake()
-    {
-      _gameplayController = Locator.Get<GameplayController>();
-      _winNexButton.onClick.AddListener(_gameplayController.End);
-    }
-
-    private void OnDestroy() => _winNexButton.onClick.RemoveListener(_gameplayController.End);
+    [SerializeField] private IncomeWindowView _incomeWindowView;
+    [SerializeField] private MoneyWindowView _moneyWindowView;
+    [SerializeField] private WinView _winView;
 
     public void PlayShow()
     {
@@ -46,8 +34,9 @@ namespace Client.Gameplay.UI
 
     public void ShowEndScreen(RegionType winner)
     {
-      _winPanel.SetActive(true);
-      _winText.SetText($"Winner: {winner}");
+      _hudView.PlayHide();
+      _winView.PlayShow(winner);
+      _gameTransitionView.PlayOutGameTransition();
     }
 
     public void ClearRegionCreation() => _hudView.Region.Creation.Clear();
@@ -65,5 +54,9 @@ namespace Client.Gameplay.UI
       _hudView.PlayShow();
       _gameTransitionView.PlayToyGameTransition();
     }
+
+    public void OpenIncomeWindow() => _incomeWindowView.Open();
+
+    public void OpenMoneyWindow() => _moneyWindowView.Open();
   }
 }

@@ -4,6 +4,7 @@ using Client.Menu.MainMenu;
 using Client.Project.Borders;
 using Client.Project.CameraFeatures;
 using Client.Project.Infrastructure;
+using Client.Project.Progress;
 using Client.Project.Region;
 using Client.Project.Tile;
 using Client.Project.Unit.Code;
@@ -26,6 +27,7 @@ namespace Client.Project.Project
     public override void Install(Context context)
     {
       context.Register(this, typeof(ICoroutineRunner));
+      context.Register(new ProgressController());
       context.Register(new InputController());
       context.Register(_cameraController);
       context.Register(_tilemapController);
