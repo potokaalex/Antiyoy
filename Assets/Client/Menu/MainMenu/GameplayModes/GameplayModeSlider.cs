@@ -56,6 +56,8 @@ namespace Client.Menu.MainMenu.GameplayModes
       }
     }
 
+    public void SetValueWithoutNotify(int value) => _slider.SetValueWithoutNotify(value);
+
     private void SliderOnValueChanged(float value)
     {
       ViewValueName(value);

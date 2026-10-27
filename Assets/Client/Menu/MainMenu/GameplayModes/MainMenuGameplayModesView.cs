@@ -1,5 +1,6 @@
 using Client.Project;
 using Client.Project.Infrastructure;
+using Client.Project.Progress;
 using Client.Project.Project;
 using Client.Project.UI;
 using UnityEngine;
@@ -11,6 +12,7 @@ namespace Client.Menu.MainMenu.GameplayModes
     [SerializeField] private CustomButton _backButton;
     [SerializeField] private CustomButton _startButton;
     [SerializeField] private MenuAnimator _menuAnimator;
+    [SerializeField] private TopAndBottomMenuAnimator _topAndBottomMenuAnimator;
     [SerializeField] private GameplayModeSlider _difficulty;
     [SerializeField] private GameplayModeSlider _mapSize;
     [SerializeField] private GameplayModeSlider _players;
@@ -18,27 +20,39 @@ namespace Client.Menu.MainMenu.GameplayModes
     private MainMenuView _mainMenuView;
     private InputController _inputController;
     private ProjectController _projectController;
+    private ProgressController _progressController;
 
-    public void Show() => _menuAnimator.PlayShow();
+    public void Show()
+    {
+      _menuAnimator.PlayShow();
+      _topAndBottomMenuAnimator.PlayShow();
+    }
 
     private void Awake()
     {
       _mainMenuView = Locator.Get<MainMenuView>();
       _inputController = Locator.Get<InputController>();
       _projectController = Locator.Get<ProjectController>();
+      _progressController = Locator.Get<ProgressController>();
+
+      LoadData();
       _backButton.OnClick += OnBackClick;
       _startButton.OnClick += OnStartClick;
-      _mapSize.OnSliderValueChanged += UpdateSliders;
-      _colors.OnSliderValueChanged += UpdateSliders;
-      UpdateSliders();
+      _difficulty.OnSliderValueChanged += OnSlidersValueChanged;
+      _mapSize.OnSliderValueChanged += OnSlidersValueChanged;
+      _players.OnSliderValueChanged += OnSlidersValueChanged;
+      _colors.OnSliderValueChanged += OnSlidersValueChanged;
+      OnSlidersValueChanged();
     }
 
     private void OnDestroy()
     {
       _backButton.OnClick -= OnBackClick;
       _startButton.OnClick -= OnStartClick;
-      _mapSize.OnSliderValueChanged -= UpdateSliders;
-      _colors.OnSliderValueChanged -= UpdateSliders;
+      _difficulty.OnSliderValueChanged -= OnSlidersValueChanged;
+      _mapSize.OnSliderValueChanged -= OnSlidersValueChanged;
+      _players.OnSliderValueChanged -= OnSlidersValueChanged;
+      _colors.OnSliderValueChanged -= OnSlidersValueChanged;
     }
 
     private void Update()
@@ -50,6 +64,7 @@ namespace Client.Menu.MainMenu.GameplayModes
     private void OnBackClick()
     {
       _menuAnimator.PlayHide();
+      _topAndBottomMenuAnimator.PlayHide();
       _mainMenuView.ShowOptions();
     }
 
@@ -57,18 +72,44 @@ namespace Client.Menu.MainMenu.GameplayModes
     {
       _projectController.LoadGameplay();
       _menuAnimator.PlayHide();
+      _topAndBottomMenuAnimator.PlayHide();
     }
 
-    private void UpdateSliders()
+    private void OnSlidersValueChanged()
+    {
+      UpdateSlidersMaxValues();
+      SaveData();
+    }
+
+    private void UpdateSlidersMaxValues()
     {
       if (_mapSize.Value == 0)
         _colors.MaxValue = 3;
-      else if(_mapSize.Value == 1)
+      else if (_mapSize.Value == 1)
         _colors.MaxValue = 7;
-      else if(_mapSize.Value >= 2)
+      else if (_mapSize.Value >= 2)
         _colors.MaxValue = 8;
 
       _players.MaxValue = _colors.Value + 2;
+    }
+
+    private void SaveData()
+    {
+      var data = _progressController.Data.Menu.GameplayModesProgressData;
+      data.Difficulty = _difficulty.Value;
+      data.MapSize = _mapSize.Value;
+      data.Players = _players.Value;
+      data.Colors = _colors.Value;
+      _progressController.Save();
+    }
+    
+    private void LoadData()
+    {
+      var data = _progressController.Data.Menu.GameplayModesProgressData;
+      _difficulty.SetValueWithoutNotify(data.Difficulty);
+      _mapSize.SetValueWithoutNotify(data.MapSize);
+      _players.SetValueWithoutNotify(data.Players);
+      _colors.SetValueWithoutNotify(data.Colors);
     }
   }
 }

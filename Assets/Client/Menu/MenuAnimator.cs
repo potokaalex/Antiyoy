@@ -37,6 +37,7 @@ namespace Client.Menu
       if (_initialized)
         return;
       _initialized = true;
+
       gameObject.SetActive(true);
 
       if (_topPanel)
@@ -47,7 +48,8 @@ namespace Client.Menu
       }
 
       gameObject.SetActive(false);
-      _body.localScale = Vector3.one * _bodyMinScale;
+      if (_body)
+        _body.localScale = Vector3.one * _bodyMinScale;
       _canvasGroup.alpha = 0;
     }
 
@@ -68,7 +70,10 @@ namespace Client.Menu
       if (_topPanel)
         sequence.Join(_topPanel.DOAnchorPos(topPosition, 0.5f));
 
-      sequence.Join(_body.DOScale(bodyScale, 0.5f))
+      if (_body)
+        sequence.Join(_body.DOScale(bodyScale, 0.5f));
+
+      sequence
         .Join(_canvasGroup.DOFade(alpha, 0.35f))
         .JoinCallback(() => _inputController.SetBlockInput(true))
         .AddOnComplete(() => _inputController.SetBlockInput(false))
