@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Antiyoy.Gameplay
 {
@@ -8,15 +7,14 @@ namespace Antiyoy.Gameplay
 
         protected readonly GameController gameController;
         private readonly DetectorProvince detectorProvince;
-        protected float boundWidth, boundHeight;
-        protected int fWidth, fHeight, w, h;
+        protected int fWidth, fHeight;
+        protected double minX, maxX, minY, maxY;
         protected Hex[][] field;
         protected System.Random random;
-        protected List<PointYio> islandCenters;
+        protected List<Hex> islandCenters;
         protected static int SMALL_PROVINCE_SIZE = 4;
         protected List<Link> links;
         private List<Hex> tempList;
-        PointYio tempPoint;
         public static int[] treesPercentages = new int[] {0, 5, 10, 15, 25, 33, 50, 66, 75, 90, 95, 100};
 
 
@@ -24,20 +22,36 @@ namespace Antiyoy.Gameplay
             this.gameController = gameController;
             detectorProvince = new DetectorProvince();
             tempList = new List<Hex>();
-            tempPoint = new PointYio();
         }
 
 
         protected void setValues(System.Random random, Hex[][] field) {
-            boundWidth = gameController.levelSizeManager.boundWidth;
-            boundHeight = gameController.levelSizeManager.boundHeight;
             fWidth = gameController.fieldManager.fWidth;
             fHeight = gameController.fieldManager.fHeight;
-            w = (int) GraphicsYio.width;
-            h = (int) GraphicsYio.height;
+
+            // All generation geometry is expressed in array coordinates. The
+            // level-size factors reproduce the original relative safety margins.
+            double scaleX = gameController.levelSizeManager.levelSize switch {
+                LevelSize.MEDIUM => 2.0,
+                LevelSize.BIG => 2.0,
+                LevelSize.HUGE => 3.0,
+                _ => 1.0
+            };
+            double scaleY = gameController.levelSizeManager.levelSize switch {
+                LevelSize.BIG => 2.0,
+                LevelSize.HUGE => 3.0,
+                _ => 1.0
+            };
+            minX = 0.1 / scaleX * fWidth;
+            maxX = fWidth - minX;
+            minY = 0.15 / scaleY * fHeight;
+            maxY = fHeight - 0.1 / scaleY * fHeight;
             SMALL_PROVINCE_SIZE = 5;
-            this.random = random;
-            this.field = field;
+            this.random = random ?? throw new ArgumentNullException(nameof(random));
+            this.field = field ?? throw new ArgumentNullException(nameof(field));
+            if (numberOfAvailableHexes() == 0) {
+                throw new InvalidOperationException("The field is too small for the selected level size; no cells are inside generation bounds.");
+            }
         }
 
 
@@ -276,7 +290,7 @@ namespace Antiyoy.Gameplay
             int maxDifference = 0;
             for (int i = 0; i < numbers.Length; i++) {
                 for (int j = i + 1; j < numbers.Length; j++) {
-                    int d = Mathf.Abs(numbers[i] - numbers[j]);
+                    int d = Math.Abs(numbers[i] - numbers[j]);
                     if (d > maxDifference) maxDifference = d;
                 }
             }
@@ -390,27 +404,36 @@ namespace Antiyoy.Gameplay
 
 
         protected void relocateMap(int deltaX, int deltaY) {
-            clearGenFlags();
-
-            for (int i = 0; i < fWidth; i++) {
-                for (int j = 0; j < fHeight; j++) {
-                    field[i][j].genFlag = field[i][j].active;
-                    field[i][j].previousFraction = field[i][j].fraction;
+            bool[][] wasActive = new bool[fWidth][];
+            int[][] fractions = new int[fWidth][];
+            for (int x = 0; x < fWidth; x++) {
+                wasActive[x] = new bool[fHeight];
+                fractions[x] = new int[fHeight];
+                for (int y = 0; y < fHeight; y++) {
+                    wasActive[x][y] = field[x][y].active;
+                    fractions[x][y] = field[x][y].fraction;
                 }
             }
 
             gameController.fieldManager.clearActiveHexesList();
-            deactivateHexes();
+            for (int x = 0; x < fWidth; x++) {
+                for (int y = 0; y < fHeight; y++) {
+                    field[x][y].active = false;
+                    field[x][y].genFlag = false;
+                }
+            }
 
-            for (int i = 0; i < fWidth; i++) {
-                for (int j = 0; j < fHeight; j++) {
-                    int destX = i + deltaX;
-                    int destY = j + deltaY;
-                    if (destX >= 0 && destY >= 0 && destX < fWidth && deltaY < fHeight) {
-                        if (field[i][j].genFlag) activateHex(field[destX][destY], field[i][j].previousFraction);
-                    } else {
-                        deactivateHex(field[i][j]);
-                    }
+            for (int x = 0; x < fWidth; x++) {
+                for (int y = 0; y < fHeight; y++) {
+                    if (!wasActive[x][y]) continue;
+                    int destX = x + deltaX;
+                    int destY = y + deltaY;
+                    if (destX < 0 || destY < 0 || destX >= fWidth || destY >= fHeight) continue;
+                    Hex destination = field[destX][destY];
+                    destination.active = true;
+                    destination.setFraction(fractions[x][y]);
+                    if (!gameController.fieldManager.activeHexes.Contains(destination))
+                        gameController.fieldManager.activeHexes.Add(destination);
                 }
             }
         }
@@ -517,12 +540,16 @@ namespace Antiyoy.Gameplay
 
 
         protected Hex getCenterHex() {
-            return gameController.fieldManager.getHexByPos(boundWidth / 2, boundHeight / 2);
+            return field[Math.Min(fWidth - 1, fWidth / 2)][Math.Min(fHeight - 1, fHeight / 2)];
         }
 
 
         protected double distanceFromCenterToCorners() {
-            return Yio.distance(0, 0, boundWidth / 2, boundHeight / 2);
+            double cx = (fWidth - 1) / 2.0;
+            double cy = (fHeight - 1) / 2.0;
+            double dx = Math.Max(cx, fWidth - 1 - cx);
+            double dy = Math.Max(cy, fHeight - 1 - cy);
+            return Math.Sqrt(dx * dx + dy * dy);
         }
 
 
@@ -532,9 +559,16 @@ namespace Antiyoy.Gameplay
                 double r = random.NextDouble();
                 r *= r;
                 r *= distanceFromCenterToCorners();
-                Hex hex = gameController.fieldManager.getHexByPos(boundWidth / 2 + r * Math.Cos(a), boundHeight / 2 + r * Math.Sin(a));
+                int x = (int)Math.Round((fWidth - 1) / 2.0 + r * Math.Cos(a));
+                int y = (int)Math.Round((fHeight - 1) / 2.0 + r * Math.Sin(a));
+                Hex hex = getHexAtArrayCoordinates(x, y);
                 if (hex != null && isHexInsideBounds(hex)) return hex;
             }
+        }
+
+        private Hex getHexAtArrayCoordinates(int x, int y) {
+            if (x < 0 || y < 0 || x >= fWidth || y >= fHeight) return null;
+            return field[x][y];
         }
 
 
@@ -549,9 +583,12 @@ namespace Antiyoy.Gameplay
                 if (gameController.levelSizeManager.levelSize <= LevelSize.MEDIUM) {
                     hex = field[random.Next(fWidth)][random.Next(fHeight)];
                 } else {
-                    tempPoint.set(boundWidth / 2, boundHeight / 2);
-                    tempPoint.relocateRadial(random.NextDouble() * random.NextDouble() * 0.5 * boundHeight, getRandomAngle());
-                    hex = gameController.fieldManager.getHexByPos(tempPoint.x, tempPoint.y);
+                    // Preserve the old centre-biased radial sampling, expressed in array space.
+                    double radiusFactor = random.NextDouble() * random.NextDouble() * 0.5;
+                    double angle = getRandomAngle();
+                    int x = (int)Math.Round((fWidth - 1) / 2.0 + radiusFactor * fWidth * Math.Cos(angle));
+                    int y = (int)Math.Round((fHeight - 1) / 2.0 + radiusFactor * fHeight * Math.Sin(angle));
+                    hex = getHexAtArrayCoordinates(x, y);
                 }
 
                 if (!isHexInsideBounds(hex)) continue;
@@ -618,23 +655,45 @@ namespace Antiyoy.Gameplay
 
         protected void createRoadBetweenIslands(int islandOne, int islandTwo) {
             if (islandTwo == -1) return;
-            PointYio startPoint = islandCenters[islandOne];
-            PointYio endPoint = islandCenters[islandTwo];
-            links.Add(new Link(startPoint, endPoint));
-            double distance = startPoint.distanceTo(endPoint);
-            double delta = gameController.fieldManager.hexSize / 2f;
-            double a = startPoint.angleTo(endPoint);
-            int n = (int) (distance / delta);
-            for (int i = 0; i < n; i++) {
-                double currentX = startPoint.x + delta * i * Math.Cos(a);
-                double currentY = startPoint.y + delta * i * Math.Sin(a);
-                Hex hex = gameController.fieldManager.getHexByPos(currentX, currentY);
-                spawnIsland(hex, 2);
+            Hex start = islandCenters[islandOne];
+            Hex end = islandCenters[islandTwo];
+            links.Add(new Link(start, end));
+
+            // The original world-space line was sampled every half-hex. Draw the
+            // equivalent line in axial array coordinates at roughly two samples per hex.
+            int distance = hexDistance(start.index1, start.index2, end.index1, end.index2);
+            int samples = Math.Max(1, distance * 2);
+            for (int i = 0; i <= samples; i++) {
+                double t = i / (double)samples;
+                Hex hex = getHexOnAxialLine(start, end, t);
+                if (hex != null) spawnIsland(hex, 2);
             }
         }
 
+        private static int hexDistance(int x1, int y1, int x2, int y2) {
+            int dx = x2 - x1;
+            int dy = y2 - y1;
+            return (Math.Abs(dx) + Math.Abs(dy) + Math.Abs(dx + dy)) / 2;
+        }
 
-        protected bool areIslandsAlreadyUnited(PointYio p1, PointYio p2) {
+        private Hex getHexOnAxialLine(Hex start, Hex end, double t) {
+            double x = start.index1 + (end.index1 - start.index1) * t;
+            double y = start.index2 + (end.index2 - start.index2) * t;
+            // Axial/cube rounding keeps the path adjacent on a hex grid.
+            double z = -x - y;
+            int rx = (int)Math.Round(x);
+            int ry = (int)Math.Round(y);
+            int rz = (int)Math.Round(z);
+            double dx = Math.Abs(rx - x);
+            double dy = Math.Abs(ry - y);
+            double dz = Math.Abs(rz - z);
+            if (dx > dy && dx > dz) rx = -ry - rz;
+            else if (dy > dz) ry = -rx - rz;
+            return getHexAtArrayCoordinates(rx, ry);
+        }
+
+
+        protected bool areIslandsAlreadyUnited(Hex p1, Hex p2) {
             for (int i = 0; i < links.Count; i++) {
                 if (links[i].equals(p1, p2)) return true;
             }
@@ -643,13 +702,18 @@ namespace Antiyoy.Gameplay
 
 
         protected int getClosestIslandIndex(int searcherIslandIndex) {
-            PointYio startPoint = islandCenters[searcherIslandIndex];
+            Hex start = islandCenters[searcherIslandIndex];
             int closestIslandIndex = -1;
-            double minDistance = fWidth * fHeight, currentDistance;
+            double minDistance = double.MaxValue;
+            // Keep the original generator's candidate range (starts at island 1).
             for (int i = 1; i < islandCenters.Count; i++) {
                 if (i == searcherIslandIndex) continue;
-                if (areIslandsAlreadyUnited(startPoint, islandCenters[i])) continue;
-                currentDistance = startPoint.distanceTo(islandCenters[i]);
+                if (areIslandsAlreadyUnited(start, islandCenters[i])) continue;
+                Hex candidate = islandCenters[i];
+                // Euclidean distance in the physical plane of an axial hex grid.
+                double dx = (candidate.index1 - start.index1) + (candidate.index2 - start.index2) * 0.5;
+                double dy = (candidate.index2 - start.index2) * (Math.Sqrt(3) / 2.0);
+                double currentDistance = dx * dx + dy * dy;
                 if (currentDistance < minDistance) {
                     minDistance = currentDistance;
                     closestIslandIndex = i;
@@ -680,16 +744,9 @@ namespace Antiyoy.Gameplay
 
 
         protected bool isHexInsideBounds(Hex hex) {
-            if (hex == null) return false;
-
-            PointYio pos = hex.getPos();
-
-            if (pos.x <= 0.1 * w) return false;
-            if (pos.x >= boundWidth - 0.1 * w) return false;
-            if (pos.y <= 0.15 * h) return false;
-            if (pos.y >= boundHeight - 0.1 * h) return false;
-
-            return true;
+            if (hex == null || hex.isNullHex()) return false;
+            return hex.index1 > minX && hex.index1 < maxX &&
+                   hex.index2 > minY && hex.index2 < maxY;
         }
 
 
@@ -709,17 +766,25 @@ namespace Antiyoy.Gameplay
 
 
         protected void createLand() {
+            int attempts = 0;
             while (!isGood()) {
+                // Each retry must start with fresh island metadata.
+                islandCenters.Clear();
+                links.Clear();
                 deactivateHexes();
                 int N = numberOfIslandsByLevelSize();
                 for (int i = 0; i < N; i++) {
                     Hex hex = getRandomHexInsideBounds();
-                    islandCenters.Add(hex.getPos());
+                    islandCenters.Add(hex);
                     spawnIsland(hex, 7);
                 }
                 uniteIslandsWithRoads();
                 centerLand();
                 cutOffHexesOutsideOfBounds();
+                attempts++;
+                if (attempts >= 500) {
+                    throw new InvalidOperationException("Map generation failed after 500 attempts. Check field dimensions and level size.");
+                }
             }
         }
 
@@ -731,28 +796,26 @@ namespace Antiyoy.Gameplay
 
         protected void beginGeneration() {
             gameController.fieldManager.createFieldMatrix();
-            islandCenters = new List<PointYio>();
+            islandCenters = new List<Hex>();
             links = new List<Link>();
         }
 
 
         public class Link {
 
-            PointYio p1, p2;
+            Hex p1, p2;
 
-
-            public Link(PointYio p1, PointYio p2) {
+            public Link(Hex p1, Hex p2) {
                 this.p1 = p1;
                 this.p2 = p2;
             }
 
-
-            public bool equals(PointYio p1, PointYio p2) {
-                return containsPoint(p1) && containsPoint(p2);
+            public bool equals(Hex p1, Hex p2) {
+                return (this.p1 == p1 && this.p2 == p2) ||
+                       (this.p1 == p2 && this.p2 == p1);
             }
 
-
-            public bool containsPoint(PointYio p) {
+            public bool containsPoint(Hex p) {
                 return p1 == p || p2 == p;
             }
 

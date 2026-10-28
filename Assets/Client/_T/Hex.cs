@@ -67,11 +67,6 @@ namespace Antiyoy.Gameplay
 
     public bool containsObject() => objectInside > 0;
 
-    public PointYio getPos()
-    {
-      //возможно позиция в мировом пространстве.
-      throw new System.NotImplementedException();
-    }
 
     public int howManyEnemyHexesNear() {
       int c = 0;

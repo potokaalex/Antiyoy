@@ -12,7 +12,6 @@ namespace Antiyoy.Gameplay
     public Hex nullHex;
     public Hex[][] field;
 
-    public float hexSize;//??
     public GameController gameController;
 
     public void Initialize(int fWidth, int fHeight, GameController gameController)
@@ -31,10 +30,11 @@ namespace Antiyoy.Gameplay
 
     public void clearActiveHexesList() => activeHexes.Clear();
 
-    public Hex getHexByPos(double x, double y)
+    // Array coordinates are the canonical coordinates used by map generation.
+    public Hex getHex(int x, int y)
     {
-      //слабо понимаю, как работает позиция, ну, т.е. это пространство в мире?
-      throw new System.NotImplementedException();
+      if (x < 0 || y < 0 || x >= fWidth || y >= fHeight) return nullHex;
+      return field[x][y];
     }
 
     public void spawnTree(Hex hex)
@@ -47,6 +47,8 @@ namespace Antiyoy.Gameplay
 
     public void createFieldMatrix()
     {
+      activeHexes.Clear();
+      solidObjects.Clear();
       for (int i = 0; i < fWidth; i++)
       {
         field[i] = new Hex[fHeight];

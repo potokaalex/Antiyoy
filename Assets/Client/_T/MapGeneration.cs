@@ -1,11 +1,13 @@
 using System;
 using Antiyoy.Gameplay;
+using UnityEngine;
+using Random = System.Random;
 
 namespace Client._T
 {
-  public class MapGeneration
+  public class MapGeneration : MonoBehaviour
   {
-    public void generateMap()
+    private void Awake()
     {
       //from runtime config
       GameRules.fractionsQuantity = 2;
@@ -14,8 +16,26 @@ namespace Client._T
 
       var gameController = new GameController(fWidth, fHeight);
       var mapGeneratorGeneric = new MapGeneratorGeneric(gameController);
-      mapGeneratorGeneric.generateMap(new Random(), gameController.fieldManager.field);
       //detectProvinces();
+      gameController.fieldManager.createFieldMatrix();
+      mapGeneratorGeneric.generateMap(new Random(), gameController.fieldManager.field);
+      
+      var str = string.Empty;
+      foreach (var hexes in gameController.fieldManager.field)
+      {
+        foreach (var hex in hexes) 
+          str += hex.active ? "X" : " ";
+        str += "\n";
+      }
+      
+      foreach (var hexes in gameController.fieldManager.field)
+      {
+        foreach (var hex in hexes) 
+          str += hex.fraction.ToString();
+        str += "\n";
+      }
+      
+      UnityEngine.Debug.Log(str);
     }
   }
 }
