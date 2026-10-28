@@ -2,7 +2,7 @@ namespace Antiyoy.Gameplay
 {
   public class Obj
   {
-    public static int PINE = 1;
-    public static int PALM = 2;
+    public const int PINE = 1;
+    public const int PALM = 2;
   }
 }

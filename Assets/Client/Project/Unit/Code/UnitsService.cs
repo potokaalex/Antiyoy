@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Client.Project.Hex;
 using Client.Project.Infrastructure;
+using Client.Project.Map;
 using Client.Project.Region;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -32,26 +32,16 @@ namespace Client.Project.Unit.Code
           x => x.gameObject.SetActive(true), x => x.gameObject.SetActive(false)));
     }
 
-    public void InitialCreateUnits(Antiyoy.Gameplay.Hex[][] field)
+    public void InitialCreateUnits(MapPureData map)
     {
-      //надо сначала разметить столицы, ну и деревья вроде уже должны быть.
-      /*
-      _gridController.GetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(0, 0)), out var redCapitalCell);
-      CreateUnit(redCapitalCell, UnitType.Capital, false);
-
-      _gridController.GetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(4, 0)), out var blueCapitalCell);
-      CreateUnit(blueCapitalCell, UnitType.Capital, false);
-
-      _gridController.GetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(0, 8)), out var pine1);
-      CreateUnit(pine1, UnitType.Pine, false);
-      _gridController.GetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(1, 8)), out var pine2);
-      CreateUnit(pine2, UnitType.Pine, false);
-
-      _gridController.GetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(7, 8)), out var palm1);
-      CreateUnit(palm1, UnitType.Palm, false);
-      _gridController.GetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(8, 8)), out var palm2);
-      CreateUnit(palm2, UnitType.Palm, false);
-      */
+      foreach (var cell in map.GetCells())
+      {
+        if (cell.Unit.HasValue)
+        {
+          var unit = cell.Unit.Value;
+          CreateUnit(_gridController.GetCell(cell.Position), unit.Type, unit.HasTurns);
+        }
+      }
     }
 
     public void Clear()

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Client.Project.Hex;
 using Client.Project.Infrastructure;
+using Client.Project.Map;
 using Client.Project.Region;
 using Client.Project.Tile;
 using Client.Project.Utilities;
@@ -23,6 +24,17 @@ namespace Client.Project
       _regionsService = Locator.Get<RegionsService>();
     }
 
+    public void InitialCreateCells(MapPureData map)
+    {
+      Size = map.Size;
+      _cells = new CellController[Size.x * Size.y];
+
+      foreach (var cell in map.GetCells())
+        CreateCell(cell.Position);
+
+      _tilemapController.FillByBaseTiles();
+    }
+
     public HexCoordinates WorldPositionToHex(Vector3 worldPosition) =>
       HexCoordinates.FromArray2DIndex(GridIndexTo2DIndex(_grid.WorldToCell(worldPosition)));
 
@@ -32,41 +44,30 @@ namespace Client.Project
 
     public Vector2Int GridIndexTo2DIndex(Vector3Int index) => new(index.y, index.x);
 
-    public bool GetCell(HexCoordinates position, out CellController cell)
+    public CellController GetCell(HexCoordinates position)
     {
       if (IsPositionInGrid(position))
-      {
-        cell = _cells[GetCellIndex(position)];
-        return cell != null;
-      }
-
-      cell = null;
-      return false;
+        return _cells[GetCellIndex(position)];
+      return null;
     }
 
-    public void InitialCreateCells(Antiyoy.Gameplay.Hex[][] field)
+    public bool GetCell(HexCoordinates position, out CellController cell)
     {
-      Size = new Vector2Int(field.Length, field[0].Length);
-      _cells = new CellController[Size.x * Size.y];
-
-      for (var x = 0; x < Size.x; x++)
-      {
-        var hexes = field[x];
-        for (var y = 0; y < Size.y; y++)
-        {
-          var hex = hexes[y];
-          if(hex.active)
-            CreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(x, y)));
-        }
-      }
-
-      _tilemapController.FillByBaseTiles();
+      cell = GetCell(position);
+      return cell != null;
     }
 
     public IEnumerable<CellController> GetAllCells()
     {
       foreach (var cell in _cells)
         if (cell != null)
+          yield return cell;
+    }
+
+    public IEnumerable<CellController> GetNeighbourCells(HexCoordinates aroundPosition)
+    {
+      foreach (var direction in HexUtilities.Directions)
+        if (GetCell(aroundPosition + direction, out var cell))
           yield return cell;
     }
 
@@ -85,13 +86,6 @@ namespace Client.Project
         _cells[GetCellIndex(cell.Position)] = null;
         cell.Dispose();
       }
-    }
-
-    public IEnumerable<CellController> GetNeighbourCells(HexCoordinates aroundPosition)
-    {
-      foreach (var direction in HexUtilities.Directions)
-        if (GetCell(aroundPosition + direction, out var cell))
-          yield return cell;
     }
 
     private void CreateCell(HexCoordinates position, RegionType type)

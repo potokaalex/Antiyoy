@@ -16,19 +16,19 @@ namespace Antiyoy.Gameplay
     {
       switch (levelSize)
       {
-        case LevelSize.SMALL:
+        case LevelSize.Small:
           boundWidth = GraphicsYio.width;
           boundHeight = GraphicsYio.height;
           break;
-        case LevelSize.MEDIUM:
+        case LevelSize.Medium:
           boundWidth = 2 * GraphicsYio.width;
           boundHeight = GraphicsYio.height;
           break;
-        case LevelSize.BIG:
+        case LevelSize.Big:
           boundWidth = 2 * GraphicsYio.width;
           boundHeight = 2 * GraphicsYio.height;
           break;
-        case LevelSize.HUGE:
+        case LevelSize.Huge:
           boundWidth = 3 * GraphicsYio.width;
           boundHeight = 3 * GraphicsYio.height;
           break;

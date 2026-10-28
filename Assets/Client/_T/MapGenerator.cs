@@ -32,14 +32,14 @@ namespace Antiyoy.Gameplay
             // All generation geometry is expressed in array coordinates. The
             // level-size factors reproduce the original relative safety margins.
             double scaleX = gameController.levelSizeManager.levelSize switch {
-                LevelSize.MEDIUM => 2.0,
-                LevelSize.BIG => 2.0,
-                LevelSize.HUGE => 3.0,
+                LevelSize.Medium => 2.0,
+                LevelSize.Big => 2.0,
+                LevelSize.Huge => 3.0,
                 _ => 1.0
             };
             double scaleY = gameController.levelSizeManager.levelSize switch {
-                LevelSize.BIG => 2.0,
-                LevelSize.HUGE => 3.0,
+                LevelSize.Big => 2.0,
+                LevelSize.Huge => 3.0,
                 _ => 1.0
             };
             minX = 0.1 / scaleX * fWidth;
@@ -580,7 +580,7 @@ namespace Antiyoy.Gameplay
         protected Hex getRandomHexInsideBounds() {
             while (true) {
                 Hex hex;
-                if (gameController.levelSizeManager.levelSize <= LevelSize.MEDIUM) {
+                if (gameController.levelSizeManager.levelSize <= LevelSize.Medium) {
                     hex = field[random.Next(fWidth)][random.Next(fHeight)];
                 } else {
                     // Preserve the old centre-biased radial sampling, expressed in array space.
@@ -753,13 +753,13 @@ namespace Antiyoy.Gameplay
         protected int numberOfIslandsByLevelSize() {
             switch (gameController.levelSizeManager.levelSize) {
                 default:
-                case LevelSize.SMALL:
+                case LevelSize.Small:
                     return 2;
-                case LevelSize.MEDIUM:
+                case LevelSize.Medium:
                     return 4;
-                case LevelSize.BIG:
+                case LevelSize.Big:
                     return 20;
-                case LevelSize.HUGE:
+                case LevelSize.Huge:
                     return 35;
             }
         }

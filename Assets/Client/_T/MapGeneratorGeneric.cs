@@ -293,13 +293,13 @@ namespace Antiyoy.Gameplay
 
             switch (gameController.levelSizeManager.levelSize) {
                 default:
-                case LevelSize.SMALL:
+                case LevelSize.Small:
                     return 1;
-                case LevelSize.MEDIUM:
+                case LevelSize.Medium:
                     return 2;
-                case LevelSize.BIG:
+                case LevelSize.Big:
                     return 3;
-                case LevelSize.HUGE:
+                case LevelSize.Huge:
                     return 4;
             }
         }

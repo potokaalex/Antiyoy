@@ -2,9 +2,9 @@ namespace Antiyoy.Gameplay
 {
   public enum LevelSize
   {
-    SMALL = 0,
-    MEDIUM = 1,
-    BIG = 2,
-    HUGE = 3,
+    Small = 0,
+    Medium = 1,
+    Big = 2,
+    Huge = 3,
   }
 }
