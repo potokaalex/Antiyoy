@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Antiyoy.Gameplay;
 using Client.Gameplay.ActionsHistory;
 using Client.Gameplay.Player;
 using Client.Gameplay.UI;
@@ -68,11 +70,21 @@ namespace Client.Gameplay.Gameplay
 
     public void Start()
     {
+      GameRules.fractionsQuantity = 2;
+      var fWidth = 20;
+      var fHeight = 20;
+
+      var gameController = new GameController(fWidth, fHeight);
+      var mapGeneratorGeneric = new MapGeneratorGeneric(gameController);
+      //detectProvinces();
+      gameController.fieldManager.createFieldMatrix();
+      mapGeneratorGeneric.generateMap(new Random(Environment.TickCount), gameController.fieldManager.field);
+      
       _warriorUnitsAnimator.Enable();
       _capitalsMarksController.Enable();
-      _gridController.InitialCreateCells();
-      _unitsService.InitialCreateUnits();
-      _regionsService.InitialCreateRegions();
+      _gridController.InitialCreateCells(gameController.fieldManager.field);
+      _unitsService.InitialCreateUnits(gameController.fieldManager.field);
+      _regionsService.InitialCreateRegions(gameController.fieldManager.field);
       _gameplayRegionsController.Enable();
       _capitalsController.Enable();
       _cameraController.Setup();

@@ -13,7 +13,7 @@ namespace Client.Project
     private CellController[] _cells;
     private RegionsService _regionsService;
 
-    public Vector2Int Size { get; } = new(10, 9);
+    public Vector2Int Size { get; private set; }
 
     public void Initialize() => _regionsService = Locator.Get<RegionsService>();
 
@@ -38,13 +38,34 @@ namespace Client.Project
       return false;
     }
 
-    public void InitialCreateCells()
+    public void InitialCreateCells(Antiyoy.Gameplay.Hex[][] field)
     {
+      Size = new Vector2Int(field.Length, field[0].Length);
       _cells = new CellController[Size.x * Size.y];
 
+      for (var x = 0; x < field.Length; x++)
+      {
+        var hexes = field[x];
+        for (var y = 0; y < hexes.Length; y++)
+        {
+          var hex = hexes[y];
+          if(hex.active)
+            CreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(x, y)));
+        }
+      }
+
+      /*
       for (var y = 0; y < Size.y; y++)
       for (var x = 0; x < Size.x; x++)
         CreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(x, y)));
+      */
+    }
+
+    public IEnumerable<CellController> GetAllCells()
+    {
+      foreach (var cell in _cells)
+        if (cell != null)
+          yield return cell;
     }
 
     public void ReCreateCell(HexCoordinates position, RegionType type)

@@ -47,11 +47,11 @@ namespace Antiyoy.Gameplay
             minY = 0.15 / scaleY * fHeight;
             maxY = fHeight - 0.1 / scaleY * fHeight;
             SMALL_PROVINCE_SIZE = 5;
-            this.random = random ?? throw new ArgumentNullException(nameof(random));
-            this.field = field ?? throw new ArgumentNullException(nameof(field));
-            if (numberOfAvailableHexes() == 0) {
-                throw new InvalidOperationException("The field is too small for the selected level size; no cells are inside generation bounds.");
-            }
+            this.random = random;// ?? throw new ArgumentNullException(nameof(random));
+            this.field = field;// ?? throw new ArgumentNullException(nameof(field));
+            //if (numberOfAvailableHexes() == 0) {
+            //    throw new InvalidOperationException("The field is too small for the selected level size; no cells are inside generation bounds.");
+            //}
         }
 
 

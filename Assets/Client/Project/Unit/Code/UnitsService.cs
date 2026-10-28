@@ -32,8 +32,10 @@ namespace Client.Project.Unit.Code
           x => x.gameObject.SetActive(true), x => x.gameObject.SetActive(false)));
     }
 
-    public void InitialCreateUnits()
+    public void InitialCreateUnits(Antiyoy.Gameplay.Hex[][] field)
     {
+      //надо сначала разметить столицы, ну и деревья вроде уже должны быть.
+      /*
       _gridController.GetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(0, 0)), out var redCapitalCell);
       CreateUnit(redCapitalCell, UnitType.Capital, false);
 
@@ -49,6 +51,7 @@ namespace Client.Project.Unit.Code
       CreateUnit(palm1, UnitType.Palm, false);
       _gridController.GetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(8, 8)), out var palm2);
       CreateUnit(palm2, UnitType.Palm, false);
+      */
     }
 
     public void Clear()

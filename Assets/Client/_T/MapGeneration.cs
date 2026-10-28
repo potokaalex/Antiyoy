@@ -18,7 +18,7 @@ namespace Client._T
       var mapGeneratorGeneric = new MapGeneratorGeneric(gameController);
       //detectProvinces();
       gameController.fieldManager.createFieldMatrix();
-      mapGeneratorGeneric.generateMap(new Random(), gameController.fieldManager.field);
+      mapGeneratorGeneric.generateMap(new Random(Environment.TickCount), gameController.fieldManager.field);
       
       var str = string.Empty;
       foreach (var hexes in gameController.fieldManager.field)

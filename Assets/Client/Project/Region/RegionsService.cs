@@ -32,8 +32,65 @@ namespace Client.Project.Region
       _bordersService = Locator.Get<BordersService>();
     }
 
-    public void InitialCreateRegions()
+    public void InitialCreateRegions(Antiyoy.Gameplay.Hex[][] field)
     {
+      //надо найти регионы, как?
+      //7 - нейтральный регион.
+      //все остальные пока можно просто сделать отдельными регионами.
+      //в любом случае, нужно проходиться волной и находить уникальные регионы.
+
+      var allRegs = new List<List<CellController>>();
+
+      // Хэш-сет для моментального поиска (O(1)) посещенных ячеек
+      var passed = new HashSet<CellController>();
+
+      // Очередь для правильного и быстрого BFS (O(1) для деквею)
+      var front = new Queue<CellController>();
+
+      // Итерируемся по всем ячейкам сетки
+      foreach (var rootCell in _gridController.GetAllCells())
+      {
+        // Если ячейка уже в каком-то регионе — пропускаем
+        if (passed.Contains(rootCell))
+          continue;
+
+        // Инициализируем новый регион
+        var currentReg = new List<CellController>();
+        allRegs.Add(currentReg);
+
+        // Добавляем стартовую ячейку
+        front.Enqueue(rootCell);
+        passed.Add(rootCell);
+        currentReg.Add(rootCell);
+
+        var cellFraction = GetFraction(field, rootCell);
+
+        while (front.Count > 0)
+        {
+          // Извлекаем из начала очереди за O(1)
+          var cell = front.Dequeue();
+
+          foreach (var neighbour in _gridController.GetNeighbourCells(cell.Position))
+          {
+            // Проверяем фракцию и не были ли мы уже в этой ячейке (O(1))
+            if (GetFraction(field, neighbour) == cellFraction && !passed.Contains(neighbour))
+            {
+              currentReg.Add(neighbour);
+              front.Enqueue(neighbour);
+              passed.Add(neighbour); // Помечаем как посещенную СРАЗУ при добавлении в очередь
+            }
+          }
+        }
+      }
+
+      foreach (var reg in allRegs)
+      {
+        var frac = GetFraction(field, reg[0]);
+        _regionsFactory.Create(reg, AddCell,frac);
+        UnityEngine.Debug.Log(frac);
+      }
+      
+      /*
       List<List<CellController>> regions = new() { new(), new(), new() };
 
       for (var y = 0; y < _gridController.Size.y; y++)
@@ -57,9 +114,39 @@ namespace Client.Project.Region
       _regionsFactory.Create(regions[0], AddCell, RegionType.Red);
       _regionsFactory.Create(regions[1], AddCell, RegionType.Blue);
       _regionsFactory.Create(regions[2], AddCell);
+      */
 
       foreach (var region in Regions)
         region.Money = 100;
+    }
+
+    private RegionType GetFraction(Antiyoy.Gameplay.Hex[][] field, CellController cell)
+    {
+      var index = cell.Position.ToArray2DIndex();
+      var hex = field[index.x][index.y];
+
+      switch (hex.fraction)
+      {
+        case 7:
+          return RegionType.Neutral;
+        case 1:
+          return RegionType.Red;
+        case 2:
+          return RegionType.Blue;
+        case 3:
+          return RegionType.Green;
+        case 4:
+          return RegionType.Yellow;
+        case 5:
+          return RegionType.Purple;
+        case 6:
+          return RegionType.Brown;
+        case 0:
+          return RegionType.Mint;
+        
+        default:
+          throw new Exception($"frac: {hex.fraction}");
+      }
     }
 
     public void Clear()
