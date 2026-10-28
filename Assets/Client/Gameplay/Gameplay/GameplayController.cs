@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Antiyoy.Gameplay;
 using Client.Gameplay.ActionsHistory;
+using Client.Gameplay.DebugFeatures;
 using Client.Gameplay.Player;
 using Client.Gameplay.UI;
 using Client.Menu.MainMenu;
@@ -36,6 +37,7 @@ namespace Client.Gameplay.Gameplay
     private WarriorUnitsAnimator _warriorUnitsAnimator;
     private CapitalsController _capitalsController;
     private GameplayRegionsController _gameplayRegionsController;
+    private DebugController _debugController;
     private int _turnsCount;
 
     private int TurnsCount
@@ -66,6 +68,7 @@ namespace Client.Gameplay.Gameplay
       _warriorUnitsAnimator = Locator.Get<WarriorUnitsAnimator>();
       _capitalsController = Locator.Get<CapitalsController>();
       _gameplayRegionsController = Locator.Get<GameplayRegionsController>();
+      _debugController = Locator.Get<DebugController>();
     }
 
     public void Start()
@@ -89,6 +92,7 @@ namespace Client.Gameplay.Gameplay
       _capitalsController.Enable();
       _cameraController.Setup();
       CreatePlayers();
+      _debugController.CreateCells();
 
       TurnsCount = 0;
       _bordersService.ViewRegionsBorders();
@@ -133,6 +137,7 @@ namespace Client.Gameplay.Gameplay
       _regionsService.Clear();
       _actionsHistoryController.Clear();
       _governmentsService.Clear();
+      _debugController.Clear();
     }
 
     public void Pause()

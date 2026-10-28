@@ -87,34 +87,7 @@ namespace Client.Project.Region
       {
         var frac = GetFraction(field, reg[0]);
         _regionsFactory.Create(reg, AddCell,frac);
-        UnityEngine.Debug.Log(frac);
       }
-      
-      /*
-      List<List<CellController>> regions = new() { new(), new(), new() };
-
-      for (var y = 0; y < _gridController.Size.y; y++)
-      for (var x = 0; x < _gridController.Size.x; x++)
-      {
-        _gridController.GetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(x, y)), out var cell);
-
-        if (y == 0)
-        {
-          if (x < 4)
-            regions[0].Add(cell);
-          else if (x <= 9)
-            regions[1].Add(cell);
-          else
-            regions[2].Add(cell);
-        }
-        else
-          regions[2].Add(cell);
-      }
-
-      _regionsFactory.Create(regions[0], AddCell, RegionType.Red);
-      _regionsFactory.Create(regions[1], AddCell, RegionType.Blue);
-      _regionsFactory.Create(regions[2], AddCell);
-      */
 
       foreach (var region in Regions)
         region.Money = 100;

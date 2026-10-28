@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Client.Project.Hex;
 using Client.Project.Infrastructure;
 using Client.Project.Region;
+using Client.Project.Tile;
 using Client.Project.Utilities;
 using UnityEngine;
 
@@ -12,10 +13,15 @@ namespace Client.Project
     [SerializeField] private Grid _grid;
     private CellController[] _cells;
     private RegionsService _regionsService;
+    private TilemapController _tilemapController;
 
     public Vector2Int Size { get; private set; }
 
-    public void Initialize() => _regionsService = Locator.Get<RegionsService>();
+    public void Initialize()
+    {
+      _tilemapController = Locator.Get<TilemapController>();
+      _regionsService = Locator.Get<RegionsService>();
+    }
 
     public HexCoordinates WorldPositionToHex(Vector3 worldPosition) =>
       HexCoordinates.FromArray2DIndex(GridIndexTo2DIndex(_grid.WorldToCell(worldPosition)));
@@ -43,10 +49,10 @@ namespace Client.Project
       Size = new Vector2Int(field.Length, field[0].Length);
       _cells = new CellController[Size.x * Size.y];
 
-      for (var x = 0; x < field.Length; x++)
+      for (var x = 0; x < Size.x; x++)
       {
         var hexes = field[x];
-        for (var y = 0; y < hexes.Length; y++)
+        for (var y = 0; y < Size.y; y++)
         {
           var hex = hexes[y];
           if(hex.active)
@@ -54,11 +60,7 @@ namespace Client.Project
         }
       }
 
-      /*
-      for (var y = 0; y < Size.y; y++)
-      for (var x = 0; x < Size.x; x++)
-        CreateCell(HexCoordinates.FromArray2DIndex(new Vector2Int(x, y)));
-      */
+      _tilemapController.FillByBaseTiles();
     }
 
     public IEnumerable<CellController> GetAllCells()
