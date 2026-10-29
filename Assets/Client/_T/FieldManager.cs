@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Client.Project.Hex;
+using UnityEngine;
 
 namespace Antiyoy.Gameplay
 {
@@ -59,31 +61,19 @@ namespace Antiyoy.Gameplay
 
     public Hex adjacentHex(Hex hex, int direction) => adjacentHex(hex.index1, hex.index2, direction);
 
-    public Hex adjacentHex(int i, int j, int direction)
+    private Hex adjacentHex(int i, int j, int direction)
     {
-      switch (direction)
-      {
-        case 0:
-          if (i >= fWidth - 1) return nullHex;
-          return field[i + 1][j];
-        case 1:
-          if (j >= fHeight - 1) return nullHex;
-          return field[i][j + 1];
-        case 2:
-          if (i <= 0 || j >= fHeight - 1) return nullHex;
-          return field[i - 1][j + 1];
-        case 3:
-          if (i <= 0) return nullHex;
-          return field[i - 1][j];
-        case 4:
-          if (j <= 0) return nullHex;
-          return field[i][j - 1];
-        case 5:
-          if (i >= fWidth - 1 || j <= 0) return nullHex;
-          return field[i + 1][j - 1];
-        default:
-          return nullHex;
-      }
+      if (direction < 0 || direction >= HexUtilities.Directions.Length)
+        return nullHex;
+
+      var offset = HexUtilities.Directions[direction];
+      var root = HexCoordinates.FromArray2DIndex(new Vector2Int(i, j));
+      var index = (root + offset).ToArray2DIndex();
+
+      if (index.x < 0 || index.x >= fWidth || index.y < 0 || index.y >= fHeight)
+        return nullHex;
+
+      return field[index.x][index.y];
     }
 
     private void addSolidObject(Hex hex, int type)

@@ -84,7 +84,7 @@ namespace Client.Gameplay.Gameplay
       _capitalsController.Enable();
       _cameraController.Setup();
       CreatePlayers();
-      _debugController.CreateCells();
+      //_debugController.CreateCells();
 
       TurnsCount = 0;
       _bordersService.ViewRegionsBorders();
@@ -129,7 +129,7 @@ namespace Client.Gameplay.Gameplay
       _regionsService.Clear();
       _actionsHistoryController.Clear();
       _governmentsService.Clear();
-      _debugController.Clear();
+      //_debugController.Clear();
     }
 
     public void Pause()
