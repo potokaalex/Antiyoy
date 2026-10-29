@@ -73,7 +73,7 @@ namespace Client.Gameplay.Gameplay
 
     public void Start()
     {
-      var map = new MapGeneratorT().Generate(LevelSize.Small, 3);
+      var map = new MapGeneratorT().Generate(_mainMenuView.GameplayModesView.LevelSize, _mainMenuView.GameplayModesView.PlayersCount);
       
       _warriorUnitsAnimator.Enable();
       _capitalsMarksController.Enable();

@@ -41,7 +41,8 @@ namespace Client.Project.Region
         var cells = new List<CellController>();
         foreach (var cell in region.Cells) 
           cells.Add(_gridController.GetCell(cell.Position));
-        _regionsFactory.Create(cells, AddCell, region.Type);
+        var newRegion = _regionsFactory.Create(cells, AddCell, region.Type);
+        newRegion.Money = region.Money;
       }
     }
 

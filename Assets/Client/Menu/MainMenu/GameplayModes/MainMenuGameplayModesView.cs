@@ -1,5 +1,6 @@
 using Client.Project;
 using Client.Project.Infrastructure;
+using Client.Project.Map;
 using Client.Project.Progress;
 using Client.Project.Project;
 using Client.Project.UI;
@@ -21,6 +22,10 @@ namespace Client.Menu.MainMenu.GameplayModes
     private InputController _inputController;
     private ProjectController _projectController;
     private ProgressController _progressController;
+
+    public LevelSize LevelSize => (LevelSize)_mapSize.Value;
+
+    public int PlayersCount => _colors.Value + 2;
 
     public void Show()
     {
@@ -102,14 +107,14 @@ namespace Client.Menu.MainMenu.GameplayModes
       data.Colors = _colors.Value;
       _progressController.Save();
     }
-    
+
     private void LoadData()
     {
       var data = _progressController.Data.Menu.GameplayModesProgressData;
-      _difficulty.SetValueWithoutNotify(data.Difficulty);
-      _mapSize.SetValueWithoutNotify(data.MapSize);
-      _players.SetValueWithoutNotify(data.Players);
-      _colors.SetValueWithoutNotify(data.Colors);
+      _difficulty.Value = data.Difficulty;
+      _mapSize.Value = data.MapSize;
+      _players.Value = data.Players;
+      _colors.Value = data.Colors;
     }
   }
 }

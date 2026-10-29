@@ -43,7 +43,7 @@ namespace Client.Menu.MainMenu.Options
 
     private void OnBattleClick()
     {
-      _mainMenuView.ShowGameplayModes();
+      _mainMenuView.GameplayModesView.Show();
       _menuAnimator.PlayHide();
     }
   }

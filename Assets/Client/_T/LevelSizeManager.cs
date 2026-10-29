@@ -1,3 +1,5 @@
+using Client.Project.Map;
+
 namespace Antiyoy.Gameplay
 {
   public class LevelSizeManager

@@ -6,6 +6,8 @@ using Client.Project.Map;
 using Client.Project.Region;
 using Client.Project.Unit.Code;
 using UnityEngine;
+using UnityEngine.Pool;
+using Random = UnityEngine.Random;
 
 namespace Client._T
 {
@@ -14,19 +16,38 @@ namespace Client._T
     public MapPureData Generate(LevelSize levelSize, int playersCount)
     {
       var map = new MapPureData();
-      map.Size = new Vector2Int(20, 20);
+      map.Size = GetMapSize(levelSize);
 
+      UnityEngine.Debug.Log(playersCount);
       GameRules.fractionsQuantity = playersCount;
-      var gameController = new GameController(map.Size.x, map.Size.y);
+      var gameController = new GameController(map.Size.x, map.Size.y, levelSize);
       var mapGeneratorGeneric = new MapGeneratorGeneric(gameController);
       gameController.fieldManager.createFieldMatrix();
       mapGeneratorGeneric.generateMap(new System.Random(Environment.TickCount), gameController.fieldManager.field);
 
       var cells = CreateCells(gameController.fieldManager.field);
       var regions = CreateRegions(cells);
+      CreateCapitals(regions);
       map.Players = CreatePlayers(regions);
 
       return map;
+    }
+
+    private Vector2Int GetMapSize(LevelSize levelSize)
+    {
+      switch (levelSize)
+      {
+        case LevelSize.Small:
+          return new Vector2Int(14, 24);
+        case LevelSize.Medium:
+          return new Vector2Int(28, 24);
+        case LevelSize.Big:
+          return new Vector2Int(28, 48);
+        case LevelSize.Huge:
+          return new Vector2Int(42, 72);
+        default:
+          throw new ArgumentOutOfRangeException(nameof(levelSize), levelSize, null);
+      }
     }
 
     private CellPureData?[,] CreateCells(Hex[][] field)
@@ -98,6 +119,12 @@ namespace Client._T
         case 6:
           return RegionType.Brown;
         case 0:
+          return RegionType.Cyan;
+        case 8:
+          return RegionType.Lime;
+        case 9:
+          return RegionType.Rose;
+        case 10:
           return RegionType.Mint;
         default:
           throw new Exception($"Cant GetFraction for: {hex.fraction}");
@@ -112,7 +139,7 @@ namespace Client._T
 
       foreach (var rootCellNull in cells)
       {
-        if(!rootCellNull.HasValue)
+        if (!rootCellNull.HasValue)
           continue;
 
         var rootCell = rootCellNull.Value;
@@ -124,7 +151,7 @@ namespace Client._T
         {
           Cells = new List<CellPureData>(),
           Type = rootCell.RegionType,
-          Money = 100
+          Money = 10
         };
         newRegions.Add(newRegion);
 
@@ -154,12 +181,18 @@ namespace Client._T
     private IEnumerable<CellPureData> GetNeighbourCells(CellPureData?[,] cells, CellPureData cell)
     {
       var aroundPosition = cell.Position;
+      var maxX = cells.GetLength(0);
+      var maxY = cells.GetLength(1);
+
       foreach (var direction in HexUtilities.Directions)
       {
         var index = (aroundPosition + direction).ToArray2DIndex();
-        var item = cells[index.x, index.y];
-        if(item.HasValue)
-          yield return item.Value;
+        if (index.x >= 0 && index.x < maxX && index.y >= 0 && index.y < maxY)
+        {
+          var item = cells[index.x, index.y];
+          if (item.HasValue)
+            yield return item.Value;
+        }
       }
     }
 
@@ -179,7 +212,7 @@ namespace Client._T
 
         players.Add(player);
         player.Regions.Add(rootRegion);
-        
+
         for (var i = regions.Count - 1; i >= 0; i--)
         {
           var region = regions[i];
@@ -192,6 +225,54 @@ namespace Client._T
       }
 
       return players;
+    }
+
+    private void CreateCapitals(List<RegionPureData> regions)
+    {
+      foreach (var region in regions)
+      {
+        if (region.Type != RegionType.Neutral)
+        {
+          var cell = (GetRandomFreeCell(region.Cells) ?? GetRandomCellExceptTowers(region.Cells)) ??
+                     region.Cells[Random.Range(0, region.Cells.Count)];
+          cell.Unit = new UnitPureData
+          {
+            Type = UnitType.Capital,
+            HasTurns = false
+          };
+
+          for (var i = 0; i < region.Cells.Count; i++)
+          {
+            if (region.Cells[i].Position == cell.Position)
+            {
+              region.Cells[i] = cell;
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    private CellPureData? GetRandomFreeCell(List<CellPureData> cells)
+    {
+      using (ListPool<CellPureData>.Get(out var resultCells))
+      {
+        foreach (var cell in cells)
+          if (!cell.Unit.HasValue)
+            resultCells.Add(cell);
+        return resultCells.Count == 0 ? null : resultCells[Random.Range(0, resultCells.Count)];
+      }
+    }
+
+    private CellPureData? GetRandomCellExceptTowers(List<CellPureData> cells)
+    {
+      using (ListPool<CellPureData>.Get(out var resultCells))
+      {
+        foreach (var cell in cells)
+          if (!cell.Unit.HasValue || cell.Unit.Value.Type != UnitType.Tower)
+            resultCells.Add(cell);
+        return resultCells.Count == 0 ? null : resultCells[Random.Range(0, resultCells.Count)];
+      }
     }
   }
 }

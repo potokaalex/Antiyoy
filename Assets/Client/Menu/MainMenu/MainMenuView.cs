@@ -12,12 +12,12 @@ namespace Client.Menu.MainMenu
     [SerializeField] private MainMenuOptionsView _options;
     [SerializeField] private MainMenuGameplayModesView _gameplayModesView;
 
+    public MainMenuGameplayModesView GameplayModesView => _gameplayModesView;
+
     public Tween PlayAppearAnimation() => _start.PlayAppearAnimation();
 
     public void ShowOptions() => _options.Show();
 
     public void ShowStart() => _start.Show();
-
-    public void ShowGameplayModes() => _gameplayModesView.Show();
   }
 }
