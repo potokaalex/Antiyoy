@@ -20,5 +20,16 @@ namespace Client.Project.Utilities
         if (getValue(list[j]) > getValue(list[j + 1]))
           (list[j], list[j + 1]) = (list[j + 1], list[j]);
     }
+
+    public static void Shuffle<T>(this T[] array)
+    {
+      var n = array.Length;
+      while (n > 1)
+      {
+        n--;
+        var k = UnityEngine.Random.Range(0, n + 1);
+        (array[k], array[n]) = (array[n], array[k]);
+      }
+    }
   }
 }

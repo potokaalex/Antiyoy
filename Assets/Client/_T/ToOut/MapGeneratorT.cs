@@ -5,6 +5,7 @@ using Client.Project.Hex;
 using Client.Project.Map;
 using Client.Project.Region;
 using Client.Project.Unit.Code;
+using Client.Project.Utilities;
 using UnityEngine;
 using UnityEngine.Pool;
 using Random = UnityEngine.Random;
@@ -13,17 +14,23 @@ namespace Client._T
 {
   public class MapGeneratorT
   {
+    private readonly RegionType[] _allPlayerRegions =
+    {
+      RegionType.Red, RegionType.Blue, RegionType.Green, RegionType.Yellow, RegionType.Purple, RegionType.Brown, RegionType.Cyan, RegionType.Lime,
+      RegionType.Rose, RegionType.Mint
+    };
+
     public MapPureData Generate(LevelSize levelSize, int playersCount)
     {
       var map = new MapPureData();
       map.Size = GetMapSize(levelSize);
 
-      UnityEngine.Debug.Log(playersCount);
       GameRules.fractionsQuantity = playersCount;
       var gameController = new GameController(map.Size.x, map.Size.y, levelSize);
       var mapGeneratorGeneric = new MapGeneratorGeneric(gameController);
       gameController.fieldManager.createFieldMatrix();
       mapGeneratorGeneric.generateMap(new System.Random(Environment.TickCount), gameController.fieldManager.field);
+      _allPlayerRegions.Shuffle();
 
       var cells = CreateCells(gameController.fieldManager.field);
       var regions = CreateRegions(cells);
@@ -65,7 +72,7 @@ namespace Client._T
             cells[x, y] = new CellPureData
             {
               Position = HexCoordinates.FromArray2DIndex(new Vector2Int(x, y)),
-              RegionType = GetFraction(hex),
+              RegionType = GetRegionType(hex),
               Unit = CreateUnitData(hex)
             };
           }
@@ -100,35 +107,12 @@ namespace Client._T
       }
     }
 
-    private RegionType GetFraction(Hex hex)
+    private RegionType GetRegionType(Hex hex)
     {
-      switch (hex.fraction)
-      {
-        case 7:
+      var fraction = hex.fraction;
+      if(fraction == GameRules.NEUTRAL_FRACTION)
           return RegionType.Neutral;
-        case 1:
-          return RegionType.Red;
-        case 2:
-          return RegionType.Blue;
-        case 3:
-          return RegionType.Green;
-        case 4:
-          return RegionType.Yellow;
-        case 5:
-          return RegionType.Purple;
-        case 6:
-          return RegionType.Brown;
-        case 0:
-          return RegionType.Cyan;
-        case 8:
-          return RegionType.Lime;
-        case 9:
-          return RegionType.Rose;
-        case 10:
-          return RegionType.Mint;
-        default:
-          throw new Exception($"Cant GetFraction for: {hex.fraction}");
-      }
+      return _allPlayerRegions[fraction];
     }
 
     private List<RegionPureData> CreateRegions(CellPureData?[,] cells)
