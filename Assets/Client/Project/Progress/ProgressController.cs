@@ -9,11 +9,10 @@ namespace Client.Project.Progress
   {
     private const string _filesExtension = "data";
     private const string _saveFolderName = "Saves";
-    private ProgressData _progressData;
     private string _directoryPath;
     private string _filePath;
 
-    public ProgressData Data => _progressData;
+    public ProgressData Data { get; private set; }
 
     public void Initialize()
     {
@@ -33,9 +32,9 @@ namespace Client.Project.Progress
       }
     }
 
-    public void Save() => SaveProgress(_progressData);
+    public void Save() => SaveProgress(Data);
 
-    private void Load() => _progressData ??= LoadProgress();
+    private void Load() => Data ??= LoadProgress();
 
     private ProgressData LoadProgress()
     {

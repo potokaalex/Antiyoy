@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Antiyoy.Gameplay;
-using Client._T;
 using Client.Gameplay.ActionsHistory;
 using Client.Gameplay.DebugFeatures;
 using Client.Gameplay.Player;
@@ -12,6 +10,7 @@ using Client.Project.Borders;
 using Client.Project.CameraFeatures;
 using Client.Project.Government;
 using Client.Project.Infrastructure;
+using Client.Project.Map;
 using Client.Project.Region;
 using Client.Project.Unit.Code;
 using Client.Project.Unit.Code.Capital;
@@ -73,8 +72,8 @@ namespace Client.Gameplay.Gameplay
 
     public void Start()
     {
-      var map = new MapGeneratorT().Generate(_mainMenuView.GameplayModesView.LevelSize, _mainMenuView.GameplayModesView.PlayersCount);
-      
+      var map = new MapGenerator().Generate(_mainMenuView.GameplayModesView.LevelSize, _mainMenuView.GameplayModesView.PlayersCount);
+
       _warriorUnitsAnimator.Enable();
       _capitalsMarksController.Enable();
       _gridController.InitialCreateCells(map);

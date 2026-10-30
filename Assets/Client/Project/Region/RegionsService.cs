@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Client.Project.Borders;
 using Client.Project.Hex;
 using Client.Project.Infrastructure;
-using Client.Project.Map;
+using Client.Project.Map.Data;
 using Client.Project.Unit.Code;
 using Client.Project.Utilities;
 using Sirenix.OdinInspector;
@@ -33,13 +33,13 @@ namespace Client.Project.Region
       _bordersService = Locator.Get<BordersService>();
     }
 
-    public void InitialCreateRegions(MapPureData map)
+    public void InitialCreateRegions(MapData map)
     {
       foreach (var player in map.Players)
       foreach (var region in player.Regions)
       {
         var cells = new List<CellController>();
-        foreach (var cell in region.Cells) 
+        foreach (var cell in region.Cells)
           cells.Add(_gridController.GetCell(cell.Position));
         var newRegion = _regionsFactory.Create(cells, AddCell, region.Type);
         newRegion.Money = region.Money;

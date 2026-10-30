@@ -58,7 +58,7 @@ namespace Client.Gameplay.UI.MoneyWindow
         var columnSizeFactor = maxColumnSize / maxIncome;
         var width = Mathf.Min(875f / governments.Count, 110f);
 
-        for (var i = 0; i < governments.Count; i++) 
+        for (var i = 0; i < governments.Count; i++)
           CreateView(governments[i], columnSizeFactor, width, i);
       }
     }

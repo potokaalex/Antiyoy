@@ -18,11 +18,7 @@ namespace Client.Menu.MainMenu.GameplayModes
 
     public event Action OnSliderValueChanged;
 
-    public int Value
-    {
-      get => (int)_slider.value;
-      set => _slider.value = value;
-    }
+    public int Value { get => (int)_slider.value; set => _slider.value = value; }
 
     public int MaxValue
     {

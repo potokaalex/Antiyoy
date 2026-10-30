@@ -16,7 +16,7 @@ namespace Client.Project.Government
 
     public void RemoveRegion(RegionController region)
     {
-      if (_governments.TryGetValue(region.Type, out var government)) 
+      if (_governments.TryGetValue(region.Type, out var government))
         government.RemoveRegion(region);
     }
 

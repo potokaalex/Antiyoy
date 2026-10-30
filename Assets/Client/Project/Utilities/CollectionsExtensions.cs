@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Random = UnityEngine.Random;
 
 namespace Client.Project.Utilities
 {
@@ -27,7 +28,7 @@ namespace Client.Project.Utilities
       while (n > 1)
       {
         n--;
-        var k = UnityEngine.Random.Range(0, n + 1);
+        var k = Random.Range(0, n + 1);
         (array[k], array[n]) = (array[n], array[k]);
       }
     }

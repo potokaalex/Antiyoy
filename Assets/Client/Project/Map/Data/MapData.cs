@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Client.Project.Map
+namespace Client.Project.Map.Data
 {
   [Serializable]
-  public class MapPureData
+  public class MapData
   {
-    public List<PlayerPureData> Players = new();
+    public List<PlayerData> Players = new();
     public Vector2Int Size;
 
-    public IEnumerable<CellPureData> GetCells()
+    public IEnumerable<CellData> GetCells()
     {
       foreach (var player in Players)
       foreach (var region in player.Regions)

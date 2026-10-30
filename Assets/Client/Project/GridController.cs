@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Client.Project.Hex;
 using Client.Project.Infrastructure;
-using Client.Project.Map;
+using Client.Project.Map.Data;
 using Client.Project.Region;
 using Client.Project.Tile;
 using Client.Project.Utilities;
@@ -24,7 +24,7 @@ namespace Client.Project
       _regionsService = Locator.Get<RegionsService>();
     }
 
-    public void InitialCreateCells(MapPureData map)
+    public void InitialCreateCells(MapData map)
     {
       Size = map.Size;
       _cells = new CellController[Size.x * Size.y];

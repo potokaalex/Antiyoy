@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using Antiyoy.Gameplay;
 using Client.Project.Hex;
-using Client.Project.Map;
+using Client.Project.Map.Data;
+using Client.Project.Map.Yiotro;
 using Client.Project.Region;
 using Client.Project.Unit.Code;
 using Client.Project.Utilities;
@@ -10,9 +10,9 @@ using UnityEngine;
 using UnityEngine.Pool;
 using Random = UnityEngine.Random;
 
-namespace Client._T
+namespace Client.Project.Map
 {
-  public class MapGeneratorT
+  public class MapGenerator
   {
     private readonly RegionType[] _allPlayerRegions =
     {
@@ -20,56 +20,40 @@ namespace Client._T
       RegionType.Rose, RegionType.Mint
     };
 
-    public MapPureData Generate(LevelSize levelSize, int playersCount)
-    {
-      var map = new MapPureData();
-      map.Size = GetMapSize(levelSize);
+    private readonly YiotroMapGeneratorGeneric _yiotroMapGenerator = new();
+    private readonly HashSet<CellData> _passedBuffer = new();
+    private readonly Queue<CellData> _frontBuffer = new();
 
-      GameRules.fractionsQuantity = playersCount;
-      var gameController = new GameController(map.Size.x, map.Size.y, levelSize);
-      var mapGeneratorGeneric = new MapGeneratorGeneric(gameController);
-      gameController.fieldManager.createFieldMatrix();
-      mapGeneratorGeneric.generateMap(new System.Random(Environment.TickCount), gameController.fieldManager.field);
+    public MapData Generate(LevelSize levelSize, int playersCount)
+    {
+      var field = _yiotroMapGenerator.GenerateMap(new System.Random(Environment.TickCount), levelSize, playersCount);
+
       _allPlayerRegions.Shuffle();
-
-      var cells = CreateCells(gameController.fieldManager.field);
-      var regions = CreateRegions(cells);
+      var size = new Vector2Int(field.Length, field[0].Length);
+      var cells = CreateCells(field, size);
+      var regions = CreateRegions(cells, size);
       CreateCapitals(regions);
-      map.Players = CreatePlayers(regions);
 
-      return map;
-    }
-
-    private Vector2Int GetMapSize(LevelSize levelSize)
-    {
-      switch (levelSize)
+      return new MapData
       {
-        case LevelSize.Small:
-          return new Vector2Int(14, 24);
-        case LevelSize.Medium:
-          return new Vector2Int(28, 24);
-        case LevelSize.Big:
-          return new Vector2Int(28, 48);
-        case LevelSize.Huge:
-          return new Vector2Int(42, 72);
-        default:
-          throw new ArgumentOutOfRangeException(nameof(levelSize), levelSize, null);
-      }
+        Players = CreatePlayers(regions),
+        Size = size
+      };
     }
 
-    private CellPureData?[,] CreateCells(Hex[][] field)
+    private CellData?[,] CreateCells(Yiotro.Hex[][] field, Vector2Int size)
     {
-      var cells = new CellPureData?[field.Length, field[0].Length];
+      var cells = new CellData?[size.x, size.y];
 
-      for (var x = 0; x < field.Length; x++)
+      for (var x = 0; x < size.x; x++)
       {
         var hexes = field[x];
-        for (var y = 0; y < hexes.Length; y++)
+        for (var y = 0; y < size.y; y++)
         {
           var hex = hexes[y];
-          if (hex.active)
+          if (hex.Active)
           {
-            cells[x, y] = new CellPureData
+            cells[x, y] = new CellData
             {
               Position = HexCoordinates.FromArray2DIndex(new Vector2Int(x, y)),
               RegionType = GetRegionType(hex),
@@ -82,44 +66,44 @@ namespace Client._T
       return cells;
     }
 
-    private UnitPureData? CreateUnitData(Hex hex)
+    private UnitData? CreateUnitData(Yiotro.Hex hex)
     {
-      if (hex.objectInside == 0)
+      if (hex.ObjectInside == 0)
         return null;
 
-      return new UnitPureData
+      return new UnitData
       {
         Type = GetObject(hex),
         HasTurns = true
       };
     }
 
-    private UnitType GetObject(Hex hex)
+    private UnitType GetObject(Yiotro.Hex hex)
     {
-      switch (hex.objectInside)
+      switch (hex.ObjectInside)
       {
-        case Obj.PINE:
+        case YiotroMapGenerator.OBJ_PINE:
           return UnitType.Pine;
-        case Obj.PALM:
+        case YiotroMapGenerator.OBJ_PALM:
           return UnitType.Palm;
         default:
-          throw new Exception($"Cant GetObject for: {hex.objectInside}");
+          throw new Exception($"Cant GetObject for: {hex.ObjectInside}");
       }
     }
 
-    private RegionType GetRegionType(Hex hex)
+    private RegionType GetRegionType(Yiotro.Hex hex)
     {
-      var fraction = hex.fraction;
-      if(fraction == GameRules.NEUTRAL_FRACTION)
-          return RegionType.Neutral;
+      var fraction = hex.Fraction;
+      if (fraction == YiotroMapGenerator.NEUTRAL_FRACTION)
+        return RegionType.Neutral;
       return _allPlayerRegions[fraction];
     }
 
-    private List<RegionPureData> CreateRegions(CellPureData?[,] cells)
+    private List<RegionData> CreateRegions(CellData?[,] cells, Vector2Int size)
     {
-      var newRegions = new List<RegionPureData>();
-      var passed = new HashSet<CellPureData>();
-      var front = new Queue<CellPureData>();
+      var newRegions = new List<RegionData>();
+      _passedBuffer.Clear();
+      _frontBuffer.Clear();
 
       foreach (var rootCellNull in cells)
       {
@@ -128,32 +112,32 @@ namespace Client._T
 
         var rootCell = rootCellNull.Value;
 
-        if (passed.Contains(rootCell))
+        if (_passedBuffer.Contains(rootCell))
           continue;
 
-        var newRegion = new RegionPureData
+        var newRegion = new RegionData
         {
-          Cells = new List<CellPureData>(),
+          Cells = new List<CellData>(),
           Type = rootCell.RegionType,
           Money = 10
         };
         newRegions.Add(newRegion);
 
-        front.Enqueue(rootCell);
-        passed.Add(rootCell);
+        _frontBuffer.Enqueue(rootCell);
+        _passedBuffer.Add(rootCell);
         newRegion.Cells.Add(rootCell);
 
-        while (front.Count > 0)
+        while (_frontBuffer.Count > 0)
         {
-          var cell = front.Dequeue();
+          var cell = _frontBuffer.Dequeue();
 
-          foreach (var neighbour in GetNeighbourCells(cells, cell))
+          foreach (var neighbour in GetNeighbourCells(cells, cell, size))
           {
-            if (neighbour.RegionType == rootCell.RegionType && !passed.Contains(neighbour))
+            if (neighbour.RegionType == rootCell.RegionType && !_passedBuffer.Contains(neighbour))
             {
               newRegion.Cells.Add(neighbour);
-              front.Enqueue(neighbour);
-              passed.Add(neighbour);
+              _frontBuffer.Enqueue(neighbour);
+              _passedBuffer.Add(neighbour);
             }
           }
         }
@@ -162,16 +146,14 @@ namespace Client._T
       return newRegions;
     }
 
-    private IEnumerable<CellPureData> GetNeighbourCells(CellPureData?[,] cells, CellPureData cell)
+    private IEnumerable<CellData> GetNeighbourCells(CellData?[,] cells, CellData cell, Vector2Int size)
     {
       var aroundPosition = cell.Position;
-      var maxX = cells.GetLength(0);
-      var maxY = cells.GetLength(1);
 
       foreach (var direction in HexUtilities.Directions)
       {
         var index = (aroundPosition + direction).ToArray2DIndex();
-        if (index.x >= 0 && index.x < maxX && index.y >= 0 && index.y < maxY)
+        if (index.x >= 0 && index.x < size.x && index.y >= 0 && index.y < size.y)
         {
           var item = cells[index.x, index.y];
           if (item.HasValue)
@@ -180,16 +162,16 @@ namespace Client._T
       }
     }
 
-    private List<PlayerPureData> CreatePlayers(List<RegionPureData> regions)
+    private List<PlayerData> CreatePlayers(List<RegionData> regions)
     {
-      var players = new List<PlayerPureData>();
+      var players = new List<PlayerData>();
 
       while (regions.Count > 0)
       {
         var rootRegion = regions[0];
         regions.RemoveAt(0);
 
-        var player = new PlayerPureData
+        var player = new PlayerData
         {
           Regions = new()
         };
@@ -211,7 +193,7 @@ namespace Client._T
       return players;
     }
 
-    private void CreateCapitals(List<RegionPureData> regions)
+    private void CreateCapitals(List<RegionData> regions)
     {
       foreach (var region in regions)
       {
@@ -219,7 +201,8 @@ namespace Client._T
         {
           var cell = (GetRandomFreeCell(region.Cells) ?? GetRandomCellExceptTowers(region.Cells)) ??
                      region.Cells[Random.Range(0, region.Cells.Count)];
-          cell.Unit = new UnitPureData
+
+          cell.Unit = new UnitData
           {
             Type = UnitType.Capital,
             HasTurns = false
@@ -237,9 +220,9 @@ namespace Client._T
       }
     }
 
-    private CellPureData? GetRandomFreeCell(List<CellPureData> cells)
+    private CellData? GetRandomFreeCell(List<CellData> cells)
     {
-      using (ListPool<CellPureData>.Get(out var resultCells))
+      using (ListPool<CellData>.Get(out var resultCells))
       {
         foreach (var cell in cells)
           if (!cell.Unit.HasValue)
@@ -248,9 +231,9 @@ namespace Client._T
       }
     }
 
-    private CellPureData? GetRandomCellExceptTowers(List<CellPureData> cells)
+    private CellData? GetRandomCellExceptTowers(List<CellData> cells)
     {
-      using (ListPool<CellPureData>.Get(out var resultCells))
+      using (ListPool<CellData>.Get(out var resultCells))
       {
         foreach (var cell in cells)
           if (!cell.Unit.HasValue || cell.Unit.Value.Type != UnitType.Tower)
