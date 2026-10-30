@@ -12,7 +12,7 @@ namespace Client.Project.UI
     [SerializeField] private bool _hardFadeAnimation;
     [SerializeField] private Color _backgroundColor = new(0f, 0f, 0.3f, 0.75f);
     [SerializeField] private bool _fadeAnimationOnRelease;
-    private readonly float _longPressDuration = 0.5f;
+    private readonly float _longPressDuration = 0.25f;
     private float _pressTime;
     private bool _isPressed;
     private Vector2 _pressPosition;
@@ -45,6 +45,8 @@ namespace Client.Project.UI
       DOTween.Kill(this);
       IsLongPress = false;
       WasDragged = false;
+      if(_background)
+        _background.color = Color.clear;
     }
 
     public void OnPointerDown(PointerEventData eventData)

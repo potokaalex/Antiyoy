@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Client.Project;
 using Client.Project.Infrastructure;
 using Client.Project.Map.Data;
@@ -16,6 +17,8 @@ namespace Client.Menu.MainMenu.SaveLoad
     [SerializeField] private SaveLoadSlotView _slotViewPrefab;
     [SerializeField] private Transform _slotsRoot;
     [SerializeField] private List<Color> _colors;
+    [SerializeField] private SaveLoadOptionsView _optionsView;
+    [SerializeField] private SaveLoadDeleteView _deleteView;
     private readonly List<SaveLoadSlotView> _activeViews = new();
     private InputController _inputController;
     private ProgressController _progressController;
@@ -29,6 +32,8 @@ namespace Client.Menu.MainMenu.SaveLoad
       _progressController = Locator.Get<ProgressController>();
       _pool = new ObjectPool<SaveLoadSlotView>(() => Instantiate(_slotViewPrefab, _slotsRoot), x => x.SetActive(true), x => x.SetActive(false));
       _backButton.OnClick += OnBackClick;
+      _optionsView.Initialize(this);
+      _deleteView.Initialize(this);
     }
 
     private void OnDestroy() => _backButton.OnClick -= OnBackClick;
@@ -43,6 +48,12 @@ namespace Client.Menu.MainMenu.SaveLoad
     {
       _menuAnimator.PlayShow();
       Load();
+    }
+
+    public void ShowDeleteView(SaveLoadSlotView slotView)
+    {
+      Hide();
+      _deleteView.Show(slotView);
     }
 
     protected void Hide() => _menuAnimator.PlayHide();
@@ -85,6 +96,8 @@ namespace Client.Menu.MainMenu.SaveLoad
 
     protected virtual void OnViewHold(MapData map)
     {
+      if (map != null && map != AutosaveMapData)
+        _optionsView.Show(_activeViews.First(x => x.MapData == map));
     }
 
     private void Load()

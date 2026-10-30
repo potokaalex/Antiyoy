@@ -14,9 +14,10 @@ namespace Client.Menu.MainMenu.SaveLoad
     [SerializeField] private TextMeshProUGUI _dateAndTime;
     [SerializeField] private Image _image;
     [SerializeField] private CustomButton _customButton;
-    private MapData _map;
 
-    public string Header { set => _name.SetText(value); }
+    public string Header { get => _name.text; set => _name.SetText(value); }
+
+    public MapData MapData { get; private set; }
 
     public event Action<MapData> OnClick;
 
@@ -24,7 +25,7 @@ namespace Client.Menu.MainMenu.SaveLoad
 
     public void Setup(MapData map, Color color)
     {
-      _map = map;
+      MapData = map;
       if (map != null)
       {
         _name.SetText(map.Name);
@@ -51,10 +52,10 @@ namespace Client.Menu.MainMenu.SaveLoad
 
     private void OnButtonRelease()
     {
-      if(!_customButton.IsLongPress && !_customButton.WasDragged) 
-        OnClick?.Invoke(_map);
+      if (!_customButton.IsLongPress && !_customButton.WasDragged)
+        OnClick?.Invoke(MapData);
     }
 
-    private void OnButtonLongPress() => OnHold?.Invoke(_map);
+    private void OnButtonLongPress() => OnHold?.Invoke(MapData);
   }
 }

@@ -14,6 +14,7 @@ namespace Client.Menu
     [SerializeField] private float _topPanelOffsetY;
     [SerializeField] private RectTransform _bottomPanel;
     [SerializeField] private float _bottomPanelOffsetY;
+    [SerializeField] private float _speedFactor = 1;
     private InputController _inputController;
     private Vector2 _topPanelStartPosition;
     private Vector2 _topPanelEndPosition;
@@ -24,9 +25,12 @@ namespace Client.Menu
     {
       _inputController = Locator.Get<InputController>();
 
-      _topPanelStartPosition = _topPanel.anchoredPosition;
-      _topPanelEndPosition = _topPanelStartPosition + new Vector2(0, _topPanelOffsetY);
-      _topPanel.anchoredPosition = _topPanelEndPosition;
+      if (_topPanel)
+      {
+        _topPanelStartPosition = _topPanel.anchoredPosition;
+        _topPanelEndPosition = _topPanelStartPosition + new Vector2(0, _topPanelOffsetY);
+        _topPanel.anchoredPosition = _topPanelEndPosition;
+      }
 
       _bottomPanelStartPosition = _bottomPanel.anchoredPosition;
       _bottomPanelEndPosition = _bottomPanelStartPosition + new Vector2(0, _bottomPanelOffsetY);
@@ -47,10 +51,11 @@ namespace Client.Menu
     {
       var sequence = DOTween.Sequence();
 
-      sequence.Join(_topPanel.DOAnchorPos(topPosition, 0.5f));
-      sequence.Join(_bottomPanel.DOAnchorPos(bottomPosition, 0.5f));
+      if (_topPanel)
+        sequence.Join(_topPanel.DOAnchorPos(topPosition, 0.5f / _speedFactor));
+      sequence.Join(_bottomPanel.DOAnchorPos(bottomPosition, 0.5f / _speedFactor));
 
-      sequence.Join(_canvasGroup.DOFade(alpha, 0.35f))
+      sequence.Join(_canvasGroup.DOFade(alpha, 0.35f / _speedFactor))
         .JoinCallback(() => _inputController.SetBlockInput(true))
         .AddOnComplete(() => _inputController.SetBlockInput(false))
         .SetEase(AnimationsUtilities.MenuDefaultEase)

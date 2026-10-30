@@ -39,6 +39,8 @@ namespace Client.Menu.MainMenu.SaveLoad
         else
           UnityEngine.Debug.Log($"Hold {map.Name}");
       }
+
+      base.OnViewHold(map);
     }
   }
 }

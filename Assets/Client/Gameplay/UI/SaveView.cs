@@ -59,6 +59,8 @@ namespace Client.Gameplay.UI
         else
           UnityEngine.Debug.Log($"Hold {map.Name}");
       }
+
+      base.OnViewHold(map);
     }
   }
 }

@@ -3294,7 +3294,7 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 6559966541420322409, guid: 50c5823a294e5d34b805e116d6a22965, type: 3}
-      insertIndex: 1
+      insertIndex: -1
       addedObject: {fileID: 8913137091076394626}
   m_SourcePrefab: {fileID: 100100000, guid: 50c5823a294e5d34b805e116d6a22965, type: 3}
 --- !u!224 &78789178118386423 stripped
@@ -3313,22 +3313,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44c6a04895734ff5a5a8cc48379dfb38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Client::Client.Utilities.CustomButton
---- !u!114 &3334580364522045339 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1591190425290972456, guid: 50c5823a294e5d34b805e116d6a22965, type: 3}
-  m_PrefabInstance: {fileID: 4058803667848700595}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7159151923493534938}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e063b5f718de4f8db6114941ee8d798e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Client::Client.Menu.MenuAnimator
 --- !u!224 &6144118045134774048 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7860908498106711443, guid: 50c5823a294e5d34b805e116d6a22965, type: 3}
   m_PrefabInstance: {fileID: 4058803667848700595}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6267490963737113775 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7974007683137787420, guid: 50c5823a294e5d34b805e116d6a22965, type: 3}
+  m_PrefabInstance: {fileID: 4058803667848700595}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37580226dd5344c8ae35bc92f749d0a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::Client.Menu.MainMenu.SaveLoad.SaveLoadDeleteView
+--- !u!114 &7122750912683128483 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6524269288855802896, guid: 50c5823a294e5d34b805e116d6a22965, type: 3}
+  m_PrefabInstance: {fileID: 4058803667848700595}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c480aa7bb68a4fa4a697ff7f7811ba88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::Client.Menu.MainMenu.SaveLoad.SaveLoadOptionsView
 --- !u!1 &7159151923493534938 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6559966541420322409, guid: 50c5823a294e5d34b805e116d6a22965, type: 3}
@@ -3347,13 +3358,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Client::Client.Menu.MainMenu.SaveLoad.SaveLoadView
   _backButton: {fileID: 2324037882979305217}
-  _menuAnimator: {fileID: 3334580364522045339}
+  _menuAnimator: {fileID: 7832597135740931960}
   _slotViewPrefab: {fileID: 5075052271675656354, guid: 3a0100303d1e5ce42a68331bb522e1aa, type: 3}
   _slotsRoot: {fileID: 78789178118386423}
   _colors:
   - {r: 0.67058825, g: 0.6392157, b: 0.34901962, a: 1}
   - {r: 0.4, g: 0.4509804, b: 0.8, a: 1}
   - {r: 0.35686275, g: 0.6509804, b: 0.43529412, a: 1}
+  _optionsView: {fileID: 7122750912683128483}
+  _deleteView: {fileID: 6267490963737113775}
+--- !u!114 &7832597135740931960 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6116237899671809483, guid: 50c5823a294e5d34b805e116d6a22965, type: 3}
+  m_PrefabInstance: {fileID: 4058803667848700595}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e063b5f718de4f8db6114941ee8d798e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::Client.Menu.MenuAnimator
 --- !u!1001 &4649363330154017112
 PrefabInstance:
   m_ObjectHideFlags: 0

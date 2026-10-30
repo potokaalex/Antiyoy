@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Client.Project.Utilities
 {
@@ -12,6 +13,13 @@ namespace Client.Project.Utilities
       var color = spriteRenderer.color;
       color.a = value;
       spriteRenderer.color = color;
+    }
+    
+    public static void SetAlpha(this Image image, float value)
+    {
+      var color = image.color;
+      color.a = value;
+      image.color = color;
     }
   }
 }
