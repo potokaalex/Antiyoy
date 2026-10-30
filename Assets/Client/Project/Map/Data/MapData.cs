@@ -9,6 +9,8 @@ namespace Client.Project.Map.Data
   {
     public List<PlayerData> Players = new();
     public Vector2Int Size;
+    public string Name;
+    public long CreationTime;
 
     public IEnumerable<CellData> GetCells()
     {
