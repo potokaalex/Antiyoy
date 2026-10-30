@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Client.Project;
 using Client.Project.Infrastructure;
+using Client.Project.Map.Data;
 using Client.Project.Progress;
 using Client.Project.UI;
 using UnityEngine;
@@ -19,6 +20,8 @@ namespace Client.Menu.MainMenu.SaveLoad
     private InputController _inputController;
     private ProgressController _progressController;
     private ObjectPool<SaveLoadSlotView> _pool;
+
+    protected MapData AutosaveMapData => _progressController.Data.AutosaveMap;
 
     protected virtual void Awake()
     {
@@ -48,23 +51,52 @@ namespace Client.Menu.MainMenu.SaveLoad
     {
     }
 
+    protected SaveLoadSlotView CreateView(MapData map)
+    {
+      var view = _pool.Get();
+      view.transform.SetSiblingIndex(_activeViews.Count + 1);
+      view.Setup(map, _colors[_activeViews.Count % _colors.Count]);
+      _activeViews.Add(view);
+      view.OnClick += OnViewClick;
+      view.OnHold += OnViewHold;
+      return view;
+    }
+
+    protected virtual void CreateViews()
+    {
+      if (AutosaveMapData != null)
+        CreateView(AutosaveMapData);
+
+      for (var i = 0; i < _progressController.Data.Maps.Count; i++)
+        CreateView(_progressController.Data.Maps[i]);
+    }
+
+    protected virtual void ClearView(SaveLoadSlotView view)
+    {
+      view.OnClick -= OnViewClick;
+      view.OnHold -= OnViewHold;
+      _pool.Release(view);
+      view.Clear();
+    }
+
+    protected virtual void OnViewClick(MapData map)
+    {
+    }
+
+    protected virtual void OnViewHold(MapData map)
+    {
+    }
+
     private void Load()
     {
       ClearViews();
-
-      for (var i = 0; i < _progressController.Data.Maps.Count; i++)
-      {
-        var view = _pool.Get();
-        view.transform.SetSiblingIndex(i + 1);
-        view.Initialize(_progressController.Data.Maps[i], _colors[i % _colors.Count]);
-        _activeViews.Add(view);
-      }
+      CreateViews();
     }
 
     private void ClearViews()
     {
       foreach (var view in _activeViews)
-        _pool.Release(view);
+        ClearView(view);
       _activeViews.Clear();
     }
   }
