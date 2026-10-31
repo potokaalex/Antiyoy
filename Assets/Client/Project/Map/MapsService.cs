@@ -64,7 +64,7 @@ namespace Client.Project.Map
       if (AutosaveMap != null)
         DeleteMapWithoutSave(AutosaveMap);
 
-      AutosaveMap = SaveCurrentMapInBeginning("Autosave", true);
+      AutosaveMap = SaveCurrentMapInBeginning(StartMap.Name, true);
     }
 
     public void RestartStartMap() => StartMap = StartMap.RestartCopy();

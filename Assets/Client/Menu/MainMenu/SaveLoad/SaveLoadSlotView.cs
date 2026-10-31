@@ -48,13 +48,11 @@ namespace Client.Menu.MainMenu.SaveLoad
       Map = null;
     }
 
-    public void SetDateAndTime(DateTime dateTime) => _dateAndTime.SetText(dateTime.ToString("dd.MM.yyyy  HH:mm", CultureInfo.InvariantCulture));
-
     public void SetMap(MapController map)
     {
       Map = map;
-      _name.SetText(map.Name);
-      SetDateAndTime(map.CreationTime);
+      _name.SetText(map.IsAutosave ? "Autosave" : map.Name);
+      _dateAndTime.SetText(map.CreationTime.ToString("dd.MM.yyyy  HH:mm", CultureInfo.InvariantCulture));
     }
 
     private void OnButtonRelease()
