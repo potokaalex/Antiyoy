@@ -11,22 +11,30 @@ namespace Client.Gameplay.UI
   {
     [SerializeField] private CustomButton _continueButton;
     [SerializeField] private CustomButton _mainMenuButton;
+    [SerializeField] private CustomButton _saveButton;
+    [SerializeField] private CustomButton _restartButton;
     [SerializeField] private MenuAnimator _menuAnimator;
     private GameplayController _gameplayController;
     private InputController _inputController;
+    private GameplayUI _gameplayUI;
 
     private void Awake()
     {
       _gameplayController = Locator.Get<GameplayController>();
+      _gameplayUI = Locator.Get<GameplayUI>();
       _inputController = Locator.Get<InputController>();
       _continueButton.OnClick += _gameplayController.UnPause;
       _mainMenuButton.OnClick += ToMainMenu;
+      _saveButton.OnClick += OnSaveClick;
+      _restartButton.OnClick += OnRestartClick;
     }
 
     private void OnDestroy()
     {
       _continueButton.OnClick -= _gameplayController.UnPause;
       _mainMenuButton.OnClick -= ToMainMenu;
+      _saveButton.OnClick -= OnSaveClick;
+      _restartButton.OnClick -= OnRestartClick;
     }
 
     private void Update()
@@ -43,6 +51,18 @@ namespace Client.Gameplay.UI
     {
       PlayHide();
       _gameplayController.MainMenu();
+    }
+
+    private void OnSaveClick()
+    {
+      PlayHide();
+      _gameplayUI.OpenSaveView();
+    }
+
+    private void OnRestartClick()
+    {
+      PlayHide();
+      _gameplayController.Restart();
     }
   }
 }

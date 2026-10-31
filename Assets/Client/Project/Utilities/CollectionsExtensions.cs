@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Random = UnityEngine.Random;
 
 namespace Client.Project.Utilities
 {
@@ -19,6 +20,17 @@ namespace Client.Project.Utilities
       for (var j = 0; j < list.Count - i - 1; j++)
         if (getValue(list[j]) > getValue(list[j + 1]))
           (list[j], list[j + 1]) = (list[j + 1], list[j]);
+    }
+
+    public static void Shuffle<T>(this T[] array)
+    {
+      var n = array.Length;
+      while (n > 1)
+      {
+        n--;
+        var k = Random.Range(0, n + 1);
+        (array[k], array[n]) = (array[n], array[k]);
+      }
     }
   }
 }

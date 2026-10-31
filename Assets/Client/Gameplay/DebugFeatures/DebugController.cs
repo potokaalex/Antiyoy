@@ -12,13 +12,9 @@ namespace Client.Gameplay.DebugFeatures
     private Transform _cellsDebugRoot;
     private GridController _gridController;
 
-    public void Initialize()
-    {
-      _gridController = Locator.Get<GridController>();
-      CreateCells();
-    }
+    public void Initialize() => _gridController = Locator.Get<GridController>();
 
-    private void CreateCells()
+    public void CreateCells()
     {
       _cellsDebugRoot = new GameObject("Debug").transform;
       var size = _gridController.Size;
@@ -33,5 +29,7 @@ namespace Client.Gameplay.DebugFeatures
         instance.Initialize(hexPosition);
       }
     }
+
+    public void Clear() => Destroy(_cellsDebugRoot.gameObject);
   }
 }

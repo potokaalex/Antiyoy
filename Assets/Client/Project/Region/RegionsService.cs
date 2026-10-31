@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Client.Project.Borders;
 using Client.Project.Hex;
 using Client.Project.Infrastructure;
+using Client.Project.Map;
 using Client.Project.Unit.Code;
 using Client.Project.Utilities;
 using Sirenix.OdinInspector;
@@ -32,34 +33,17 @@ namespace Client.Project.Region
       _bordersService = Locator.Get<BordersService>();
     }
 
-    public void InitialCreateRegions()
+    public void InitialCreateRegions(MapController map)
     {
-      List<List<CellController>> regions = new() { new(), new(), new() };
-
-      for (var y = 0; y < _gridController.Size.y; y++)
-      for (var x = 0; x < _gridController.Size.x; x++)
+      foreach (var player in map.Players)
+      foreach (var region in player.Regions)
       {
-        _gridController.GetCell(HexCoordinates.FromArray2DIndex(new Vector2Int(x, y)), out var cell);
-
-        if (y == 0)
-        {
-          if (x < 4)
-            regions[0].Add(cell);
-          else if (x <= 9)
-            regions[1].Add(cell);
-          else
-            regions[2].Add(cell);
-        }
-        else
-          regions[2].Add(cell);
+        var cells = new List<CellController>();
+        foreach (var cell in region.Cells)
+          cells.Add(_gridController.GetCell(cell.Position));
+        var newRegion = _regionsFactory.Create(cells, AddCell, region.Type);
+        newRegion.Money = region.Money;
       }
-
-      _regionsFactory.Create(regions[0], AddCell, RegionType.Red);
-      _regionsFactory.Create(regions[1], AddCell, RegionType.Blue);
-      _regionsFactory.Create(regions[2], AddCell);
-
-      foreach (var region in Regions)
-        region.Money = 100;
     }
 
     public void Clear()

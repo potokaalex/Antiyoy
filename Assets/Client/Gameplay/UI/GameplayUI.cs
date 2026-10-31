@@ -24,12 +24,14 @@ namespace Client.Gameplay.UI
 
     public void ClearRegionCreation() => _view.ClearRegionCreation();
 
-    public void ShowPause() => _view.ShowPause();
+    public void ShowPause(bool fromGameplay = true) => _view.ShowPause(fromGameplay);
 
     public void HidePause() => _view.HidePause();
 
     public void OpenIncomeWindow() => _view.OpenIncomeWindow();
 
     public void OpenMoneyWindow() => _view.OpenMoneyWindow();
+
+    public void OpenSaveView() => _view.OpenSaveView();
   }
 }

@@ -16,7 +16,7 @@ namespace Client.Project.Government
 
     public void RemoveRegion(RegionController region)
     {
-      if (_governments.TryGetValue(region.Type, out var government)) 
+      if (_governments.TryGetValue(region.Type, out var government))
         government.RemoveRegion(region);
     }
 
@@ -24,6 +24,12 @@ namespace Client.Project.Government
     {
       outList.Clear();
       outList.AddRange(_governments.Values);
+    }
+
+    public IEnumerable<GovernmentController> GetAll()
+    {
+      foreach (var government in _governments.Values)
+        yield return government;
     }
 
     public void GetAllAlive(List<GovernmentController> outList)

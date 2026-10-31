@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Client.Gameplay.ActionsHistory;
+using Client.Gameplay.DebugFeatures;
 using Client.Gameplay.Player;
 using Client.Gameplay.UI;
 using Client.Menu.MainMenu;
@@ -9,6 +10,7 @@ using Client.Project.Borders;
 using Client.Project.CameraFeatures;
 using Client.Project.Government;
 using Client.Project.Infrastructure;
+using Client.Project.Map;
 using Client.Project.Region;
 using Client.Project.Unit.Code;
 using Client.Project.Unit.Code.Capital;
@@ -34,6 +36,8 @@ namespace Client.Gameplay.Gameplay
     private WarriorUnitsAnimator _warriorUnitsAnimator;
     private CapitalsController _capitalsController;
     private GameplayRegionsController _gameplayRegionsController;
+    private DebugController _debugController;
+    private MapsService _mapsService;
     private int _turnsCount;
 
     private int TurnsCount
@@ -64,19 +68,23 @@ namespace Client.Gameplay.Gameplay
       _warriorUnitsAnimator = Locator.Get<WarriorUnitsAnimator>();
       _capitalsController = Locator.Get<CapitalsController>();
       _gameplayRegionsController = Locator.Get<GameplayRegionsController>();
+      _debugController = Locator.Get<DebugController>();
+      _mapsService = Locator.Get<MapsService>();
     }
 
     public void Start()
     {
+      var map = _mapsService.StartMap;
       _warriorUnitsAnimator.Enable();
       _capitalsMarksController.Enable();
-      _gridController.InitialCreateCells();
-      _unitsService.InitialCreateUnits();
-      _regionsService.InitialCreateRegions();
+      _gridController.InitialCreateCells(map);
+      _unitsService.InitialCreateUnits(map);
+      _regionsService.InitialCreateRegions(map);
       _gameplayRegionsController.Enable();
       _capitalsController.Enable();
       _cameraController.Setup();
       CreatePlayers();
+      //_debugController.CreateCells();
 
       TurnsCount = 0;
       _bordersService.ViewRegionsBorders();
@@ -104,6 +112,7 @@ namespace Client.Gameplay.Gameplay
         TurnsCount++;
         SetFirstPlayer();
         _treesController.UpdateTrees();
+        _mapsService.SaveCurrentMapInAutosave();
       }
 
       UpdatePlayerRegions();
@@ -121,6 +130,7 @@ namespace Client.Gameplay.Gameplay
       _regionsService.Clear();
       _actionsHistoryController.Clear();
       _governmentsService.Clear();
+      //_debugController.Clear();
     }
 
     public void Pause()
@@ -135,6 +145,13 @@ namespace Client.Gameplay.Gameplay
     {
       _mainMenuView.ShowStart();
       End();
+    }
+
+    public void Restart()
+    {
+      End();
+      _mapsService.RestartStartMap();
+      Start();
     }
 
     private void SetFirstPlayer() => SetCurrentPlayer(_players[0]);

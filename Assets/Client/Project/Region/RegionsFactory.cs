@@ -29,7 +29,7 @@ namespace Client.Project.Region
       }
     }
 
-    public void Create(List<CellController> cells, Action<RegionController, CellController> addFunc, RegionType type = RegionType.Neutral)
+    public RegionController Create(List<CellController> cells, Action<RegionController, CellController> addFunc, RegionType type = RegionType.Neutral)
     {
       _pool.Get(out var instance);
       instance.Type = type;
@@ -38,6 +38,7 @@ namespace Client.Project.Region
 
       _governmentsService.AddRegion(instance);
       _regions.Add(instance);
+      return instance;
     }
 
     public void Destroy(RegionController instance)

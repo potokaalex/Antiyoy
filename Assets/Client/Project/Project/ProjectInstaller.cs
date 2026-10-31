@@ -4,6 +4,7 @@ using Client.Menu.MainMenu;
 using Client.Project.Borders;
 using Client.Project.CameraFeatures;
 using Client.Project.Infrastructure;
+using Client.Project.Map;
 using Client.Project.Progress;
 using Client.Project.Region;
 using Client.Project.Tile;
@@ -37,6 +38,7 @@ namespace Client.Project.Project
       context.Register(_regionsService);
       context.Register(new UnitsAreaCalculator());
       context.Register(_unitsService);
+      context.Register(new MapsService());
       context.Register(_introView);
       context.Register(_menuView);
       context.Register(_mainMenuView);

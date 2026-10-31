@@ -14,6 +14,7 @@ namespace Client.Gameplay.UI
     [SerializeField] private IncomeWindowView _incomeWindowView;
     [SerializeField] private MoneyWindowView _moneyWindowView;
     [SerializeField] private WinView _winView;
+    [SerializeField] private SaveView _saveView;
 
     public void PlayShow()
     {
@@ -41,11 +42,15 @@ namespace Client.Gameplay.UI
 
     public void ClearRegionCreation() => _hudView.Region.Creation.Clear();
 
-    public void ShowPause()
+    public void ShowPause(bool fromGameplay)
     {
-      _hudView.PlayHide();
+      if (fromGameplay)
+      {
+        _hudView.PlayHide();
+        _gameTransitionView.PlayOutGameTransition();
+      }
+
       _pauseView.PlayShow();
-      _gameTransitionView.PlayOutGameTransition();
     }
 
     public void HidePause()
@@ -58,5 +63,7 @@ namespace Client.Gameplay.UI
     public void OpenIncomeWindow() => _incomeWindowView.Open();
 
     public void OpenMoneyWindow() => _moneyWindowView.Open();
+
+    public void OpenSaveView() => _saveView.Show();
   }
 }

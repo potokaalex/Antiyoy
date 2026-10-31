@@ -9,6 +9,7 @@ namespace Client.Menu.MainMenu.Options
   {
     [SerializeField] private CustomButton _backButton;
     [SerializeField] private CustomButton _battleButton;
+    [SerializeField] private CustomButton _loadButton;
     [SerializeField] private MenuAnimator _menuAnimator;
     private MainMenuView _mainMenuView;
     private InputController _inputController;
@@ -21,12 +22,14 @@ namespace Client.Menu.MainMenu.Options
       _inputController = Locator.Get<InputController>();
       _backButton.OnClick += OnBackClick;
       _battleButton.OnClick += OnBattleClick;
+      _loadButton.OnClick += OnLoadClick;
     }
 
     private void OnDestroy()
     {
       _backButton.OnClick -= OnBackClick;
       _battleButton.OnClick -= OnBattleClick;
+      _loadButton.OnClick -= OnLoadClick;
     }
 
     private void Update()
@@ -43,8 +46,14 @@ namespace Client.Menu.MainMenu.Options
 
     private void OnBattleClick()
     {
-      _mainMenuView.ShowGameplayModes();
       _menuAnimator.PlayHide();
+      _mainMenuView.GameplayModesView.Show();
+    }
+
+    private void OnLoadClick()
+    {
+      _menuAnimator.PlayHide();
+      _mainMenuView.ShowLoad();
     }
   }
 }

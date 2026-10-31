@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Client.Project.Hex
 {
+  [Serializable]
   public struct HexCoordinates : IEquatable<HexCoordinates>
   {
     public int Q;
