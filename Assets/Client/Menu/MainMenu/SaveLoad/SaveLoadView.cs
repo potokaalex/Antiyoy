@@ -1,9 +1,7 @@
 using System.Collections.Generic;
-using System.Linq;
 using Client.Project;
 using Client.Project.Infrastructure;
-using Client.Project.Map.Data;
-using Client.Project.Progress;
+using Client.Project.Map;
 using Client.Project.UI;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -20,16 +18,17 @@ namespace Client.Menu.MainMenu.SaveLoad
     [SerializeField] private SaveLoadOptionsView _optionsView;
     [SerializeField] private SaveLoadDeleteView _deleteView;
     private readonly List<SaveLoadSlotView> _activeViews = new();
-    private InputController _inputController;
-    private ProgressController _progressController;
     private ObjectPool<SaveLoadSlotView> _pool;
+    private InputController _inputController;
 
-    protected MapData AutosaveMapData => _progressController.Data.AutosaveMap;
+    protected MapsService MapsService { get; private set; }
+
+    protected SaveLoadSlotView AutosaveSlotView { get; private set; }
 
     protected virtual void Awake()
     {
       _inputController = Locator.Get<InputController>();
-      _progressController = Locator.Get<ProgressController>();
+      MapsService = Locator.Get<MapsService>();
       _pool = new ObjectPool<SaveLoadSlotView>(() => Instantiate(_slotViewPrefab, _slotsRoot), x => x.SetActive(true), x => x.SetActive(false));
       _backButton.OnClick += OnBackClick;
       _optionsView.Initialize(this);
@@ -56,13 +55,21 @@ namespace Client.Menu.MainMenu.SaveLoad
       _deleteView.Show(slotView);
     }
 
+    public void DeleteSlot(SaveLoadSlotView slotView) => MapsService.DeleteMap(slotView.Map);
+
+    public void Rename(SaveLoadSlotView slotView, string newName)
+    {
+      MapsService.RenameMap(slotView.Map, newName);
+      slotView.Header = newName;
+    }
+
     protected void Hide() => _menuAnimator.PlayHide();
 
     protected virtual void OnBackClick()
     {
     }
 
-    protected SaveLoadSlotView CreateView(MapData map)
+    protected SaveLoadSlotView CreateView(MapController map)
     {
       var view = _pool.Get();
       view.transform.SetSiblingIndex(_activeViews.Count + 1);
@@ -75,11 +82,11 @@ namespace Client.Menu.MainMenu.SaveLoad
 
     protected virtual void CreateViews()
     {
-      if (AutosaveMapData != null)
-        CreateView(AutosaveMapData);
+      if (MapsService.AutosaveMap != null)
+        AutosaveSlotView = CreateView(MapsService.AutosaveMap);
 
-      for (var i = 0; i < _progressController.Data.Maps.Count; i++)
-        CreateView(_progressController.Data.Maps[i]);
+      for (var i = 0; i < MapsService.Maps.Count; i++)
+        CreateView(MapsService.Maps[i]);
     }
 
     protected virtual void ClearView(SaveLoadSlotView view)
@@ -90,14 +97,14 @@ namespace Client.Menu.MainMenu.SaveLoad
       view.Clear();
     }
 
-    protected virtual void OnViewClick(MapData map)
+    protected virtual void OnViewClick(SaveLoadSlotView slotView)
     {
     }
 
-    protected virtual void OnViewHold(MapData map)
+    protected virtual void OnViewHold(SaveLoadSlotView slotView)
     {
-      if (map != null && map != AutosaveMapData)
-        _optionsView.Show(_activeViews.First(x => x.MapData == map));
+      if (slotView != AutosaveSlotView)
+        _optionsView.Show(slotView);
     }
 
     private void Load()

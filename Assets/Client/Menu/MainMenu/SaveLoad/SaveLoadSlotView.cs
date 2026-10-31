@@ -1,6 +1,6 @@
 using System;
 using System.Globalization;
-using Client.Project.Map.Data;
+using Client.Project.Map;
 using Client.Project.UI;
 using TMPro;
 using UnityEngine;
@@ -17,20 +17,17 @@ namespace Client.Menu.MainMenu.SaveLoad
 
     public string Header { get => _name.text; set => _name.SetText(value); }
 
-    public MapData MapData { get; private set; }
+    public MapController Map { get; private set; }
 
-    public event Action<MapData> OnClick;
+    public event Action<SaveLoadSlotView> OnClick;
 
-    public event Action<MapData> OnHold;
+    public event Action<SaveLoadSlotView> OnHold;
 
-    public void Setup(MapData map, Color color)
+    public void Setup(MapController map, Color color)
     {
-      MapData = map;
+      Map = map;
       if (map != null)
-      {
-        _name.SetText(map.Name);
-        _dateAndTime.SetText(DateTime.FromBinary(map.CreationTime).ToString("dd.MM.yyyy  HH:mm", CultureInfo.InvariantCulture));
-      }
+        SetMap(map);
       else
       {
         _name.SetText(string.Empty);
@@ -48,14 +45,24 @@ namespace Client.Menu.MainMenu.SaveLoad
     {
       _customButton.OnRelease -= OnButtonRelease;
       _customButton.OnLongPress -= OnButtonLongPress;
+      Map = null;
+    }
+
+    public void SetDateAndTime(DateTime dateTime) => _dateAndTime.SetText(dateTime.ToString("dd.MM.yyyy  HH:mm", CultureInfo.InvariantCulture));
+
+    public void SetMap(MapController map)
+    {
+      Map = map;
+      _name.SetText(map.Name);
+      SetDateAndTime(map.CreationTime);
     }
 
     private void OnButtonRelease()
     {
       if (!_customButton.IsLongPress && !_customButton.WasDragged)
-        OnClick?.Invoke(MapData);
+        OnClick?.Invoke(this);
     }
 
-    private void OnButtonLongPress() => OnHold?.Invoke(MapData);
+    private void OnButtonLongPress() => OnHold?.Invoke(this);
   }
 }

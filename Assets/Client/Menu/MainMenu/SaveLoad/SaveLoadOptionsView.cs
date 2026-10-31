@@ -16,7 +16,7 @@ namespace Client.Menu.MainMenu.SaveLoad
     [SerializeField] private TopAndBottomMenuAnimator _bodyMenuAnimator;
     [SerializeField] private MenuAnimator _inputFieldAnimator;
     [SerializeField] private Image _fade;
-    private float _fadeAnimationSpeedFactor = 1.5f;
+    private readonly float _fadeAnimationSpeedFactor = 1.5f;
     private SaveLoadView _saveLoadView;
     private SaveLoadSlotView _slotView;
 
@@ -26,6 +26,7 @@ namespace Client.Menu.MainMenu.SaveLoad
       _backButton.OnClick += OnBackClick;
       _renameButton.OnClick += OnRenameClick;
       _deleteButton.OnClick += OnDeleteClick;
+      _inputField.onEndEdit.AddListener(OnEndRename);
     }
 
     private void OnDestroy()
@@ -33,6 +34,7 @@ namespace Client.Menu.MainMenu.SaveLoad
       _backButton.OnClick -= OnBackClick;
       _renameButton.OnClick -= OnRenameClick;
       _deleteButton.OnClick -= OnDeleteClick;
+      _inputField.onEndEdit.RemoveListener(OnEndRename);
       DOTween.Kill(this);
     }
 
@@ -66,6 +68,12 @@ namespace Client.Menu.MainMenu.SaveLoad
     {
       Hide();
       _saveLoadView.ShowDeleteView(_slotView);
+    }
+
+    private void OnEndRename(string value)
+    {
+      _saveLoadView.Rename(_slotView, value);
+      Hide();
     }
   }
 }

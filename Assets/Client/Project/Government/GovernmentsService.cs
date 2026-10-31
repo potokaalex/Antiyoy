@@ -26,6 +26,12 @@ namespace Client.Project.Government
       outList.AddRange(_governments.Values);
     }
 
+    public IEnumerable<GovernmentController> GetAll()
+    {
+      foreach (var government in _governments.Values)
+        yield return government;
+    }
+
     public void GetAllAlive(List<GovernmentController> outList)
     {
       outList.Clear();

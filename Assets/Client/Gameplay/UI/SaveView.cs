@@ -1,12 +1,12 @@
 using Client.Menu.MainMenu.SaveLoad;
 using Client.Project.Infrastructure;
-using Client.Project.Map.Data;
 
 namespace Client.Gameplay.UI
 {
   public class SaveView : SaveLoadView
   {
     private GameplayUI _gameplayUI;
+    private SaveLoadSlotView _emptyView;
 
     protected override void Awake()
     {
@@ -16,9 +16,9 @@ namespace Client.Gameplay.UI
 
     protected override void CreateViews()
     {
-      var emptyView = CreateView(null);
-      emptyView.Header = "empty";
-      emptyView.OnClick += OnEmptyViewClick;
+      _emptyView = CreateView(null);
+      _emptyView.Header = "empty";
+      _emptyView.OnClick += OnEmptyViewClick;
       base.CreateViews();
     }
 
@@ -34,33 +34,24 @@ namespace Client.Gameplay.UI
       _gameplayUI.ShowPause(false);
     }
 
-    private void OnEmptyViewClick(MapData _)
+    private void OnEmptyViewClick(SaveLoadSlotView _)
     {
-      UnityEngine.Debug.Log("Click Empty");
+      if (_emptyView.Map == null)
+        _emptyView.SetMap(MapsService.SaveCurrentMapInNewSlot(MapsService.StartMap.Name));
+      else
+        _emptyView.SetMap(MapsService.SaveCurrentMapInSlot(_emptyView.Map, MapsService.StartMap.Name));
     }
 
-    protected override void OnViewClick(MapData map)
+    protected override void OnViewClick(SaveLoadSlotView slotView)
     {
-      if (map != null)
-      {
-        if (map == AutosaveMapData)
-          UnityEngine.Debug.Log("Click Autosave");
-        else
-          UnityEngine.Debug.Log($"Click {map.Name}");
-      }
+      if (slotView != AutosaveSlotView && slotView != _emptyView) 
+        slotView.SetMap(MapsService.SaveCurrentMapInSlot(slotView.Map, MapsService.StartMap.Name));
     }
 
-    protected override void OnViewHold(MapData map)
+    protected override void OnViewHold(SaveLoadSlotView slotView)
     {
-      if (map != null)
-      {
-        if (map == AutosaveMapData)
-          UnityEngine.Debug.Log("Hold Autosave");
-        else
-          UnityEngine.Debug.Log($"Hold {map.Name}");
-      }
-
-      base.OnViewHold(map);
+      if(slotView != _emptyView)
+        base.OnViewHold(slotView);
     }
   }
 }

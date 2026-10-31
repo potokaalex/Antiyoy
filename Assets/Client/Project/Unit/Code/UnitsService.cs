@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Client.Project.Infrastructure;
-using Client.Project.Map.Data;
+using Client.Project.Map;
 using Client.Project.Region;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -32,7 +32,7 @@ namespace Client.Project.Unit.Code
           x => x.gameObject.SetActive(true), x => x.gameObject.SetActive(false)));
     }
 
-    public void InitialCreateUnits(MapData map)
+    public void InitialCreateUnits(MapController map)
     {
       foreach (var cell in map.GetCells())
       {

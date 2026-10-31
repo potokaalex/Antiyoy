@@ -28,7 +28,7 @@ namespace Client.Menu.MainMenu.SaveLoad
 
     private void OnDeleteClick()
     {
-      Debug.Log($"Delete: {_slotView.Header}");
+      _saveLoadView.DeleteSlot(_slotView);
       Hide();
     }
 

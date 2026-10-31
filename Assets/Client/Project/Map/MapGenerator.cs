@@ -24,9 +24,9 @@ namespace Client.Project.Map
     private readonly HashSet<CellData> _passedBuffer = new();
     private readonly Queue<CellData> _frontBuffer = new();
 
-    public MapData Generate(LevelSize levelSize, int playersCount)
+    public MapController Generate(LevelSize levelSize, int colorsCount)
     {
-      var field = _yiotroMapGenerator.GenerateMap(new System.Random(Environment.TickCount), levelSize, playersCount);
+      var field = _yiotroMapGenerator.GenerateMap(new System.Random(Environment.TickCount), levelSize, colorsCount);
 
       _allPlayerRegions.Shuffle();
       var size = new Vector2Int(field.Length, field[0].Length);
@@ -34,11 +34,12 @@ namespace Client.Project.Map
       var regions = CreateRegions(cells, size);
       CreateCapitals(regions);
 
-      return new MapData
+      return new MapController(new MapData
       {
         Players = CreatePlayers(regions),
-        Size = size
-      };
+        Size = size,
+        Name = "Skirmish"
+      });
     }
 
     private CellData?[,] CreateCells(Yiotro.Hex[][] field, Vector2Int size)

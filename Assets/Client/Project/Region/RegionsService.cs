@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Client.Project.Borders;
 using Client.Project.Hex;
 using Client.Project.Infrastructure;
-using Client.Project.Map.Data;
+using Client.Project.Map;
 using Client.Project.Unit.Code;
 using Client.Project.Utilities;
 using Sirenix.OdinInspector;
@@ -33,7 +33,7 @@ namespace Client.Project.Region
       _bordersService = Locator.Get<BordersService>();
     }
 
-    public void InitialCreateRegions(MapData map)
+    public void InitialCreateRegions(MapController map)
     {
       foreach (var player in map.Players)
       foreach (var region in player.Regions)

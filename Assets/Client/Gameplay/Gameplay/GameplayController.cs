@@ -37,6 +37,7 @@ namespace Client.Gameplay.Gameplay
     private CapitalsController _capitalsController;
     private GameplayRegionsController _gameplayRegionsController;
     private DebugController _debugController;
+    private MapsService _mapsService;
     private int _turnsCount;
 
     private int TurnsCount
@@ -68,12 +69,12 @@ namespace Client.Gameplay.Gameplay
       _capitalsController = Locator.Get<CapitalsController>();
       _gameplayRegionsController = Locator.Get<GameplayRegionsController>();
       _debugController = Locator.Get<DebugController>();
+      _mapsService = Locator.Get<MapsService>();
     }
 
     public void Start()
     {
-      var map = new MapGenerator().Generate(_mainMenuView.GameplayModesView.LevelSize, _mainMenuView.GameplayModesView.PlayersCount);
-
+      var map = _mapsService.StartMap;
       _warriorUnitsAnimator.Enable();
       _capitalsMarksController.Enable();
       _gridController.InitialCreateCells(map);

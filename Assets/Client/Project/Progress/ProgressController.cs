@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using Client.Project.Infrastructure;
 using UnityEngine;
+using Newtonsoft.Json;
 
 namespace Client.Project.Progress
 {
@@ -9,6 +10,7 @@ namespace Client.Project.Progress
   {
     private const string _filesExtension = "data";
     private const string _saveFolderName = "Saves";
+    private JsonSerializerSettings _jsonSettings;
     private string _directoryPath;
     private string _filePath;
 
@@ -16,6 +18,10 @@ namespace Client.Project.Progress
 
     public void Initialize()
     {
+      _jsonSettings = new JsonSerializerSettings
+      {
+        NullValueHandling = NullValueHandling.Include,
+      };
       CreatePaths();
       Load();
     }
@@ -47,7 +53,7 @@ namespace Client.Project.Progress
       {
         using var reader = new StreamReader(_filePath, false);
         var readData = reader.ReadToEnd();
-        var result = JsonUtility.FromJson<ProgressData>(readData);
+        var result = JsonConvert.DeserializeObject<ProgressData>(readData, _jsonSettings);
         if (result != null)
           return result;
       }
@@ -67,7 +73,7 @@ namespace Client.Project.Progress
       try
       {
         using var writer = new StreamWriter(_filePath, false);
-        writer.Write(JsonUtility.ToJson(progress));
+        writer.Write(JsonConvert.SerializeObject(progress, _jsonSettings));
       }
       catch (Exception e)
       {

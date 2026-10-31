@@ -22,10 +22,7 @@ namespace Client.Menu.MainMenu.GameplayModes
     private InputController _inputController;
     private ProjectController _projectController;
     private ProgressController _progressController;
-
-    public LevelSize LevelSize => (LevelSize)_mapSize.Value;
-
-    public int PlayersCount => _colors.Value + 2;
+    private MapsService _mapsService;
 
     public void Show()
     {
@@ -39,6 +36,7 @@ namespace Client.Menu.MainMenu.GameplayModes
       _inputController = Locator.Get<InputController>();
       _projectController = Locator.Get<ProjectController>();
       _progressController = Locator.Get<ProgressController>();
+      _mapsService = Locator.Get<MapsService>();
 
       LoadData();
       _backButton.OnClick += OnBackClick;
@@ -75,6 +73,7 @@ namespace Client.Menu.MainMenu.GameplayModes
 
     private void OnStartClick()
     {
+      _mapsService.GenerateStartMap((LevelSize)_mapSize.Value, _colors.Value + 2);
       _projectController.LoadGameplay();
       _menuAnimator.PlayHide();
       _topAndBottomMenuAnimator.PlayHide();
