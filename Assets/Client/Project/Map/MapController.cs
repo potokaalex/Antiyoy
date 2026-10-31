@@ -15,9 +15,11 @@ namespace Client.Project.Map
 
     public IReadOnlyList<PlayerData> Players => _data.Players;
 
-    public string Name { get => _data.Name; set => _data.Name = value; }
+    public string Name => _data.Name;
 
-    public DateTime CreationTime { get => DateTime.FromBinary(_data.CreationTime); set => _data.CreationTime = value.ToBinary(); }
+    public DateTime CreationTime => DateTime.FromBinary(_data.CreationTime);
+
+    public bool IsAutosave => _data.IsAutosave;
 
     public IEnumerable<CellData> GetCells()
     {

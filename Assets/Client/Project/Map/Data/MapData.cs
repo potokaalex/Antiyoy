@@ -11,5 +11,6 @@ namespace Client.Project.Map.Data
     public Vector2Int Size;
     public string Name;
     public long CreationTime;
+    public bool IsAutosave;
   }
 }

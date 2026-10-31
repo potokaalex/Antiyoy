@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Client.Project.Government;
 using Client.Project.Infrastructure;
 using Client.Project.Map.Data;
@@ -36,25 +37,17 @@ namespace Client.Project.Map
 
     public void RenameMap(MapController map, string name)
     {
-      map.Name = name;
+      map.GetData().Name = name;
       _progressController.Save();
     }
 
     public void DeleteMap(MapController map)
     {
-      _maps.Remove(map);
-      _progressController.Data.Maps.Remove(map.GetData());
+      DeleteMapWithoutSave(map);
       _progressController.Save();
     }
 
-    public MapController SaveCurrentMapInNewSlot(string mapName)
-    {
-      var map = CreateCurrentMap(mapName);
-      _progressController.Data.Maps.Insert(0, map.GetData());
-      _progressController.Save();
-      _maps.Insert(0, map);
-      return map;
-    }
+    public MapController SaveCurrentMapInNewSlot(string mapName) => SaveCurrentMapInBeginning(mapName);
 
     public MapController SaveCurrentMapInSlot(MapController mapController, string mapName)
     {
@@ -64,6 +57,15 @@ namespace Client.Project.Map
       _progressController.Save();
       _maps[index] = map;
       return map;
+    }
+
+    public void SaveCurrentMapInAutosave()
+    {
+      if (AutosaveMap != null)
+        DeleteMapWithoutSave(AutosaveMap);
+
+      AutosaveMap = SaveCurrentMapInBeginning("Autosave");
+      AutosaveMap.GetData().IsAutosave = true;
     }
 
     private MapController CreateCurrentMap(string mapName)
@@ -130,11 +132,25 @@ namespace Client.Project.Map
 
     private void Load()
     {
-      if (_progressController.Data.AutosaveMap != null)
-        AutosaveMap = new MapController(_progressController.Data.AutosaveMap);
-
       foreach (var mapData in _progressController.Data.Maps)
         _maps.Add(new MapController(mapData));
+
+      AutosaveMap = _maps.FirstOrDefault(x => x.IsAutosave);
+    }
+
+    private void DeleteMapWithoutSave(MapController map)
+    {
+      _maps.Remove(map);
+      _progressController.Data.Maps.Remove(map.GetData());
+    }
+    
+    private MapController SaveCurrentMapInBeginning(string mapName)
+    {
+      var map = CreateCurrentMap(mapName);
+      _maps.Insert(0, map);
+      _progressController.Data.Maps.Insert(0, map.GetData());
+      _progressController.Save();
+      return map;
     }
   }
 }

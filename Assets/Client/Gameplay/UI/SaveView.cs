@@ -44,7 +44,7 @@ namespace Client.Gameplay.UI
 
     protected override void OnViewClick(SaveLoadSlotView slotView)
     {
-      if (slotView != AutosaveSlotView && slotView != _emptyView) 
+      if (slotView != _emptyView && !slotView.Map.IsAutosave) 
         slotView.SetMap(MapsService.SaveCurrentMapInSlot(slotView.Map, MapsService.StartMap.Name));
     }
 

@@ -23,8 +23,6 @@ namespace Client.Menu.MainMenu.SaveLoad
 
     protected MapsService MapsService { get; private set; }
 
-    protected SaveLoadSlotView AutosaveSlotView { get; private set; }
-
     protected virtual void Awake()
     {
       _inputController = Locator.Get<InputController>();
@@ -82,9 +80,6 @@ namespace Client.Menu.MainMenu.SaveLoad
 
     protected virtual void CreateViews()
     {
-      if (MapsService.AutosaveMap != null)
-        AutosaveSlotView = CreateView(MapsService.AutosaveMap);
-
       for (var i = 0; i < MapsService.Maps.Count; i++)
         CreateView(MapsService.Maps[i]);
     }
@@ -103,7 +98,7 @@ namespace Client.Menu.MainMenu.SaveLoad
 
     protected virtual void OnViewHold(SaveLoadSlotView slotView)
     {
-      if (slotView != AutosaveSlotView)
+      if (!slotView.Map.IsAutosave)
         _optionsView.Show(slotView);
     }
 
