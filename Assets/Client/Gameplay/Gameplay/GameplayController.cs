@@ -147,6 +147,13 @@ namespace Client.Gameplay.Gameplay
       End();
     }
 
+    public void Restart()
+    {
+      End();
+      _mapsService.RestartStartMap();
+      Start();
+    }
+
     private void SetFirstPlayer() => SetCurrentPlayer(_players[0]);
 
     private void SetCurrentPlayer(PlayerController playerController)

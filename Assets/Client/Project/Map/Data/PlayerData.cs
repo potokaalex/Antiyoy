@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Client.Project.Map.Data
 {
@@ -7,5 +8,13 @@ namespace Client.Project.Map.Data
   public struct PlayerData
   {
     public List<RegionData> Regions;
+
+    public PlayerData Copy()
+    {
+      return new PlayerData
+      {
+        Regions = Regions.Select(r => r.Copy()).ToList()
+      };
+    }
   }
 }

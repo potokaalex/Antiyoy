@@ -12,6 +12,7 @@ namespace Client.Gameplay.UI
     [SerializeField] private CustomButton _continueButton;
     [SerializeField] private CustomButton _mainMenuButton;
     [SerializeField] private CustomButton _saveButton;
+    [SerializeField] private CustomButton _restartButton;
     [SerializeField] private MenuAnimator _menuAnimator;
     private GameplayController _gameplayController;
     private InputController _inputController;
@@ -25,6 +26,7 @@ namespace Client.Gameplay.UI
       _continueButton.OnClick += _gameplayController.UnPause;
       _mainMenuButton.OnClick += ToMainMenu;
       _saveButton.OnClick += OnSaveClick;
+      _restartButton.OnClick += OnRestartClick;
     }
 
     private void OnDestroy()
@@ -32,6 +34,7 @@ namespace Client.Gameplay.UI
       _continueButton.OnClick -= _gameplayController.UnPause;
       _mainMenuButton.OnClick -= ToMainMenu;
       _saveButton.OnClick -= OnSaveClick;
+      _restartButton.OnClick -= OnRestartClick;
     }
 
     private void Update()
@@ -54,6 +57,12 @@ namespace Client.Gameplay.UI
     {
       PlayHide();
       _gameplayUI.OpenSaveView();
+    }
+
+    private void OnRestartClick()
+    {
+      PlayHide();
+      _gameplayController.Restart();
     }
   }
 }

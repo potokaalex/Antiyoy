@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Client.Project.Map.Data;
 using UnityEngine;
 
@@ -15,7 +16,7 @@ namespace Client.Project.Map
 
     public IReadOnlyList<PlayerData> Players => _data.Players;
 
-    public string Name => _data.Name;
+    public string Name { get => _data.Name; set => _data.Name = value; }
 
     public DateTime CreationTime => DateTime.FromBinary(_data.CreationTime);
 
@@ -30,5 +31,18 @@ namespace Client.Project.Map
     }
 
     public MapData GetData() => _data;
+
+    public MapController RestartCopy()
+    {
+      return new MapController(new MapData
+      {
+        InitialPlayers = _data.InitialPlayers,
+        Players = _data.InitialPlayers.Select(x => x.Copy()).ToList(),
+        Size = _data.Size,
+        Name = _data.Name,
+        CreationTime = _data.CreationTime,
+        IsAutosave = false
+      });
+    }
   }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Client.Project.Region;
 
 namespace Client.Project.Map.Data
@@ -20,5 +21,15 @@ namespace Client.Project.Map.Data
     public static bool operator ==(RegionData left, RegionData right) => left.Equals(right);
 
     public static bool operator !=(RegionData left, RegionData right) => !left.Equals(right);
+
+    public RegionData Copy()
+    {
+      return new RegionData
+      {
+        Cells = Cells.ToList(),
+        Type = Type,
+        Money = Money
+      };
+    }
   }
 }

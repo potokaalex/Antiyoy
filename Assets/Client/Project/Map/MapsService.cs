@@ -19,7 +19,7 @@ namespace Client.Project.Map
 
     public MapController StartMap { get; private set; }
 
-    public MapController AutosaveMap { get; private set; }
+    private MapController AutosaveMap { get; set; }
 
     public IReadOnlyList<MapController> Maps => _maps;
 
@@ -33,11 +33,11 @@ namespace Client.Project.Map
 
     public void GenerateStartMap(LevelSize levelSize, int colorsCount) => StartMap = _mapGenerator.Generate(levelSize, colorsCount);
 
-    public void SetStartMap(MapController map) => StartMap = map;
+    public void SetStartMap(MapController map) => StartMap = map; //должна быть копия?
 
     public void RenameMap(MapController map, string name)
     {
-      map.GetData().Name = name;
+      map.Name = name;
       _progressController.Save();
     }
 
@@ -64,11 +64,12 @@ namespace Client.Project.Map
       if (AutosaveMap != null)
         DeleteMapWithoutSave(AutosaveMap);
 
-      AutosaveMap = SaveCurrentMapInBeginning("Autosave");
-      AutosaveMap.GetData().IsAutosave = true;
+      AutosaveMap = SaveCurrentMapInBeginning("Autosave", true);
     }
 
-    private MapController CreateCurrentMap(string mapName)
+    public void RestartStartMap() => StartMap = StartMap.RestartCopy();
+
+    private MapController CreateCurrentMap(string mapName, bool isAutosave = false)
     {
       var players = new List<PlayerData>();
 
@@ -94,10 +95,12 @@ namespace Client.Project.Map
 
       return new MapController(new MapData
       {
+        InitialPlayers = StartMap.GetData().InitialPlayers,
         Players = players,
         Size = _gridController.Size,
         Name = mapName,
-        CreationTime = DateTime.Now.ToBinary()
+        CreationTime = DateTime.Now.ToBinary(),
+        IsAutosave = isAutosave
       });
     }
 
@@ -143,10 +146,10 @@ namespace Client.Project.Map
       _maps.Remove(map);
       _progressController.Data.Maps.Remove(map.GetData());
     }
-    
-    private MapController SaveCurrentMapInBeginning(string mapName)
+
+    private MapController SaveCurrentMapInBeginning(string mapName, bool isAutosave = false)
     {
-      var map = CreateCurrentMap(mapName);
+      var map = CreateCurrentMap(mapName, isAutosave);
       _maps.Insert(0, map);
       _progressController.Data.Maps.Insert(0, map.GetData());
       _progressController.Save();

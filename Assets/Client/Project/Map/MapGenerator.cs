@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Client.Project.Hex;
 using Client.Project.Map.Data;
 using Client.Project.Map.Yiotro;
@@ -33,10 +34,12 @@ namespace Client.Project.Map
       var cells = CreateCells(field, size);
       var regions = CreateRegions(cells, size);
       CreateCapitals(regions);
+      var players = CreatePlayers(regions);
 
       return new MapController(new MapData
       {
-        Players = CreatePlayers(regions),
+        InitialPlayers = players,
+        Players = players.Select(x => x.Copy()).ToList(),
         Size = size,
         Name = "Skirmish"
       });
