@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5040797127825536878}
   - component: {fileID: 2634140002007400746}
   m_Layer: 6
-  m_Name: GameplayModeSliderPoint
+  m_Name: CustomSliderPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

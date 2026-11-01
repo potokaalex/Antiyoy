@@ -2,7 +2,7 @@ using Client.Menu;
 using Client.Project.Infrastructure;
 using UnityEngine;
 
-namespace Client.MapEditor
+namespace Client.MapEditor.UI
 {
   public class MapEditorUI : MonoBehaviour, IInitializable
   {
@@ -12,5 +12,9 @@ namespace Client.MapEditor
     public void Initialize() => _view = Locator.Get<MenuView>().Spawn(_viewPrefab);
 
     public void PlayShow() => _view.PlayShow();
+
+    public void PlayHide() => _view.PlayHide();
+
+    public void ShowPause() => _view.ShowPause();
   }
 }

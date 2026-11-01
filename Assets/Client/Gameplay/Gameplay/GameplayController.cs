@@ -119,20 +119,6 @@ namespace Client.Gameplay.Gameplay
       _cameraController.Focus(_capitalsController.GetCapital(_governmentsService.Get(_currentPlayer.RegionType).Regions[0]).WorldPosition);
     }
 
-    public void End()
-    {
-      Started = false;
-      _warriorUnitsAnimator.Disable();
-      _capitalsMarksController.Disable();
-      _capitalsController.Disable();
-      _gameplayRegionsController.Disable();
-      _unitsService.Clear();
-      _regionsService.Clear();
-      _actionsHistoryController.Clear();
-      _governmentsService.Clear();
-      //_debugController.Clear();
-    }
-
     public void Pause()
     {
       _currentPlayer.Pause();
@@ -152,6 +138,20 @@ namespace Client.Gameplay.Gameplay
       End();
       _mapsService.RestartStartMap();
       Start();
+    }
+
+    private void End()
+    {
+      Started = false;
+      _warriorUnitsAnimator.Disable();
+      _capitalsMarksController.Disable();
+      _capitalsController.Disable();
+      _gameplayRegionsController.Disable();
+      _unitsService.Clear();
+      _regionsService.Clear();
+      _actionsHistoryController.Clear();
+      _governmentsService.Clear();
+      //_debugController.Clear();
     }
 
     private void SetFirstPlayer() => SetCurrentPlayer(_players[0]);

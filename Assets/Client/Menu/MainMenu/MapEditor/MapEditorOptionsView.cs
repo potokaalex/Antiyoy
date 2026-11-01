@@ -5,6 +5,7 @@ using Client.Project.Map;
 using Client.Project.Progress;
 using Client.Project.Project;
 using Client.Project.UI;
+using Client.Project.UI.Slider;
 using UnityEngine;
 
 namespace Client.Menu.MainMenu.MapEditor
@@ -17,7 +18,7 @@ namespace Client.Menu.MainMenu.MapEditor
     [SerializeField] private CustomButton _importButton;
     [SerializeField] private MenuAnimator _menuAnimator;
     [SerializeField] private TopAndBottomMenuAnimator _topAndBottomMenuAnimator;
-    [SerializeField] private GameplayModeSlider _mapSize;
+    [SerializeField] private CustomSlider _mapSize;
     [SerializeField] private MapEditorLoadView _loadView;
     private MainMenuView _mainMenuView;
     private InputController _inputController;

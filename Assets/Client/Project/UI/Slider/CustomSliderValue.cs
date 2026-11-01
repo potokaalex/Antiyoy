@@ -1,10 +1,10 @@
 using System;
 using UnityEngine;
 
-namespace Client.Menu.MainMenu.GameplayModes
+namespace Client.Project.UI.Slider
 {
   [Serializable]
-  public struct GameplayModeSliderValue
+  public struct CustomSliderValue
   {
     public string Name;
     public GameObject Point;

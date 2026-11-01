@@ -3,15 +3,15 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Client.Menu.MainMenu.GameplayModes
+namespace Client.Project.UI.Slider
 {
   [ExecuteAlways]
-  public class GameplayModeSlider : MonoBehaviour
+  public class CustomSlider : MonoBehaviour
   {
-    [SerializeField] private Slider _slider;
+    [SerializeField] private UnityEngine.UI.Slider _slider;
     [SerializeField] private HorizontalLayoutGroup _horizontalLayoutGroup;
     [SerializeField] private TextMeshProUGUI _currentValueName;
-    [SerializeField] private GameplayModeSliderValue[] _allValues;
+    [SerializeField] private CustomSliderValue[] _allValues;
     [SerializeField] private float _pointSize;
     [SerializeField] [Min(0)] private int _maxValue;
     private bool _recalculateRequest;

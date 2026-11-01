@@ -481,7 +481,7 @@ GameObject:
   - component: {fileID: 6318988046174613247}
   - component: {fileID: 7533347656581119461}
   m_Layer: 6
-  m_Name: GameplayModeSlider
+  m_Name: CustomSlider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

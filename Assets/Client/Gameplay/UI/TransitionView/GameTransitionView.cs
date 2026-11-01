@@ -8,7 +8,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Client.Gameplay.UI
+namespace Client.Gameplay.UI.TransitionView
 {
   public class GameTransitionView : MonoBehaviour
   {

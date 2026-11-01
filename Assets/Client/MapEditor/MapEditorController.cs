@@ -1,3 +1,5 @@
+using Client.MapEditor.UI;
+using Client.Menu.MainMenu;
 using Client.Project;
 using Client.Project.Borders;
 using Client.Project.CameraFeatures;
@@ -17,6 +19,7 @@ namespace Client.MapEditor
     private CameraController _cameraController;
     private BordersService _bordersService;
     private MapEditorUI _mapEditorUI;
+    private MainMenuView _mainMenuView;
     private bool _started;
 
     public void Initialize()
@@ -28,8 +31,9 @@ namespace Client.MapEditor
       _bordersService = Locator.Get<BordersService>();
       _mapsService = Locator.Get<MapsService>();
       _mapEditorUI = Locator.Get<MapEditorUI>();
+      _mainMenuView = Locator.Get<MainMenuView>();
     }
-    
+
     public void Start()
     {
       var map = _mapsService.StartMap;
@@ -42,7 +46,7 @@ namespace Client.MapEditor
       _mapEditorUI.PlayShow();
       _started = true;
     }
-    
+
     public void Tick()
     {
       if (!_started)
@@ -51,7 +55,13 @@ namespace Client.MapEditor
       //_currentPlayer.Tick();
     }
 
-    public void End()
+    public void MainMenu()
+    {
+      End();
+      _mainMenuView.ShowStart();
+    }
+
+    private void End()
     {
       _started = false;
       _unitsService.Clear();

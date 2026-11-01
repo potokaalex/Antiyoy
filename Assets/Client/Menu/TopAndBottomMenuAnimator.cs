@@ -21,6 +21,8 @@ namespace Client.Menu
     private Vector2 _bottomPanelStartPosition;
     private Vector2 _bottomPanelEndPosition;
 
+    public float SpeedFactor { get => _speedFactor; set => _speedFactor = value; }
+
     private void Awake()
     {
       _inputController = Locator.Get<InputController>();
@@ -52,10 +54,10 @@ namespace Client.Menu
       var sequence = DOTween.Sequence();
 
       if (_topPanel)
-        sequence.Join(_topPanel.DOAnchorPos(topPosition, 0.5f / _speedFactor));
-      sequence.Join(_bottomPanel.DOAnchorPos(bottomPosition, 0.5f / _speedFactor));
+        sequence.Join(_topPanel.DOAnchorPos(topPosition, 0.5f / SpeedFactor));
+      sequence.Join(_bottomPanel.DOAnchorPos(bottomPosition, 0.5f / SpeedFactor));
 
-      sequence.Join(_canvasGroup.DOFade(alpha, 0.35f / _speedFactor))
+      sequence.Join(_canvasGroup.DOFade(alpha, 0.35f / SpeedFactor))
         .JoinCallback(() => _inputController.SetBlockInput(true))
         .AddOnComplete(() => _inputController.SetBlockInput(false))
         .SetEase(AnimationsUtilities.MenuDefaultEase)
