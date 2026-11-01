@@ -24,12 +24,6 @@ namespace Client.Menu.MainMenu.GameplayModes
     private ProgressController _progressController;
     private MapsService _mapsService;
 
-    public void Show()
-    {
-      _menuAnimator.PlayShow();
-      _topAndBottomMenuAnimator.PlayShow();
-    }
-
     private void Awake()
     {
       _mainMenuView = Locator.Get<MainMenuView>();
@@ -62,6 +56,12 @@ namespace Client.Menu.MainMenu.GameplayModes
     {
       if (_inputController.BackClicked)
         OnBackClick();
+    }
+
+    public void Show()
+    {
+      _menuAnimator.PlayShow();
+      _topAndBottomMenuAnimator.PlayShow();
     }
 
     private void OnBackClick()

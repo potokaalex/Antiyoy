@@ -10,6 +10,7 @@ namespace Client.Menu.MainMenu.Options
     [SerializeField] private CustomButton _backButton;
     [SerializeField] private CustomButton _battleButton;
     [SerializeField] private CustomButton _loadButton;
+    [SerializeField] private CustomButton _mapEditorButton;
     [SerializeField] private MenuAnimator _menuAnimator;
     private MainMenuView _mainMenuView;
     private InputController _inputController;
@@ -23,6 +24,7 @@ namespace Client.Menu.MainMenu.Options
       _backButton.OnClick += OnBackClick;
       _battleButton.OnClick += OnBattleClick;
       _loadButton.OnClick += OnLoadClick;
+      _mapEditorButton.OnClick += OnMapEditorClick;
     }
 
     private void OnDestroy()
@@ -30,6 +32,7 @@ namespace Client.Menu.MainMenu.Options
       _backButton.OnClick -= OnBackClick;
       _battleButton.OnClick -= OnBattleClick;
       _loadButton.OnClick -= OnLoadClick;
+      _mapEditorButton.OnClick -= OnMapEditorClick;
     }
 
     private void Update()
@@ -54,6 +57,12 @@ namespace Client.Menu.MainMenu.Options
     {
       _menuAnimator.PlayHide();
       _mainMenuView.ShowLoad();
+    }
+
+    private void OnMapEditorClick()
+    {
+      _menuAnimator.PlayHide();
+      _mainMenuView.ShowMapEditor();
     }
   }
 }

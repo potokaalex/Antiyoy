@@ -45,6 +45,15 @@ namespace Client.Project.Map
       });
     }
 
+    public MapController GenerateEmpty(LevelSize levelSize)
+    {
+      return new MapController(new MapData
+      {
+        InitialPlayers = new List<PlayerData>(),
+        Size = _yiotroMapGenerator.GetFieldSize(levelSize)
+      });
+    }
+
     private CellData?[,] CreateCells(Yiotro.Hex[][] field, Vector2Int size)
     {
       var cells = new CellData?[size.x, size.y];

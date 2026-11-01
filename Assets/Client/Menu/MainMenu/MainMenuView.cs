@@ -1,4 +1,5 @@
 using Client.Menu.MainMenu.GameplayModes;
+using Client.Menu.MainMenu.MapEditor;
 using Client.Menu.MainMenu.Options;
 using Client.Menu.MainMenu.SaveLoad;
 using Client.Menu.MainMenu.Start;
@@ -13,6 +14,7 @@ namespace Client.Menu.MainMenu
     [SerializeField] private MainMenuOptionsView _options;
     [SerializeField] private MainMenuGameplayModesView _gameplayModesView;
     [SerializeField] private LoadView _loadView;
+    [SerializeField] private MapEditorOptionsView _mapEditorOptionsView;
 
     public MainMenuGameplayModesView GameplayModesView => _gameplayModesView;
 
@@ -23,5 +25,7 @@ namespace Client.Menu.MainMenu
     public void ShowStart() => _start.Show();
 
     public void ShowLoad() => _loadView.Show();
+
+    public void ShowMapEditor() => _mapEditorOptionsView.Show();
   }
 }

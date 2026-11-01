@@ -29,5 +29,10 @@ namespace Client.Project.Project
       Application.Quit();
 #endif
     }
+
+    public void LoadMapEditor()
+    {
+      
+    }
   }
 }

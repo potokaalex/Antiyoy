@@ -22,6 +22,23 @@ namespace Client.Project.Map.Yiotro
       return FieldManager.Field;
     }
 
+    public Vector2Int GetFieldSize(LevelSize levelSize)
+    {
+      switch (levelSize)
+      {
+        case LevelSize.Small:
+          return new Vector2Int(14, 24);
+        case LevelSize.Medium:
+          return new Vector2Int(28, 24);
+        case LevelSize.Big:
+          return new Vector2Int(28, 48);
+        case LevelSize.Huge:
+          return new Vector2Int(42, 72);
+        default:
+          throw new ArgumentOutOfRangeException(nameof(levelSize), levelSize, null);
+      }
+    }
+
     protected override void DecreaseProvince(List<Hex> provinceList, double power)
     {
       var num = (int)(power * provinceList.Count);
@@ -51,23 +68,6 @@ namespace Client.Project.Map.Yiotro
       hex.SetFraction(NEUTRAL_FRACTION);
       GetActiveHexes().Add(hex);
       return true;
-    }
-
-    private Vector2Int GetFieldSize(LevelSize levelSize)
-    {
-      switch (levelSize)
-      {
-        case LevelSize.Small:
-          return new Vector2Int(14, 24);
-        case LevelSize.Medium:
-          return new Vector2Int(28, 24);
-        case LevelSize.Big:
-          return new Vector2Int(28, 48);
-        case LevelSize.Huge:
-          return new Vector2Int(42, 72);
-        default:
-          throw new ArgumentOutOfRangeException(nameof(levelSize), levelSize, null);
-      }
     }
 
     // not actually needed right now

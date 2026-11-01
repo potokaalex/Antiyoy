@@ -12,6 +12,7 @@ namespace Client.Project.Map
   public class MapsService : IInitializable
   {
     private readonly List<MapController> _maps = new();
+    private readonly List<MapController> _editorMaps = new();
     private readonly MapGenerator _mapGenerator = new();
     private ProgressController _progressController;
     private GridController _gridController;
@@ -23,6 +24,8 @@ namespace Client.Project.Map
 
     public IReadOnlyList<MapController> Maps => _maps;
 
+    public IReadOnlyList<MapController> EditorMaps => _editorMaps;
+
     public void Initialize()
     {
       _progressController = Locator.Get<ProgressController>();
@@ -33,7 +36,9 @@ namespace Client.Project.Map
 
     public void GenerateStartMap(LevelSize levelSize, int colorsCount) => StartMap = _mapGenerator.Generate(levelSize, colorsCount);
 
-    public void SetStartMap(MapController map) => StartMap = map; //должна быть копия?
+    public void GenerateEmptyStartMap(LevelSize levelSize) => StartMap = _mapGenerator.GenerateEmpty(levelSize);
+
+    public void SetStartMap(MapController map) => StartMap = map;
 
     public void RenameMap(MapController map, string name)
     {
@@ -44,6 +49,13 @@ namespace Client.Project.Map
     public void DeleteMap(MapController map)
     {
       DeleteMapWithoutSave(map);
+      _progressController.Save();
+    }
+
+    public void DeleteEditorMap(MapController map)
+    {
+      _editorMaps.Remove(map);
+      _progressController.Data.EditorMaps.Remove(map.GetData());
       _progressController.Save();
     }
 
@@ -139,6 +151,9 @@ namespace Client.Project.Map
         _maps.Add(new MapController(mapData));
 
       AutosaveMap = _maps.FirstOrDefault(x => x.IsAutosave);
+
+      foreach (var mapData in _progressController.Data.EditorMaps)
+        _editorMaps.Add(new MapController(mapData));
     }
 
     private void DeleteMapWithoutSave(MapController map)
