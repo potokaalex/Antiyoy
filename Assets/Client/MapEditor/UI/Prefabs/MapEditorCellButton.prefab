@@ -106,10 +106,55 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5489700535715094215, guid: 10651db774aae314598754fca26fc5a3, type: 3}
       propertyPath: m_Name
-      value: MapEditorCellButton Variant
+      value: MapEditorCellButton
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5489700535715094215, guid: 10651db774aae314598754fca26fc5a3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7300289770168074279}
   m_SourcePrefab: {fileID: 100100000, guid: 10651db774aae314598754fca26fc5a3, type: 3}
+--- !u!114 &289991312437900561 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6131823070450448137, guid: 10651db774aae314598754fca26fc5a3, type: 3}
+  m_PrefabInstance: {fileID: 5845352460154110488}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2103612698597055711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44c6a04895734ff5a5a8cc48379dfb38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::Client.Utilities.CustomButton
+--- !u!114 &1905206430647160092 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5435416147479662340, guid: 10651db774aae314598754fca26fc5a3, type: 3}
+  m_PrefabInstance: {fileID: 5845352460154110488}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+--- !u!1 &2103612698597055711 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5489700535715094215, guid: 10651db774aae314598754fca26fc5a3, type: 3}
+  m_PrefabInstance: {fileID: 5845352460154110488}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7300289770168074279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2103612698597055711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24e03f70a3354257959c68c0e158785f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::Client.MapEditor.UI.Panels.MapEditorCellButton
+  _regionType: 0
+  _button: {fileID: 289991312437900561}
+  _image: {fileID: 1905206430647160092}

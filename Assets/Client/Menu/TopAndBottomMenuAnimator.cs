@@ -44,8 +44,11 @@ namespace Client.Menu
 
     private void OnDestroy() => DOTween.Kill(this);
 
-    public void PlayShow() =>
-      MenuAnimation(_topPanelStartPosition, _bottomPanelStartPosition, 1).JoinCallback(() => _root.gameObject.SetActive(true));
+    public void PlayShow()
+    {
+      _root.gameObject.SetActive(true);
+      MenuAnimation(_topPanelStartPosition, _bottomPanelStartPosition, 1);
+    }
 
     public void PlayHide() => MenuAnimation(_topPanelEndPosition, _bottomPanelEndPosition, 0).AddOnComplete(() => _root.gameObject.SetActive(false));
 

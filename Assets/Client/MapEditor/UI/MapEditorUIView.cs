@@ -22,5 +22,7 @@ namespace Client.MapEditor.UI
     }
 
     public void ShowPause() => _pauseView.Show();
+
+    public void ShowPlayerColorsView() => _hud.ShowPlayerColorsView();
   }
 }
