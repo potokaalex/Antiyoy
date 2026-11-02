@@ -1,0 +1,63 @@
+using Client.Project;
+using Client.Project.Borders;
+using Client.Project.Hex;
+using Client.Project.Infrastructure;
+using Client.Project.Region;
+using Client.Project.Utilities;
+using UnityEngine;
+
+namespace Client.MapEditor.Mode
+{
+  public class MapEditorCellsModeHandler : IMapEditorModeHandler
+  {
+    private readonly RegionType _regionType;
+    private readonly InputController _inputController;
+    private readonly GridController _gridController;
+    private readonly RegionsService _regionsService;
+    private readonly bool _random;
+    private readonly bool _destroy;
+    private readonly BordersService _bordersService;
+    private HexCoordinates _lastPosition;
+
+    public bool OnlyLand { get; set; }
+
+    public MapEditorCellsModeHandler(RegionType regionType, bool random = false, bool destroy = false, bool onlyLand = false)
+    {
+      _destroy = destroy;
+      _random = random;
+      _regionType = regionType;
+      OnlyLand = onlyLand;
+      _inputController = Locator.Get<InputController>();
+      _gridController = Locator.Get<GridController>();
+      _regionsService = Locator.Get<RegionsService>();
+      _bordersService = Locator.Get<BordersService>();
+    }
+
+    public void HandleInput(HexCoordinates position)
+    {
+      if (_inputController.IsHold && position != _lastPosition)
+      {
+        if (_destroy)
+        {
+          _gridController.DestroyCell(position);
+          _bordersService.ViewRegionsBorders();
+        }
+        else
+          ReCreateCell(position, _random ? GameUtilities.AllPlayerRegions[Random.Range(0, GameUtilities.AllPlayerRegions.Length)] : _regionType);
+
+        _lastPosition = position;
+      }
+    }
+
+    private void ReCreateCell(HexCoordinates position, RegionType type)
+    {
+      if (_gridController.GetCell(position, out var cell))
+        _regionsService.SetRegionType(cell, type);
+      else if (!OnlyLand)
+      {
+        cell = _gridController.CreateCell(position, true);
+        _regionsService.AddToBestNeighbourRegion(type, cell);
+      }
+    }
+  }
+}

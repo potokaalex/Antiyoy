@@ -1,3 +1,4 @@
+using Client.MapEditor.Mode;
 using Client.MapEditor.UI;
 using Client.Menu.MainMenu;
 using Client.Project;
@@ -21,6 +22,8 @@ namespace Client.MapEditor
     private MapEditorUI _mapEditorUI;
     private MainMenuView _mainMenuView;
     private bool _started;
+    private IMapEditorModeHandler _currentModeHandler;
+    private bool _cellsModeOnlyLand;
 
     public void Initialize()
     {
@@ -44,6 +47,7 @@ namespace Client.MapEditor
 
       _bordersService.ViewRegionsBorders();
       _mapEditorUI.PlayShow();
+      MoveMode();
       _started = true;
     }
 
@@ -52,7 +56,14 @@ namespace Client.MapEditor
       if (!_started)
         return;
 
-      //_currentPlayer.Tick();
+      if (!_cameraController.GetHitFromMousePoint(out var hit))
+        return;
+
+      var hex = _gridController.WorldPositionToHex(hit.point);
+      if (!_gridController.IsPositionInGrid(hex))
+        return;
+
+      _currentModeHandler?.HandleInput(hex);
     }
 
     public void MainMenu()
@@ -61,12 +72,34 @@ namespace Client.MapEditor
       _mainMenuView.ShowStart();
     }
 
+    public void MoveMode() => SelectMode(new MapEditorMoveModeHandler());
+
+    public void CreateCellMode(RegionType regionType) => SelectMode(new MapEditorCellsModeHandler(regionType, onlyLand: _cellsModeOnlyLand));
+
+    public void CreateRandomCellMode() => SelectMode(new MapEditorCellsModeHandler(default, random: true, onlyLand: _cellsModeOnlyLand));
+
+    public void DestroyCellMode() => SelectMode(new MapEditorCellsModeHandler(default, destroy: true));
+
+    public void SetCellModeOnlyLand(bool onlyLand)
+    {
+      _cellsModeOnlyLand = onlyLand;
+      if (_currentModeHandler is MapEditorCellsModeHandler cellsModeHandler)
+        cellsModeHandler.OnlyLand = onlyLand;
+    }
+
     private void End()
     {
       _started = false;
       _unitsService.Clear();
       _regionsService.Clear();
       _mapEditorUI.Clear();
+    }
+
+    private void SelectMode(IMapEditorModeHandler modeHandler)
+    {
+      _currentModeHandler?.Clear();
+      _currentModeHandler = modeHandler;
+      _currentModeHandler.Start();
     }
   }
 }

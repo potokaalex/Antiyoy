@@ -4,7 +4,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Client.MapEditor.UI.Panels
+namespace Client.MapEditor.UI.Panels.Settings
 {
   public class MapEditorPlayerColorButton : MonoBehaviour
   {

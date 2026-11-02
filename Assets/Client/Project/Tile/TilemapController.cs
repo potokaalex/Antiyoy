@@ -36,5 +36,23 @@ namespace Client.Project.Tile
       _tilemap.SetColor(tilemapPosition, color);
       _tilemapShadows.SetColor(tilemapPosition, Color.white);
     }
+
+    public void CreateTile(HexCoordinates position)
+    {
+      var tilemapPosition = _gridController.GridIndexFrom2DIndex(position.ToArray2DIndex());
+      _tilemap.SetTile(tilemapPosition, _tile);
+      _tilemapShadows.SetTile(tilemapPosition, _tile);
+      _tilemap.CompressBounds();
+      _tilemapShadows.CompressBounds();
+    }
+
+    public void DestroyTile(HexCoordinates position)
+    {
+      var tilemapPosition = _gridController.GridIndexFrom2DIndex(position.ToArray2DIndex());
+      _tilemap.SetTile(tilemapPosition, null);
+      _tilemapShadows.SetTile(tilemapPosition, null);
+      _tilemap.CompressBounds();
+      _tilemapShadows.CompressBounds();
+    }
   }
 }

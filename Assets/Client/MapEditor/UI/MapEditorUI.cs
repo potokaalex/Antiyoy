@@ -20,5 +20,7 @@ namespace Client.MapEditor.UI
     public void ShowPlayerColorsView() => _view.ShowPlayerColorsView();
 
     public void Clear() => _view.Clear();
+
+    public void HideCurrentPanel() => _view.HideCurrentPanel();
   }
 }

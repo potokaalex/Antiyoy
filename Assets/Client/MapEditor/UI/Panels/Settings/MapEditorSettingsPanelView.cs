@@ -4,7 +4,7 @@ using Client.Project.UI;
 using Client.Project.UI.Slider;
 using UnityEngine;
 
-namespace Client.MapEditor.UI.Panels
+namespace Client.MapEditor.UI.Panels.Settings
 {
   public class MapEditorSettingsPanelView : MonoBehaviour, IMapEditorHudPanelView
   {

@@ -1,4 +1,6 @@
 using Client.MapEditor.UI.Panels;
+using Client.MapEditor.UI.Panels.Cells;
+using Client.MapEditor.UI.Panels.Settings;
 using Client.Menu;
 using Client.Project.Infrastructure;
 using Client.Project.UI;
@@ -20,11 +22,14 @@ namespace Client.MapEditor.UI
     [SerializeField] private MapEditorSettingsPanelView _settingsPanelView;
     [SerializeField] private MapEditorPlayerColorsView _playerColorsView;
     private MapEditorUI _mapEditorUI;
+    private MapEditorController _mapEditorController;
     private IMapEditorHudPanelView _currentPanelView;
 
     private void Awake()
     {
       _mapEditorUI = Locator.Get<MapEditorUI>();
+      _mapEditorController = Locator.Get<MapEditorController>();
+
       _pauseButton.OnClick += OnPauseClick;
       _openCellsPanelButton.OnClick += OnCellsPanelButtonClick;
       _openUnitsPanelButton.OnClick += OnUnitsPanelButtonClick;
@@ -58,6 +63,17 @@ namespace Client.MapEditor.UI
 
     public void Clear() => HideCurrentPanel();
 
+    public void ShowPlayerColorsView() => _playerColorsView.Show();
+
+    public void HideCurrentPanel()
+    {
+      if (_currentPanelView != null)
+      {
+        _currentPanelView.Hide();
+        _currentPanelView = null;
+      }
+    }
+
     private void OnPauseClick()
     {
       _mapEditorUI.PlayHide();
@@ -84,18 +100,10 @@ namespace Client.MapEditor.UI
       _currentPanelView.Show();
     }
 
-    private void HideCurrentPanel()
-    {
-      if (_currentPanelView != null)
-      {
-        _currentPanelView.Hide();
-        _currentPanelView = null;
-      }
-    }
-
     private void OnMoveButtonClick()
     {
       HideCurrentPanel();
+      _mapEditorController.MoveMode();
     }
 
     private void OnRegionSettingsButtonClick()
@@ -104,7 +112,5 @@ namespace Client.MapEditor.UI
     }
 
     private void OnSettingsButtonClick() => SelectPanel(_settingsPanelView);
-
-    public void ShowPlayerColorsView() => _playerColorsView.Show();
   }
 }

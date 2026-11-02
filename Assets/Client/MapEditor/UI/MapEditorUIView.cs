@@ -26,5 +26,7 @@ namespace Client.MapEditor.UI
     public void ShowPlayerColorsView() => _hud.ShowPlayerColorsView();
 
     public void Clear() => _hud.Clear();
+
+    public void HideCurrentPanel() => _hud.HideCurrentPanel();
   }
 }

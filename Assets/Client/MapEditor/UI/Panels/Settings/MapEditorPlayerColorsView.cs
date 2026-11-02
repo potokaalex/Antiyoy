@@ -2,7 +2,7 @@ using Client.Menu;
 using Client.Project.UI;
 using UnityEngine;
 
-namespace Client.MapEditor.UI.Panels
+namespace Client.MapEditor.UI.Panels.Settings
 {
   public class MapEditorPlayerColorsView : MonoBehaviour
   {

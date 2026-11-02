@@ -15,15 +15,10 @@ namespace Client.Project.Map
 {
   public class MapGenerator
   {
-    private readonly RegionType[] _allPlayerRegions =
-    {
-      RegionType.Red, RegionType.Blue, RegionType.Green, RegionType.Yellow, RegionType.Purple, RegionType.Brown, RegionType.Cyan, RegionType.Lime,
-      RegionType.Rose, RegionType.Mint
-    };
-
     private readonly YiotroMapGeneratorGeneric _yiotroMapGenerator = new();
     private readonly HashSet<CellData> _passedBuffer = new();
     private readonly Queue<CellData> _frontBuffer = new();
+    private readonly RegionType[] _allPlayerRegions = GameUtilities.AllPlayerRegions.ToArray();
 
     public MapController Generate(LevelSize levelSize, int colorsCount)
     {
