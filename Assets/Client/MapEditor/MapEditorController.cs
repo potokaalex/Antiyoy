@@ -66,6 +66,7 @@ namespace Client.MapEditor
       _started = false;
       _unitsService.Clear();
       _regionsService.Clear();
+      _mapEditorUI.Clear();
     }
   }
 }

@@ -16,6 +16,8 @@ namespace Client.MapEditor.UI.Panels
     [SerializeField] private CustomButton _playerColorButton;
     private MapEditorUI _mapEditorUI;
 
+    public float BottomOffsetY => _topAndBottomMenuAnimator.BottomPanelOffsetY;
+
     private void Awake()
     {
       _mapEditorUI = Locator.Get<MapEditorUI>();

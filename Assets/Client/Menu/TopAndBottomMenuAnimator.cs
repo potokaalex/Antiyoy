@@ -23,6 +23,16 @@ namespace Client.Menu
 
     public float SpeedFactor { get => _speedFactor; set => _speedFactor = value; }
 
+    public float BottomPanelOffsetY
+    {
+      get => _bottomPanelOffsetY;
+      set
+      {
+        _bottomPanelEndPosition = _bottomPanelStartPosition + new Vector2(0, _bottomPanelOffsetY);
+        _bottomPanelOffsetY = value;
+      }
+    }
+
     private void Awake()
     {
       _inputController = Locator.Get<InputController>();

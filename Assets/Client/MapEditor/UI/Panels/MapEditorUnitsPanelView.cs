@@ -15,6 +15,8 @@ namespace Client.MapEditor.UI.Panels
     [SerializeField] private CustomButton _peasantButton;
     [SerializeField] private CustomButton _spearmanButton;
 
+    public float BottomOffsetY => _topAndBottomMenuAnimator.BottomPanelOffsetY;
+
     public void Show() => _topAndBottomMenuAnimator.PlayShow();
 
     public void Hide() => _topAndBottomMenuAnimator.PlayHide();

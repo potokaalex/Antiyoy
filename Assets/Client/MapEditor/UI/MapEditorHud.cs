@@ -45,7 +45,8 @@ namespace Client.MapEditor.UI
 
     public void Show()
     {
-      _topAndBottomMenuAnimator.SpeedFactor = 1;
+      _topAndBottomMenuAnimator.BottomPanelOffsetY = _currentPanelView?.BottomOffsetY ?? -200;
+      _topAndBottomMenuAnimator.SpeedFactor = 1f;
       _topAndBottomMenuAnimator.PlayShow();
     }
 
@@ -53,8 +54,9 @@ namespace Client.MapEditor.UI
     {
       _topAndBottomMenuAnimator.SpeedFactor = 2;
       _topAndBottomMenuAnimator.PlayHide();
-      HideCurrentPanel();
     }
+
+    public void Clear() => HideCurrentPanel();
 
     private void OnPauseClick()
     {
@@ -62,12 +64,15 @@ namespace Client.MapEditor.UI
       _mapEditorUI.ShowPause();
     }
 
-    private void OnCellsPanelButtonClick() => SelectView(_cellsPanelView);
+    private void OnCellsPanelButtonClick() => SelectPanel(_cellsPanelView);
 
-    private void OnUnitsPanelButtonClick() => SelectView(_unitsPanelView);
+    private void OnUnitsPanelButtonClick() => SelectPanel(_unitsPanelView);
 
-    private void SelectView(IMapEditorHudPanelView panelView)
+    private void SelectPanel(IMapEditorHudPanelView panelView)
     {
+      if (panelView == null)
+        return;
+
       if (_currentPanelView == panelView)
       {
         HideCurrentPanel();
@@ -97,13 +102,9 @@ namespace Client.MapEditor.UI
     {
       HideCurrentPanel();
     }
-    
-    private void OnSettingsButtonClick() => SelectView(_settingsPanelView);
 
-    public void ShowPlayerColorsView()
-    {
-      //во, мы тут.
-      _playerColorsView.Show();
-    }
+    private void OnSettingsButtonClick() => SelectPanel(_settingsPanelView);
+
+    public void ShowPlayerColorsView() => _playerColorsView.Show();
   }
 }

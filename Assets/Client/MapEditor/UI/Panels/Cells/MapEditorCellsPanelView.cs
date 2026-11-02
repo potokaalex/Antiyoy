@@ -14,6 +14,8 @@ namespace Client.MapEditor.UI.Panels
     [SerializeField] private CustomButton _filterButton;
     [SerializeField] private TextMeshProUGUI _filterText;
 
+    public float BottomOffsetY => _topAndBottomMenuAnimator.BottomPanelOffsetY;
+
     public void Show()
     {
       _topAndBottomMenuAnimator.PlayShow();
