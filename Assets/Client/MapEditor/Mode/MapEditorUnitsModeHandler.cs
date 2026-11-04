@@ -12,17 +12,21 @@ namespace Client.MapEditor.Mode
     private readonly GridController _gridController;
     private readonly UnitsService _unitsService;
     private readonly CapitalsController _capitalsController;
-    private readonly UnitType _unitType;
-    private readonly bool _destroy;
+    private UnitType _unitType;
+    private bool _destroy;
 
-    public MapEditorUnitsModeHandler(UnitType unitType, bool destroy = false)
+    public MapEditorUnitsModeHandler()
     {
-      _unitType = unitType;
-      _destroy = destroy;
       _inputController = Locator.Get<InputController>();
       _gridController = Locator.Get<GridController>();
       _unitsService = Locator.Get<UnitsService>();
       _capitalsController = Locator.Get<CapitalsController>();
+    }
+
+    public void Setup(UnitType unitType, bool destroy = false)
+    {
+      _unitType = unitType;
+      _destroy = destroy;
     }
 
     public void HandleInput(HexCoordinates position)

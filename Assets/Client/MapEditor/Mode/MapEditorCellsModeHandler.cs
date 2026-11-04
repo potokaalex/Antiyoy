@@ -34,6 +34,7 @@ namespace Client.MapEditor.Mode
       _regionType = regionType;
       _random = random;
       _destroy = destroy;
+      _lastPosition = HexCoordinates.FromArray2DIndex(new Vector2Int(-1, -1));
     }
 
     public void HandleInput(HexCoordinates position)

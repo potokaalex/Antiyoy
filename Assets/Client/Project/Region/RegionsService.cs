@@ -20,9 +20,13 @@ namespace Client.Project.Region
     private RegionsFactory _regionsFactory;
     private BordersService _bordersService;
 
+    public event Action<RegionController, CellController> OnBeforeRegionAddCell;
+
     public event Action<RegionController> OnRegionAddCell;
 
     public event Action<RegionController> OnRegionRemoveCell;
+
+    public event Action<RegionController, RegionController> OnBeforeJoinRegions; //major, minor
 
     public IReadOnlyList<RegionController> Regions => _regionsFactory.ActiveRegions;
 
@@ -105,10 +109,12 @@ namespace Client.Project.Region
 
     private void TryJoinRegions(HexCoordinates position, RegionType type)
     {
-      var regions = new List<RegionController>();
-      FindRegionsWhitOneType(position, regions, type);
-      regions.SortByDecreasing(GetRegionPower);
-      JoinRegions(regions);
+      using (ListPool<RegionController>.Get(out var regions))
+      {
+        FindRegionsWhitOneType(position, regions, type);
+        regions.SortByDecreasing(GetRegionPower);
+        JoinRegions(regions);
+      }
     }
 
     private void TryDivideRegion(RegionController region)
@@ -169,6 +175,7 @@ namespace Client.Project.Region
       for (var i = 1; i < regions.Count; i++)
       {
         var region = regions[i];
+        OnBeforeJoinRegions?.Invoke(mainRegion, region);
         mainRegion.Money += region.Money;
 
         while (region.Cells.Count > 0)
@@ -221,6 +228,7 @@ namespace Client.Project.Region
 
     private void AddCell(RegionController region, CellController cell)
     {
+      OnBeforeRegionAddCell?.Invoke(region, cell);
       region.Add(cell);
       OnRegionAddCell?.Invoke(region);
     }

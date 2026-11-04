@@ -11,6 +11,7 @@ namespace Client.Project
   public class GridController : MonoBehaviour, IInitializable
   {
     [SerializeField] private Grid _grid;
+    [SerializeField] private Transform _background;
     private CellController[] _cells;
     private TilemapController _tilemapController;
 
@@ -27,6 +28,7 @@ namespace Client.Project
         CreateCell(cell.Position);
 
       _tilemapController.FillByBaseTiles();
+      AdjustBackground();
     }
 
     public HexCoordinates WorldPositionToHex(Vector3 worldPosition) =>
@@ -87,11 +89,31 @@ namespace Client.Project
       var arrayIndex = MathUtilities.ToArrayIndex(position.ToArray2DIndex(), Size.x);
       _cells[arrayIndex] = cell;
       cell.Initialize(position);
-      if(createTile)
+      if (createTile)
         _tilemapController.CreateTile(position);
       return cell;
     }
 
     private int GetCellIndex(HexCoordinates position) => MathUtilities.ToArrayIndex(position.ToArray2DIndex(), Size.x);
+
+    private void AdjustBackground()
+    {
+      var min = HexPositionToWorld(HexCoordinates.FromArray2DIndex(new Vector2Int(0, 0)));
+      var max = HexPositionToWorld(HexCoordinates.FromArray2DIndex(new Vector2Int(Size.x - 1, Size.y - 1)));
+      var diff = max - min;
+      var position = diff / 2f;
+      var scale = new Vector3(diff.x + MathUtilities.HexSide * 2, diff.y + MathUtilities.HexHeight * 2, 1);
+
+      if (Size.y % 2 != 0)
+      {
+        position += new Vector3(0, MathUtilities.HexHeight / 2f, 0);
+        scale += new Vector3(0, MathUtilities.HexHeight, 0);
+      }
+
+      scale += new Vector3(0.25f, 0.25f, 0);
+
+      _background.position = position;
+      _background.localScale = scale;
+    }
   }
 }

@@ -74,12 +74,13 @@ namespace Client.Project.CameraFeatures
       var gridMax = (Vector2)_gridController.HexPositionToWorld(HexCoordinates.FromArray2DIndex(_gridController.Size - Vector2Int.one));
       _center = (gridMin + gridMax) / 2f;
 
-      var maxVisibleUnits = (gridMax.y - gridMin.y) + 5;
+      var unitsAbove = 5;
+      var maxVisibleUnits = gridMax.y - gridMin.y + unitsAbove;
       _maxSize = Mathf.Max(maxVisibleUnits / 2f, _minSize);
       SetSize(_maxSize);
 
-      _minPosition = _center - Vector2.one * _maxSize;
-      _maxPosition = _center + Vector2.one * _maxSize;
+      _minPosition = gridMin - Vector2.one * unitsAbove / 2f;
+      _maxPosition = gridMax + Vector2.one * unitsAbove / 2f;
       SetPosition(_center);
     }
 

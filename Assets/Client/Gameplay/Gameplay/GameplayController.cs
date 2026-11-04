@@ -80,8 +80,8 @@ namespace Client.Gameplay.Gameplay
       _gridController.InitialCreateCells(map);
       _unitsService.InitialCreateUnits(map);
       _regionsService.InitialCreateRegions(map);
+      _capitalsController.RemoveDoubleCapitals();
       _gameplayRegionsController.Enable();
-      _capitalsController.Enable();
       _cameraController.Setup();
       CreatePlayers();
       //_debugController.CreateCells();
@@ -145,7 +145,6 @@ namespace Client.Gameplay.Gameplay
       Started = false;
       _warriorUnitsAnimator.Disable();
       _capitalsMarksController.Disable();
-      _capitalsController.Disable();
       _gameplayRegionsController.Disable();
       _unitsService.Clear();
       _regionsService.Clear();
