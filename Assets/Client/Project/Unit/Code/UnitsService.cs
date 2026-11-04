@@ -105,6 +105,18 @@ namespace Client.Project.Unit.Code
 
     public Sprite GetSprite(UnitType unitType) => _unitsConfigs[unitType].Sprite;
 
+    public int GetJoinId(UnitType unitType) => _unitsConfigs[unitType].JoinFactor;
+
+    public UnitType GetTypeByJoinId(int id, UnitType def)
+    {
+      foreach (var config in _unitsConfigs.Values)
+        if (config.JoinFactor == id)
+          return config.Type;
+      return def;
+    }
+
+    public int GetMaxJoinId() => _unitsConfigs.Values.Max(x => x.JoinFactor);
+
     private void CreateUnit(CellController cell, UnitType type, bool hasTurns)
     {
       Destroy(cell.Unit);
@@ -125,16 +137,9 @@ namespace Client.Project.Unit.Code
         return UnitType.StrongTower;
 
       if (current.IsWarrior() && next.IsWarrior())
-      {
-        var joinFactor = GetJoinId(current) + GetJoinId(next);
-        foreach (var config in _unitsConfigs.Values)
-          if (config.JoinFactor == joinFactor)
-            return config.Type;
-      }
+        return GetTypeByJoinId(GetJoinId(current) + GetJoinId(next), def);
 
       return def;
     }
-
-    private int GetJoinId(UnitType unitType) => _unitsConfigs[unitType].JoinFactor;
   }
 }

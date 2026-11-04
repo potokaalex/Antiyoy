@@ -10,27 +10,30 @@ namespace Client.MapEditor.Mode
 {
   public class MapEditorCellsModeHandler : IMapEditorModeHandler
   {
-    private readonly RegionType _regionType;
     private readonly InputController _inputController;
     private readonly GridController _gridController;
     private readonly RegionsService _regionsService;
-    private readonly bool _random;
-    private readonly bool _destroy;
     private readonly BordersService _bordersService;
+    private RegionType _regionType;
+    private bool _random;
+    private bool _destroy;
     private HexCoordinates _lastPosition;
 
     public bool OnlyLand { get; set; }
 
-    public MapEditorCellsModeHandler(RegionType regionType, bool random = false, bool destroy = false, bool onlyLand = false)
+    public MapEditorCellsModeHandler()
     {
-      _destroy = destroy;
-      _random = random;
-      _regionType = regionType;
-      OnlyLand = onlyLand;
       _inputController = Locator.Get<InputController>();
       _gridController = Locator.Get<GridController>();
       _regionsService = Locator.Get<RegionsService>();
       _bordersService = Locator.Get<BordersService>();
+    }
+
+    public void Setup(RegionType regionType, bool random = false, bool destroy = false)
+    {
+      _regionType = regionType;
+      _random = random;
+      _destroy = destroy;
     }
 
     public void HandleInput(HexCoordinates position)

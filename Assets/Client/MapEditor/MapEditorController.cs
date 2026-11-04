@@ -13,6 +13,7 @@ namespace Client.MapEditor
 {
   public class MapEditorController : IInitializable, ITickable
   {
+    private readonly MapEditorCellsModeHandler _cellsModeHandler = new();
     private MapsService _mapsService;
     private GridController _gridController;
     private UnitsService _unitsService;
@@ -23,7 +24,6 @@ namespace Client.MapEditor
     private MainMenuView _mainMenuView;
     private bool _started;
     private IMapEditorModeHandler _currentModeHandler;
-    private bool _cellsModeOnlyLand;
 
     public void Initialize()
     {
@@ -74,18 +74,29 @@ namespace Client.MapEditor
 
     public void MoveMode() => SelectMode(new MapEditorMoveModeHandler());
 
-    public void CreateCellMode(RegionType regionType) => SelectMode(new MapEditorCellsModeHandler(regionType, onlyLand: _cellsModeOnlyLand));
-
-    public void CreateRandomCellMode() => SelectMode(new MapEditorCellsModeHandler(default, random: true, onlyLand: _cellsModeOnlyLand));
-
-    public void DestroyCellMode() => SelectMode(new MapEditorCellsModeHandler(default, destroy: true));
-
-    public void SetCellModeOnlyLand(bool onlyLand)
+    public void CreateCellMode(RegionType regionType)
     {
-      _cellsModeOnlyLand = onlyLand;
-      if (_currentModeHandler is MapEditorCellsModeHandler cellsModeHandler)
-        cellsModeHandler.OnlyLand = onlyLand;
+      _cellsModeHandler.Setup(regionType);
+      SelectMode(_cellsModeHandler);
     }
+
+    public void CreateRandomCellMode()
+    {
+      _cellsModeHandler.Setup(default, random: true);
+      SelectMode(_cellsModeHandler);
+    }
+
+    public void DestroyCellMode()
+    {
+      _cellsModeHandler.Setup(default, destroy: true);
+      SelectMode(_cellsModeHandler);
+    }
+
+    public void SetCellModeOnlyLand(bool onlyLand) => _cellsModeHandler.OnlyLand = onlyLand;
+
+    public void CreateUnitMode(UnitType unitType) => SelectMode(new MapEditorUnitsModeHandler(unitType));
+
+    public void DeleteUnitMode() => SelectMode(new MapEditorUnitsModeHandler(default, destroy: true));
 
     private void End()
     {
@@ -93,6 +104,7 @@ namespace Client.MapEditor
       _unitsService.Clear();
       _regionsService.Clear();
       _mapEditorUI.Clear();
+      ClearCurrentMode();
     }
 
     private void SelectMode(IMapEditorModeHandler modeHandler)
@@ -100,6 +112,12 @@ namespace Client.MapEditor
       _currentModeHandler?.Clear();
       _currentModeHandler = modeHandler;
       _currentModeHandler.Start();
+    }
+
+    private void ClearCurrentMode()
+    {
+      _currentModeHandler?.Clear();
+      _currentModeHandler = null;
     }
   }
 }

@@ -36,15 +36,15 @@ namespace Client.Project.Unit.Code.Capital
       }
     }
 
-    private bool IsCapital(IUnit unit) => unit != null && unit.Type == UnitType.Capital;
-
-    private bool HasCapital(RegionController region)
+    public bool HasCapital(RegionController region)
     {
       foreach (var cell in region.Cells)
         if (IsCapital(cell.Unit))
           return true;
       return false;
     }
+
+    private bool IsCapital(IUnit unit) => unit != null && unit.Type == UnitType.Capital;
 
     public IUnit GetCapital(RegionController region)
     {
