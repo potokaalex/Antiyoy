@@ -77,7 +77,7 @@ namespace Client.Menu.MainMenu.MapEditor
 
     private void OnCreateClick()
     {
-      _mapsService.GenerateEmptyStartMap((LevelSize)_mapSize.Value);
+      _mapsService.GenerateEmptyStartMap((LevelSize)_mapSize.Value, "Editor");
       _projectController.LoadMapEditor();
       Hide();
     }

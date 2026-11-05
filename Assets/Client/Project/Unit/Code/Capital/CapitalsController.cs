@@ -16,7 +16,7 @@ namespace Client.Project.Unit.Code.Capital
       _regionsService = Locator.Get<RegionsService>();
     }
 
-    public void InitialCheckCapitals()
+    public void CheckCapitals()
     {
       foreach (var region in _regionsService.Regions)
       {

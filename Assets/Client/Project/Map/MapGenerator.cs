@@ -40,12 +40,13 @@ namespace Client.Project.Map
       });
     }
 
-    public MapController GenerateEmpty(LevelSize levelSize)
+    public MapController GenerateEmpty(LevelSize levelSize, string name)
     {
       return new MapController(new MapData
       {
         InitialPlayers = new List<PlayerData>(),
-        Size = _yiotroMapGenerator.GetFieldSize(levelSize)
+        Size = _yiotroMapGenerator.GetFieldSize(levelSize),
+        Name = name
       });
     }
 

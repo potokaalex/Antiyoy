@@ -37,15 +37,15 @@ namespace Client.Gameplay.UI
     private void OnEmptyViewClick(SaveLoadSlotView _)
     {
       if (_emptyView.Map == null)
-        _emptyView.SetMap(MapsService.SaveCurrentMapInNewSlot(MapsService.StartMap.Name));
+        _emptyView.SetMap(MapsService.SaveCurrentMapInNewSlot());
       else
-        _emptyView.SetMap(MapsService.SaveCurrentMapInSlot(_emptyView.Map, MapsService.StartMap.Name));
+        _emptyView.SetMap(MapsService.SaveCurrentMapInSlot(_emptyView.Map));
     }
 
     protected override void OnViewClick(SaveLoadSlotView slotView)
     {
       if (slotView != _emptyView && !slotView.Map.IsAutosave) 
-        slotView.SetMap(MapsService.SaveCurrentMapInSlot(slotView.Map, MapsService.StartMap.Name));
+        slotView.SetMap(MapsService.SaveCurrentMapInSlot(slotView.Map));
     }
 
     protected override void OnViewHold(SaveLoadSlotView slotView)

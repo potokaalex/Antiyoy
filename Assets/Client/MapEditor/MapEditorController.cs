@@ -7,14 +7,17 @@ using Client.Project.Borders;
 using Client.Project.CameraFeatures;
 using Client.Project.Infrastructure;
 using Client.Project.Map;
+using Client.Project.Project;
 using Client.Project.Region;
 using Client.Project.Unit.Code;
 using Client.Project.Unit.Code.Capital;
+using UnityEngine;
 
 namespace Client.MapEditor
 {
-  public class MapEditorController : IInitializable, ITickable
+  public class MapEditorController : IInitializable, ITickable, IOnApplicationFocusReceiver
   {
+    private const float _saveInterval = 10f;
     private readonly MapEditorMoveModeHandler _moveModeHandler = new();
     private readonly MapEditorCellsModeHandler _cellsModeHandler = new();
     private readonly MapEditorUnitsModeHandler _unitsModeHandler = new();
@@ -30,11 +33,13 @@ namespace Client.MapEditor
     private CapitalsController _capitalsController;
     private bool _started;
     private IMapEditorModeHandler _currentModeHandler;
-    private MapEditorPlayerRegionType _playerRegionType = new(RegionType.Lime);
+    private MapEditorPlayerRegionType _playerRegionType;
+    private ProjectController _projectController;
+    private float _timeToSave = 10f;
 
-    public int PlayersValue { get; set; } = 1;
+    public int PlayersValue { get; set; }
 
-    public int DifficultyValue { get; set; } = 4;
+    public int DifficultyValue { get; set; }
 
     public event Action OnPlayerRegionTypeChanged;
 
@@ -59,6 +64,7 @@ namespace Client.MapEditor
       _mapEditorUI = Locator.Get<MapEditorUI>();
       _mainMenuView = Locator.Get<MainMenuView>();
       _capitalsController = Locator.Get<CapitalsController>();
+      _projectController = Locator.Get<ProjectController>();
     }
 
     public void Start()
@@ -67,6 +73,10 @@ namespace Client.MapEditor
       _cameraController.Setup();
       _regionsService.AddMoneyWhenJoin = false;
       _regionsService.RegionInitialMoney = 10;
+      _playerRegionType = new(RegionType.Lime);
+      PlayersValue = 1;
+      DifficultyValue = 4;
+      _timeToSave = _saveInterval;
 
       _mapEditorUI.PlayShow();
       MoveMode();
@@ -81,6 +91,14 @@ namespace Client.MapEditor
       if (!_started)
         return;
 
+      _timeToSave -= Time.deltaTime;
+
+      if (_timeToSave <= 0f)
+      {
+        _timeToSave = _saveInterval;
+        SaveMap();
+      }
+
       if (!_cameraController.GetHitFromMousePoint(out var hit))
         return;
 
@@ -91,8 +109,18 @@ namespace Client.MapEditor
       _currentModeHandler?.HandleInput(hex);
     }
 
+    public void OnFocus(bool hasFocus)
+    {
+      if (!hasFocus && _started)
+      {
+        _timeToSave = _saveInterval;
+        SaveMap();
+      }
+    }
+
     public void MainMenu()
     {
+      SaveMap();
       End();
       _mainMenuView.ShowStart();
     }
@@ -145,8 +173,19 @@ namespace Client.MapEditor
     {
       ClearMap();
       var levelSize = _mapsService.GetLevelSize(_mapsService.StartMap.Size);
-      _mapsService.GenerateStartMap(levelSize, GetFractionsCount(levelSize), "Editor");
+      _mapsService.GenerateStartMap(levelSize, GetFractionsCount(levelSize), _mapsService.StartMap.Name);
       LoadMap();
+    }
+
+    public bool Play()
+    {
+      if (MapEmpty())
+        return false;
+
+      SaveMap();
+      End();
+      _projectController.LoadGameplay();
+      return true;
     }
 
     private void End()
@@ -190,7 +229,6 @@ namespace Client.MapEditor
       _gridController.InitialCreateCells(map);
       _unitsService.InitialCreateUnits(map);
       _regionsService.InitialCreateRegions(map);
-      _capitalsController.InitialCheckCapitals();
       _bordersService.ViewRegionsBorders();
     }
 
@@ -205,6 +243,19 @@ namespace Client.MapEditor
         _ => throw new ArgumentOutOfRangeException()
       };
       return fractionsCount;
+    }
+
+    private void SaveMap()
+    {
+      if(!MapEmpty()) 
+        _mapsService.SaveCurrentEditorMap();
+    }
+
+    private bool MapEmpty()
+    {
+      foreach (var unused in _gridController.GetAllCells())
+        return false;
+      return true;
     }
   }
 }

@@ -38,7 +38,7 @@ namespace Client.Project.Map
     public void GenerateStartMap(LevelSize levelSize, int colorsCount, string name) =>
       StartMap = _mapGenerator.Generate(levelSize, colorsCount, name);
 
-    public void GenerateEmptyStartMap(LevelSize levelSize) => StartMap = _mapGenerator.GenerateEmpty(levelSize);
+    public void GenerateEmptyStartMap(LevelSize levelSize, string name) => StartMap = _mapGenerator.GenerateEmpty(levelSize, name);
 
     public void SetStartMap(MapController map) => StartMap = map;
 
@@ -61,31 +61,40 @@ namespace Client.Project.Map
       _progressController.Save();
     }
 
-    public MapController SaveCurrentMapInNewSlot(string mapName) => SaveCurrentMapInBeginning(mapName);
-
-    public MapController SaveCurrentMapInSlot(MapController mapController, string mapName)
+    public MapController SaveCurrentMapInNewSlot()
     {
-      var map = CreateCurrentMap(mapName);
-      var index = _maps.IndexOf(mapController);
-      _progressController.Data.Maps[index] = map.GetData();
-      _progressController.Save();
-      _maps[index] = map;
-      return map;
+      InsertNullMap();
+      return SaveCurrentMapInSlot(0);
     }
+
+    public MapController SaveCurrentMapInSlot(MapController mapController) =>
+      SaveCurrentMapInSlot(_maps.IndexOf(mapController));
 
     public void SaveCurrentMapInAutosave()
     {
-      if (AutosaveMap != null)
-        DeleteMapWithoutSave(AutosaveMap);
+      if (AutosaveMap == null)
+        InsertNullMap();
 
-      AutosaveMap = SaveCurrentMapInBeginning(StartMap.Name, true);
+      AutosaveMap = SaveCurrentMapInSlot(0, isAutosave: true);
+    }
+
+    public void SaveCurrentEditorMap()
+    {
+      var index = _editorMaps.IndexOf(StartMap);
+      if (index == -1)
+      {
+        InsertNullMap(isEditor: true);
+        index = 0;
+      }
+
+      StartMap = SaveCurrentMapInSlot(index, isEditor: true);
     }
 
     public void RestartStartMap() => StartMap = StartMap.RestartCopy();
 
     public LevelSize GetLevelSize(Vector2Int mapSize) => _mapGenerator.GetLevelSize(mapSize);
 
-    private MapController CreateCurrentMap(string mapName, bool isAutosave = false)
+    private MapController CreateCurrentMap(bool isAutosave = false, bool isEditor = false)
     {
       var players = new List<PlayerData>();
 
@@ -111,10 +120,10 @@ namespace Client.Project.Map
 
       return new MapController(new MapData
       {
-        InitialPlayers = StartMap.GetData().InitialPlayers,
+        InitialPlayers = isEditor ? players : StartMap.GetData().InitialPlayers,
         Players = players,
         Size = _gridController.Size,
-        Name = mapName,
+        Name = StartMap.Name,
         CreationTime = DateTime.Now.ToBinary(),
         IsAutosave = isAutosave
       });
@@ -166,13 +175,36 @@ namespace Client.Project.Map
       _progressController.Data.Maps.Remove(map.GetData());
     }
 
-    private MapController SaveCurrentMapInBeginning(string mapName, bool isAutosave = false)
+    private MapController SaveCurrentMapInSlot(int slotIndex, bool isEditor = false, bool isAutosave = false)
     {
-      var map = CreateCurrentMap(mapName, isAutosave);
-      _maps.Insert(0, map);
-      _progressController.Data.Maps.Insert(0, map.GetData());
+      var map = CreateCurrentMap(isEditor: isEditor, isAutosave: isAutosave);
+      if (isEditor)
+      {
+        _progressController.Data.EditorMaps[slotIndex] = map.GetData();
+        _editorMaps[slotIndex] = map;
+      }
+      else
+      {
+        _progressController.Data.Maps[slotIndex] = map.GetData();
+        _maps[slotIndex] = map;
+      }
+
       _progressController.Save();
       return map;
+    }
+
+    private void InsertNullMap(bool isEditor = false)
+    {
+      if (isEditor)
+      {
+        _editorMaps.Insert(0, null);
+        _progressController.Data.EditorMaps.Insert(0, null);
+      }
+      else
+      {
+        _maps.Insert(0, null);
+        _progressController.Data.Maps.Insert(0, null);
+      }
     }
   }
 }

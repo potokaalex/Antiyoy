@@ -11,6 +11,7 @@ namespace Client.Project.Infrastructure
     private readonly List<IInitializable> _initializables = new();
     private readonly List<ITickable> _tickables = new();
     private readonly List<IDisposable> _disposables = new();
+    private readonly List<IOnApplicationFocusReceiver> _onApplicationFocusReceivers = new();
 
     public void Register(object service) => Register(service, service.GetType());
 
@@ -24,6 +25,8 @@ namespace Client.Project.Infrastructure
         _tickables.Add(tickable);
       if (service is IDisposable disposable)
         _disposables.Add(disposable);
+      if (service is IOnApplicationFocusReceiver receiver)
+        _onApplicationFocusReceivers.Add(receiver);
     }
 
     private void Awake()
@@ -44,6 +47,12 @@ namespace Client.Project.Infrastructure
         tickable.Tick();
     }
 
+    private void OnApplicationFocus(bool hasFocus)
+    {
+      foreach (var receiver in _onApplicationFocusReceivers)
+        receiver.OnFocus(hasFocus);
+    }
+    
     private void OnDestroy()
     {
       foreach (var disposable in _disposables)

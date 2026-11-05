@@ -80,7 +80,7 @@ namespace Client.Gameplay.Gameplay
       _gridController.InitialCreateCells(map);
       _unitsService.InitialCreateUnits(map);
       _regionsService.InitialCreateRegions(map);
-      _capitalsController.InitialCheckCapitals();
+      _capitalsController.CheckCapitals();
       _gameplayRegionsController.Enable();
       _cameraController.Setup();
       CreatePlayers();

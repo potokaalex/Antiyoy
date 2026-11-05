@@ -54,7 +54,8 @@ namespace Client.MapEditor.UI
 
     private void OnPlayClick()
     {
-      
+      if(_mapEditorController.Play())
+        Hide();
     }
 
     private void OnExportClick()
