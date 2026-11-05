@@ -6,6 +6,7 @@ using Client.Project.Infrastructure;
 using Client.Project.Map.Data;
 using Client.Project.Progress;
 using Client.Project.Region;
+using UnityEngine;
 
 namespace Client.Project.Map
 {
@@ -34,7 +35,8 @@ namespace Client.Project.Map
       Load();
     }
 
-    public void GenerateStartMap(LevelSize levelSize, int colorsCount) => StartMap = _mapGenerator.Generate(levelSize, colorsCount);
+    public void GenerateStartMap(LevelSize levelSize, int colorsCount, string name) =>
+      StartMap = _mapGenerator.Generate(levelSize, colorsCount, name);
 
     public void GenerateEmptyStartMap(LevelSize levelSize) => StartMap = _mapGenerator.GenerateEmpty(levelSize);
 
@@ -80,6 +82,8 @@ namespace Client.Project.Map
     }
 
     public void RestartStartMap() => StartMap = StartMap.RestartCopy();
+
+    public LevelSize GetLevelSize(Vector2Int mapSize) => _mapGenerator.GetLevelSize(mapSize);
 
     private MapController CreateCurrentMap(string mapName, bool isAutosave = false)
     {

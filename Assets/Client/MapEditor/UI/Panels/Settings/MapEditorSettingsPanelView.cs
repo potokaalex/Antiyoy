@@ -69,7 +69,7 @@ namespace Client.MapEditor.UI.Panels.Settings
       _mapEditorUI.HideCurrentPanel();
       _mapEditorUI.ShowAgreeView(new MapEditorAgreeViewParameters
       {
-        AgreeAction = _mapEditorController.Clear,
+        AgreeAction = _mapEditorController.ClearMap,
         Header = "Clear map?",
         CancelColor = new Color(0.35686275f, 0.6509804f, 0.43529412f, 1),
         CancelText = "Cancel",

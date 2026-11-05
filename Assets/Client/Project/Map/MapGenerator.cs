@@ -20,7 +20,7 @@ namespace Client.Project.Map
     private readonly Queue<CellData> _frontBuffer = new();
     private readonly RegionType[] _allPlayerRegions = GameUtilities.AllPlayerRegions.ToArray();
 
-    public MapController Generate(LevelSize levelSize, int colorsCount)
+    public MapController Generate(LevelSize levelSize, int colorsCount, string name)
     {
       var field = _yiotroMapGenerator.GenerateMap(new System.Random(Environment.TickCount), levelSize, colorsCount);
 
@@ -36,7 +36,7 @@ namespace Client.Project.Map
         InitialPlayers = players,
         Players = players.Select(x => x.Copy()).ToList(),
         Size = size,
-        Name = "Skirmish"
+        Name = name
       });
     }
 
@@ -48,6 +48,8 @@ namespace Client.Project.Map
         Size = _yiotroMapGenerator.GetFieldSize(levelSize)
       });
     }
+
+    public LevelSize GetLevelSize(Vector2Int fieldSize) => _yiotroMapGenerator.GetLevelSize(fieldSize);
 
     private CellData?[,] CreateCells(Yiotro.Hex[][] field, Vector2Int size)
     {

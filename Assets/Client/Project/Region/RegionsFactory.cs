@@ -45,8 +45,8 @@ namespace Client.Project.Region
 
     public void Destroy(RegionController instance)
     {
-      _regions.Remove(instance);
       instance.Clear();
+      _regions.Remove(instance);
       _pool.Release(instance);
       _governmentsService.RemoveRegion(instance);
     }

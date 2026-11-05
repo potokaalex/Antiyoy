@@ -39,6 +39,20 @@ namespace Client.Project.Map.Yiotro
       }
     }
 
+    public LevelSize GetLevelSize(Vector2Int fieldSize)
+    {
+      if (fieldSize == new Vector2Int(14, 24))
+        return LevelSize.Small;
+      if (fieldSize == new Vector2Int(28, 24)) 
+        return LevelSize.Medium;
+      if (fieldSize == new Vector2Int(28, 48)) 
+        return LevelSize.Big;
+      if (fieldSize == new Vector2Int(42, 72)) 
+        return LevelSize.Huge;
+
+      throw new Exception($"Cant find levelSize for fieldSize: {fieldSize}");
+    }
+
     protected override void DecreaseProvince(List<Hex> provinceList, double power)
     {
       var num = (int)(power * provinceList.Count);

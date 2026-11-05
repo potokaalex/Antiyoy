@@ -69,12 +69,8 @@ namespace Client.Project
 
     public void DestroyCell(HexCoordinates position)
     {
-      if (GetCell(position, out var cell))
-      {
-        _cells[GetCellIndex(cell.Position)] = null;
-        cell.Dispose();
-        _tilemapController.DestroyTile(position);
-      }
+      if (GetCell(position, out var cell)) 
+        DestroyCell(cell);
     }
 
     public bool IsPositionInGrid(HexCoordinates position)
@@ -92,6 +88,12 @@ namespace Client.Project
       if (createTile)
         _tilemapController.CreateTile(position);
       return cell;
+    }
+
+    public void DestroyAllCells()
+    {
+      foreach (var cell in _cells) 
+        DestroyCell(cell);
     }
 
     private int GetCellIndex(HexCoordinates position) => MathUtilities.ToArrayIndex(position.ToArray2DIndex(), Size.x);
@@ -114,6 +116,16 @@ namespace Client.Project
 
       _background.position = position;
       _background.localScale = scale;
+    }
+
+    private void DestroyCell(CellController cell)
+    {
+      if (cell != null)
+      {
+        _cells[GetCellIndex(cell.Position)] = null;
+        cell.Dispose();
+        _tilemapController.DestroyTile(cell.Position);
+      }
     }
   }
 }

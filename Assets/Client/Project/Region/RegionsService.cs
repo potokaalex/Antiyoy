@@ -64,8 +64,11 @@ namespace Client.Project.Region
     public void RemoveFromRegion(CellController cell)
     {
       var region = cell.Region;
-      RemoveCell(region, cell);
-      TryDivideRegion(region);
+      if (region != null)
+      {
+        RemoveCell(region, cell);
+        TryDivideRegion(region);
+      }
     }
 
     public void AddToBestNeighbourRegion(RegionType type, CellController cell)

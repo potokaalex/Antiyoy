@@ -63,16 +63,11 @@ namespace Client.MapEditor
 
     public void Start()
     {
-      var map = _mapsService.StartMap;
-      _gridController.InitialCreateCells(map);
-      _unitsService.InitialCreateUnits(map);
-      _regionsService.InitialCreateRegions(map);
-      _capitalsController.RemoveDoubleCapitals();
+      LoadMap();
       _cameraController.Setup();
       _regionsService.AddMoneyWhenJoin = false;
       _regionsService.RegionInitialMoney = 10;
 
-      _bordersService.ViewRegionsBorders();
       _mapEditorUI.PlayShow();
       MoveMode();
 
@@ -138,14 +133,20 @@ namespace Client.MapEditor
 
     public void RegionsMode() => SelectMode(_regionsModeHandler);
 
-    public void Clear()
+    public void ClearMap()
     {
-      //удаление всех клеток и регионов. 
+      _unitsService.Clear();
+      _regionsService.Clear();
+      _gridController.DestroyAllCells();
+      _bordersService.ViewRegionsBorders();
     }
 
     public void GenerateRandomMap()
     {
-      //удаление всех клеток и регионов, создание новой карты.
+      ClearMap();
+      var levelSize = _mapsService.GetLevelSize(_mapsService.StartMap.Size);
+      _mapsService.GenerateStartMap(levelSize, GetFractionsCount(levelSize), "Editor");
+      LoadMap();
     }
 
     private void End()
@@ -153,8 +154,7 @@ namespace Client.MapEditor
       _started = false;
       _regionsService.OnBeforeJoinRegions -= OnBeforeJoinRegions;
       _regionsService.OnBeforeRegionAddCell -= OnBeforeRegionAddCell;
-      _unitsService.Clear();
-      _regionsService.Clear();
+      ClearMap();
       _mapEditorUI.Clear();
       ClearCurrentMode();
     }
@@ -182,6 +182,29 @@ namespace Client.MapEditor
     {
       if (_capitalsController.HasCapital(region) && cell.HasUnit && cell.Unit.Type == UnitType.Capital)
         _unitsService.Destroy(cell.Unit);
+    }
+
+    private void LoadMap()
+    {
+      var map = _mapsService.StartMap;
+      _gridController.InitialCreateCells(map);
+      _unitsService.InitialCreateUnits(map);
+      _regionsService.InitialCreateRegions(map);
+      _capitalsController.InitialCheckCapitals();
+      _bordersService.ViewRegionsBorders();
+    }
+
+    private int GetFractionsCount(LevelSize levelSize)
+    {
+      var fractionsCount = levelSize switch
+      {
+        LevelSize.Small => 3,
+        LevelSize.Medium => 5,
+        LevelSize.Big => 7,
+        LevelSize.Huge => 10,
+        _ => throw new ArgumentOutOfRangeException()
+      };
+      return fractionsCount;
     }
   }
 }

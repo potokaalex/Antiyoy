@@ -16,7 +16,7 @@ namespace Client.Project.Unit.Code.Capital
       _regionsService = Locator.Get<RegionsService>();
     }
 
-    public void RemoveDoubleCapitals()
+    public void InitialCheckCapitals()
     {
       foreach (var region in _regionsService.Regions)
       {
@@ -30,6 +30,8 @@ namespace Client.Project.Unit.Code.Capital
               _unitsService.Destroy(cellUnit);
           }
         }
+        else if (region.IsAlive)
+          CreateCapital(region);
       }
     }
 

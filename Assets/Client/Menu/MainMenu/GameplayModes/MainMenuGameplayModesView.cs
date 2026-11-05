@@ -74,7 +74,7 @@ namespace Client.Menu.MainMenu.GameplayModes
 
     private void OnStartClick()
     {
-      _mapsService.GenerateStartMap((LevelSize)_mapSize.Value, _colors.Value + 2);
+      _mapsService.GenerateStartMap((LevelSize)_mapSize.Value, _colors.Value + 2, "Skirmish");
       _projectController.LoadGameplay();
       _menuAnimator.PlayHide();
       _topAndBottomMenuAnimator.PlayHide();
