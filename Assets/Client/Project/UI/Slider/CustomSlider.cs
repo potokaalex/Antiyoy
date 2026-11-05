@@ -30,6 +30,8 @@ namespace Client.Project.UI.Slider
       }
     }
 
+    public string ValueName { get => _currentValueName.text; set => _currentValueName.SetText(value); }
+
     private void OnValidate() => _recalculateRequest = true;
 
     private void Awake()
@@ -55,6 +57,8 @@ namespace Client.Project.UI.Slider
         _recalculateRequest = false;
       }
     }
+
+    public void SetValueWithoutNotify(float value) => _slider.SetValueWithoutNotify(value);
 
     private void SliderOnValueChanged(float value)
     {

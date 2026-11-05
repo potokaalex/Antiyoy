@@ -1,5 +1,6 @@
 using Client.Menu;
 using Client.Project.Infrastructure;
+using Client.Project.Region;
 using UnityEngine;
 
 namespace Client.MapEditor.UI
@@ -22,5 +23,7 @@ namespace Client.MapEditor.UI
     public void Clear() => _view.Clear();
 
     public void HideCurrentPanel() => _view.HideCurrentPanel();
+
+    public void ShowRegionSettings(RegionController region) => _view.ShowRegionSettings(region);
   }
 }

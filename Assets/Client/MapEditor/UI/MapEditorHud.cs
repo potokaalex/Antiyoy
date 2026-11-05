@@ -20,7 +20,6 @@ namespace Client.MapEditor.UI
     [SerializeField] private MapEditorCellsPanelView _cellsPanelView;
     [SerializeField] private MapEditorUnitsPanelView _unitsPanelView;
     [SerializeField] private MapEditorSettingsPanelView _settingsPanelView;
-    [SerializeField] private MapEditorPlayerColorsView _playerColorsView;
     private MapEditorUI _mapEditorUI;
     private MapEditorController _mapEditorController;
     private IMapEditorHudPanelView _currentPanelView;
@@ -62,8 +61,6 @@ namespace Client.MapEditor.UI
     }
 
     public void Clear() => HideCurrentPanel();
-
-    public void ShowPlayerColorsView() => _playerColorsView.Show();
 
     public void HideCurrentPanel()
     {
@@ -109,6 +106,7 @@ namespace Client.MapEditor.UI
     private void OnRegionSettingsButtonClick()
     {
       HideCurrentPanel();
+      _mapEditorController.RegionsMode();
     }
 
     private void OnSettingsButtonClick() => SelectPanel(_settingsPanelView);

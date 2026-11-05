@@ -17,6 +17,7 @@ namespace Client.MapEditor
     private readonly MapEditorMoveModeHandler _moveModeHandler = new();
     private readonly MapEditorCellsModeHandler _cellsModeHandler = new();
     private readonly MapEditorUnitsModeHandler _unitsModeHandler = new();
+    private readonly MapEditorRegionsModeHandler _regionsModeHandler = new();
     private MapsService _mapsService;
     private GridController _gridController;
     private UnitsService _unitsService;
@@ -50,6 +51,8 @@ namespace Client.MapEditor
       _regionsService.InitialCreateRegions(map);
       _capitalsController.RemoveDoubleCapitals();
       _cameraController.Setup();
+      _regionsService.AddMoneyWhenJoin = false;
+      _regionsService.RegionInitialMoney = 10;
 
       _bordersService.ViewRegionsBorders();
       _mapEditorUI.PlayShow();
@@ -115,6 +118,8 @@ namespace Client.MapEditor
       SelectMode(_unitsModeHandler);
     }
 
+    public void RegionsMode() => SelectMode(_regionsModeHandler);
+
     private void End()
     {
       _started = false;
@@ -147,7 +152,7 @@ namespace Client.MapEditor
 
     private void OnBeforeRegionAddCell(RegionController region, CellController cell)
     {
-      if (_capitalsController.HasCapital(region) && cell.HasUnit && cell.Unit.Type == UnitType.Capital) 
+      if (_capitalsController.HasCapital(region) && cell.HasUnit && cell.Unit.Type == UnitType.Capital)
         _unitsService.Destroy(cell.Unit);
     }
   }

@@ -30,6 +30,10 @@ namespace Client.Project.Region
 
     public IReadOnlyList<RegionController> Regions => _regionsFactory.ActiveRegions;
 
+    public bool AddMoneyWhenJoin { get; set; } = true;
+
+    public int RegionInitialMoney { get; set; }
+
     public void Initialize()
     {
       _gridController = Locator.Get<GridController>();
@@ -45,8 +49,7 @@ namespace Client.Project.Region
         var cells = new List<CellController>();
         foreach (var cell in region.Cells)
           cells.Add(_gridController.GetCell(cell.Position));
-        var newRegion = _regionsFactory.Create(cells, AddCell, region.Type);
-        newRegion.Money = region.Money;
+        _regionsFactory.Create(cells, AddCell, region.Type, region.Money);
       }
     }
 
@@ -54,6 +57,8 @@ namespace Client.Project.Region
     {
       for (var i = Regions.Count - 1; i >= 0; i--)
         _regionsFactory.Destroy(Regions[i]);
+      AddMoneyWhenJoin = true;
+      RegionInitialMoney = 0;
     }
 
     public void RemoveFromRegion(CellController cell)
@@ -74,7 +79,7 @@ namespace Client.Project.Region
       if (region != null)
         AddCell(region, cell);
       else
-        _regionsFactory.Create(cell, AddCell, type);
+        _regionsFactory.Create(cell, AddCell, type, RegionInitialMoney);
 
       TryJoinRegions(cell.Position, type);
       _bordersService.ViewRegionsBorders();
@@ -176,7 +181,8 @@ namespace Client.Project.Region
       {
         var region = regions[i];
         OnBeforeJoinRegions?.Invoke(mainRegion, region);
-        mainRegion.Money += region.Money;
+        if (AddMoneyWhenJoin)
+          mainRegion.Money += region.Money;
 
         while (region.Cells.Count > 0)
         {
@@ -194,7 +200,7 @@ namespace Client.Project.Region
         foreach (var cell in regionParts.Items[i])
           RemoveCell(region, cell);
 
-        _regionsFactory.Create(regionParts.Items[i], AddCell, region.Type);
+        _regionsFactory.Create(regionParts.Items[i], AddCell, region.Type, RegionInitialMoney);
       }
     }
 
