@@ -1,3 +1,4 @@
+using Client.MapEditor.UI.AgreeView;
 using Client.Menu;
 using Client.Project.Infrastructure;
 using Client.Project.Region;
@@ -25,5 +26,7 @@ namespace Client.MapEditor.UI
     public void HideCurrentPanel() => _view.HideCurrentPanel();
 
     public void ShowRegionSettings(RegionController region) => _view.ShowRegionSettings(region);
+
+    public void ShowAgreeView(MapEditorAgreeViewParameters parameters) => _view.ShowAgreeView(parameters);
   }
 }

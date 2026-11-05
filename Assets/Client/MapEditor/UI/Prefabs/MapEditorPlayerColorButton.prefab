@@ -143,3 +143,15 @@ MonoBehaviour:
   _randomRegionType: 0
   _regionType: 0
   _image: {fileID: 5476182677492781679}
+  _button: {fileID: 6163643975041690210}
+--- !u!114 &6163643975041690210 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6131823070450448137, guid: 10651db774aae314598754fca26fc5a3, type: 3}
+  m_PrefabInstance: {fileID: 40872221805665643}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5529963617861600172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44c6a04895734ff5a5a8cc48379dfb38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::Client.Utilities.CustomButton

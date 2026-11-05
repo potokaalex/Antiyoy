@@ -1,3 +1,4 @@
+using System;
 using Client.MapEditor.Mode;
 using Client.MapEditor.UI;
 using Client.Menu.MainMenu;
@@ -29,6 +30,23 @@ namespace Client.MapEditor
     private CapitalsController _capitalsController;
     private bool _started;
     private IMapEditorModeHandler _currentModeHandler;
+    private MapEditorPlayerRegionType _playerRegionType = new(RegionType.Lime);
+
+    public int PlayersValue { get; set; } = 1;
+
+    public int DifficultyValue { get; set; } = 4;
+
+    public event Action OnPlayerRegionTypeChanged;
+
+    public MapEditorPlayerRegionType PlayerRegionType
+    {
+      get => _playerRegionType;
+      set
+      {
+        _playerRegionType = value;
+        OnPlayerRegionTypeChanged?.Invoke();
+      }
+    }
 
     public void Initialize()
     {
@@ -119,6 +137,16 @@ namespace Client.MapEditor
     }
 
     public void RegionsMode() => SelectMode(_regionsModeHandler);
+
+    public void Clear()
+    {
+      //удаление всех клеток и регионов. 
+    }
+
+    public void GenerateRandomMap()
+    {
+      //удаление всех клеток и регионов, создание новой карты.
+    }
 
     private void End()
     {

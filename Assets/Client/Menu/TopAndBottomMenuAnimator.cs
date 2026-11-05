@@ -49,7 +49,8 @@ namespace Client.Menu
       _bottomPanel.anchoredPosition = _bottomPanelEndPosition;
 
       _root.gameObject.SetActive(false);
-      _canvasGroup.alpha = 0;
+      if(_canvasGroup)
+        _canvasGroup.alpha = 0;
     }
 
     private void OnDestroy() => DOTween.Kill(this);
@@ -70,8 +71,10 @@ namespace Client.Menu
         sequence.Join(_topPanel.DOAnchorPos(topPosition, 0.5f / SpeedFactor));
       sequence.Join(_bottomPanel.DOAnchorPos(bottomPosition, 0.5f / SpeedFactor));
 
-      sequence.Join(_canvasGroup.DOFade(alpha, 0.35f / SpeedFactor))
-        .JoinCallback(() => _inputController.SetBlockInput(true))
+      if (_canvasGroup)
+        sequence.Join(_canvasGroup.DOFade(alpha, 0.35f / SpeedFactor));
+
+      sequence.JoinCallback(() => _inputController.SetBlockInput(true))
         .AddOnComplete(() => _inputController.SetBlockInput(false))
         .SetEase(AnimationsUtilities.MenuDefaultEase)
         .SetId(this);
