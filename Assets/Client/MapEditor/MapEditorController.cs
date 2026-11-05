@@ -5,6 +5,7 @@ using Client.Menu.MainMenu;
 using Client.Project;
 using Client.Project.Borders;
 using Client.Project.CameraFeatures;
+using Client.Project.Government;
 using Client.Project.Infrastructure;
 using Client.Project.Map;
 using Client.Project.Project;
@@ -31,11 +32,12 @@ namespace Client.MapEditor
     private MapEditorUI _mapEditorUI;
     private MainMenuView _mainMenuView;
     private CapitalsController _capitalsController;
-    private bool _started;
+    private ProjectController _projectController;
+    private GovernmentsService _governmentsService;
     private IMapEditorModeHandler _currentModeHandler;
     private MapEditorPlayerRegionType _playerRegionType;
-    private ProjectController _projectController;
-    private float _timeToSave = 10f;
+    private float _timeToSave;
+    private bool _started;
 
     public int PlayersValue { get; set; }
 
@@ -65,6 +67,7 @@ namespace Client.MapEditor
       _mainMenuView = Locator.Get<MainMenuView>();
       _capitalsController = Locator.Get<CapitalsController>();
       _projectController = Locator.Get<ProjectController>();
+      _governmentsService = Locator.Get<GovernmentsService>();
     }
 
     public void Start()
@@ -167,6 +170,7 @@ namespace Client.MapEditor
       _regionsService.Clear();
       _gridController.DestroyAllCells();
       _bordersService.ViewRegionsBorders();
+      _governmentsService.Clear();
     }
 
     public void GenerateRandomMap()
@@ -247,8 +251,11 @@ namespace Client.MapEditor
 
     private void SaveMap()
     {
-      if(!MapEmpty()) 
+      if(!MapEmpty())
+      {
+        _governmentsService.ClearEmpty();
         _mapsService.SaveCurrentEditorMap();
+      }
     }
 
     private bool MapEmpty()

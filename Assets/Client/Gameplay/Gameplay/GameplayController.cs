@@ -94,7 +94,7 @@ namespace Client.Gameplay.Gameplay
 
     public void Tick()
     {
-      if (!Started)
+      if (!Started || !HasPlayers())
         return;
 
       _currentPlayer.Tick();
@@ -102,6 +102,9 @@ namespace Client.Gameplay.Gameplay
 
     public void NextTurn()
     {
+      if (!HasPlayers())
+        return;
+
       _currentPlayer.EndTurn();
 
       if (CheckWin())
@@ -121,7 +124,8 @@ namespace Client.Gameplay.Gameplay
 
     public void Pause()
     {
-      _currentPlayer.Pause();
+      if (HasPlayers())
+        _currentPlayer.Pause();
       _gameplayUI.ShowPause();
     }
 
@@ -153,7 +157,11 @@ namespace Client.Gameplay.Gameplay
       //_debugController.Clear();
     }
 
-    private void SetFirstPlayer() => SetCurrentPlayer(_players[0]);
+    private void SetFirstPlayer()
+    {
+      if (HasPlayers())
+        SetCurrentPlayer(_players[0]);
+    }
 
     private void SetCurrentPlayer(PlayerController playerController)
     {
@@ -211,5 +219,7 @@ namespace Client.Gameplay.Gameplay
 
       return false;
     }
+
+    private bool HasPlayers() => _players.Count > 0;
   }
 }

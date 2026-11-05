@@ -8135,6 +8135,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 4161380294023232992, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
+      propertyPath: _hardFadeAnimation
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7866581061948486584, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
       propertyPath: m_text
       value: Export
@@ -13111,6 +13115,10 @@ PrefabInstance:
     - target: {fileID: 3185197312950019340, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4161380294023232992, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
+      propertyPath: _hardFadeAnimation
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7866581061948486584, guid: 1c69e91ac56bcca4d9debb0caba49914, type: 3}
       propertyPath: m_text
