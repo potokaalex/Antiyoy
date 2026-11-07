@@ -192,6 +192,11 @@ namespace Client.MapEditor
       return true;
     }
 
+    public void Export()
+    {
+      new _T.EncodeManager().Encode();
+    }
+
     private void End()
     {
       _started = false;

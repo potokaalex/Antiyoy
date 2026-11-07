@@ -19,7 +19,8 @@ namespace Client._T
     private readonly GridController _gridController;
     private readonly UnitsService _unitsService;
     private readonly RegionsService _regionsService;
-    private StringBuilder _builder;
+    private readonly StringBuilder _builder = new();
+    private bool _isHuge;
 
     public EncodeManager()
     {
@@ -32,15 +33,15 @@ namespace Client._T
 
     public void Encode()
     {
-      _builder = new StringBuilder();
-      var levelSize = _mapsService.GetLevelSize(_mapsService.StartMap.Size);
+      _builder.Clear();
+      _isHuge = _gridController.LevelSize == LevelSize.Huge;
       AddWatermark();
-      EncodeLevelSize(levelSize);
+      EncodeLevelSize();
       EncodeGeneralInfo();
       EncodeMapName();
       EncodeEditorInfo();
-      EncodeLand(levelSize);
-      EncodeUnits(levelSize);
+      EncodeLand();
+      EncodeUnits();
       EncodeProvinces();
       EncodeRelations();
       EncodeCoalitions();
@@ -56,53 +57,29 @@ namespace Client._T
     {
       StartSection("coalitions");
       _builder.Append("temporary");
-      //_builder.append(gameController.levelEditorManager.coalitionsManager.encode());
     }
 
-    private void EncodeRealMoney()
-    {
-      StartSection("real_money");
-      /*for (Province province : fieldManager.provinces)
-      {
-        Hex capital = province.getCapital();
-        _builder.Append(capital.index1)
-          .Append(" ")
-          .Append(capital.index2)
-          .Append(" ")
-          .Append(province.money)
-          .Append(",");
-      }*/
-    }
+    private void EncodeRealMoney() => StartSection("real_money");
 
     private void EncodeGoal()
     {
       StartSection("goal");
-      _builder.Append("def 0"); //_builder.append(gameController.finishGameManager.encode());
+      _builder.Append("def 0");
     }
 
-    private void EncodeMessages()
-    {
-      StartSection("messages");
-      //_builder.append(gameController.messagesManager.encode());
-    }
+    private void EncodeMessages() => StartSection("messages");
 
-    private void EncodeRelations()
-    {
-      StartSection("relations");
-      //_builder.append(gameController.levelEditorManager.editorRelationsManager.encode());
-    }
+    private void EncodeRelations() => StartSection("relations");
 
     private void EncodeProvinces()
     {
       StartSection("provinces");
-      //_builder.append(gameController.levelEditorManager.editorProvinceManager.encode());
 
       for (var i = 0; i < _regionsService.Regions.Count; i++)
       {
         var region = _regionsService.Regions[i];
-        var firstCellIndex = region.Cells[0].Position.ToArray2DIndex();
-        _builder.Append(firstCellIndex.x).Append("@").Append(firstCellIndex.y).Append("@").Append(i).Append("@").Append(i).Append("@")
-          .Append(region.Money).Append(",");
+        var index = EncodePosition(region.Cells[0].Position);
+        _builder.Append(index.x).Append("@").Append(index.y).Append("@").Append(i).Append("@").Append(i).Append("@").Append(region.Money).Append(",");
       }
     }
 
@@ -111,13 +88,6 @@ namespace Client._T
       StartSection("map_name");
       _builder.Append(_mapsService.StartMap.Name);
     }
-
-    /*
-    private Preferences getPreferences()
-    {
-      return Gdx.app.getPreferences(EditorSaveSystem.EDITOR_PREFS);
-    }
-    */
 
     private void EncodeEditorInfo()
     {
@@ -128,17 +98,14 @@ namespace Client._T
       _builder.Append(false).Append(" ");
     }
 
-    private void EncodeUnits(LevelSize levelSize)
+    private void EncodeUnits()
     {
       StartSection("units");
       foreach (var unit in _unitsService.Units)
       {
         if (unit.Type.IsWarrior())
         {
-          if (!CanEncodePosition(unit.Cell.Position, levelSize == LevelSize.Huge))
-            continue;
-
-          var index = EncodePosition(unit.Cell.Position, levelSize == LevelSize.Huge);
+          var index = EncodePosition(unit.Cell.Position);
           var strength = unit.Type switch
           {
             UnitType.Peasant => 1,
@@ -152,18 +119,12 @@ namespace Client._T
       }
     }
 
-    private void EncodeLand(LevelSize levelSize)
+    private void EncodeLand()
     {
       StartSection("land");
 
       foreach (var cell in _gridController.GetAllCells())
       {
-        if (!CanEncodePosition(cell.Position, levelSize == LevelSize.Huge))
-        {
-          UnityEngine.Debug.Log(EncodePosition(cell.Position, levelSize == LevelSize.Huge));
-          continue;
-        }
-
         var objectInside = 0;
         if (cell.HasUnit)
         {
@@ -196,7 +157,7 @@ namespace Client._T
           _ => throw new ArgumentOutOfRangeException()
         };
 
-        var index = EncodePosition(cell.Position, levelSize == LevelSize.Huge);
+        var index = EncodePosition(cell.Position);
         _builder.Append(index.x).Append(" ").Append(index.y).Append(" ").Append(fraction).Append(" ").Append(objectInside).Append(",");
       }
     }
@@ -207,13 +168,14 @@ namespace Client._T
       StartSection("general");
       _builder.Append(1).Append(" "); //_builder.Append(GameRules.difficulty).Append(" ");
       _builder.Append(1).Append(" "); //_builder.Append(gameController.playersNumber).append(" ");
-      _builder.Append(_governmentsService.GetAll().Count(x => x.IsAlive)); //_builder.Append(GameRules.fractionsQuantity); или всех непустых?
+      _builder.Append(_governmentsService.GetAll().Count(x => x.Regions.Count > 0 && x.RegionsType != RegionType.Neutral)); 
+      //_builder.Append(GameRules.fractionsQuantity); - заменить текущий подсчёт на сохраненное значение.
     }
 
-    private void EncodeLevelSize(LevelSize levelSize)
+    private void EncodeLevelSize()
     {
       StartSection("level_size");
-      var value = levelSize switch
+      var value = _gridController.LevelSize switch
       {
         LevelSize.Small => 1,
         LevelSize.Medium => 2,
@@ -228,26 +190,13 @@ namespace Client._T
 
     private void StartSection(string name) => _builder.Append("#").Append(name).Append(":");
 
-    private Vector2Int EncodePosition(HexCoordinates hex, bool huge)
+    private Vector2Int EncodePosition(HexCoordinates hex)
     {
-      var y = hex.Q;
-      var x = hex.R + (hex.Q - (hex.Q & 1)) / 2 - hex.Q / 2;
-
-      x += huge ? 20 : 26;
-      //x += 20; 20 минимально возможное смещение, лучше 26 для обратной совместимости.
-
-      //todo
-      //hex.R + hex.Q / 2 - (hex.Q & 1) / 2 - hex.Q / 2
-      //hex.R + hex.Q / 2 - hex.Q / 2
-      //hex.R
-
-      return new Vector2Int(x, y);
-    }
-
-    private bool CanEncodePosition(HexCoordinates cellPosition, bool huge)
-    {
-      var index = EncodePosition(cellPosition, huge);
-      return index.x >= 0 && index.x <= 84 && index.y >= 0 && index.y <= 54;
+      return new Vector2Int
+      {
+        x = hex.R + (_isHuge ? 20 : 26),
+        y = hex.Q
+      };
     }
   }
 }

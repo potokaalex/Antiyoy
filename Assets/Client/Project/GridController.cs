@@ -14,14 +14,22 @@ namespace Client.Project
     [SerializeField] private Transform _background;
     private CellController[] _cells;
     private TilemapController _tilemapController;
+    private MapsService _mapsService;
 
     public Vector2Int Size { get; private set; }
 
-    public void Initialize() => _tilemapController = Locator.Get<TilemapController>();
+    public LevelSize LevelSize { get; private set; }
+
+    public void Initialize()
+    {
+      _tilemapController = Locator.Get<TilemapController>();
+      _mapsService = Locator.Get<MapsService>();
+    }
 
     public void InitialCreateCells(MapController map)
     {
       Size = map.Size;
+      LevelSize = _mapsService.GetLevelSize(Size);
       _cells = new CellController[Size.x * Size.y];
 
       foreach (var cell in map.GetCells())
