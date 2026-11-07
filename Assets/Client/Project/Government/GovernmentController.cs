@@ -9,7 +9,7 @@ namespace Client.Project.Government
 
     public IReadOnlyList<RegionController> Regions => _regions;
 
-    public RegionType RegionsType => _regions[0].Type;
+    public RegionType RegionsType { get; private set; }
 
     public bool IsAlive
     {
@@ -21,6 +21,8 @@ namespace Client.Project.Government
         return false;
       }
     }
+
+    public GovernmentController(RegionType regionType) => RegionsType = regionType;
 
     public void AddRegion(RegionController region) => _regions.Add(region);
 

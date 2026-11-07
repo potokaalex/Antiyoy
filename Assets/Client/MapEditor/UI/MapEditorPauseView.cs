@@ -1,3 +1,4 @@
+using Client._T;
 using Client.Menu;
 using Client.Project;
 using Client.Project.Infrastructure;
@@ -60,7 +61,7 @@ namespace Client.MapEditor.UI
 
     private void OnExportClick()
     {
-      
+      new EncodeManager().Encode();
     }
 
     private void OnMainMenuClick()

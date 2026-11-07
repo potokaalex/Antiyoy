@@ -11,7 +11,7 @@ namespace Client.Project.Government
     public void AddRegion(RegionController region)
     {
       if (!_governments.TryGetValue(region.Type, out var government))
-        government = _governments[region.Type] = new GovernmentController();
+        government = _governments[region.Type] = new GovernmentController(region.Type);
       government.AddRegion(region);
     }
 
