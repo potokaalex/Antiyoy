@@ -33,14 +33,14 @@ namespace Client._T
     public void Encode()
     {
       _builder = new StringBuilder();
-
+      var levelSize = _mapsService.GetLevelSize(_mapsService.StartMap.Size);
       AddWatermark();
-      EncodeLevelSize();
+      EncodeLevelSize(levelSize);
       EncodeGeneralInfo();
       EncodeMapName();
       EncodeEditorInfo();
-      EncodeLand();
-      EncodeUnits();
+      EncodeLand(levelSize);
+      EncodeUnits(levelSize);
       EncodeProvinces();
       EncodeRelations();
       EncodeCoalitions();
@@ -128,17 +128,17 @@ namespace Client._T
       _builder.Append(false).Append(" ");
     }
 
-    private void EncodeUnits()
+    private void EncodeUnits(LevelSize levelSize)
     {
       StartSection("units");
       foreach (var unit in _unitsService.Units)
       {
         if (unit.Type.IsWarrior())
         {
-          if (!CanEncodePosition(unit.Cell.Position))
+          if (!CanEncodePosition(unit.Cell.Position, levelSize == LevelSize.Huge))
             continue;
 
-          var index = EncodePosition(unit.Cell.Position);
+          var index = EncodePosition(unit.Cell.Position, levelSize == LevelSize.Huge);
           var strength = unit.Type switch
           {
             UnitType.Peasant => 1,
@@ -152,14 +152,17 @@ namespace Client._T
       }
     }
 
-    private void EncodeLand()
+    private void EncodeLand(LevelSize levelSize)
     {
       StartSection("land");
 
       foreach (var cell in _gridController.GetAllCells())
       {
-        if (!CanEncodePosition(cell.Position))
+        if (!CanEncodePosition(cell.Position, levelSize == LevelSize.Huge))
+        {
+          UnityEngine.Debug.Log(EncodePosition(cell.Position, levelSize == LevelSize.Huge));
           continue;
+        }
 
         var objectInside = 0;
         if (cell.HasUnit)
@@ -193,7 +196,7 @@ namespace Client._T
           _ => throw new ArgumentOutOfRangeException()
         };
 
-        var index = EncodePosition(cell.Position);
+        var index = EncodePosition(cell.Position, levelSize == LevelSize.Huge);
         _builder.Append(index.x).Append(" ").Append(index.y).Append(" ").Append(fraction).Append(" ").Append(objectInside).Append(",");
       }
     }
@@ -207,10 +210,10 @@ namespace Client._T
       _builder.Append(_governmentsService.GetAll().Count(x => x.IsAlive)); //_builder.Append(GameRules.fractionsQuantity); или всех непустых?
     }
 
-    private void EncodeLevelSize()
+    private void EncodeLevelSize(LevelSize levelSize)
     {
       StartSection("level_size");
-      var value = _mapsService.GetLevelSize(_mapsService.StartMap.Size) switch
+      var value = levelSize switch
       {
         LevelSize.Small => 1,
         LevelSize.Medium => 2,
@@ -225,12 +228,13 @@ namespace Client._T
 
     private void StartSection(string name) => _builder.Append("#").Append(name).Append(":");
 
-    private Vector2Int EncodePosition(HexCoordinates hex)
+    private Vector2Int EncodePosition(HexCoordinates hex, bool huge)
     {
       var y = hex.Q;
       var x = hex.R + (hex.Q - (hex.Q & 1)) / 2 - hex.Q / 2;
 
-      x += 26;
+      x += huge ? 20 : 26;
+      //x += 20; 20 минимально возможное смещение, лучше 26 для обратной совместимости.
 
       //todo
       //hex.R + hex.Q / 2 - (hex.Q & 1) / 2 - hex.Q / 2
@@ -240,9 +244,9 @@ namespace Client._T
       return new Vector2Int(x, y);
     }
 
-    private bool CanEncodePosition(HexCoordinates cellPosition)
+    private bool CanEncodePosition(HexCoordinates cellPosition, bool huge)
     {
-      var index = EncodePosition(cellPosition);
+      var index = EncodePosition(cellPosition, huge);
       return index.x >= 0 && index.x <= 84 && index.y >= 0 && index.y <= 54;
     }
   }

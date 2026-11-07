@@ -33,7 +33,7 @@ namespace Client.Project.Map.Yiotro
         case LevelSize.Big:
           return new Vector2Int(28, 48);
         case LevelSize.Huge:
-          return new Vector2Int(42, 72);
+          return new Vector2Int(42, 65);
         default:
           throw new ArgumentOutOfRangeException(nameof(levelSize), levelSize, null);
       }
@@ -47,7 +47,7 @@ namespace Client.Project.Map.Yiotro
         return LevelSize.Medium;
       if (fieldSize == new Vector2Int(28, 48)) 
         return LevelSize.Big;
-      if (fieldSize == new Vector2Int(42, 72)) 
+      if (fieldSize == new Vector2Int(42, 65)) 
         return LevelSize.Huge;
 
       throw new Exception($"Cant find levelSize for fieldSize: {fieldSize}");
