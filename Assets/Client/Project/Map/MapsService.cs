@@ -40,6 +40,9 @@ namespace Client.Project.Map
 
     public void GenerateEmptyStartMap(LevelSize levelSize, string name) => StartMap = _mapGenerator.GenerateEmpty(levelSize, name);
 
+    public void GenerateStartMapFromCopyBuffer() =>
+      StartMap = new MapController(new _T.DecodeManager().Perform(GUIUtility.systemCopyBuffer));
+
     public void SetStartMap(MapController map) => StartMap = map;
 
     public void RenameMap(MapController map, string name)
@@ -91,6 +94,8 @@ namespace Client.Project.Map
     }
 
     public void RestartStartMap() => StartMap = StartMap.RestartCopy();
+
+    public Vector2Int GetFieldSize(LevelSize levelSize) => _mapGenerator.GetFieldSize(levelSize);
 
     public LevelSize GetLevelSize(Vector2Int mapSize) => _mapGenerator.GetLevelSize(mapSize);
 

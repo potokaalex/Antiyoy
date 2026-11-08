@@ -27,7 +27,7 @@ namespace Client.Project.Map
       _allPlayerRegions.Shuffle();
       var size = new Vector2Int(field.Length, field[0].Length);
       var cells = CreateCells(field, size);
-      var regions = CreateRegions(cells, size);
+      var regions = CreateRegions(cells, size, 10);
       CreateCapitals(regions);
       var players = CreatePlayers(regions);
 
@@ -51,6 +51,86 @@ namespace Client.Project.Map
     }
 
     public LevelSize GetLevelSize(Vector2Int fieldSize) => _yiotroMapGenerator.GetLevelSize(fieldSize);
+
+    public Vector2Int GetFieldSize(LevelSize levelSize) => _yiotroMapGenerator.GetFieldSize(levelSize);
+
+    public List<RegionData> CreateRegions(CellData?[,] cells, Vector2Int size, int initialMoney)
+    {
+      var newRegions = new List<RegionData>();
+      _passedBuffer.Clear();
+      _frontBuffer.Clear();
+
+      foreach (var rootCellNull in cells)
+      {
+        if (!rootCellNull.HasValue)
+          continue;
+
+        var rootCell = rootCellNull.Value;
+
+        if (_passedBuffer.Contains(rootCell))
+          continue;
+
+        var newRegion = new RegionData
+        {
+          Cells = new List<CellData>(),
+          Type = rootCell.RegionType,
+          Money = initialMoney
+        };
+        newRegions.Add(newRegion);
+
+        _frontBuffer.Enqueue(rootCell);
+        _passedBuffer.Add(rootCell);
+        newRegion.Cells.Add(rootCell);
+
+        while (_frontBuffer.Count > 0)
+        {
+          var cell = _frontBuffer.Dequeue();
+
+          foreach (var neighbour in GetNeighbourCells(cells, cell, size))
+          {
+            if (neighbour.RegionType == rootCell.RegionType && !_passedBuffer.Contains(neighbour))
+            {
+              newRegion.Cells.Add(neighbour);
+              _frontBuffer.Enqueue(neighbour);
+              _passedBuffer.Add(neighbour);
+            }
+          }
+        }
+      }
+
+      return newRegions;
+    }
+
+    public List<PlayerData> CreatePlayers(List<RegionData> regions)
+    {
+      var players = new List<PlayerData>();
+
+      while (regions.Count > 0)
+      {
+        var rootRegion = regions[0];
+        regions.RemoveAt(0);
+
+        var player = new PlayerData
+        {
+          Regions = new()
+        };
+
+        players.Add(player);
+        player.Regions.Add(rootRegion);
+
+        for (var i = regions.Count - 1; i >= 0; i--)
+        {
+          var region = regions[i];
+          if (region.Type == rootRegion.Type)
+          {
+            player.Regions.Add(region);
+            regions.RemoveAt(i);
+          }
+        }
+      }
+
+      return players;
+    }
 
     private CellData?[,] CreateCells(Yiotro.Hex[][] field, Vector2Int size)
     {
@@ -110,53 +190,6 @@ namespace Client.Project.Map
       return _allPlayerRegions[fraction];
     }
 
-    private List<RegionData> CreateRegions(CellData?[,] cells, Vector2Int size)
-    {
-      var newRegions = new List<RegionData>();
-      _passedBuffer.Clear();
-      _frontBuffer.Clear();
-
-      foreach (var rootCellNull in cells)
-      {
-        if (!rootCellNull.HasValue)
-          continue;
-
-        var rootCell = rootCellNull.Value;
-
-        if (_passedBuffer.Contains(rootCell))
-          continue;
-
-        var newRegion = new RegionData
-        {
-          Cells = new List<CellData>(),
-          Type = rootCell.RegionType,
-          Money = 10
-        };
-        newRegions.Add(newRegion);
-
-        _frontBuffer.Enqueue(rootCell);
-        _passedBuffer.Add(rootCell);
-        newRegion.Cells.Add(rootCell);
-
-        while (_frontBuffer.Count > 0)
-        {
-          var cell = _frontBuffer.Dequeue();
-
-          foreach (var neighbour in GetNeighbourCells(cells, cell, size))
-          {
-            if (neighbour.RegionType == rootCell.RegionType && !_passedBuffer.Contains(neighbour))
-            {
-              newRegion.Cells.Add(neighbour);
-              _frontBuffer.Enqueue(neighbour);
-              _passedBuffer.Add(neighbour);
-            }
-          }
-        }
-      }
-
-      return newRegions;
-    }
-
     private IEnumerable<CellData> GetNeighbourCells(CellData?[,] cells, CellData cell, Vector2Int size)
     {
       var aroundPosition = cell.Position;
@@ -171,37 +204,6 @@ namespace Client.Project.Map
             yield return item.Value;
         }
       }
-    }
-
-    private List<PlayerData> CreatePlayers(List<RegionData> regions)
-    {
-      var players = new List<PlayerData>();
-
-      while (regions.Count > 0)
-      {
-        var rootRegion = regions[0];
-        regions.RemoveAt(0);
-
-        var player = new PlayerData
-        {
-          Regions = new()
-        };
-
-        players.Add(player);
-        player.Regions.Add(rootRegion);
-
-        for (var i = regions.Count - 1; i >= 0; i--)
-        {
-          var region = regions[i];
-          if (region.Type == rootRegion.Type)
-          {
-            player.Regions.Add(region);
-            regions.RemoveAt(i);
-          }
-        }
-      }
-
-      return players;
     }
 
     private void CreateCapitals(List<RegionData> regions)

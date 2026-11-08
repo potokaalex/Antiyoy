@@ -1,4 +1,3 @@
-using Client.Menu.MainMenu.GameplayModes;
 using Client.Project;
 using Client.Project.Infrastructure;
 using Client.Project.Map;
@@ -103,7 +102,9 @@ namespace Client.Menu.MainMenu.MapEditor
 
     private void OnImportClick()
     {
-      //Todo 
+      _mapsService.GenerateStartMapFromCopyBuffer();
+      _projectController.LoadMapEditor();
+      Hide();
     }
   }
 }

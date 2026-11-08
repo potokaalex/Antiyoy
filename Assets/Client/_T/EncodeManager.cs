@@ -43,11 +43,11 @@ namespace Client._T
       EncodeLand();
       EncodeUnits();
       EncodeProvinces();
-      EncodeRelations();
-      EncodeCoalitions();
-      EncodeMessages();
-      EncodeGoal();
-      EncodeRealMoney();
+      //EncodeRelations();
+      //EncodeCoalitions();
+      //EncodeMessages();
+      //EncodeGoal();
+      //EncodeRealMoney();
 
       _builder.Append("#");
       UnityEngine.Debug.Log(_builder.ToString());
@@ -93,7 +93,6 @@ namespace Client._T
     {
       StartSection("editor_info");
       _builder.Append(1).Append(" "); // _builder.Append(GameRules.editorChosenColor).Append(" "); //? todo
-      _builder.Append(false).Append(" ");
       _builder.Append(false).Append(" ");
       _builder.Append(false).Append(" ");
     }
@@ -167,7 +166,7 @@ namespace Client._T
       //todo
       StartSection("general");
       _builder.Append(1).Append(" "); //_builder.Append(GameRules.difficulty).Append(" ");
-      _builder.Append(1).Append(" "); //_builder.Append(gameController.playersNumber).append(" ");
+      _builder.Append(1).Append(" "); //_builder.Append(gameController.playersNumber).append(" "); вероятно это игроки типа на одном устройстве и боты.
       _builder.Append(_governmentsService.GetAll().Count(x => x.Regions.Count > 0 && x.RegionsType != RegionType.Neutral)); 
       //_builder.Append(GameRules.fractionsQuantity); - заменить текущий подсчёт на сохраненное значение.
     }
