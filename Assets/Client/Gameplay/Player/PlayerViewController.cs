@@ -90,7 +90,11 @@ namespace Client.Gameplay.Player
       ClearUnitSelectionView();
     }
 
-    public void Undo() => _playerController.Undo();
+    public void Undo()
+    {
+      if (_playerController != null)
+        _playerController.Undo();
+    }
 
     public void SetCreateUnitMode(UnitType unitType) => _playerController.SetCreateUnitMode(unitType);
 

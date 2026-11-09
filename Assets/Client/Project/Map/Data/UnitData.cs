@@ -9,6 +9,12 @@ namespace Client.Project.Map.Data
     public UnitType Type;
     public bool HasTurns;
 
+    public UnitData(UnitType type, bool hasTurns = false)
+    {
+      Type = type;
+      HasTurns = hasTurns;
+    }
+
     public bool Equals(UnitData other) => Type == other.Type && HasTurns == other.HasTurns;
 
     public override bool Equals(object obj) => obj is UnitData other && Equals(other);

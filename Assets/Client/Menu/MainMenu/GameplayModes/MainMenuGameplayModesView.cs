@@ -4,6 +4,7 @@ using Client.Project.Map;
 using Client.Project.Progress;
 using Client.Project.Project;
 using Client.Project.UI;
+using Client.Project.UI.Slider;
 using UnityEngine;
 
 namespace Client.Menu.MainMenu.GameplayModes
@@ -14,21 +15,15 @@ namespace Client.Menu.MainMenu.GameplayModes
     [SerializeField] private CustomButton _startButton;
     [SerializeField] private MenuAnimator _menuAnimator;
     [SerializeField] private TopAndBottomMenuAnimator _topAndBottomMenuAnimator;
-    [SerializeField] private GameplayModeSlider _difficulty;
-    [SerializeField] private GameplayModeSlider _mapSize;
-    [SerializeField] private GameplayModeSlider _players;
-    [SerializeField] private GameplayModeSlider _colors;
+    [SerializeField] private CustomSlider _difficulty;
+    [SerializeField] private CustomSlider _mapSize;
+    [SerializeField] private CustomSlider _players;
+    [SerializeField] private CustomSlider _colors;
     private MainMenuView _mainMenuView;
     private InputController _inputController;
     private ProjectController _projectController;
     private ProgressController _progressController;
     private MapsService _mapsService;
-
-    public void Show()
-    {
-      _menuAnimator.PlayShow();
-      _topAndBottomMenuAnimator.PlayShow();
-    }
 
     private void Awake()
     {
@@ -64,6 +59,12 @@ namespace Client.Menu.MainMenu.GameplayModes
         OnBackClick();
     }
 
+    public void Show()
+    {
+      _menuAnimator.PlayShow();
+      _topAndBottomMenuAnimator.PlayShow();
+    }
+
     private void OnBackClick()
     {
       _menuAnimator.PlayHide();
@@ -73,7 +74,7 @@ namespace Client.Menu.MainMenu.GameplayModes
 
     private void OnStartClick()
     {
-      _mapsService.GenerateStartMap((LevelSize)_mapSize.Value, _colors.Value + 2);
+      _mapsService.GenerateStartMap((LevelSize)_mapSize.Value, _colors.Value + 2, "Skirmish");
       _projectController.LoadGameplay();
       _menuAnimator.PlayHide();
       _topAndBottomMenuAnimator.PlayHide();

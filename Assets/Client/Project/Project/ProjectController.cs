@@ -1,4 +1,5 @@
 using Client.Gameplay.Gameplay;
+using Client.MapEditor;
 using Client.Menu.Intro;
 using Client.Project.Infrastructure;
 using UnityEditor;
@@ -9,10 +10,12 @@ namespace Client.Project.Project
   public class ProjectController : IInitializable
   {
     private GameplayController _gameplayController;
+    private MapEditorController _mapEditorController;
 
     public void Initialize()
     {
       _gameplayController = Locator.Get<GameplayController>();
+      _mapEditorController = Locator.Get<MapEditorController>();
       var introView = Locator.Get<IntroView>();
       Application.targetFrameRate = 300;
       QualitySettings.vSyncCount = -1;
@@ -29,5 +32,7 @@ namespace Client.Project.Project
       Application.Quit();
 #endif
     }
+
+    public void LoadMapEditor() => _mapEditorController.Start();
   }
 }

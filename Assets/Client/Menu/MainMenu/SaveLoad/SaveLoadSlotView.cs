@@ -31,7 +31,8 @@ namespace Client.Menu.MainMenu.SaveLoad
       else
       {
         _name.SetText(string.Empty);
-        _dateAndTime.SetText(string.Empty);
+        if (_dateAndTime)
+          _dateAndTime.SetText(string.Empty);
       }
 
       _image.color = color;
@@ -52,7 +53,8 @@ namespace Client.Menu.MainMenu.SaveLoad
     {
       Map = map;
       _name.SetText(map.IsAutosave ? "Autosave" : map.Name);
-      _dateAndTime.SetText(map.CreationTime.ToString("dd.MM.yyyy  HH:mm", CultureInfo.InvariantCulture));
+      if (_dateAndTime)
+        _dateAndTime.SetText(map.CreationTime.ToString("dd.MM.yyyy  HH:mm", CultureInfo.InvariantCulture));
     }
 
     private void OnButtonRelease()

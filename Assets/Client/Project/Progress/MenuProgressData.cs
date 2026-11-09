@@ -6,5 +6,6 @@ namespace Client.Project.Progress
   public class MenuProgressData
   {
     public GameplayModesProgressData GameplayModesProgressData = new();
+    public MapEditorOptionsProgressData MapEditorOptionsProgressData = new();
   }
 }

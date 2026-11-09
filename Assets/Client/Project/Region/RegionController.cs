@@ -62,6 +62,8 @@ namespace Client.Project.Region
     public void Clear()
     {
       Money = 0;
+      foreach (var cell in _cells)
+        cell.Region = null;
       _cells.Clear();
     }
 

@@ -14,8 +14,11 @@ namespace Client.Project
     private DateTime _startTime;
     private Vector3 _startPosition;
     private MenuView _menuView;
+    private bool _startOverUI;
 
     public bool IsClick { get; private set; }
+
+    public bool IsHold { get; private set; }
 
     public bool BackClicked => Input.GetKeyDown(KeyCode.Escape) && !BlockInput;
 
@@ -32,16 +35,24 @@ namespace Client.Project
     {
       IsClick = false;
 
-      if (Input.GetMouseButtonDown(0) && !IsPointerOverUI())
+      if (Input.GetMouseButtonDown(0))
       {
-        _startTime = DateTime.UtcNow;
-        _startPosition = Input.mousePosition;
+        if (!IsPointerOverUI())
+        {
+          _startTime = DateTime.UtcNow;
+          _startPosition = Input.mousePosition;
+          _startOverUI = false;
+        }
+        else
+          _startOverUI = true;
       }
 
       if (Input.GetMouseButtonUp(0))
         if ((DateTime.UtcNow - _startTime).TotalSeconds < 0.3f &&
             Vector2.Distance(_startPosition, Input.mousePosition) < _eventSystem.pixelDragThreshold)
           IsClick = true;
+
+      IsHold = Input.GetMouseButton(0) && !_startOverUI;
     }
 
     public bool IsPointerOverUI() => IsPointerOverUI(Input.mousePosition);

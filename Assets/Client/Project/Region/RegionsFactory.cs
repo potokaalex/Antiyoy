@@ -20,22 +20,24 @@ namespace Client.Project.Region
       _pool = new ObjectPool<RegionController>(() => new RegionController());
     }
 
-    public void Create(CellController cell, Action<RegionController, CellController> addFunc, RegionType type = RegionType.Neutral)
+    public void Create(CellController cell, Action<RegionController, CellController> addFunc, RegionType type = RegionType.Neutral, int money = 0)
     {
       using (ListPool<CellController>.Get(out var list))
       {
         list.Add(cell);
-        Create(list, addFunc, type);
+        Create(list, addFunc, type, money);
       }
     }
 
-    public RegionController Create(List<CellController> cells, Action<RegionController, CellController> addFunc, RegionType type = RegionType.Neutral)
+    public RegionController Create(List<CellController> cells, Action<RegionController, CellController> addFunc, RegionType type = RegionType.Neutral,
+      int money = 0)
     {
       _pool.Get(out var instance);
       instance.Type = type;
       foreach (var cell in cells)
         addFunc(instance, cell);
 
+      instance.Money = money;
       _governmentsService.AddRegion(instance);
       _regions.Add(instance);
       return instance;
@@ -43,8 +45,8 @@ namespace Client.Project.Region
 
     public void Destroy(RegionController instance)
     {
-      _regions.Remove(instance);
       instance.Clear();
+      _regions.Remove(instance);
       _pool.Release(instance);
       _governmentsService.RemoveRegion(instance);
     }

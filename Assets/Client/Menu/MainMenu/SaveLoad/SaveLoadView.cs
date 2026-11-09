@@ -53,7 +53,7 @@ namespace Client.Menu.MainMenu.SaveLoad
       _deleteView.Show(slotView);
     }
 
-    public void DeleteSlot(SaveLoadSlotView slotView) => MapsService.DeleteMap(slotView.Map);
+    public virtual void DeleteSlot(SaveLoadSlotView slotView) => MapsService.DeleteMap(slotView.Map);
 
     public void Rename(SaveLoadSlotView slotView, string newName)
     {

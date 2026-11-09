@@ -1,8 +1,8 @@
 using System;
 using System.IO;
 using Client.Project.Infrastructure;
-using UnityEngine;
 using Newtonsoft.Json;
+using UnityEngine;
 
 namespace Client.Project.Progress
 {

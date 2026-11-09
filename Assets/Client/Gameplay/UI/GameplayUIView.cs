@@ -1,6 +1,7 @@
 using Client.Gameplay.UI.Hud;
 using Client.Gameplay.UI.IncomeWindow;
 using Client.Gameplay.UI.MoneyWindow;
+using Client.Gameplay.UI.TransitionView;
 using Client.Project.Region;
 using UnityEngine;
 

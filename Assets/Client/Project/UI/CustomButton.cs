@@ -45,7 +45,7 @@ namespace Client.Project.UI
       DOTween.Kill(this);
       IsLongPress = false;
       WasDragged = false;
-      if(_background)
+      if (_background)
         _background.color = Color.clear;
     }
 

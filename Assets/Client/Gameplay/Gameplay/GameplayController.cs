@@ -80,8 +80,8 @@ namespace Client.Gameplay.Gameplay
       _gridController.InitialCreateCells(map);
       _unitsService.InitialCreateUnits(map);
       _regionsService.InitialCreateRegions(map);
+      _capitalsController.CheckCapitals();
       _gameplayRegionsController.Enable();
-      _capitalsController.Enable();
       _cameraController.Setup();
       CreatePlayers();
       //_debugController.CreateCells();
@@ -94,7 +94,7 @@ namespace Client.Gameplay.Gameplay
 
     public void Tick()
     {
-      if (!Started)
+      if (!Started || !HasPlayers())
         return;
 
       _currentPlayer.Tick();
@@ -102,6 +102,9 @@ namespace Client.Gameplay.Gameplay
 
     public void NextTurn()
     {
+      if (!HasPlayers())
+        return;
+
       _currentPlayer.EndTurn();
 
       if (CheckWin())
@@ -119,23 +122,10 @@ namespace Client.Gameplay.Gameplay
       _cameraController.Focus(_capitalsController.GetCapital(_governmentsService.Get(_currentPlayer.RegionType).Regions[0]).WorldPosition);
     }
 
-    public void End()
-    {
-      Started = false;
-      _warriorUnitsAnimator.Disable();
-      _capitalsMarksController.Disable();
-      _capitalsController.Disable();
-      _gameplayRegionsController.Disable();
-      _unitsService.Clear();
-      _regionsService.Clear();
-      _actionsHistoryController.Clear();
-      _governmentsService.Clear();
-      //_debugController.Clear();
-    }
-
     public void Pause()
     {
-      _currentPlayer.Pause();
+      if (HasPlayers())
+        _currentPlayer.Pause();
       _gameplayUI.ShowPause();
     }
 
@@ -154,7 +144,26 @@ namespace Client.Gameplay.Gameplay
       Start();
     }
 
-    private void SetFirstPlayer() => SetCurrentPlayer(_players[0]);
+    public void Export() => _mapsService.ExportFromRuntime();
+
+    private void End()
+    {
+      Started = false;
+      _warriorUnitsAnimator.Disable();
+      _capitalsMarksController.Disable();
+      _gameplayRegionsController.Disable();
+      _unitsService.Clear();
+      _regionsService.Clear();
+      _actionsHistoryController.Clear();
+      _governmentsService.Clear();
+      //_debugController.Clear();
+    }
+
+    private void SetFirstPlayer()
+    {
+      if (HasPlayers())
+        SetCurrentPlayer(_players[0]);
+    }
 
     private void SetCurrentPlayer(PlayerController playerController)
     {
@@ -212,5 +221,7 @@ namespace Client.Gameplay.Gameplay
 
       return false;
     }
+
+    private bool HasPlayers() => _players.Count > 0;
   }
 }
