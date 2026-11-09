@@ -144,6 +144,8 @@ namespace Client.Gameplay.Gameplay
       Start();
     }
 
+    public void Export() => _mapsService.ExportFromRuntime();
+
     private void End()
     {
       Started = false;

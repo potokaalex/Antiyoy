@@ -14,6 +14,7 @@ namespace Client.Project.Map
     private ProgressController _progressController;
     private MapsFactory _mapsFactory;
     private MapDecodeController _mapDecodeController;
+    private MapEncodeController _mapEncodeController;
 
     public MapController StartMap { get; private set; }
 
@@ -28,6 +29,7 @@ namespace Client.Project.Map
       _progressController = Locator.Get<ProgressController>();
       _mapsFactory = Locator.Get<MapsFactory>();
       _mapDecodeController = Locator.Get<MapDecodeController>();
+      _mapEncodeController = Locator.Get<MapEncodeController>();
       Load();
     }
 
@@ -36,17 +38,27 @@ namespace Client.Project.Map
 
     public void GenerateEmptyStartMap(LevelSize levelSize, string name) => StartMap = _mapGenerator.GenerateEmpty(levelSize, name);
 
-    public bool GenerateStartMapFromCopyBuffer()
+    public void GenerateFromCopyBufferIntoEditorStartMap() => GenerateStartMapFromCopyBuffer(StartMap.Name, _editorMaps.IndexOf(StartMap));
+
+    public bool GenerateStartMapFromCopyBuffer() => GenerateStartMapFromCopyBuffer(null);
+
+    private bool GenerateStartMapFromCopyBuffer(string overrideName, int editorIndex = -1)
     {
       var code = GUIUtility.systemCopyBuffer;
       if (_mapDecodeController.IsValidLevelCode(code))
       {
         StartMap = new MapController(_mapDecodeController.DecodeToMapData(code));
+        if (overrideName != null)
+          StartMap.Name = overrideName;
+        if (editorIndex != -1)
+          _editorMaps[editorIndex] = StartMap;
         return true;
       }
 
       return false;
     }
+
+    public bool CanGenerateStartMapFromCopyBuffer() => _mapDecodeController.IsValidLevelCode(GUIUtility.systemCopyBuffer);
 
     public void SetStartMap(MapController map) => StartMap = map;
 
@@ -99,6 +111,8 @@ namespace Client.Project.Map
     }
 
     public void RestartStartMap() => StartMap = StartMap.RestartCopy();
+
+    public void ExportFromRuntime() =>  GUIUtility.systemCopyBuffer = _mapEncodeController.EncodeFromRuntime();
 
     private void Load()
     {

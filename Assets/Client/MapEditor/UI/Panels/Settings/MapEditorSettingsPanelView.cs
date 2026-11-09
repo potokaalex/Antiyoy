@@ -17,6 +17,7 @@ namespace Client.MapEditor.UI.Panels.Settings
     [SerializeField] private CustomSlider _playersSlider;
     [SerializeField] private CustomSlider _difficultySlider;
     [SerializeField] private CustomButton _playerColorButton;
+    [SerializeField] private CustomButton _importButton;
     [SerializeField] private Image _playerRandomColorImage;
     [SerializeField] private Image _playerColorImage;
     [SerializeField] private Image _playerColorBackground;
@@ -38,6 +39,7 @@ namespace Client.MapEditor.UI.Panels.Settings
       _difficultySlider.OnSliderValueChanged += OnDifficultyValueChanged;
       _playerColorButton.OnClick += OnPlayerColorButtonClick;
       _mapEditorController.OnPlayerRegionTypeChanged += ViewPlayerColor;
+      _importButton.OnClick += OnImportClick;
 
       _playerRandomColorImage.gameObject.SetActive(false);
     }
@@ -50,6 +52,7 @@ namespace Client.MapEditor.UI.Panels.Settings
       _difficultySlider.OnSliderValueChanged -= OnDifficultyValueChanged;
       _playerColorButton.OnClick -= OnPlayerColorButtonClick;
       _mapEditorController.OnPlayerRegionTypeChanged -= ViewPlayerColor;
+      _importButton.OnClick -= OnImportClick;
     }
 
     public void Show()
@@ -111,6 +114,23 @@ namespace Client.MapEditor.UI.Panels.Settings
       _playerColorImage.color = color;
       color.a = 0.1f;
       _playerColorBackground.color = color;
+    }
+
+    private void OnImportClick()
+    {
+      if (_mapEditorController.CanImport())
+      {
+        _mapEditorUI.HideCurrentPanel();
+        _mapEditorUI.ShowAgreeView(new MapEditorAgreeViewParameters
+        {
+          AgreeAction = _mapEditorController.Import,
+          Header = "Import map?",
+          CancelColor = new Color(0.35686275f, 0.6509804f, 0.43529412f, 1),
+          CancelText = "Cancel",
+          AgreeColor = new Color(0.39607844f, 0.4509804f, 0.8f, 1),
+          AgreeText = "Import"
+        });
+      }
     }
   }
 }

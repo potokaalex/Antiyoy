@@ -1,5 +1,6 @@
 using Client.Gameplay.Gameplay;
 using Client.Menu;
+using Client.Menu.ExportMessage;
 using Client.Project;
 using Client.Project.Infrastructure;
 using Client.Project.UI;
@@ -13,7 +14,9 @@ namespace Client.Gameplay.UI
     [SerializeField] private CustomButton _mainMenuButton;
     [SerializeField] private CustomButton _saveButton;
     [SerializeField] private CustomButton _restartButton;
+    [SerializeField] private CustomButton _exportButton;
     [SerializeField] private MenuAnimator _menuAnimator;
+    [SerializeField] private ExportMessageView _exportMessageView;
     private GameplayController _gameplayController;
     private InputController _inputController;
     private GameplayUI _gameplayUI;
@@ -27,6 +30,7 @@ namespace Client.Gameplay.UI
       _mainMenuButton.OnClick += ToMainMenu;
       _saveButton.OnClick += OnSaveClick;
       _restartButton.OnClick += OnRestartClick;
+      _exportButton.OnClick += OnExportClick;
     }
 
     private void OnDestroy()
@@ -35,6 +39,7 @@ namespace Client.Gameplay.UI
       _mainMenuButton.OnClick -= ToMainMenu;
       _saveButton.OnClick -= OnSaveClick;
       _restartButton.OnClick -= OnRestartClick;
+      _exportButton.OnClick -= OnExportClick;
     }
 
     private void Update()
@@ -63,6 +68,12 @@ namespace Client.Gameplay.UI
     {
       PlayHide();
       _gameplayController.Restart();
+    }
+
+    private void OnExportClick()
+    {
+      _exportMessageView.Show();
+      _gameplayController.Export();
     }
   }
 }

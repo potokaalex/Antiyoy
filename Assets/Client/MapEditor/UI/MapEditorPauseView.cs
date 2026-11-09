@@ -1,4 +1,5 @@
 using Client.Menu;
+using Client.Menu.ExportMessage;
 using Client.Project;
 using Client.Project.Infrastructure;
 using Client.Project.UI;
@@ -13,6 +14,7 @@ namespace Client.MapEditor.UI
     [SerializeField] private CustomButton _exportButton;
     [SerializeField] private CustomButton _mainMenuButton;
     [SerializeField] private MenuAnimator _menuAnimator;
+    [SerializeField] private ExportMessageView _exportMessageView;
     private MapEditorController _mapEditorController;
     private InputController _inputController;
     private MapEditorUI _mapEditorUI;
@@ -58,7 +60,11 @@ namespace Client.MapEditor.UI
         Hide();
     }
 
-    private void OnExportClick() => _mapEditorController.Export();
+    private void OnExportClick()
+    {
+      _mapEditorController.Export();
+      _exportMessageView.Show();
+    }
 
     private void OnMainMenuClick()
     {

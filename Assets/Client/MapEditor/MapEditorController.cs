@@ -34,7 +34,6 @@ namespace Client.MapEditor
     private CapitalsController _capitalsController;
     private ProjectController _projectController;
     private GovernmentsService _governmentsService;
-    private MapEncodeController _mapEncodeController;
     private IMapEditorModeHandler _currentModeHandler;
     private MapEditorPlayerRegionType _playerRegionType;
     private float _timeToSave;
@@ -69,13 +68,11 @@ namespace Client.MapEditor
       _capitalsController = Locator.Get<CapitalsController>();
       _projectController = Locator.Get<ProjectController>();
       _governmentsService = Locator.Get<GovernmentsService>();
-      _mapEncodeController = Locator.Get<MapEncodeController>();
     }
 
     public void Start()
     {
       LoadMap();
-      _cameraController.Setup();
       _regionsService.AddMoneyWhenJoin = false;
       _regionsService.RegionInitialMoney = 10;
       _playerRegionType = new(RegionType.Lime);
@@ -192,13 +189,22 @@ namespace Client.MapEditor
       return true;
     }
 
-    public void Export() => GUIUtility.systemCopyBuffer = _mapEncodeController.EncodeFromRuntime();
+    public void Export() => _mapsService.ExportFromRuntime();
 
     public void Pause()
     {
       SaveMap();
       _mapEditorUI.ShowPause();
     }
+
+    public void Import()
+    {
+      ClearMap();
+      _mapsService.GenerateFromCopyBufferIntoEditorStartMap();
+      LoadMap();
+    }
+
+    public bool CanImport() => _mapsService.CanGenerateStartMapFromCopyBuffer();
 
     private void End()
     {
@@ -242,6 +248,7 @@ namespace Client.MapEditor
       _unitsService.InitialCreateUnits(map);
       _regionsService.InitialCreateRegions(map);
       _bordersService.ViewRegionsBorders();
+      _cameraController.Setup();
     }
 
     private int GetFractionsCount(LevelSize levelSize)
