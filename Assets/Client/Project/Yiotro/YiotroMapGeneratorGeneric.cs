@@ -1,9 +1,9 @@
-using System;
 using System.Collections.Generic;
-using UnityEngine;
+using Client.Project.Map;
+using Client.Project.Utilities;
 using Random = System.Random;
 
-namespace Client.Project.Map.Yiotro
+namespace Client.Project.Yiotro
 {
   public class YiotroMapGeneratorGeneric : YiotroMapGenerator
   {
@@ -11,7 +11,7 @@ namespace Client.Project.Map.Yiotro
 
     public Hex[][] GenerateMap(Random random, LevelSize levelSize, int fractionsQuantity)
     {
-      FieldManager.Setup(GetFieldSize(levelSize));
+      FieldManager.Setup(GameUtilities.LevelSizeToFieldSize(levelSize));
       SetValues(random, levelSize, fractionsQuantity);
       BeginGeneration();
       CreateLand();
@@ -20,37 +20,6 @@ namespace Client.Project.Map.Yiotro
         GenericBalance();
       EndGeneration();
       return FieldManager.Field;
-    }
-
-    public Vector2Int GetFieldSize(LevelSize levelSize)
-    {
-      switch (levelSize)
-      {
-        case LevelSize.Small:
-          return new Vector2Int(14, 24);
-        case LevelSize.Medium:
-          return new Vector2Int(28, 24);
-        case LevelSize.Big:
-          return new Vector2Int(28, 48);
-        case LevelSize.Huge:
-          return new Vector2Int(42, 65);
-        default:
-          throw new ArgumentOutOfRangeException(nameof(levelSize), levelSize, null);
-      }
-    }
-
-    public LevelSize GetLevelSize(Vector2Int fieldSize)
-    {
-      if (fieldSize == new Vector2Int(14, 24))
-        return LevelSize.Small;
-      if (fieldSize == new Vector2Int(28, 24)) 
-        return LevelSize.Medium;
-      if (fieldSize == new Vector2Int(28, 48)) 
-        return LevelSize.Big;
-      if (fieldSize == new Vector2Int(42, 65)) 
-        return LevelSize.Huge;
-
-      throw new Exception($"Cant find levelSize for fieldSize: {fieldSize}");
     }
 
     protected override void DecreaseProvince(List<Hex> provinceList, double power)

@@ -25,7 +25,7 @@ namespace Client.MapEditor.Mode
         if (_gridController.GetCell(position, out var cell))
         {
           var region = cell.Region;
-          if(region.IsAlive) 
+          if (region.IsAlive)
             _mapEditorUI.ShowRegionSettings(region);
         }
       }

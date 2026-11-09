@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Client.Project.Hex;
 using UnityEngine;
 
-namespace Client.Project.Map.Yiotro
+namespace Client.Project.Yiotro
 {
   public class FieldManager
   {
@@ -32,7 +32,7 @@ namespace Client.Project.Map.Yiotro
     {
       if (!hex.Active)
         return;
-      AddSolidObject(hex, hex.IsNearWater() ? YiotroMapGenerator.OBJ_PALM : YiotroMapGenerator.OBJ_PINE);
+      AddSolidObject(hex, hex.IsNearWater() ? YiotroUtilities.OBJ_PALM : YiotroUtilities.OBJ_PINE);
     }
 
     public void CreateFieldMatrix()

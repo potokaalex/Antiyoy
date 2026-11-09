@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Client.Project.Map.Yiotro
+namespace Client.Project.Yiotro
 {
   public class DetectorProvince
   {

@@ -1,11 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Client.Project.Government;
 using Client.Project.Infrastructure;
-using Client.Project.Map.Data;
 using Client.Project.Progress;
-using Client.Project.Region;
 using UnityEngine;
 
 namespace Client.Project.Map
@@ -16,8 +12,8 @@ namespace Client.Project.Map
     private readonly List<MapController> _editorMaps = new();
     private readonly MapGenerator _mapGenerator = new();
     private ProgressController _progressController;
-    private GridController _gridController;
-    private GovernmentsService _governmentsService;
+    private MapsFactory _mapsFactory;
+    private MapDecodeController _mapDecodeController;
 
     public MapController StartMap { get; private set; }
 
@@ -30,8 +26,8 @@ namespace Client.Project.Map
     public void Initialize()
     {
       _progressController = Locator.Get<ProgressController>();
-      _gridController = Locator.Get<GridController>();
-      _governmentsService = Locator.Get<GovernmentsService>();
+      _mapsFactory = Locator.Get<MapsFactory>();
+      _mapDecodeController = Locator.Get<MapDecodeController>();
       Load();
     }
 
@@ -40,8 +36,17 @@ namespace Client.Project.Map
 
     public void GenerateEmptyStartMap(LevelSize levelSize, string name) => StartMap = _mapGenerator.GenerateEmpty(levelSize, name);
 
-    public void GenerateStartMapFromCopyBuffer() =>
-      StartMap = new MapController(new _T.DecodeManager().Perform(GUIUtility.systemCopyBuffer));
+    public bool GenerateStartMapFromCopyBuffer()
+    {
+      var code = GUIUtility.systemCopyBuffer;
+      if (_mapDecodeController.IsValidLevelCode(code))
+      {
+        StartMap = new MapController(_mapDecodeController.DecodeToMapData(code));
+        return true;
+      }
+
+      return false;
+    }
 
     public void SetStartMap(MapController map) => StartMap = map;
 
@@ -95,74 +100,6 @@ namespace Client.Project.Map
 
     public void RestartStartMap() => StartMap = StartMap.RestartCopy();
 
-    public Vector2Int GetFieldSize(LevelSize levelSize) => _mapGenerator.GetFieldSize(levelSize);
-
-    public LevelSize GetLevelSize(Vector2Int mapSize) => _mapGenerator.GetLevelSize(mapSize);
-
-    private MapController CreateCurrentMap(bool isAutosave = false, bool isEditor = false)
-    {
-      var players = new List<PlayerData>();
-
-      foreach (var government in _governmentsService.GetAll())
-      {
-        var regions = new List<RegionData>();
-
-        foreach (var r in government.Regions)
-        {
-          regions.Add(new RegionData
-          {
-            Cells = CreateCells(r),
-            Type = r.Type,
-            Money = r.Money
-          });
-        }
-
-        players.Add(new PlayerData
-        {
-          Regions = regions
-        });
-      }
-
-      return new MapController(new MapData
-      {
-        InitialPlayers = isEditor ? players : StartMap.GetData().InitialPlayers,
-        Players = players,
-        Size = _gridController.Size,
-        Name = StartMap.Name,
-        CreationTime = DateTime.Now.ToBinary(),
-        IsAutosave = isAutosave
-      });
-    }
-
-    private List<CellData> CreateCells(RegionController region)
-    {
-      var result = new List<CellData>();
-      foreach (var cell in region.Cells)
-      {
-        UnitData? unit;
-
-        if (cell.HasUnit)
-        {
-          unit = new UnitData
-          {
-            Type = cell.Unit.Type,
-            HasTurns = cell.Unit.HasTurns
-          };
-        }
-        else
-          unit = null;
-
-        result.Add(new CellData
-        {
-          Position = cell.Position,
-          RegionType = cell.Region.Type,
-          Unit = unit
-        });
-      }
-
-      return result;
-    }
-
     private void Load()
     {
       foreach (var mapData in _progressController.Data.Maps)
@@ -182,15 +119,16 @@ namespace Client.Project.Map
 
     private MapController SaveCurrentMapInSlot(int slotIndex, bool isEditor = false, bool isAutosave = false)
     {
-      var map = CreateCurrentMap(isEditor: isEditor, isAutosave: isAutosave);
+      var mapData = _mapsFactory.CreateRuntimeMap(StartMap.GetData().InitialPlayers, StartMap.Name, isEditor: isEditor, isAutosave: isAutosave);
+      var map = new MapController(mapData);
       if (isEditor)
       {
-        _progressController.Data.EditorMaps[slotIndex] = map.GetData();
+        _progressController.Data.EditorMaps[slotIndex] = mapData;
         _editorMaps[slotIndex] = map;
       }
       else
       {
-        _progressController.Data.Maps[slotIndex] = map.GetData();
+        _progressController.Data.Maps[slotIndex] = mapData;
         _maps[slotIndex] = map;
       }
 

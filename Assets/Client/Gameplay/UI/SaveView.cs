@@ -44,13 +44,13 @@ namespace Client.Gameplay.UI
 
     protected override void OnViewClick(SaveLoadSlotView slotView)
     {
-      if (slotView != _emptyView && !slotView.Map.IsAutosave) 
+      if (slotView != _emptyView && !slotView.Map.IsAutosave)
         slotView.SetMap(MapsService.SaveCurrentMapInSlot(slotView.Map));
     }
 
     protected override void OnViewHold(SaveLoadSlotView slotView)
     {
-      if(slotView != _emptyView)
+      if (slotView != _emptyView)
         base.OnViewHold(slotView);
     }
   }

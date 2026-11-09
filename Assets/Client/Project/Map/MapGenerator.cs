@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Client.Project.Hex;
+using Client.Project.Infrastructure;
 using Client.Project.Map.Data;
-using Client.Project.Map.Yiotro;
 using Client.Project.Region;
 using Client.Project.Unit.Code;
 using Client.Project.Utilities;
+using Client.Project.Yiotro;
 using UnityEngine;
 using UnityEngine.Pool;
 using Random = UnityEngine.Random;
@@ -16,9 +17,10 @@ namespace Client.Project.Map
   public class MapGenerator
   {
     private readonly YiotroMapGeneratorGeneric _yiotroMapGenerator = new();
-    private readonly HashSet<CellData> _passedBuffer = new();
-    private readonly Queue<CellData> _frontBuffer = new();
     private readonly RegionType[] _allPlayerRegions = GameUtilities.AllPlayerRegions.ToArray();
+    private readonly MapsFactory _mapsFactory;
+
+    public MapGenerator() => _mapsFactory = Locator.Get<MapsFactory>();
 
     public MapController Generate(LevelSize levelSize, int colorsCount, string name)
     {
@@ -27,110 +29,15 @@ namespace Client.Project.Map
       _allPlayerRegions.Shuffle();
       var size = new Vector2Int(field.Length, field[0].Length);
       var cells = CreateCells(field, size);
-      var regions = CreateRegions(cells, size, 10);
+      var regions = _mapsFactory.CreateRegions(cells, size, 10);
       CreateCapitals(regions);
-      var players = CreatePlayers(regions);
+      var players = _mapsFactory.CreatePlayers(regions);
 
-      return new MapController(new MapData
-      {
-        InitialPlayers = players,
-        Players = players.Select(x => x.Copy()).ToList(),
-        Size = size,
-        Name = name
-      });
+      return new MapController(_mapsFactory.CreateMapData(players, size, name));
     }
 
-    public MapController GenerateEmpty(LevelSize levelSize, string name)
-    {
-      return new MapController(new MapData
-      {
-        InitialPlayers = new List<PlayerData>(),
-        Size = _yiotroMapGenerator.GetFieldSize(levelSize),
-        Name = name
-      });
-    }
-
-    public LevelSize GetLevelSize(Vector2Int fieldSize) => _yiotroMapGenerator.GetLevelSize(fieldSize);
-
-    public Vector2Int GetFieldSize(LevelSize levelSize) => _yiotroMapGenerator.GetFieldSize(levelSize);
-
-    public List<RegionData> CreateRegions(CellData?[,] cells, Vector2Int size, int initialMoney)
-    {
-      var newRegions = new List<RegionData>();
-      _passedBuffer.Clear();
-      _frontBuffer.Clear();
-
-      foreach (var rootCellNull in cells)
-      {
-        if (!rootCellNull.HasValue)
-          continue;
-
-        var rootCell = rootCellNull.Value;
-
-        if (_passedBuffer.Contains(rootCell))
-          continue;
-
-        var newRegion = new RegionData
-        {
-          Cells = new List<CellData>(),
-          Type = rootCell.RegionType,
-          Money = initialMoney
-        };
-        newRegions.Add(newRegion);
-
-        _frontBuffer.Enqueue(rootCell);
-        _passedBuffer.Add(rootCell);
-        newRegion.Cells.Add(rootCell);
-
-        while (_frontBuffer.Count > 0)
-        {
-          var cell = _frontBuffer.Dequeue();
-
-          foreach (var neighbour in GetNeighbourCells(cells, cell, size))
-          {
-            if (neighbour.RegionType == rootCell.RegionType && !_passedBuffer.Contains(neighbour))
-            {
-              newRegion.Cells.Add(neighbour);
-              _frontBuffer.Enqueue(neighbour);
-              _passedBuffer.Add(neighbour);
-            }
-          }
-        }
-      }
-
-      return newRegions;
-    }
-
-    public List<PlayerData> CreatePlayers(List<RegionData> regions)
-    {
-      var players = new List<PlayerData>();
-
-      while (regions.Count > 0)
-      {
-        var rootRegion = regions[0];
-        regions.RemoveAt(0);
-
-        var player = new PlayerData
-        {
-          Regions = new()
-        };
-
-        players.Add(player);
-        player.Regions.Add(rootRegion);
-
-        for (var i = regions.Count - 1; i >= 0; i--)
-        {
-          var region = regions[i];
-          if (region.Type == rootRegion.Type)
-          {
-            player.Regions.Add(region);
-            regions.RemoveAt(i);
-          }
-        }
-      }
-
-      return players;
-    }
+    public MapController GenerateEmpty(LevelSize levelSize, string name) =>
+      new(_mapsFactory.CreateMapData(new List<PlayerData>(), GameUtilities.LevelSizeToFieldSize(levelSize), name));
 
     private CellData?[,] CreateCells(Yiotro.Hex[][] field, Vector2Int size)
     {
@@ -159,27 +66,9 @@ namespace Client.Project.Map
 
     private UnitData? CreateUnitData(Yiotro.Hex hex)
     {
-      if (hex.ObjectInside == 0)
-        return null;
-
-      return new UnitData
-      {
-        Type = GetObject(hex),
-        HasTurns = true
-      };
-    }
-
-    private UnitType GetObject(Yiotro.Hex hex)
-    {
-      switch (hex.ObjectInside)
-      {
-        case YiotroMapGenerator.OBJ_PINE:
-          return UnitType.Pine;
-        case YiotroMapGenerator.OBJ_PALM:
-          return UnitType.Palm;
-        default:
-          throw new Exception($"Cant GetObject for: {hex.ObjectInside}");
-      }
+      if (hex.ObjectInside != 0)
+        return new UnitData(YiotroUtilities.ObjToUnitType(hex.ObjectInside), true);
+      return null;
     }
 
     private RegionType GetRegionType(Yiotro.Hex hex)
@@ -190,22 +79,6 @@ namespace Client.Project.Map
       return _allPlayerRegions[fraction];
     }
 
-    private IEnumerable<CellData> GetNeighbourCells(CellData?[,] cells, CellData cell, Vector2Int size)
-    {
-      var aroundPosition = cell.Position;
-
-      foreach (var direction in HexUtilities.Directions)
-      {
-        var index = (aroundPosition + direction).ToArray2DIndex();
-        if (index.x >= 0 && index.x < size.x && index.y >= 0 && index.y < size.y)
-        {
-          var item = cells[index.x, index.y];
-          if (item.HasValue)
-            yield return item.Value;
-        }
-      }
-    }
-
     private void CreateCapitals(List<RegionData> regions)
     {
       foreach (var region in regions)
@@ -214,21 +87,7 @@ namespace Client.Project.Map
         {
           var cell = (GetRandomFreeCell(region.Cells) ?? GetRandomCellExceptTowers(region.Cells)) ??
                      region.Cells[Random.Range(0, region.Cells.Count)];
-
-          cell.Unit = new UnitData
-          {
-            Type = UnitType.Capital,
-            HasTurns = false
-          };
-
-          for (var i = 0; i < region.Cells.Count; i++)
-          {
-            if (region.Cells[i].Position == cell.Position)
-            {
-              region.Cells[i] = cell;
-              break;
-            }
-          }
+          _mapsFactory.SetUnit(new UnitData(UnitType.Capital), region, cell.Position);
         }
       }
     }

@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
+using Client.Project.Map;
 
-namespace Client.Project.Map.Yiotro
+namespace Client.Project.Yiotro
 {
   public class YiotroMapGenerator
   {
     public const int NEUTRAL_FRACTION = 100;
-    public const int OBJ_PINE = 1;
-    public const int OBJ_PALM = 2;
 
     protected const int SMALL_PROVINCE_SIZE = 5;
     protected readonly FieldManager FieldManager = new();

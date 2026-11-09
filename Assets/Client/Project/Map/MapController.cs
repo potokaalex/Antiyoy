@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using Client.Project.Infrastructure;
 using Client.Project.Map.Data;
 using UnityEngine;
 
@@ -8,9 +8,14 @@ namespace Client.Project.Map
 {
   public class MapController
   {
+    private readonly MapsFactory _mapsFactory;
     private readonly MapData _data;
 
-    public MapController(MapData data) => _data = data;
+    public MapController(MapData data)
+    {
+      _mapsFactory = Locator.Get<MapsFactory>();
+      _data = data;
+    }
 
     public Vector2Int Size => _data.Size;
 
@@ -32,17 +37,6 @@ namespace Client.Project.Map
 
     public MapData GetData() => _data;
 
-    public MapController RestartCopy()
-    {
-      return new MapController(new MapData
-      {
-        InitialPlayers = _data.InitialPlayers,
-        Players = _data.InitialPlayers.Select(x => x.Copy()).ToList(),
-        Size = _data.Size,
-        Name = _data.Name,
-        CreationTime = _data.CreationTime,
-        IsAutosave = false
-      });
-    }
+    public MapController RestartCopy() => new(_mapsFactory.CreateMapData(_data.InitialPlayers, _data.Size, _data.Name, CreationTime));
   }
 }

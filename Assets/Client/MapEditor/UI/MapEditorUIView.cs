@@ -20,7 +20,7 @@ namespace Client.MapEditor.UI
       _hud.Show();
       _gameTransitionView.PlayToyGameTransition();
     }
-    
+
     public void PlayHide()
     {
       _hud.Hide();

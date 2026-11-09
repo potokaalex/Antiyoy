@@ -34,6 +34,7 @@ namespace Client.MapEditor
     private CapitalsController _capitalsController;
     private ProjectController _projectController;
     private GovernmentsService _governmentsService;
+    private MapEncodeController _mapEncodeController;
     private IMapEditorModeHandler _currentModeHandler;
     private MapEditorPlayerRegionType _playerRegionType;
     private float _timeToSave;
@@ -68,6 +69,7 @@ namespace Client.MapEditor
       _capitalsController = Locator.Get<CapitalsController>();
       _projectController = Locator.Get<ProjectController>();
       _governmentsService = Locator.Get<GovernmentsService>();
+      _mapEncodeController = Locator.Get<MapEncodeController>();
     }
 
     public void Start()
@@ -176,7 +178,7 @@ namespace Client.MapEditor
     public void GenerateRandomMap()
     {
       ClearMap();
-      var levelSize = _mapsService.GetLevelSize(_mapsService.StartMap.Size);
+      var levelSize = _gridController.LevelSize;
       _mapsService.GenerateStartMap(levelSize, GetFractionsCount(levelSize), _mapsService.StartMap.Name);
       LoadMap();
     }
@@ -192,10 +194,7 @@ namespace Client.MapEditor
       return true;
     }
 
-    public void Export()
-    {
-      new _T.EncodeManager().Encode();
-    }
+    public void Export() => GUIUtility.systemCopyBuffer = _mapEncodeController.EncodeFromRuntime();
 
     private void End()
     {
@@ -256,7 +255,7 @@ namespace Client.MapEditor
 
     private void SaveMap()
     {
-      if(!MapEmpty())
+      if (!MapEmpty())
       {
         _governmentsService.ClearEmpty();
         _mapsService.SaveCurrentEditorMap();

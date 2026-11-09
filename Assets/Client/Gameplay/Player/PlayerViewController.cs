@@ -92,7 +92,7 @@ namespace Client.Gameplay.Player
 
     public void Undo()
     {
-      if(_playerController != null)
+      if (_playerController != null)
         _playerController.Undo();
     }
 

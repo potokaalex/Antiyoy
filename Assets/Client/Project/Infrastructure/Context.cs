@@ -52,7 +52,7 @@ namespace Client.Project.Infrastructure
       foreach (var receiver in _onApplicationFocusReceivers)
         receiver.OnFocus(hasFocus);
     }
-    
+
     private void OnDestroy()
     {
       foreach (var disposable in _disposables)

@@ -49,7 +49,7 @@ namespace Client.Menu
       _bottomPanel.anchoredPosition = _bottomPanelEndPosition;
 
       _root.gameObject.SetActive(false);
-      if(_canvasGroup)
+      if (_canvasGroup)
         _canvasGroup.alpha = 0;
     }
 

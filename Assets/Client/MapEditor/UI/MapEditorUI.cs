@@ -10,7 +10,7 @@ namespace Client.MapEditor.UI
   {
     [SerializeField] private MapEditorUIView _viewPrefab;
     private MapEditorUIView _view;
-    
+
     public void Initialize() => _view = Locator.Get<MenuView>().Spawn(_viewPrefab);
 
     public void PlayShow() => _view.PlayShow();

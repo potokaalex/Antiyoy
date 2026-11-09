@@ -102,9 +102,11 @@ namespace Client.Menu.MainMenu.MapEditor
 
     private void OnImportClick()
     {
-      _mapsService.GenerateStartMapFromCopyBuffer();
-      _projectController.LoadMapEditor();
-      Hide();
+      if (_mapsService.GenerateStartMapFromCopyBuffer())
+      {
+        _projectController.LoadMapEditor();
+        Hide();
+      }
     }
   }
 }
