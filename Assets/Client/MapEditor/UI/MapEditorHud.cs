@@ -73,8 +73,8 @@ namespace Client.MapEditor.UI
 
     private void OnPauseClick()
     {
+      _mapEditorController.Pause();
       _mapEditorUI.PlayHide();
-      _mapEditorUI.ShowPause();
     }
 
     private void OnCellsPanelButtonClick() => SelectPanel(_cellsPanelView);

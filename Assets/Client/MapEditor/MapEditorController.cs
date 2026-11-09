@@ -125,7 +125,6 @@ namespace Client.MapEditor
 
     public void MainMenu()
     {
-      SaveMap();
       End();
       _mainMenuView.ShowStart();
     }
@@ -188,13 +187,18 @@ namespace Client.MapEditor
       if (MapEmpty())
         return false;
 
-      SaveMap();
       End();
       _projectController.LoadGameplay();
       return true;
     }
 
     public void Export() => GUIUtility.systemCopyBuffer = _mapEncodeController.EncodeFromRuntime();
+
+    public void Pause()
+    {
+      SaveMap();
+      _mapEditorUI.ShowPause();
+    }
 
     private void End()
     {
