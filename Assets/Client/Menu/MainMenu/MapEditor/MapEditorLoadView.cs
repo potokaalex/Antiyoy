@@ -16,8 +16,6 @@ namespace Client.Menu.MainMenu.MapEditor
       _projectController = Locator.Get<ProjectController>();
     }
 
-    public override void DeleteSlot(SaveLoadSlotView slotView) => MapsService.DeleteEditorMap(slotView.Map);
-
     protected override void OnBackClick()
     {
       Hide();
@@ -26,8 +24,8 @@ namespace Client.Menu.MainMenu.MapEditor
 
     protected override void CreateViews()
     {
-      for (var i = 0; i < MapsService.EditorMaps.Count; i++)
-        CreateView(MapsService.EditorMaps[i]);
+      foreach (var map in MapsService.GetEditorMaps()) 
+        CreateView(map);
     }
 
     protected override void OnViewClick(SaveLoadSlotView slotView)

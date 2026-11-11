@@ -27,6 +27,8 @@ namespace Client.Project.Map
 
     public bool IsAutosave => _data.IsAutosave;
 
+    public bool IsEditor { get => _data.IsEditor; set => _data.IsEditor = value; }
+
     public IEnumerable<CellData> GetCells()
     {
       foreach (var player in _data.Players)

@@ -53,7 +53,7 @@ namespace Client.Menu.MainMenu.SaveLoad
       _deleteView.Show(slotView);
     }
 
-    public virtual void DeleteSlot(SaveLoadSlotView slotView) => MapsService.DeleteMap(slotView.Map);
+    public void DeleteSlot(SaveLoadSlotView slotView) => MapsService.DeleteMap(slotView.Map);
 
     public void Rename(SaveLoadSlotView slotView, string newName)
     {
@@ -80,8 +80,8 @@ namespace Client.Menu.MainMenu.SaveLoad
 
     protected virtual void CreateViews()
     {
-      for (var i = 0; i < MapsService.Maps.Count; i++)
-        CreateView(MapsService.Maps[i]);
+      foreach (var map in MapsService.GetMaps()) 
+        CreateView(map);
     }
 
     protected virtual void ClearView(SaveLoadSlotView view)

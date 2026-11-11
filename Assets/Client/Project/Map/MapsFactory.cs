@@ -67,7 +67,8 @@ namespace Client.Project.Map
         Size = _gridController.Size,
         Name = name,
         CreationTime = DateTime.Now.ToBinary(),
-        IsAutosave = isAutosave
+        IsAutosave = isAutosave,
+        IsEditor = isEditor
       };
     }
 

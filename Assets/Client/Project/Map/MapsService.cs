@@ -9,7 +9,6 @@ namespace Client.Project.Map
   public class MapsService : IInitializable
   {
     private readonly List<MapController> _maps = new();
-    private readonly List<MapController> _editorMaps = new();
     private readonly MapGenerator _mapGenerator = new();
     private ProgressController _progressController;
     private MapsFactory _mapsFactory;
@@ -20,10 +19,6 @@ namespace Client.Project.Map
 
     private MapController AutosaveMap { get; set; }
 
-    public IReadOnlyList<MapController> Maps => _maps;
-
-    public IReadOnlyList<MapController> EditorMaps => _editorMaps;
-
     public void Initialize()
     {
       _progressController = Locator.Get<ProgressController>();
@@ -33,12 +28,26 @@ namespace Client.Project.Map
       Load();
     }
 
+    public IEnumerable<MapController> GetMaps()
+    {
+      foreach (var map in _maps)
+        if (!map.IsEditor)
+          yield return map;
+    }
+    
+    public IEnumerable<MapController> GetEditorMaps()
+    {
+      foreach (var map in _maps)
+        if (map.IsEditor)
+          yield return map;
+    }
+
     public void GenerateStartMap(LevelSize levelSize, int colorsCount, string name) =>
       StartMap = _mapGenerator.Generate(levelSize, colorsCount, name);
 
     public void GenerateEmptyStartMap(LevelSize levelSize, string name) => StartMap = _mapGenerator.GenerateEmpty(levelSize, name);
 
-    public void GenerateFromCopyBufferIntoEditorStartMap() => GenerateStartMapFromCopyBuffer(StartMap.Name, _editorMaps.IndexOf(StartMap));
+    public void GenerateFromCopyBufferIntoEditorStartMap() => GenerateStartMapFromCopyBuffer(StartMap.Name, _maps.IndexOf(StartMap));
 
     public bool GenerateStartMapFromCopyBuffer() => GenerateStartMapFromCopyBuffer(null);
 
@@ -51,7 +60,10 @@ namespace Client.Project.Map
         if (overrideName != null)
           StartMap.Name = overrideName;
         if (editorIndex != -1)
-          _editorMaps[editorIndex] = StartMap;
+        {
+          _maps[editorIndex] = StartMap;
+          StartMap.IsEditor = true;
+        }
         return true;
       }
 
@@ -71,13 +83,6 @@ namespace Client.Project.Map
     public void DeleteMap(MapController map)
     {
       DeleteMapWithoutSave(map);
-      _progressController.Save();
-    }
-
-    public void DeleteEditorMap(MapController map)
-    {
-      _editorMaps.Remove(map);
-      _progressController.Data.EditorMaps.Remove(map.GetData());
       _progressController.Save();
     }
 
@@ -101,10 +106,10 @@ namespace Client.Project.Map
 
     public void SaveCurrentEditorMap()
     {
-      var index = _editorMaps.IndexOf(StartMap);
+      var index = _maps.IndexOf(StartMap);
       if (index == -1)
       {
-        InsertNullMap(isEditor: true);
+        InsertNullMap();
         index = 0;
       }
 
@@ -121,9 +126,6 @@ namespace Client.Project.Map
         _maps.Add(new MapController(mapData));
 
       AutosaveMap = _maps.FirstOrDefault(x => x.IsAutosave);
-
-      foreach (var mapData in _progressController.Data.EditorMaps)
-        _editorMaps.Add(new MapController(mapData));
     }
 
     private void DeleteMapWithoutSave(MapController map)
@@ -136,33 +138,16 @@ namespace Client.Project.Map
     {
       var mapData = _mapsFactory.CreateRuntimeMap(StartMap.GetData().InitialPlayers, StartMap.Name, isEditor: isEditor, isAutosave: isAutosave);
       var map = new MapController(mapData);
-      if (isEditor)
-      {
-        _progressController.Data.EditorMaps[slotIndex] = mapData;
-        _editorMaps[slotIndex] = map;
-      }
-      else
-      {
-        _progressController.Data.Maps[slotIndex] = mapData;
-        _maps[slotIndex] = map;
-      }
-
+      _progressController.Data.Maps[slotIndex] = mapData;
+      _maps[slotIndex] = map;
       _progressController.Save();
       return map;
     }
 
-    private void InsertNullMap(bool isEditor = false)
+    private void InsertNullMap()
     {
-      if (isEditor)
-      {
-        _editorMaps.Insert(0, null);
-        _progressController.Data.EditorMaps.Insert(0, null);
-      }
-      else
-      {
-        _maps.Insert(0, null);
-        _progressController.Data.Maps.Insert(0, null);
-      }
+      _maps.Insert(0, null);
+      _progressController.Data.Maps.Insert(0, null);
     }
   }
 }

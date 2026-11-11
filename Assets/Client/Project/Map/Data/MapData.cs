@@ -13,5 +13,6 @@ namespace Client.Project.Map.Data
     public string Name;
     public long CreationTime;
     public bool IsAutosave;
+    public bool IsEditor;
   }
 }

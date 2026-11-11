@@ -9,6 +9,5 @@ namespace Client.Project.Progress
   {
     public MenuProgressData Menu = new();
     public List<MapData> Maps = new();
-    public List<MapData> EditorMaps = new();
   }
 }
