@@ -175,8 +175,8 @@ namespace Client.MapEditor
     {
       ClearMap();
       var levelSize = _gridController.LevelSize;
-      _mapsService.GenerateStartMap(levelSize, GetFractionsCount(levelSize), _mapsService.StartMap.Name);
-      LoadMap();
+      _mapsService.GenerateMapIntoEditorStart(levelSize, GetFractionsCount(levelSize), _mapsService.StartMap.Name);
+      LoadMap(false);
     }
 
     public bool Play()
@@ -201,7 +201,7 @@ namespace Client.MapEditor
     {
       ClearMap();
       _mapsService.GenerateFromCopyBufferIntoEditorStartMap();
-      LoadMap();
+      LoadMap(false);
     }
 
     public bool CanImport() => _mapsService.CanGenerateStartMapFromCopyBuffer();
@@ -241,14 +241,14 @@ namespace Client.MapEditor
         _unitsService.Destroy(cell.Unit);
     }
 
-    private void LoadMap()
+    private void LoadMap(bool viewFullMap = true)
     {
       var map = _mapsService.StartMap;
       _gridController.InitialCreateCells(map);
       _unitsService.InitialCreateUnits(map);
       _regionsService.InitialCreateRegions(map);
       _bordersService.ViewRegionsBorders();
-      _cameraController.Setup();
+      _cameraController.Setup(viewFullMap);
     }
 
     private int GetFractionsCount(LevelSize levelSize)

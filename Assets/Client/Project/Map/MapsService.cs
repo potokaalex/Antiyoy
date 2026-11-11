@@ -34,7 +34,7 @@ namespace Client.Project.Map
         if (!map.IsEditor)
           yield return map;
     }
-    
+
     public IEnumerable<MapController> GetEditorMaps()
     {
       foreach (var map in _maps)
@@ -42,8 +42,15 @@ namespace Client.Project.Map
           yield return map;
     }
 
-    public void GenerateStartMap(LevelSize levelSize, int colorsCount, string name) =>
+    public void GenerateStartMap(LevelSize levelSize, int colorsCount, string name) => StartMap = _mapGenerator.Generate(levelSize, colorsCount, name);
+
+    public void GenerateMapIntoEditorStart(LevelSize levelSize, int colorsCount, string name)
+    {
+      var index = _maps.IndexOf(StartMap);
       StartMap = _mapGenerator.Generate(levelSize, colorsCount, name);
+      if(index != -1)
+        _maps[index] = StartMap;
+    }
 
     public void GenerateEmptyStartMap(LevelSize levelSize, string name) => StartMap = _mapGenerator.GenerateEmpty(levelSize, name);
 
@@ -64,6 +71,7 @@ namespace Client.Project.Map
           _maps[editorIndex] = StartMap;
           StartMap.IsEditor = true;
         }
+
         return true;
       }
 
@@ -82,7 +90,9 @@ namespace Client.Project.Map
 
     public void DeleteMap(MapController map)
     {
-      DeleteMapWithoutSave(map);
+      _maps.Remove(map);
+      _progressController.ClearMap(map.Id);
+      _progressController.Data.MapsIds.Remove(map.Id);
       _progressController.Save();
     }
 
@@ -98,7 +108,7 @@ namespace Client.Project.Map
     public void SaveCurrentMapInAutosave()
     {
       if (AutosaveMap != null)
-        DeleteMapWithoutSave(AutosaveMap);
+        DeleteMap(AutosaveMap);
 
       InsertNullMap();
       AutosaveMap = SaveCurrentMapInSlot(0, isAutosave: true);
@@ -122,24 +132,35 @@ namespace Client.Project.Map
 
     private void Load()
     {
-      foreach (var mapData in _progressController.Data.Maps)
-        _maps.Add(new MapController(mapData));
+      var mapIds = _progressController.Data.MapsIds;
+      for (var i = mapIds.Count - 1; i >= 0; i--)
+      {
+        var mapId = mapIds[i];
+        if (!_progressController.LoadMap(mapId, out var mapData))
+        {
+          mapIds.RemoveAt(i);
+          continue;
+        }
 
+        _maps.Insert(0, new MapController(mapData));
+      }
+
+      _progressController.Save();
       AutosaveMap = _maps.FirstOrDefault(x => x.IsAutosave);
-    }
-
-    private void DeleteMapWithoutSave(MapController map)
-    {
-      _maps.Remove(map);
-      _progressController.Data.Maps.Remove(map.GetData());
     }
 
     private MapController SaveCurrentMapInSlot(int slotIndex, bool isEditor = false, bool isAutosave = false)
     {
+      var mapsIds = _progressController.Data.MapsIds;
+      var oldMap = _maps[slotIndex];
+      var id = oldMap?.Id ?? _mapsFactory.GenerateId(mapsIds);
+      UnityEngine.Debug.Log($"Save: {id}, oldMapId: {oldMap?.Id}");
       var mapData = _mapsFactory.CreateRuntimeMap(StartMap.GetData().InitialPlayers, StartMap.Name, isEditor: isEditor, isAutosave: isAutosave);
+      mapData.Id = id;
       var map = new MapController(mapData);
-      _progressController.Data.Maps[slotIndex] = mapData;
       _maps[slotIndex] = map;
+      _progressController.SaveMap(mapData);
+      mapsIds[slotIndex] = mapData.Id;
       _progressController.Save();
       return map;
     }
@@ -147,7 +168,7 @@ namespace Client.Project.Map
     private void InsertNullMap()
     {
       _maps.Insert(0, null);
-      _progressController.Data.Maps.Insert(0, null);
+      _progressController.Data.MapsIds.Insert(0, -1);
     }
   }
 }

@@ -68,7 +68,7 @@ namespace Client.Project.CameraFeatures
 
     public IEnumerator CreateScreenshotCoroutine(RenderTexture rt) => _imageController.CreateScreenshotCoroutine(rt);
 
-    public void Setup()
+    public void Setup(bool viewFullMap = true)
     {
       var gridMin = (Vector2)_gridController.HexPositionToWorld(HexCoordinates.FromArray2DIndex(Vector2Int.zero));
       var gridMax = (Vector2)_gridController.HexPositionToWorld(HexCoordinates.FromArray2DIndex(_gridController.Size - Vector2Int.one));
@@ -77,11 +77,20 @@ namespace Client.Project.CameraFeatures
       var unitsAbove = 5;
       var maxVisibleUnits = gridMax.y - gridMin.y + unitsAbove;
       _maxSize = Mathf.Max(maxVisibleUnits / 2f, _minSize);
-      SetSize(_maxSize);
 
       _minPosition = gridMin - Vector2.one * unitsAbove / 2f;
       _maxPosition = gridMax + Vector2.one * unitsAbove / 2f;
-      SetPosition(_center);
+
+      if (viewFullMap)
+      {
+        SetSize(_maxSize);
+        SetPosition(_center);
+      }
+      else
+      {
+        SetSize(ClampSize(_camera.orthographicSize));
+        SetPosition(ClampPosition(_camera.transform.position));
+      }
     }
 
     public void Focus(Vector3 position)
@@ -208,7 +217,7 @@ namespace Client.Project.CameraFeatures
           _targetSize = _camera.orthographicSize - delta * zoomDragMultiplier / 5f;
       }
 
-      _targetSize = Mathf.Clamp(_targetSize, _minSize, _maxSize);
+      _targetSize = ClampSize(_targetSize);
       _camera.orthographicSize = Mathf.Lerp(_camera.orthographicSize, _targetSize, _zoomLerpFactor * Time.deltaTime);
     }
 
@@ -233,6 +242,8 @@ namespace Client.Project.CameraFeatures
       position.z = _positionZ;
       return position;
     }
+
+    private float ClampSize(float size) => Mathf.Clamp(size, _minSize, _maxSize);
 
     private void ClearDrag() => SetPosition(_camera.transform.position);
 

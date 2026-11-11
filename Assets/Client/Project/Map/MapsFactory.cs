@@ -189,6 +189,17 @@ namespace Client.Project.Map
       throw new Exception("Cant get region by cell");
     }
 
+    public int GenerateId(List<int> existedIds)
+    {
+      for (var i = 0; i < int.MaxValue; i++)
+      {
+        if (!existedIds.Contains(i))
+          return i;
+      }
+
+      throw new Exception("Cant generate id");
+    }
+
     private List<PlayerData> CopyPlayers(List<PlayerData> players) => players.Select(x => x.Copy()).ToList();
 
     private IEnumerable<CellData> GetNeighbourCells(CellData?[,] cells, CellData cell, Vector2Int size)

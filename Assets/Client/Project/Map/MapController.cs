@@ -17,6 +17,8 @@ namespace Client.Project.Map
       _data = data;
     }
 
+    public int Id { get => _data.Id; set => _data.Id = value; }
+
     public Vector2Int Size => _data.Size;
 
     public IReadOnlyList<PlayerData> Players => _data.Players;

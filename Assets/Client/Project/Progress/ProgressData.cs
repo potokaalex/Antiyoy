@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Client.Project.Map.Data;
 
 namespace Client.Project.Progress
 {
@@ -8,6 +7,6 @@ namespace Client.Project.Progress
   public class ProgressData
   {
     public MenuProgressData Menu = new();
-    public List<MapData> Maps = new();
+    public List<int> MapsIds = new();
   }
 }
