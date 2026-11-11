@@ -92,9 +92,10 @@ namespace Client.Project.Map
 
     public void SaveCurrentMapInAutosave()
     {
-      if (AutosaveMap == null)
-        InsertNullMap();
+      if (AutosaveMap != null)
+        DeleteMapWithoutSave(AutosaveMap);
 
+      InsertNullMap();
       AutosaveMap = SaveCurrentMapInSlot(0, isAutosave: true);
     }
 
@@ -112,7 +113,7 @@ namespace Client.Project.Map
 
     public void RestartStartMap() => StartMap = StartMap.RestartCopy();
 
-    public void ExportFromRuntime() =>  GUIUtility.systemCopyBuffer = _mapEncodeController.EncodeFromRuntime();
+    public void ExportFromRuntime() => GUIUtility.systemCopyBuffer = _mapEncodeController.EncodeFromRuntime();
 
     private void Load()
     {
