@@ -115,7 +115,7 @@ namespace Client.Gameplay.Gameplay
         TurnsCount++;
         SetFirstPlayer();
         _treesController.UpdateTrees();
-        _mapsService.SaveCurrentMapInAutosave();
+        _mapsService.SaveRuntimeMapInAutosave();
       }
 
       UpdatePlayerRegions();

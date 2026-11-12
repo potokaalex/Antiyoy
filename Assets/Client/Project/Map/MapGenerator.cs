@@ -22,7 +22,9 @@ namespace Client.Project.Map
 
     public MapGenerator() => _mapsFactory = Locator.Get<MapsFactory>();
 
-    public MapController Generate(LevelSize levelSize, int colorsCount, string name)
+    public MapController Generate(LevelSize levelSize, int colorsCount, string name) => new(GenerateData(levelSize, colorsCount, name));
+
+    public MapData GenerateData(LevelSize levelSize, int colorsCount, string name)
     {
       var field = _yiotroMapGenerator.GenerateMap(new System.Random(Environment.TickCount), levelSize, colorsCount);
 
@@ -33,7 +35,7 @@ namespace Client.Project.Map
       CreateCapitals(regions);
       var players = _mapsFactory.CreatePlayers(regions);
 
-      return new MapController(_mapsFactory.CreateMapData(players, size, name));
+      return _mapsFactory.CreateMapData(players, size, name);
     }
 
     public MapController GenerateEmpty(LevelSize levelSize, string name) =>

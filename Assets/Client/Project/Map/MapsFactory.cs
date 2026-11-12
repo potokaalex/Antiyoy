@@ -24,10 +24,11 @@ namespace Client.Project.Map
       _gridController = Locator.Get<GridController>();
     }
 
-    public MapData CreateMapData(List<PlayerData> initialPlayers, Vector2Int size, string name, DateTime creationTime = default)
+    public MapData CreateMapData(List<PlayerData> initialPlayers, Vector2Int size, string name, DateTime creationTime = default, int id = -1)
     {
       return new MapData
       {
+        Id = id,
         InitialPlayers = initialPlayers,
         Players = CopyPlayers(initialPlayers),
         Size = size,

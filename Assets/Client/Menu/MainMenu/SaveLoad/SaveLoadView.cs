@@ -80,8 +80,9 @@ namespace Client.Menu.MainMenu.SaveLoad
 
     protected virtual void CreateViews()
     {
-      foreach (var map in MapsService.GetMaps()) 
-        CreateView(map);
+      foreach (var map in MapsService.GetMaps())
+        if (!map.IsEditor)
+          CreateView(map);
     }
 
     protected virtual void ClearView(SaveLoadSlotView view)

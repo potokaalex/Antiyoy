@@ -24,8 +24,9 @@ namespace Client.Menu.MainMenu.MapEditor
 
     protected override void CreateViews()
     {
-      foreach (var map in MapsService.GetEditorMaps()) 
-        CreateView(map);
+      foreach (var map in MapsService.GetMaps())
+        if (map.IsEditor)
+          CreateView(map);
     }
 
     protected override void OnViewClick(SaveLoadSlotView slotView)

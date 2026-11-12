@@ -9,7 +9,7 @@ namespace Client.Project.Map
   public class MapController
   {
     private readonly MapsFactory _mapsFactory;
-    private readonly MapData _data;
+    private MapData _data;
 
     public MapController(MapData data)
     {
@@ -29,7 +29,7 @@ namespace Client.Project.Map
 
     public bool IsAutosave => _data.IsAutosave;
 
-    public bool IsEditor { get => _data.IsEditor; set => _data.IsEditor = value; }
+    public bool IsEditor => _data.IsEditor;
 
     public IEnumerable<CellData> GetCells()
     {
@@ -41,6 +41,10 @@ namespace Client.Project.Map
 
     public MapData GetData() => _data;
 
-    public MapController RestartCopy() => new(_mapsFactory.CreateMapData(_data.InitialPlayers, _data.Size, _data.Name, CreationTime));
+    public void Restart() => _data = _mapsFactory.CreateMapData(_data.InitialPlayers, _data.Size, _data.Name, CreationTime, Id);
+
+    public void SetSize(Vector2Int size) => _data.Size = size;
+
+    public void SetPlayers(List<PlayerData> players) => _data.Players = players;
   }
 }

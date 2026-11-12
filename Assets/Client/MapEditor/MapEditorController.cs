@@ -175,7 +175,7 @@ namespace Client.MapEditor
     {
       ClearMap();
       var levelSize = _gridController.LevelSize;
-      _mapsService.GenerateMapIntoEditorStart(levelSize, GetFractionsCount(levelSize), _mapsService.StartMap.Name);
+      _mapsService.GenerateMapIntoStart(levelSize, GetFractionsCount(levelSize));
       LoadMap(false);
     }
 
@@ -200,11 +200,11 @@ namespace Client.MapEditor
     public void Import()
     {
       ClearMap();
-      _mapsService.GenerateFromCopyBufferIntoEditorStartMap();
+      _mapsService.GenerateFromCopyBufferIntoStartMap();
       LoadMap(false);
     }
 
-    public bool CanImport() => _mapsService.CanGenerateStartMapFromCopyBuffer();
+    public bool CanImport() => _mapsService.CanGenerateFromCopyBuffer();
 
     private void End()
     {
@@ -269,7 +269,7 @@ namespace Client.MapEditor
       if (!MapEmpty())
       {
         _governmentsService.ClearEmpty();
-        _mapsService.SaveCurrentEditorMap();
+        _mapsService.SaveRuntimeEditorMap();
       }
     }
 
