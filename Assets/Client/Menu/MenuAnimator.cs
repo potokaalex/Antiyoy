@@ -59,7 +59,8 @@ namespace Client.Menu
     public void PlayShow()
     {
       Initialize();
-      var tween = MenuAnimation(_topPanelStartPosition, 1, 1).JoinCallback(() => gameObject.SetActive(true));
+      gameObject.SetActive(true);
+      var tween = MenuAnimation(_topPanelStartPosition, 1, 1);
       if (_hasBackgroundAnimation)
         tween.Join(_menuView.Background.PlayColorTransition(_backgroundShowColor, _particlesShowColor));
     }

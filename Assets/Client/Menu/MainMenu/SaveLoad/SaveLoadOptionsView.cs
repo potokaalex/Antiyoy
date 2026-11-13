@@ -62,6 +62,7 @@ namespace Client.Menu.MainMenu.SaveLoad
       _inputFieldAnimator.PlayShow();
       _bodyMenuAnimator.PlayHide();
       _inputField.text = _slotView.Header;
+      _inputField.Select();
     }
 
     private void OnDeleteClick()
@@ -72,7 +73,8 @@ namespace Client.Menu.MainMenu.SaveLoad
 
     private void OnEndRename(string value)
     {
-      _saveLoadView.Rename(_slotView, value);
+      if(!string.IsNullOrEmpty(value))
+        _saveLoadView.Rename(_slotView, value);
       Hide();
     }
   }

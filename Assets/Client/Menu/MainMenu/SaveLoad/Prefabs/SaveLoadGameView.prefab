@@ -1950,7 +1950,7 @@ MonoBehaviour:
   m_AsteriskChar: 42
   m_KeyboardType: 0
   m_LineType: 0
-  m_HideMobileInput: 0
+  m_HideMobileInput: 1
   m_HideSoftKeyboard: 0
   m_CharacterValidation: 0
   m_RegexValue: 
@@ -2152,6 +2152,7 @@ MonoBehaviour:
   _bottomPanel: {fileID: 3574438527831462178}
   _bottomPanelOffsetY: -750
   _speedFactor: 1.5
+  _controlInput: 1
 --- !u!1 &7709391159470996169
 GameObject:
   m_ObjectHideFlags: 0
@@ -2686,11 +2687,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5219525339767593459, guid: 10651db774aae314598754fca26fc5a3, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 500
+      value: 850
       objectReference: {fileID: 0}
     - target: {fileID: 5219525339767593459, guid: 10651db774aae314598754fca26fc5a3, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 100
+      value: 125
       objectReference: {fileID: 0}
     - target: {fileID: 5219525339767593459, guid: 10651db774aae314598754fca26fc5a3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2806,11 +2807,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5219525339767593459, guid: 10651db774aae314598754fca26fc5a3, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 500
+      value: 850
       objectReference: {fileID: 0}
     - target: {fileID: 5219525339767593459, guid: 10651db774aae314598754fca26fc5a3, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 100
+      value: 125
       objectReference: {fileID: 0}
     - target: {fileID: 5219525339767593459, guid: 10651db774aae314598754fca26fc5a3, type: 3}
       propertyPath: m_LocalPosition.x
