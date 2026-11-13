@@ -33,7 +33,7 @@ namespace Client.Project.Map
 
       _allPlayerRegions.Shuffle();
       _cells = _mapsFactory.CellsBuffer;
-      _mapsFactory.ClearCellsBuffer(size);
+      _mapsFactory.ClearCellsBuffer();
       CreateCells(field, size);
       var regions = _mapsFactory.CreateRegions(_cells, size, 10);
       CreateCapitals(regions);

@@ -53,6 +53,7 @@ namespace Client.Project.Hex
 
     public static bool operator !=(HexCoordinates a, HexCoordinates b) => !a.Equals(b);
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool Equals(HexCoordinates other) => Q == other.Q && R == other.R;
 
     public override bool Equals(object obj) => obj is HexCoordinates other && Equals(other);

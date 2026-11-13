@@ -217,12 +217,7 @@ namespace Client.Project.Map
       throw new Exception("Cant generate id");
     }
 
-    public void ClearCellsBuffer(Vector2Int size)
-    {
-      for (var x = 0; x < size.x; x++)
-      for (var y = 0; y < size.y; y++)
-        CellsBuffer[x, y].HasValue = false;
-    }
+    public void ClearCellsBuffer() => Array.Clear(CellsBuffer, 0, CellsBuffer.Length);
 
     private List<PlayerData> CopyPlayers(List<PlayerData> players) => players.Select(x => x.Copy()).ToList();
 

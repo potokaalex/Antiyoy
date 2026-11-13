@@ -62,7 +62,7 @@ namespace Client.Project.Map
       _mapSize = GameUtilities.LevelSizeToFieldSize(levelSize);
       _isHuge = levelSize == LevelSize.Huge;
       _cells = _mapsFactory.CellsBuffer;
-      _mapsFactory.ClearCellsBuffer(_mapSize);
+      _mapsFactory.ClearCellsBuffer();
     }
 
     private void DecodeMapName()
