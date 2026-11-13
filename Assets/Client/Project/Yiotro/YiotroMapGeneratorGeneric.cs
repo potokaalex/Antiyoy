@@ -1,17 +1,30 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Client.Project.Map;
 using Client.Project.Utilities;
+using UnityEngine;
 using Random = System.Random;
 
 namespace Client.Project.Yiotro
 {
   public class YiotroMapGeneratorGeneric : YiotroMapGenerator
   {
+    private static readonly double[][] _changes =
+    {
+      null,
+      null,
+      new[] { -0.4, 0.3 },
+      new[] { -0.5, 0.2, 0.4 },
+      new[] { -0.6, 0.12, 0.3, 0.6 },
+      new[] { -0.5, -0.35, 0.15, 0.32, 0.5 },
+      new[] { -0.6, -0.75, 0.15, 0.25, 0.4, 0.6 },
+      new[] { -0.4, -0.9, 0.2, 0.3, 0.45, 0.6, 0.8 }
+    };
     private bool _flagNeutrals;
 
-    public Hex[][] GenerateMap(Random random, LevelSize levelSize, int fractionsQuantity)
+    public Hex[][] GenerateMap(Random random, LevelSize levelSize, int fractionsQuantity, Vector2Int size)
     {
-      FieldManager.Setup(GameUtilities.LevelSizeToFieldSize(levelSize));
+      FieldManager.Setup(size);
       SetValues(random, levelSize, fractionsQuantity);
       BeginGeneration();
       CreateLand();
@@ -126,26 +139,7 @@ namespace Client.Project.Yiotro
       ApplyChanges(changesArray);
     }
 
-    private double[] GetChangesArray()
-    {
-      switch (FractionsQuantity)
-      {
-        default:
-          return null;
-        case 2:
-          return new[] { -0.4, 0.3 };
-        case 3:
-          return new[] { -0.5, 0.2, 0.4 };
-        case 4:
-          return new[] { -0.6, 0.12, 0.3, 0.6 };
-        case 5:
-          return new[] { -0.5, -0.35, 0.15, 0.32, 0.5 };
-        case 6:
-          return new[] { -0.6, -0.75, 0.15, 0.25, 0.4, 0.6 };
-        case 7:
-          return new[] { -0.4, -0.9, 0.2, 0.3, 0.45, 0.6, 0.8 };
-      }
-    }
+    private double[] GetChangesArray() => FractionsQuantity < _changes.Length && FractionsQuantity >= 2 ? _changes[FractionsQuantity] : null;
 
     private void ApplyChanges(double[] changes)
     {
@@ -163,7 +157,8 @@ namespace Client.Project.Yiotro
     private void SpawnProvince(Hex spawnHex, int startingPotential)
     {
       spawnHex.GenPotential = startingPotential;
-      var propagationList = new List<Hex>();
+      var propagationList = TempList;
+      propagationList.Clear();
       propagationList.Add(spawnHex);
       while (propagationList.Count > 0)
       {
@@ -188,18 +183,26 @@ namespace Client.Project.Yiotro
 
     private Hex FindGoodPlaceForNewProvince()
     {
-      if (AllHexesAreNeutral())
+      var activeHexesList = GetActiveHexes();
+      var activeHexesArray = activeHexesList.ExtractArray();
+      var activeHexesCount = activeHexesList.Count;
+
+      if (AllHexesAreNeutral(activeHexesArray, activeHexesCount))
         return GetRandomFreeHex();
 
-      PrepareHexesToFindNewProvincePlace();
-
       var step = 0;
+
+      PrepareHexesToFindNewProvincePlace(activeHexesArray, activeHexesCount);
+
       while (true)
       {
         var expanded = false;
-        foreach (Hex hex in GetActiveHexes())
+        for (var i = 0; i < activeHexesCount; i++)
         {
-          if (hex.MoveZoneNumber != step) continue;
+          var hex = activeHexesArray[i];
+          if (hex.MoveZoneNumber != step) 
+            continue;
+
           for (var dir = 0; dir < 6; dir++)
           {
             var adj = hex.GetAdjacentHex(dir);
@@ -218,23 +221,28 @@ namespace Client.Project.Yiotro
         step++;
       }
 
-      return FindHexWithHighestMoveZoneNumber();
+      return FindHexWithHighestMoveZoneNumber(activeHexesArray, activeHexesCount);
     }
 
-    private Hex FindHexWithHighestMoveZoneNumber()
+    private Hex FindHexWithHighestMoveZoneNumber(Hex[] hexes, int hexesCount)
     {
       Hex result = null;
 
-      foreach (Hex hex in GetActiveHexes())
+      for (var i = 0; i < hexesCount; i++)
+      {
+        var hex = hexes[i];
         if (result == null || hex.MoveZoneNumber > result.MoveZoneNumber)
           result = hex;
+      }
+
       return result;
     }
 
-    private void PrepareHexesToFindNewProvincePlace()
+    private void PrepareHexesToFindNewProvincePlace(Hex[] hexes, int hexesCount)
     {
-      foreach (Hex hex in GetActiveHexes())
+      for (var i = 0; i < hexesCount; i++)
       {
+        var hex = hexes[i];
         if (hex.IsNeutral())
         {
           hex.MoveZoneNumber = -1;
@@ -245,15 +253,18 @@ namespace Client.Project.Yiotro
       }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private List<Hex> GetActiveHexes() => FieldManager.ActiveHexes;
 
-    private bool AllHexesAreNeutral()
+    private bool AllHexesAreNeutral(Hex[] hexes, int hexesCount)
     {
-      if (!_flagNeutrals) return false;
+      if (!_flagNeutrals) 
+        return false;
 
-      foreach (Hex activeHex in GetActiveHexes())
+      for (var i = 0; i < hexesCount; i++)
       {
-        if (activeHex.IsNeutral())
+        var hex = hexes[i];
+        if (hex.IsNeutral())
           continue;
         _flagNeutrals = false;
         return false;

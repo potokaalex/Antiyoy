@@ -26,10 +26,11 @@ namespace Client.Project.Map
 
     public MapData GenerateData(LevelSize levelSize, int colorsCount, string name)
     {
-      var field = _yiotroMapGenerator.GenerateMap(new System.Random(Environment.TickCount), levelSize, colorsCount);
+      UnityEngine.Debug.Log(Environment.TickCount);
+      var size = GameUtilities.LevelSizeToFieldSize(levelSize);
+      var field = _yiotroMapGenerator.GenerateMap(new System.Random(Environment.TickCount), levelSize, colorsCount, size);
 
       _allPlayerRegions.Shuffle();
-      var size = new Vector2Int(field.Length, field[0].Length);
       var cells = CreateCells(field, size);
       var regions = _mapsFactory.CreateRegions(cells, size, 10);
       CreateCapitals(regions);

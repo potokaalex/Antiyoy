@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Client.Project.Hex
@@ -17,25 +18,22 @@ namespace Client.Project.Hex
       R = r;
     }
 
-    public static HexCoordinates FromArray2DIndex(Vector2Int index)
-    {
-      return new HexCoordinates
-      {
-        Q = index.x,
-        R = index.y - (index.x - (index.x & 1)) / 2
-      };
-    }
+    public static HexCoordinates FromArray2DIndex(Vector2Int index) => FromArray2DIndex(index.x, index.y);
+
+    public static HexCoordinates FromArray2DIndex(int x, int y) => new(x, y - ((x - (x & 1)) >> 1));
 
     public Vector2Int ToArray2DIndex()
     {
-      return new Vector2Int
-      {
-        x = Q,
-        y = R + (Q - (Q & 1)) / 2
-      };
+      var q = Q;
+      return new Vector2Int(q, R + ((q - (q & 1)) >> 1));
     }
 
-    public float GetMagnitude() => (Math.Abs(Q) + Math.Abs(R) + Math.Abs(S)) / 2f;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Vector2Int AddOffsetToArray2Index(int x, int y, HexCoordinates offset)
+    {
+      var q = x + offset.Q;
+      return new Vector2Int(q, y + offset.R + ((q - (q & 1)) >> 1) - ((x - (x & 1)) >> 1));
+    }
 
     public override string ToString() => $"{Q};{R};{S}";
 

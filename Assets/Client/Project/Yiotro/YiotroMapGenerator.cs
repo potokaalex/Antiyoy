@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Client.Project.Map;
+using Client.Project.Utilities;
 
 namespace Client.Project.Yiotro
 {
@@ -10,13 +11,16 @@ namespace Client.Project.Yiotro
 
     protected const int SMALL_PROVINCE_SIZE = 5;
     protected readonly FieldManager FieldManager = new();
+    protected readonly List<Hex> TempList = new();
     protected Random Random;
     protected LevelSize LevelSize;
     protected int FractionsQuantity;
 
     private const double _treesSpawnChance = 0.1;
     private readonly DetectorProvince _detectorProvince = new();
-    private readonly List<Hex> _tempList = new();
+    private readonly List<Hex> _islandCenters = new();
+    private readonly List<Link> _links = new();
+    private readonly RelocateMapData[][] _relocateMapData;
     private int _fWidth;
     private int _fHeight;
     private double _minX;
@@ -24,8 +28,14 @@ namespace Client.Project.Yiotro
     private double _minY;
     private double _maxY;
     private Hex[][] _field;
-    private List<Hex> _islandCenters;
-    private List<Link> _links;
+
+    public YiotroMapGenerator()
+    {
+      var maxFieldSize = GameUtilities.MaxFieldSize;
+      _relocateMapData = new RelocateMapData[maxFieldSize.x][];
+      for (var x = 0; x < maxFieldSize.x; x++)
+        _relocateMapData[x] = new RelocateMapData[maxFieldSize.y];
+    }
 
     protected void SetValues(Random random, LevelSize levelSize, int fractionsQuantity)
     {
@@ -79,7 +89,7 @@ namespace Client.Project.Yiotro
       {
         var hex = FindHexToExcludeFromProvince(provinceList);
         provinceList.Remove(hex);
-        hex.Fraction = getRandomFractionExceptOne(provinceFraction);
+        hex.Fraction = GetRandomFractionExceptOne(provinceFraction);
       }
     }
 
@@ -146,17 +156,19 @@ namespace Client.Project.Yiotro
     protected void BeginGeneration()
     {
       FieldManager.CreateFieldMatrix();
-      _islandCenters = new List<Hex>();
-      _links = new List<Link>();
+      _islandCenters.Clear();
+      _links.Clear();
     }
 
     protected void CutProvincesToSmallSizes()
     {
       var loopLimit = 100;
-      while (atLeastOneProvinceIsTooBig() && loopLimit > 0)
+      while (AtLeastOneProvinceIsTooBig() && loopLimit > 0)
       {
-        foreach (var activeHex in FieldManager.ActiveHexes)
+        var hexes = FieldManager.ActiveHexes;
+        for (var i = 0; i < hexes.Count; i++)
         {
+          var activeHex = hexes[i];
           var provinceList = _detectorProvince.DetectProvince(activeHex);
           if (provinceList.Count > SMALL_PROVINCE_SIZE)
             ReduceProvinceSize(provinceList);
@@ -170,7 +182,7 @@ namespace Client.Project.Yiotro
     {
       Hex resultHex = null;
       var minNumber = 0;
-      for (int i = 0; i < provinceList.Count; i++)
+      for (var i = 0; i < provinceList.Count; i++)
       {
         var currHex = provinceList[i];
         var currNumber = currHex.NumberOfFriendlyHexesNearby();
@@ -194,15 +206,20 @@ namespace Client.Project.Yiotro
       }
     }
 
-    private bool atLeastOneProvinceIsTooBig()
+    private bool AtLeastOneProvinceIsTooBig()
     {
-      foreach (var activeHex in FieldManager.ActiveHexes)
+      var hexes = FieldManager.ActiveHexes;
+      for (var i = 0; i < hexes.Count; i++)
+      {
+        var activeHex = hexes[i];
         if (_detectorProvince.DetectProvince(activeHex).Count > SMALL_PROVINCE_SIZE)
           return true;
+      }
+
       return false;
     }
 
-    private int getRandomFractionExceptOne(int excludedFraction)
+    private int GetRandomFractionExceptOne(int excludedFraction)
     {
       while (true)
       {
@@ -243,45 +260,37 @@ namespace Client.Project.Yiotro
 
     private void RelocateMap(int deltaX, int deltaY)
     {
-      var wasActive = new bool[_fWidth][];
-      var fractions = new int[_fWidth][];
-      for (var x = 0; x < _fWidth; x++)
-      {
-        wasActive[x] = new bool[_fHeight];
-        fractions[x] = new int[_fHeight];
-        for (var y = 0; y < _fHeight; y++)
-        {
-          wasActive[x][y] = _field[x][y].Active;
-          fractions[x][y] = _field[x][y].Fraction;
-        }
-      }
+      var activeHexes = FieldManager.ActiveHexes;
+      activeHexes.Clear();
 
-      FieldManager.ClearActiveHexesList();
       for (var x = 0; x < _fWidth; x++)
+      for (var y = 0; y < _fHeight; y++)
       {
-        for (var y = 0; y < _fHeight; y++)
-        {
-          _field[x][y].Active = false;
-          _field[x][y].GenFlag = false;
-        }
+        ref var data = ref _relocateMapData[x][y];
+        var hex = _field[x][y];
+        data.Active = hex.Active;
+        data.Fraction = hex.Fraction;
+        hex.Active = false;
+        hex.GenFlag = false;
       }
 
       for (var x = 0; x < _fWidth; x++)
+      for (var y = 0; y < _fHeight; y++)
       {
-        for (var y = 0; y < _fHeight; y++)
-        {
-          if (!wasActive[x][y])
-            continue;
-          var destX = x + deltaX;
-          var destY = y + deltaY;
-          if (destX < 0 || destY < 0 || destX >= _fWidth || destY >= _fHeight)
-            continue;
-          var destination = _field[destX][destY];
-          destination.Active = true;
-          destination.SetFraction(fractions[x][y]);
-          if (!FieldManager.ActiveHexes.Contains(destination))
-            FieldManager.ActiveHexes.Add(destination);
-        }
+        ref var data = ref _relocateMapData[x][y];
+
+        if (!data.Active)
+          continue;
+
+        var destX = x + deltaX;
+        var destY = y + deltaY;
+        if (destX < 0 || destY < 0 || destX >= _fWidth || destY >= _fHeight)
+          continue;
+
+        var destination = _field[destX][destY];
+        destination.Active = true;
+        destination.SetFraction(data.Fraction);
+        activeHexes.Add(destination);
       }
     }
 
@@ -306,18 +315,18 @@ namespace Client.Project.Yiotro
         return false;
 
       // flood
-      _tempList.Clear();
-      _tempList.Add(activeHex);
-      while (_tempList.Count > 0)
+      TempList.Clear();
+      TempList.Add(activeHex);
+      while (TempList.Count > 0)
       {
-        var hex = _tempList[0];
-        _tempList.RemoveAt(0);
+        var hex = TempList[0];
+        TempList.RemoveAt(0);
         hex.GenFlag = true;
-        for (int i = 0; i < 6; i++)
+        for (var i = 0; i < 6; i++)
         {
           var adjHex = hex.GetAdjacentHex(i);
-          if (adjHex.Active && !adjHex.GenFlag && !_tempList.Contains(adjHex))
-            _tempList.Add(adjHex);
+          if (adjHex.Active && !adjHex.GenFlag && !TempList.Contains(adjHex))
+            TempList.Add(adjHex);
         }
       }
 
@@ -437,7 +446,8 @@ namespace Client.Project.Yiotro
     {
       ClearGenFlags();
       startHex.GenPotential = size;
-      var propagationList = new List<Hex>();
+      var propagationList = TempList;
+      propagationList.Clear();
       propagationList.Add(startHex);
       while (propagationList.Count > 0)
       {
@@ -463,15 +473,18 @@ namespace Client.Project.Yiotro
 
     private void UniteIslandsWithRoads()
     {
-      for (var i = 0; i < _islandCenters.Count; i++)
-        CreateRoadBetweenIslands(i, GetClosestIslandIndex(i));
+      var islandCentersArray = _islandCenters.ExtractArray();
+      var islandCentersCount = _islandCenters.Count;
+
+      for (var i = 0; i < islandCentersCount; i++)
+        CreateRoadBetweenIslands(i, GetClosestIslandIndex(i, islandCentersArray, islandCentersCount), islandCentersArray);
     }
 
-    private void CreateRoadBetweenIslands(int islandOne, int islandTwo)
+    private void CreateRoadBetweenIslands(int islandOne, int islandTwo, Hex[] islandCenters)
     {
       if (islandTwo == -1) return;
-      var start = _islandCenters[islandOne];
-      var end = _islandCenters[islandTwo];
+      var start = islandCenters[islandOne];
+      var end = islandCenters[islandTwo];
       _links.Add(new Link(start, end));
 
       // The original world-space line was sampled every half-hex. Draw the
@@ -513,25 +526,28 @@ namespace Client.Project.Yiotro
       return GetHexAtArrayCoordinates(rx, ry);
     }
 
-    private bool AreIslandsAlreadyUnited(Hex p1, Hex p2)
+    private bool AreIslandsAlreadyUnited(Hex p1, Hex p2, Link[] linksArray, int linksCount)
     {
-      for (var i = 0; i < _links.Count; i++)
-        if (_links[i].Equals(p1, p2))
+      for (var i = 0; i < linksCount; i++)
+        if (linksArray[i].Equals(p1, p2))
           return true;
       return false;
     }
 
-    private int GetClosestIslandIndex(int searcherIslandIndex)
+    private int GetClosestIslandIndex(int searcherIslandIndex, Hex[] islandCentersArray, int islandCentersCount)
     {
-      var start = _islandCenters[searcherIslandIndex];
+      var start = islandCentersArray[searcherIslandIndex];
       var closestIslandIndex = -1;
       var minDistance = double.MaxValue;
+      var linksArray = _links.ExtractArray();
+      var linksCount = _links.Count;
+
       // Keep the original generator's candidate range (starts at island 1).
-      for (var i = 1; i < _islandCenters.Count; i++)
+      for (var i = 1; i < islandCentersCount; i++)
       {
-        if (i == searcherIslandIndex || AreIslandsAlreadyUnited(start, _islandCenters[i]))
+        var candidate = islandCentersArray[i];
+        if (i == searcherIslandIndex || AreIslandsAlreadyUnited(start, candidate, linksArray, linksCount))
           continue;
-        var candidate = _islandCenters[i];
         // Euclidean distance in the physical plane of an axial hex grid.
         var dx = (candidate.Index1 - start.Index1) + (candidate.Index2 - start.Index2) * 0.5;
         var dy = (candidate.Index2 - start.Index2) * (Math.Sqrt(3) / 2.0);
