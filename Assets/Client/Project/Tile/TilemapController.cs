@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Client.Project.Hex;
 using Client.Project.Infrastructure;
 using Client.Project.Utilities;
@@ -10,6 +11,7 @@ namespace Client.Project.Tile
   {
     [SerializeField] private Tilemap _tilemap;
     [SerializeField] private Tilemap _tilemapShadows;
+    [SerializeField] private Tilemap _tilemapMask;
     [SerializeField] private TileBase _tile;
     private GridController _gridController;
 
@@ -17,6 +19,7 @@ namespace Client.Project.Tile
     {
       _gridController = Locator.Get<GridController>();
       FillByBaseTiles();
+      _tilemapMask.gameObject.SetActive(false);
     }
 
     private void FillByBaseTiles()
@@ -46,6 +49,23 @@ namespace Client.Project.Tile
       var tilemapPosition = _gridController.GridIndexFrom2DIndex(position.ToArray2DIndex());
       _tilemap.SetColor(tilemapPosition, Color.clear);
       _tilemapShadows.SetColor(tilemapPosition, Color.clear);
+    }
+
+    public void TilemapMaskCreateTiles(List<CellController> cells)
+    {
+      foreach (var cell in cells)
+      {
+        var tilemapPosition = _gridController.GridIndexFrom2DIndex(cell.Position.ToArray2DIndex());
+        _tilemapMask.SetTile(tilemapPosition, _tile);
+      }
+
+      _tilemapMask.gameObject.SetActive(true);
+    }
+
+    public void TilemapMaskClearTiles()
+    {
+      _tilemapMask.gameObject.SetActive(false);
+      _tilemapMask.ClearAllTiles();
     }
   }
 }

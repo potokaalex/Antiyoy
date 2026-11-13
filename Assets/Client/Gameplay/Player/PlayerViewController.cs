@@ -1,5 +1,4 @@
 using Client.Gameplay.Protection;
-using Client.Gameplay.TileSelectionView;
 using Client.Gameplay.UI;
 using Client.Project;
 using Client.Project.Borders;

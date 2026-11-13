@@ -3,7 +3,6 @@ using Client.Gameplay.DebugFeatures;
 using Client.Gameplay.Player;
 using Client.Gameplay.Protection;
 using Client.Gameplay.Recovery;
-using Client.Gameplay.TileSelectionView;
 using Client.Gameplay.UI;
 using Client.Project.Government;
 using Client.Project.Infrastructure;
