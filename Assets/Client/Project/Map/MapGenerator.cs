@@ -27,7 +27,6 @@ namespace Client.Project.Map
 
     public MapData GenerateData(LevelSize levelSize, int colorsCount, string name)
     {
-      UnityEngine.Debug.Log(Environment.TickCount);
       var size = GameUtilities.LevelSizeToFieldSize(levelSize);
       var field = _yiotroMapGenerator.GenerateMap(new System.Random(Environment.TickCount), levelSize, colorsCount, size);
 
