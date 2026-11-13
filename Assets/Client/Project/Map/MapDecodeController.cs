@@ -13,7 +13,7 @@ namespace Client.Project.Map
     private MapsFactory _mapsFactory;
     private Vector2Int _mapSize;
     private string _source;
-    private CellData?[,] _cells;
+    private UnsafeNullable<CellData>[,] _cells;
     private string _mapName;
     private bool _isHuge;
 
@@ -61,7 +61,8 @@ namespace Client.Project.Map
 
       _mapSize = GameUtilities.LevelSizeToFieldSize(levelSize);
       _isHuge = levelSize == LevelSize.Huge;
-      _cells = new CellData?[_mapSize.x, _mapSize.y];
+      _cells = _mapsFactory.CellsBuffer;
+      _mapsFactory.ClearCellsBuffer(_mapSize);
     }
 
     private void DecodeMapName()
@@ -138,12 +139,11 @@ namespace Client.Project.Map
 
         var regionType = YiotroUtilities.FractionToRegionType(fraction);
 
-        _cells[index.x, index.y] = new CellData
-        {
-          Position = hex,
-          RegionType = regionType,
-          Unit = unitData
-        };
+        ref var cell = ref _cells[index.x, index.y];
+        cell.HasValue = true;
+        cell.Value.Position = hex;
+        cell.Value.RegionType = regionType;
+        cell.Value.Unit = unitData;
       }
     }
 

@@ -13,11 +13,18 @@ namespace Client.Project.Map
 {
   public class MapsFactory : IInitializable
   {
-    private readonly HashSet<CellData> _passedBuffer = new();
+    public readonly UnsafeNullable<CellData>[,] CellsBuffer;
+    private readonly HashSet<CellData> _passedBuffer = new(CellDataEqualityComparer.Instance);
     private readonly Queue<CellData> _frontBuffer = new();
     private GovernmentsService _governmentsService;
     private GridController _gridController;
 
+    public MapsFactory()
+    {
+      var maxFieldSize = GameUtilities.MaxFieldSize;
+      CellsBuffer = new UnsafeNullable<CellData>[maxFieldSize.x, maxFieldSize.y];
+    }
+ 
     public void Initialize()
     {
       _governmentsService = Locator.Get<GovernmentsService>();
@@ -73,18 +80,21 @@ namespace Client.Project.Map
       };
     }
 
-    public List<RegionData> CreateRegions(CellData?[,] cells, Vector2Int size, int initialMoney)
+    public List<RegionData> CreateRegions(UnsafeNullable<CellData>[,] cells, Vector2Int size, int initialMoney)
     {
       var newRegions = new List<RegionData>();
       _passedBuffer.Clear();
       _frontBuffer.Clear();
 
-      foreach (var rootCellNull in cells)
+      for (var x = 0; x < size.x; x++)
+      for (var y = 0; y < size.y; y++)
       {
+        ref var rootCellNull = ref cells[x, y];
+
         if (!rootCellNull.HasValue)
           continue;
 
-        var rootCell = rootCellNull.Value;
+        ref var rootCell = ref rootCellNull.Value;
 
         if (_passedBuffer.Contains(rootCell))
           continue;
@@ -105,13 +115,24 @@ namespace Client.Project.Map
         {
           var cell = _frontBuffer.Dequeue();
 
-          foreach (var neighbour in GetNeighbourCells(cells, cell, size))
+          var aroundPosition = cell.Position;
+
+          for (var i = 0; i < HexUtilities.Directions.Length; i++)
           {
-            if (neighbour.RegionType == rootCell.RegionType && !_passedBuffer.Contains(neighbour))
+            var index = aroundPosition.AddOffsetAndConvertToArray2DIndex(HexUtilities.Directions[i]);
+            if (index.x >= 0 && index.x < size.x && index.y >= 0 && index.y < size.y)
             {
-              newRegion.Cells.Add(neighbour);
-              _frontBuffer.Enqueue(neighbour);
-              _passedBuffer.Add(neighbour);
+              ref var neighbourNull = ref cells[index.x, index.y];
+              if (neighbourNull.HasValue)
+              {
+                ref var neighbour = ref neighbourNull.Value;
+                if (neighbour.RegionType == rootCell.RegionType && !_passedBuffer.Contains(neighbour))
+                {
+                  newRegion.Cells.Add(neighbour);
+                  _frontBuffer.Enqueue(neighbour);
+                  _passedBuffer.Add(neighbour);
+                }
+              }
             }
           }
         }
@@ -119,7 +140,7 @@ namespace Client.Project.Map
 
       return newRegions;
     }
-
+    
     public List<PlayerData> CreatePlayers(List<RegionData> regions)
     {
       var players = new List<PlayerData>();
@@ -165,16 +186,11 @@ namespace Client.Project.Map
       }
     }
 
-    public void SetUnit(UnitData? unit, CellData?[,] cells, int x, int y)
+    public void SetUnit(UnitData? unit, UnsafeNullable<CellData>[,] cells, int x, int y)
     {
       ref var cellNullable = ref cells[x, y];
-
-      if (cellNullable.HasValue)
-      {
-        var cell = cellNullable.Value;
-        cell.Unit = unit;
-        cells[x, y] = cell;
-      }
+      if (cellNullable.HasValue) 
+        cellNullable.Value.Unit = unit;
     }
 
     public ref RegionData GetRegionByCell(HexCoordinates hex, List<RegionData> regions)
@@ -201,23 +217,14 @@ namespace Client.Project.Map
       throw new Exception("Cant generate id");
     }
 
-    private List<PlayerData> CopyPlayers(List<PlayerData> players) => players.Select(x => x.Copy()).ToList();
-
-    private IEnumerable<CellData> GetNeighbourCells(CellData?[,] cells, CellData cell, Vector2Int size)
+    public void ClearCellsBuffer(Vector2Int size)
     {
-      var aroundPosition = cell.Position;
-
-      foreach (var direction in HexUtilities.Directions)
-      {
-        var index = (aroundPosition + direction).ToArray2DIndex();
-        if (index.x >= 0 && index.x < size.x && index.y >= 0 && index.y < size.y)
-        {
-          var item = cells[index.x, index.y];
-          if (item.HasValue)
-            yield return item.Value;
-        }
-      }
+      for (var x = 0; x < size.x; x++)
+      for (var y = 0; y < size.y; y++)
+        CellsBuffer[x, y].HasValue = false;
     }
+
+    private List<PlayerData> CopyPlayers(List<PlayerData> players) => players.Select(x => x.Copy()).ToList();
 
     private List<CellData> CreateCells(RegionController region)
     {

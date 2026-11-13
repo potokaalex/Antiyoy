@@ -58,7 +58,7 @@ namespace Client.Project.Yiotro
         return NullHex;
 
       var offset = HexUtilities.Directions[direction];
-      var index = HexCoordinates.AddOffsetToArray2Index(hex.Index1, hex.Index2, offset);
+      var index = HexCoordinates.AddOffsetToArray2DIndex(hex.Index1, hex.Index2, offset);
 
       if (index.x < 0 || index.x >= FWidth || index.y < 0 || index.y >= FHeight)
         return NullHex;

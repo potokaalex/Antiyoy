@@ -19,6 +19,7 @@ namespace Client.Project.Map
     private readonly YiotroMapGeneratorGeneric _yiotroMapGenerator = new();
     private readonly RegionType[] _allPlayerRegions = GameUtilities.AllPlayerRegions.ToArray();
     private readonly MapsFactory _mapsFactory;
+    private UnsafeNullable<CellData>[,] _cells;
 
     public MapGenerator() => _mapsFactory = Locator.Get<MapsFactory>();
 
@@ -31,8 +32,10 @@ namespace Client.Project.Map
       var field = _yiotroMapGenerator.GenerateMap(new System.Random(Environment.TickCount), levelSize, colorsCount, size);
 
       _allPlayerRegions.Shuffle();
-      var cells = CreateCells(field, size);
-      var regions = _mapsFactory.CreateRegions(cells, size, 10);
+      _cells = _mapsFactory.CellsBuffer;
+      _mapsFactory.ClearCellsBuffer(size);
+      CreateCells(field, size);
+      var regions = _mapsFactory.CreateRegions(_cells, size, 10);
       CreateCapitals(regions);
       var players = _mapsFactory.CreatePlayers(regions);
 
@@ -42,10 +45,8 @@ namespace Client.Project.Map
     public MapController GenerateEmpty(LevelSize levelSize, string name) =>
       new(_mapsFactory.CreateMapData(new List<PlayerData>(), GameUtilities.LevelSizeToFieldSize(levelSize), name));
 
-    private CellData?[,] CreateCells(Yiotro.Hex[][] field, Vector2Int size)
+    private void CreateCells(Yiotro.Hex[][] field, Vector2Int size)
     {
-      var cells = new CellData?[size.x, size.y];
-
       for (var x = 0; x < size.x; x++)
       {
         var hexes = field[x];
@@ -54,17 +55,14 @@ namespace Client.Project.Map
           var hex = hexes[y];
           if (hex.Active)
           {
-            cells[x, y] = new CellData
-            {
-              Position = HexCoordinates.FromArray2DIndex(new Vector2Int(x, y)),
-              RegionType = GetRegionType(hex),
-              Unit = CreateUnitData(hex)
-            };
+            ref var data = ref _cells[x, y];
+            data.HasValue = true;
+            data.Value.Position = HexCoordinates.FromArray2DIndex(x, y);
+            data.Value.RegionType = GetRegionType(hex);
+            data.Value.Unit = CreateUnitData(hex);
           }
         }
       }
-
-      return cells;
     }
 
     private UnitData? CreateUnitData(Yiotro.Hex hex)

@@ -29,10 +29,18 @@ namespace Client.Project.Hex
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector2Int AddOffsetToArray2Index(int x, int y, HexCoordinates offset)
+    public static Vector2Int AddOffsetToArray2DIndex(int x, int y, HexCoordinates offset)
     {
       var q = x + offset.Q;
       return new Vector2Int(q, y + offset.R + ((q - (q & 1)) >> 1) - ((x - (x & 1)) >> 1));
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Vector2Int AddOffsetAndConvertToArray2DIndex(HexCoordinates offset)
+    {
+      var q = Q + offset.Q;
+      var r = R + offset.R;
+      return new Vector2Int(q, r + ((q - (q & 1)) >> 1));
     }
 
     public override string ToString() => $"{Q};{R};{S}";
