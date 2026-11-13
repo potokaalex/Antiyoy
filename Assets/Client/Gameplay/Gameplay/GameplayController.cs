@@ -156,6 +156,7 @@ namespace Client.Gameplay.Gameplay
       _regionsService.Clear();
       _actionsHistoryController.Clear();
       _governmentsService.Clear();
+      _gridController.DestroyAllCells();
       //_debugController.Clear();
     }
 

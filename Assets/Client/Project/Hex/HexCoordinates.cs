@@ -28,6 +28,12 @@ namespace Client.Project.Hex
       return new Vector2Int(q, R + ((q - (q & 1)) >> 1));
     }
 
+    public void ToArray2DIndex(out int x, out int y)
+    {
+      x = Q;
+      y = R + ((x - (x & 1)) >> 1);
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Vector2Int AddOffsetToArray2DIndex(int x, int y, HexCoordinates offset)
     {

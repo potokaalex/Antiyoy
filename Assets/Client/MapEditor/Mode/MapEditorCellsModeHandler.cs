@@ -59,7 +59,7 @@ namespace Client.MapEditor.Mode
         _regionsService.SetRegionType(cell, type);
       else if (!OnlyLand)
       {
-        cell = _gridController.CreateCell(position, true);
+        cell = _gridController.CreateCell(position);
         _regionsService.AddToBestNeighbourRegion(type, cell);
       }
     }

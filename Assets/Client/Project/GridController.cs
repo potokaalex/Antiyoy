@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Client.Project.Hex;
 using Client.Project.Infrastructure;
 using Client.Project.Map;
 using Client.Project.Tile;
 using Client.Project.Utilities;
 using UnityEngine;
+using UnityEngine.Pool;
 
 namespace Client.Project
 {
@@ -14,23 +16,31 @@ namespace Client.Project
     [SerializeField] private Transform _background;
     private CellController[] _cells;
     private TilemapController _tilemapController;
+    private ObjectPool<CellController> _pool;
+    private int _sizeX;
+    private int _sizeY;
 
-    public Vector2Int Size { get; private set; }
+    public Vector2Int Size => new(_sizeX, _sizeY);
 
     public LevelSize LevelSize { get; private set; }
 
-    public void Initialize() => _tilemapController = Locator.Get<TilemapController>();
+    public void Initialize()
+    {
+      _tilemapController = Locator.Get<TilemapController>();
+      _pool = new ObjectPool<CellController>(() => new CellController());
+    }
 
     public void InitialCreateCells(MapController map)
     {
-      Size = map.Size;
-      LevelSize = GameUtilities.FieldSizeToLevelSize(Size);
-      _cells = new CellController[Size.x * Size.y];
+      _sizeX = map.Size.x;
+      _sizeY = map.Size.y;
 
+      LevelSize = GameUtilities.FieldSizeToLevelSize(Size);
+      _cells = new CellController[_sizeX * _sizeY];
+      
       foreach (var cell in map.GetCells())
         CreateCell(cell.Position);
 
-      _tilemapController.FillByBaseTiles();
       AdjustBackground();
     }
 
@@ -45,8 +55,9 @@ namespace Client.Project
 
     public CellController GetCell(HexCoordinates position)
     {
-      if (IsPositionInGrid(position))
-        return _cells[GetCellIndex(position)];
+      position.ToArray2DIndex(out var x, out var y);
+      if (IsPositionInGrid(x, y))
+        return _cells[MathUtilities.ToArrayIndex(x, y, _sizeX)];
       return null;
     }
 
@@ -78,18 +89,16 @@ namespace Client.Project
 
     public bool IsPositionInGrid(HexCoordinates position)
     {
-      var array2DIndex = position.ToArray2DIndex();
-      return array2DIndex.x >= 0 && array2DIndex.y >= 0 && array2DIndex.x < Size.x && array2DIndex.y < Size.y;
+      var index = position.ToArray2DIndex();
+      return IsPositionInGrid(index.x, index.y);
     }
 
-    public CellController CreateCell(HexCoordinates position, bool createTile = false)
+    public CellController CreateCell(HexCoordinates position)
     {
-      var cell = new CellController();
+      var cell = _pool.Get();
       var arrayIndex = MathUtilities.ToArrayIndex(position.ToArray2DIndex(), Size.x);
       _cells[arrayIndex] = cell;
       cell.Initialize(position);
-      if (createTile)
-        _tilemapController.CreateTile(position);
       return cell;
     }
 
@@ -99,12 +108,19 @@ namespace Client.Project
         DestroyCell(cell);
     }
 
-    private int GetCellIndex(HexCoordinates position) => MathUtilities.ToArrayIndex(position.ToArray2DIndex(), Size.x);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private bool IsPositionInGrid(int x, int y) => x >= 0 && y >= 0 && x < _sizeX && y < _sizeY;
+
+    private int GetCellIndex(HexCoordinates position)
+    {
+      var index = position.ToArray2DIndex();
+      return MathUtilities.ToArrayIndex(index.x, index.y, Size.x);
+    }
 
     private void AdjustBackground()
     {
-      var min = HexPositionToWorld(HexCoordinates.FromArray2DIndex(new Vector2Int(0, 0)));
-      var max = HexPositionToWorld(HexCoordinates.FromArray2DIndex(new Vector2Int(Size.x - 1, Size.y - 1)));
+      var min = HexPositionToWorld(HexCoordinates.FromArray2DIndex(0, 0));
+      var max = HexPositionToWorld(HexCoordinates.FromArray2DIndex(Size.x - 1, Size.y - 1));
       var diff = max - min;
       var position = diff / 2f;
       var scale = new Vector3(diff.x + MathUtilities.HexSide * 2, diff.y + MathUtilities.HexHeight * 2, 1);
@@ -127,7 +143,8 @@ namespace Client.Project
       {
         _cells[GetCellIndex(cell.Position)] = null;
         cell.Dispose();
-        _tilemapController.DestroyTile(cell.Position);
+        _pool.Release(cell);
+        _tilemapController.ClearColor(cell.Position);
       }
     }
   }

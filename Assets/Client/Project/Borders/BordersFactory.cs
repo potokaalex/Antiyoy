@@ -1,29 +1,30 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Client.Project.Hex;
 using Client.Project.Infrastructure;
 using Client.Project.Region;
 using Client.Project.Utilities;
 using UnityEngine;
-using UnityEngine.Pool;
 
 namespace Client.Project.Borders
 {
   public class BordersFactory : MonoBehaviour
   {
     [SerializeField] private BorderController _prefab;
+    private readonly Stack<BorderController> _pool = new();
     private readonly List<BorderController> _active = new();
     private readonly HashSet<Vector2> _activePositions = new();
-    private ObjectPool<BorderController> _pool;
     private RegionsService _regionsService;
     private GridController _gridController;
+    private Transform _transform;
 
     private void Awake()
     {
       _regionsService = Locator.Get<RegionsService>();
       _gridController = Locator.Get<GridController>();
-      _pool = new ObjectPool<BorderController>(() => Instantiate(_prefab, transform), x => x.SetActive(true), x => x.SetActive(false));
-      _pool.Prewarm(100);
+      _transform = transform;
+      PrewarmPool(1500);
     }
 
     public void ViewRegionsBorders()
@@ -39,7 +40,7 @@ namespace Client.Project.Borders
     {
       for (var i = _active.Count - 1; i >= 0; i--)
       {
-        _pool.Release(_active[i]);
+        ReleaseInstance(_active[i]);
         _active.RemoveAt(i);
       }
 
@@ -122,10 +123,38 @@ namespace Client.Project.Borders
 
       if (_activePositions.Add(position))
       {
-        var border = _pool.Get();
+        var border = GetInstance();
         border.Transform.SetPositionAndRotation(position, Quaternion.Euler(0, 0, zRotation));
         _active.Add(border);
       }
     }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private BorderController GetInstance()
+    {
+      if (_pool.TryPop(out var instance))
+      {
+        instance.SetActive(true);
+        return instance;
+      }
+
+      return CreateInstance();
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void ReleaseInstance(BorderController instance)
+    {
+      instance.SetActive(false);
+      _pool.Push(instance);
+    }
+
+    private void PrewarmPool(int count)
+    {
+      for (var i = 0; i < count; i++) 
+        ReleaseInstance(CreateInstance());
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private BorderController CreateInstance() => Instantiate(_prefab, _transform);
   }
 }

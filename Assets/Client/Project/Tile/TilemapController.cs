@@ -1,5 +1,6 @@
 using Client.Project.Hex;
 using Client.Project.Infrastructure;
+using Client.Project.Utilities;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -12,16 +13,19 @@ namespace Client.Project.Tile
     [SerializeField] private TileBase _tile;
     private GridController _gridController;
 
-    public void Initialize() => _gridController = Locator.Get<GridController>();
-
-    public void FillByBaseTiles()
+    public void Initialize()
     {
-      _tilemap.ClearAllTiles();
-      _tilemapShadows.ClearAllTiles();
+      _gridController = Locator.Get<GridController>();
+      FillByBaseTiles();
+    }
 
-      foreach (var cell in _gridController.GetAllCells())
+    private void FillByBaseTiles()
+    {
+      var maxFieldSize = GameUtilities.MaxFieldSize;
+      for (var x = 0; x < maxFieldSize.x; x++)
+      for (var y = 0; y < maxFieldSize.y; y++)
       {
-        var tilemapPosition = _gridController.GridIndexFrom2DIndex(cell.Position.ToArray2DIndex());
+        var tilemapPosition = _gridController.GridIndexFrom2DIndex(new Vector2Int(x, y));
         _tilemap.SetTile(tilemapPosition, _tile);
         _tilemapShadows.SetTile(tilemapPosition, _tile);
       }
@@ -37,22 +41,11 @@ namespace Client.Project.Tile
       _tilemapShadows.SetColor(tilemapPosition, Color.white);
     }
 
-    public void CreateTile(HexCoordinates position)
+    public void ClearColor(HexCoordinates position)
     {
       var tilemapPosition = _gridController.GridIndexFrom2DIndex(position.ToArray2DIndex());
-      _tilemap.SetTile(tilemapPosition, _tile);
-      _tilemapShadows.SetTile(tilemapPosition, _tile);
-      _tilemap.CompressBounds();
-      _tilemapShadows.CompressBounds();
-    }
-
-    public void DestroyTile(HexCoordinates position)
-    {
-      var tilemapPosition = _gridController.GridIndexFrom2DIndex(position.ToArray2DIndex());
-      _tilemap.SetTile(tilemapPosition, null);
-      _tilemapShadows.SetTile(tilemapPosition, null);
-      _tilemap.CompressBounds();
-      _tilemapShadows.CompressBounds();
+      _tilemap.SetColor(tilemapPosition, Color.clear);
+      _tilemapShadows.SetColor(tilemapPosition, Color.clear);
     }
   }
 }
