@@ -45,22 +45,19 @@ namespace Client.Project.Map
     public MapController GenerateEmpty(LevelSize levelSize, string name) =>
       new(_mapsFactory.CreateMapData(new List<PlayerData>(), GameUtilities.LevelSizeToFieldSize(levelSize), name));
 
-    private void CreateCells(Yiotro.Hex[][] field, Vector2Int size)
+    private void CreateCells(Yiotro.Hex[,] field, Vector2Int size)
     {
       for (var x = 0; x < size.x; x++)
+      for (var y = 0; y < size.y; y++)
       {
-        var hexes = field[x];
-        for (var y = 0; y < size.y; y++)
+        var hex = field[x, y];
+        if (hex.Active)
         {
-          var hex = hexes[y];
-          if (hex.Active)
-          {
-            ref var data = ref _cells[x, y];
-            data.HasValue = true;
-            data.Value.Position = HexCoordinates.FromArray2DIndex(x, y);
-            data.Value.RegionType = GetRegionType(hex);
-            data.Value.Unit = CreateUnitData(hex);
-          }
+          ref var data = ref _cells[x, y];
+          data.HasValue = true;
+          data.Value.Position = HexCoordinates.FromArray2DIndex(x, y);
+          data.Value.RegionType = GetRegionType(hex);
+          data.Value.Unit = CreateUnitData(hex);
         }
       }
     }

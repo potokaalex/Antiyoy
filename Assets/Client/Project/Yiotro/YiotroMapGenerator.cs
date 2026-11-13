@@ -27,7 +27,7 @@ namespace Client.Project.Yiotro
     private double _maxX;
     private double _minY;
     private double _maxY;
-    private Hex[][] _field;
+    private Hex[,] _field;
 
     public YiotroMapGenerator()
     {
@@ -267,7 +267,7 @@ namespace Client.Project.Yiotro
       for (var y = 0; y < _fHeight; y++)
       {
         ref var data = ref _relocateMapData[x][y];
-        var hex = _field[x][y];
+        var hex = _field[x, y];
         data.Active = hex.Active;
         data.Fraction = hex.Fraction;
         hex.Active = false;
@@ -287,7 +287,7 @@ namespace Client.Project.Yiotro
         if (destX < 0 || destY < 0 || destX >= _fWidth || destY >= _fHeight)
           continue;
 
-        var destination = _field[destX][destY];
+        var destination = _field[destX, destY];
         destination.Active = true;
         destination.SetFraction(data.Fraction);
         activeHexes.Add(destination);
@@ -301,7 +301,7 @@ namespace Client.Project.Yiotro
       var c = 0;
       for (var i = 0; i < _fWidth; i++)
       for (var j = 0; j < _fHeight; j++)
-        if (IsHexInsideBounds(_field[i][j]))
+        if (IsHexInsideBounds(_field[i, j]))
           c++;
       return c;
     }
@@ -333,8 +333,11 @@ namespace Client.Project.Yiotro
       // check if something is not tagged
       for (var i = 0; i < _fWidth; i++)
       for (var j = 0; j < _fHeight; j++)
-        if (_field[i][j].Active && !_field[i][j].GenFlag)
+      {
+        var hex = _field[i, j];
+        if (hex.Active && !hex.GenFlag)
           return false;
+      }
 
       return true;
     }
@@ -343,8 +346,12 @@ namespace Client.Project.Yiotro
     {
       for (var i = 0; i < _fWidth; i++)
       for (var j = 0; j < _fHeight; j++)
-        if (_field[i][j].Active)
-          return _field[i][j];
+      {
+        var hex = _field[i, j];
+        if (hex.Active)
+          return hex;
+      }
+
       return null;
     }
 
@@ -362,11 +369,12 @@ namespace Client.Project.Yiotro
       for (var i = 0; i < _fWidth; i++)
       for (var j = 0; j < _fHeight; j++)
       {
-        if (_field[i][j].Active && !IsHexInsideBounds(_field[i][j]))
+        var hex = _field[i, j];
+        if (hex.Active && !IsHexInsideBounds(hex))
         {
-          DeactivateHex(_field[i][j]);
+          DeactivateHex(hex);
           for (var k = 0; k < 6; k++)
-            MaybeDeactivateIfPossible(_field[i][j].GetAdjacentHex(k));
+            MaybeDeactivateIfPossible(hex.GetAdjacentHex(k));
         }
       }
     }
@@ -376,9 +384,10 @@ namespace Client.Project.Yiotro
       for (var i = 0; i < _fWidth; i++)
       for (var j = 0; j < _fHeight; j++)
       {
-        if (!_field[i][j].Active)
+        var hex = _field[i, j];
+        if (!hex.Active)
           continue;
-        DeactivateHex(_field[i][j]);
+        DeactivateHex(hex);
       }
     }
 
@@ -386,16 +395,16 @@ namespace Client.Project.Yiotro
     {
       for (var i = 0; i < _fWidth; i++)
       for (var j = 0; j < _fHeight; j++)
-        _field[i][j].GenFlag = false;
+        _field[i, j].GenFlag = false;
     }
 
-    private Hex GetCenterHex() => _field[Math.Min(_fWidth - 1, _fWidth / 2)][Math.Min(_fHeight - 1, _fHeight / 2)];
+    private Hex GetCenterHex() => _field[Math.Min(_fWidth - 1, _fWidth / 2), Math.Min(_fHeight - 1, _fHeight / 2)];
 
     private Hex GetHexAtArrayCoordinates(int x, int y)
     {
       if (x < 0 || y < 0 || x >= _fWidth || y >= _fHeight)
         return null;
-      return _field[x][y];
+      return _field[x, y];
     }
 
     private double GetRandomAngle() => Random.NextDouble() * 2d * Math.PI;
@@ -406,7 +415,7 @@ namespace Client.Project.Yiotro
       {
         Hex hex;
         if (LevelSize <= LevelSize.Medium)
-          hex = _field[Random.Next(_fWidth)][Random.Next(_fHeight)];
+          hex = _field[Random.Next(_fWidth), Random.Next(_fHeight)];
         else
         {
           // Preserve the old centre-biased radial sampling, expressed in array space.

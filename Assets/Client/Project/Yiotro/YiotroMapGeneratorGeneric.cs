@@ -20,9 +20,10 @@ namespace Client.Project.Yiotro
       new[] { -0.6, -0.75, 0.15, 0.25, 0.4, 0.6 },
       new[] { -0.4, -0.9, 0.2, 0.3, 0.45, 0.6, 0.8 }
     };
+
     private bool _flagNeutrals;
 
-    public Hex[][] GenerateMap(Random random, LevelSize levelSize, int fractionsQuantity, Vector2Int size)
+    public Hex[,] GenerateMap(Random random, LevelSize levelSize, int fractionsQuantity, Vector2Int size)
     {
       FieldManager.Setup(size);
       SetValues(random, levelSize, fractionsQuantity);
@@ -200,7 +201,7 @@ namespace Client.Project.Yiotro
         for (var i = 0; i < activeHexesCount; i++)
         {
           var hex = activeHexesArray[i];
-          if (hex.MoveZoneNumber != step) 
+          if (hex.MoveZoneNumber != step)
             continue;
 
           for (var dir = 0; dir < 6; dir++)
@@ -258,7 +259,7 @@ namespace Client.Project.Yiotro
 
     private bool AllHexesAreNeutral(Hex[] hexes, int hexesCount)
     {
-      if (!_flagNeutrals) 
+      if (!_flagNeutrals)
         return false;
 
       for (var i = 0; i < hexesCount; i++)

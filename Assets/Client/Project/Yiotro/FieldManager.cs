@@ -10,20 +10,17 @@ namespace Client.Project.Yiotro
     public readonly List<Hex> ActiveHexes = new();
     private readonly List<Hex> _solidObjects = new();
     public readonly Hex NullHex;
-    public readonly Hex[][] Field;
+    public readonly Hex[,] Field;
     public int FWidth;
     public int FHeight;
 
     public FieldManager()
     {
       var maxFieldSize = GameUtilities.MaxFieldSize;
-      Field = new Hex[maxFieldSize.x][];
+      Field = new Hex[maxFieldSize.x, maxFieldSize.y];
       for (var x = 0; x < maxFieldSize.x; x++)
-      {
-        Field[x] = new Hex[maxFieldSize.y];
-        for (var y = 0; y < maxFieldSize.y; y++)
-          Field[x][y] = new Hex(x, y, this);
-      }
+      for (var y = 0; y < maxFieldSize.y; y++)
+        Field[x, y] = new Hex(x, y, this);
 
       NullHex = new Hex(-1, -1, this);
       NullHex.Active = false;
@@ -49,7 +46,7 @@ namespace Client.Project.Yiotro
 
       for (var i = 0; i < FWidth; i++)
       for (var j = 0; j < FHeight; j++)
-        Field[i][j].Setup();
+        Field[i, j].Setup();
     }
 
     public Hex AdjacentHex(Hex hex, int direction)
@@ -59,11 +56,13 @@ namespace Client.Project.Yiotro
 
       var offset = HexUtilities.Directions[direction];
       var index = HexCoordinates.AddOffsetToArray2DIndex(hex.Index1, hex.Index2, offset);
-
-      if (index.x < 0 || index.x >= FWidth || index.y < 0 || index.y >= FHeight)
+      var x = index.x;
+      var y = index.y;
+      
+      if (x < 0 || x >= FWidth || y < 0 || y >= FHeight)
         return NullHex;
 
-      return Field[index.x][index.y];
+      return Field[x, y];
     }
 
     private void AddSolidObject(Hex hex, int type)
