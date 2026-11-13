@@ -65,11 +65,11 @@ namespace Client.Project.Map
       }
     }
 
-    private UnitData? CreateUnitData(Yiotro.Hex hex)
+    private UnsafeNullable<UnitData> CreateUnitData(Yiotro.Hex hex)
     {
       if (hex.ObjectInside != 0)
-        return new UnitData(YiotroUtilities.ObjToUnitType(hex.ObjectInside), true);
-      return null;
+        return new UnsafeNullable<UnitData>(new UnitData(YiotroUtilities.ObjToUnitType(hex.ObjectInside), true));
+      return default;
     }
 
     private RegionType GetRegionType(Yiotro.Hex hex)
@@ -88,7 +88,7 @@ namespace Client.Project.Map
         {
           var cell = (GetRandomFreeCell(region.Cells) ?? GetRandomCellExceptTowers(region.Cells)) ??
                      region.Cells[Random.Range(0, region.Cells.Count)];
-          _mapsFactory.SetUnit(new UnitData(UnitType.Capital), region, cell.Position);
+          _mapsFactory.SetUnit(new UnsafeNullable<UnitData>(new UnitData(UnitType.Capital)), region, cell.Position);
         }
       }
     }

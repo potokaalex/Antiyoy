@@ -1,22 +1,34 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Client.Project
 {
+  [Serializable]
   public struct UnsafeNullable<T> : IEquatable<UnsafeNullable<T>>
   {
     public T Value;
     public bool HasValue;
 
-    private UnsafeNullable(T value)
+    public UnsafeNullable(T value)
     {
       Value = value;
       HasValue = true;
     }
 
-    public static implicit operator UnsafeNullable<T>(T value) => new(value);
-
-    public bool Equals(UnsafeNullable<T> other) => HasValue == other.HasValue && EqualityComparer<T>.Default.Equals(Value, other.Value);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool Equals(UnsafeNullable<T> other)
+    {
+      var otherHasValue = other.HasValue;
+      
+      if (!HasValue && !otherHasValue)
+        return true;
+      
+      if (HasValue && otherHasValue)
+        return EqualityComparer<T>.Default.Equals(Value, other.Value);
+      
+      return false;
+    }
 
     public override bool Equals(object obj) => obj is UnsafeNullable<T> other && Equals(other);
 

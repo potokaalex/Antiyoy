@@ -172,7 +172,7 @@ namespace Client.Project.Map
       return players;
     }
 
-    public void SetUnit(UnitData? unit, RegionData region, HexCoordinates cellPosition)
+    public void SetUnit(UnsafeNullable<UnitData> unit, RegionData region, HexCoordinates cellPosition)
     {
       var cells = region.Cells;
       for (var i = 0; i < cells.Count; i++)
@@ -186,7 +186,7 @@ namespace Client.Project.Map
       }
     }
 
-    public void SetUnit(UnitData? unit, UnsafeNullable<CellData>[,] cells, int x, int y)
+    public void SetUnit(UnsafeNullable<UnitData> unit, UnsafeNullable<CellData>[,] cells, int x, int y)
     {
       ref var cellNullable = ref cells[x, y];
       if (cellNullable.HasValue) 
@@ -226,18 +226,7 @@ namespace Client.Project.Map
       var result = new List<CellData>();
       foreach (var cell in region.Cells)
       {
-        UnitData? unit;
-
-        if (cell.HasUnit)
-        {
-          unit = new UnitData
-          {
-            Type = cell.Unit.Type,
-            HasTurns = cell.Unit.HasTurns
-          };
-        }
-        else
-          unit = null;
+        var unit = cell.HasUnit ? new UnsafeNullable<UnitData>(new UnitData(cell.Unit.Type, cell.Unit.HasTurns)) : default;
 
         result.Add(new CellData
         {

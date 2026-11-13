@@ -10,7 +10,7 @@ namespace Client.Project.Map.Data
   {
     public HexCoordinates Position;
     public RegionType RegionType;
-    public UnitData? Unit;
+    public UnsafeNullable<UnitData> Unit;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool Equals(CellData other) =>

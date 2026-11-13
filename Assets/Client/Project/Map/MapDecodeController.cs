@@ -106,7 +106,7 @@ namespace Client.Project.Map
       var ready = bool.Parse(split[3]);
       var unitType = YiotroUtilities.StrengthToUnitType(strength);
       var index = YiotroUtilities.IndexToHex(index1, index2, _isHuge).ToArray2DIndex();
-      _mapsFactory.SetUnit(new UnitData(unitType, ready), _cells, index.x, index.y);
+      _mapsFactory.SetUnit(new UnsafeNullable<UnitData>(new UnitData(unitType, ready)), _cells, index.x, index.y);
     }
 
     private void DecodeLand()
@@ -130,13 +130,7 @@ namespace Client.Project.Map
         var hex = YiotroUtilities.IndexToHex(index1, index2, _isHuge);
         var index = hex.ToArray2DIndex();
 
-        UnitData? unitData = null;
-        if (objectInside != 0)
-        {
-          var unitType = YiotroUtilities.ObjToUnitType(objectInside);
-          unitData = new UnitData(unitType);
-        }
-
+        var unitData = objectInside != 0 ? new UnsafeNullable<UnitData>(new UnitData(YiotroUtilities.ObjToUnitType(objectInside))) : default;
         var regionType = YiotroUtilities.FractionToRegionType(fraction);
 
         ref var cell = ref _cells[index.x, index.y];
