@@ -1333,6 +1333,22 @@ PrefabInstance:
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 3146268636949199500, guid: de2618af98cc6ad4f89432b995a43a40, type: 3}
+    - target: {fileID: 4790469562312440994, guid: de2618af98cc6ad4f89432b995a43a40, type: 3}
+      propertyPath: _zoomLerpFactor
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4790469562312440994, guid: de2618af98cc6ad4f89432b995a43a40, type: 3}
+      propertyPath: _pinchZoomSensitivity
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4790469562312440994, guid: de2618af98cc6ad4f89432b995a43a40, type: 3}
+      propertyPath: _zoomTouchSensitivity
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4790469562312440994, guid: de2618af98cc6ad4f89432b995a43a40, type: 3}
+      propertyPath: _zoomWheelSensitivity
+      value: 0.25
+      objectReference: {fileID: 0}
     - target: {fileID: 5090457157583211816, guid: de2618af98cc6ad4f89432b995a43a40, type: 3}
       propertyPath: _menuView
       value: 
