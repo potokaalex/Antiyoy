@@ -37,10 +37,11 @@ namespace Client.Project
 
       LevelSize = GameUtilities.FieldSizeToLevelSize(Size);
       _cells = new CellController[_sizeX * _sizeY];
-      
+
       foreach (var cell in map.GetCells())
         CreateCell(cell.Position);
 
+      _tilemapController.FillByBaseTiles();
       AdjustBackground();
     }
 
@@ -84,7 +85,10 @@ namespace Client.Project
     public void DestroyCell(HexCoordinates position)
     {
       if (GetCell(position, out var cell))
+      {
         DestroyCell(cell);
+        _tilemapController.DestroyTile(position);
+      }
     }
 
     public bool IsPositionInGrid(HexCoordinates position)
@@ -93,8 +97,11 @@ namespace Client.Project
       return IsPositionInGrid(index.x, index.y);
     }
 
-    public CellController CreateCell(HexCoordinates position)
+    public CellController CreateCell(HexCoordinates position, bool createTile = false)
     {
+      if(createTile)
+        _tilemapController.CreateTile(position);
+
       var cell = _pool.Get();
       var arrayIndex = MathUtilities.ToArrayIndex(position.ToArray2DIndex(), Size.x);
       _cells[arrayIndex] = cell;
@@ -106,6 +113,7 @@ namespace Client.Project
     {
       foreach (var cell in _cells)
         DestroyCell(cell);
+      _tilemapController.ClearAllTiles();
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -144,7 +152,6 @@ namespace Client.Project
         _cells[GetCellIndex(cell.Position)] = null;
         cell.Dispose();
         _pool.Release(cell);
-        _tilemapController.ClearColor(cell.Position);
       }
     }
   }
