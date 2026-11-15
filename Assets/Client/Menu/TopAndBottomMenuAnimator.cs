@@ -22,6 +22,8 @@ namespace Client.Menu
     private Vector2 _bottomPanelStartPosition;
     private Vector2 _bottomPanelEndPosition;
 
+    public bool IsShowing { get; private set; }
+
     public float SpeedFactor { get => _speedFactor; set => _speedFactor = value; }
 
     public float BottomPanelOffsetY
@@ -59,13 +61,18 @@ namespace Client.Menu
 
     private void OnDestroy() => Clear();
 
-    public void PlayShow(bool fromEnd = false)
+    public void PlayShow()
     {
       _root.gameObject.SetActive(true);
       MenuAnimation(_topPanelStartPosition, _bottomPanelStartPosition, 1);
+      IsShowing = true;
     }
 
-    public void PlayHide() => MenuAnimation(_topPanelEndPosition, _bottomPanelEndPosition, 0).AddOnComplete(() => _root.gameObject.SetActive(false));
+    public void PlayHide()
+    {
+      MenuAnimation(_topPanelEndPosition, _bottomPanelEndPosition, 0).AddOnComplete(() => _root.gameObject.SetActive(false));
+      IsShowing = false;
+    }
 
     public void Clear(bool complete = false) => DOTween.Kill(this, complete);
 

@@ -2,6 +2,7 @@ using Client.MapEditor.UI.Panels;
 using Client.MapEditor.UI.Panels.Cells;
 using Client.MapEditor.UI.Panels.Settings;
 using Client.Menu;
+using Client.Project;
 using Client.Project.Infrastructure;
 using Client.Project.UI;
 using UnityEngine;
@@ -23,11 +24,13 @@ namespace Client.MapEditor.UI
     private MapEditorUI _mapEditorUI;
     private MapEditorController _mapEditorController;
     private IMapEditorHudPanelView _currentPanelView;
+    private InputController _inputController;
 
     private void Awake()
     {
       _mapEditorUI = Locator.Get<MapEditorUI>();
       _mapEditorController = Locator.Get<MapEditorController>();
+      _inputController = Locator.Get<InputController>();
 
       _pauseButton.OnClick += OnPauseClick;
       _openCellsPanelButton.OnClick += OnCellsPanelButtonClick;
@@ -45,6 +48,12 @@ namespace Client.MapEditor.UI
       _moveButton.OnClick -= OnMoveButtonClick;
       _regionSettingsButton.OnClick -= OnRegionSettingsButtonClick;
       _settingsButton.OnClick -= OnSettingsButtonClick;
+    }
+
+    private void Update()
+    {
+      if (_topAndBottomMenuAnimator.IsShowing && !_mapEditorUI.IsShowingAgreeView() && _inputController.BackClicked) 
+        _pauseButton.Click();
     }
 
     public void Show()

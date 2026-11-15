@@ -111,6 +111,9 @@ namespace Client.Project
 
     public void DestroyAllCells()
     {
+      if(_cells == null)
+        return;
+
       foreach (var cell in _cells)
         DestroyCell(cell);
       _tilemapController.ClearAllTiles();

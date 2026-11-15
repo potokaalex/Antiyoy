@@ -38,5 +38,7 @@ namespace Client.MapEditor.UI
     public void ShowRegionSettings(RegionController region) => _regionSettingsView.Show(region);
 
     public void ShowAgreeView(MapEditorAgreeViewParameters parameters) => _agreeView.Show(parameters);
+
+    public bool IsShowingAgreeView() => _agreeView.IsShowing;
   }
 }

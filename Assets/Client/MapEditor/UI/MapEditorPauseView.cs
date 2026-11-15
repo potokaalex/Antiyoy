@@ -40,8 +40,8 @@ namespace Client.MapEditor.UI
 
     private void Update()
     {
-      if (_inputController.BackClicked)
-        OnMainMenuClick();
+      if (_menuAnimator.IsShowing && _inputController.BackClicked) 
+        _mainMenuButton.Click();
     }
 
     public void Show() => _menuAnimator.PlayShow();

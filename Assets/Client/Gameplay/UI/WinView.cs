@@ -1,5 +1,6 @@
 using Client.Gameplay.Gameplay;
 using Client.Menu;
+using Client.Project;
 using Client.Project.Infrastructure;
 using Client.Project.Region;
 using Client.Project.UI;
@@ -15,15 +16,23 @@ namespace Client.Gameplay.UI
     [SerializeField] private Image _winnerImage;
     private GameplayController _gameplayController;
     private RegionsService _regionsService;
+    private InputController _inputController;
 
     private void Awake()
     {
       _gameplayController = Locator.Get<GameplayController>();
       _regionsService = Locator.Get<RegionsService>();
+      _inputController = Locator.Get<InputController>();
       _mainMenuButton.OnClick += ToMainMenu;
     }
 
     private void OnDestroy() => _mainMenuButton.OnClick -= ToMainMenu;
+
+    private void Update()
+    {
+      if (_menuAnimator.IsShowing && _inputController.BackClicked)
+        _mainMenuButton.Click();
+    }
 
     public void PlayShow(RegionType winner)
     {

@@ -37,8 +37,8 @@ namespace Client.Menu.MainMenu.SaveLoad
 
     private void Update()
     {
-      if (_inputController.BackClicked)
-        OnBackClick();
+      if (_menuAnimator.IsShowing && !_optionsView.IsShowing && !_deleteView.IsShowing && _inputController.BackClicked)
+        _backButton.Click();
     }
 
     public void Show()

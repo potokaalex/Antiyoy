@@ -51,8 +51,8 @@ namespace Client.Menu.MainMenu.MapEditor
 
     private void Update()
     {
-      if (_inputController.BackClicked)
-        OnBackClick();
+      if (_menuAnimator.IsShowing && _inputController.BackClicked)
+        _backButton.Click();
     }
 
     public void Show()
