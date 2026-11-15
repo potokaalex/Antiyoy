@@ -98,7 +98,7 @@ namespace Client.Gameplay.Player
         return;
       }
 
-      if (_gameplayMode == GameplayMode.SelectedRegion && ShowBuildingsProtection(cell))
+      if (_gameplayMode == GameplayMode.SelectedRegion && cell.Region == SelectedRegion && ShowBuildingsProtection(cell))
         return;
 
       if (_gameplayMode == GameplayMode.None || _gameplayMode == GameplayMode.SelectedRegion)
