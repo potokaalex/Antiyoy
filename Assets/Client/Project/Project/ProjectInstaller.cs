@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace Client.Project.Project
 {
-  public class ProjectInstaller : MonoInstaller, ICoroutineRunner
+  public class ProjectInstaller : MonoInstaller
   {
     [SerializeField] private IntroView _introView;
     [SerializeField] private MainMenuView _mainMenuView;
@@ -27,7 +27,6 @@ namespace Client.Project.Project
 
     public override void Install(Context context)
     {
-      context.Register(this, typeof(ICoroutineRunner));
       context.Register(new ProgressController());
       context.Register(new InputController());
       context.Register(_cameraController);

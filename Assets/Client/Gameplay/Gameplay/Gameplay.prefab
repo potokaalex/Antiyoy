@@ -45,7 +45,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63983f39a5114983a60d467e95cddfcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Client::Client.Gameplay.SelectableTilemap
-  _tileMaskPrefab: {fileID: 7311759828820901779, guid: 82e460a06ef2395489a9ad7233817309, type: 3}
   _hidePanel: {fileID: 9084559545630032106}
 --- !u!1 &1752804432473282717
 GameObject:
@@ -58,7 +57,6 @@ GameObject:
   - component: {fileID: 1376374734287290357}
   - component: {fileID: 5088833510483981116}
   - component: {fileID: 4884427127700600059}
-  - component: {fileID: 4178847374942291518}
   m_Layer: 0
   m_Name: Gameplay
   m_TagString: Untagged
@@ -99,7 +97,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d13324d7d3194f9b8362ed87f5029180, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Client::Client.GameplayInstaller
-  _debugController: {fileID: 4178847374942291518}
   _tilesSelectionView: {fileID: 1233859896093750046}
   _gameplayUI: {fileID: 4884427127700600059}
   _protectionView: {fileID: 5197151000867834946}
@@ -120,19 +117,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Client::Client.Gameplay.UI.GameplayUI
   _viewPrefab: {fileID: 2339203316927769259, guid: 7678219760a946f48b16056fa4ca713d, type: 3}
---- !u!114 &4178847374942291518
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1752804432473282717}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7634fbeaaf744a499810cd3e3533e68d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Client::Client.New.DebugController
-  _cellDebugPrefab: {fileID: 5748800255380385168, guid: b012fa36006fceb45b47c360ac1a9822, type: 3}
 --- !u!1 &4190136797004500016
 GameObject:
   m_ObjectHideFlags: 0

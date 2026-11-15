@@ -1,5 +1,4 @@
 using Client.Gameplay.ActionsHistory;
-using Client.Gameplay.DebugFeatures;
 using Client.Gameplay.Player;
 using Client.Gameplay.Protection;
 using Client.Gameplay.Recovery;
@@ -14,7 +13,6 @@ namespace Client.Gameplay.Gameplay
 {
   public class GameplayInstaller : MonoInstaller
   {
-    [SerializeField] private DebugController _debugController;
     [SerializeField] private TilesSelectionView _tilesSelectionView;
     [SerializeField] private GameplayUI _gameplayUI;
     [SerializeField] private ProtectionView _protectionView;
@@ -25,7 +23,6 @@ namespace Client.Gameplay.Gameplay
 
     public override void Install(Context context)
     {
-      context.Register(_debugController);
       context.Register(new CapitalsController());
       context.Register(new GameplayRegionsController());
       context.Register(new GovernmentsService());

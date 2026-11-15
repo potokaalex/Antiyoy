@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Client.Gameplay.ActionsHistory;
-using Client.Gameplay.DebugFeatures;
 using Client.Gameplay.Player;
 using Client.Gameplay.UI;
 using Client.Menu.MainMenu;
@@ -36,9 +35,9 @@ namespace Client.Gameplay.Gameplay
     private WarriorUnitsAnimator _warriorUnitsAnimator;
     private CapitalsController _capitalsController;
     private GameplayRegionsController _gameplayRegionsController;
-    private DebugController _debugController;
     private MapsService _mapsService;
     private int _turnsCount;
+    private bool _started;
 
     private int TurnsCount
     {
@@ -49,8 +48,6 @@ namespace Client.Gameplay.Gameplay
         _gameplayUI.ViewTurnsCount(value);
       }
     }
-
-    public bool Started { get; private set; }
 
     public void Initialize()
     {
@@ -68,7 +65,6 @@ namespace Client.Gameplay.Gameplay
       _warriorUnitsAnimator = Locator.Get<WarriorUnitsAnimator>();
       _capitalsController = Locator.Get<CapitalsController>();
       _gameplayRegionsController = Locator.Get<GameplayRegionsController>();
-      _debugController = Locator.Get<DebugController>();
       _mapsService = Locator.Get<MapsService>();
     }
 
@@ -84,17 +80,16 @@ namespace Client.Gameplay.Gameplay
       _gameplayRegionsController.Enable();
       _cameraController.Setup();
       CreatePlayers();
-      //_debugController.CreateCells();
 
       TurnsCount = 0;
       _bordersService.ViewRegionsBorders();
       _gameplayUI.PlayShow();
-      Started = true;
+      _started = true;
     }
 
     public void Tick()
     {
-      if (!Started || !HasPlayers())
+      if (!_started || !HasPlayers())
         return;
 
       _currentPlayer.Tick();
@@ -148,7 +143,7 @@ namespace Client.Gameplay.Gameplay
 
     private void End()
     {
-      Started = false;
+      _started = false;
       _warriorUnitsAnimator.Disable();
       _capitalsMarksController.Disable();
       _gameplayRegionsController.Disable();
@@ -157,7 +152,6 @@ namespace Client.Gameplay.Gameplay
       _actionsHistoryController.Clear();
       _governmentsService.Clear();
       _gridController.DestroyAllCells();
-      //_debugController.Clear();
     }
 
     private void SetFirstPlayer()

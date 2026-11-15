@@ -9,7 +9,7 @@ namespace Client.Project.Yiotro
   {
     public const int NEUTRAL_FRACTION = 100;
 
-    protected const int SMALL_PROVINCE_SIZE = 5;
+    protected const int SMALL_PROVINCE_SIZE = 3;
     protected readonly FieldManager FieldManager = new();
     protected readonly List<Hex> TempList = new();
     protected Random Random;
