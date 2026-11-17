@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Client.Project.Map
 {
-  public class MapController
+  public class MapController : IReadOnlyMap
   {
     private readonly MapsFactory _mapsFactory;
     private MapData _data;
@@ -17,11 +17,9 @@ namespace Client.Project.Map
       _data = data;
     }
 
-    public int Id { get => _data.Id; set => _data.Id = value; }
+    public int Id => _data.Id;
 
     public Vector2Int Size => _data.Size;
-
-    public IReadOnlyList<PlayerData> Players => _data.Players;
 
     public string Name { get => _data.Name; set => _data.Name = value; }
 
@@ -37,6 +35,13 @@ namespace Client.Project.Map
       foreach (var region in player.Regions)
       foreach (var cell in region.Cells)
         yield return cell;
+    }
+
+    public IEnumerable<RegionData> GetRegions()
+    {
+      foreach (var player in _data.Players)
+      foreach (var region in player.Regions)
+        yield return region;
     }
 
     public MapData GetData() => _data;

@@ -30,7 +30,7 @@ namespace Client.Project
       _pool = new ObjectPool<CellController>(() => new CellController());
     }
 
-    public void InitialCreateCells(MapController map)
+    public void InitialCreateCells(IReadOnlyMap map)
     {
       _sizeX = map.Size.x;
       _sizeY = map.Size.y;

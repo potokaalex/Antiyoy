@@ -39,13 +39,13 @@ namespace Client.Gameplay.UI
       if (_emptyView.Map == null)
         _emptyView.SetMap(MapsService.SaveRuntimeMapInNewSlot());
       else
-        _emptyView.SetMap(MapsService.SaveRuntimeMapInSlot(_emptyView.Map));
+        _emptyView.SetMap(MapsService.SaveRuntimeMapInSlot(_emptyView.Map.Id));
     }
 
     protected override void OnViewClick(SaveLoadSlotView slotView)
     {
       if (slotView != _emptyView && !slotView.Map.IsAutosave)
-        slotView.SetMap(MapsService.SaveRuntimeMapInSlot(slotView.Map));
+        slotView.SetMap(MapsService.SaveRuntimeMapInSlot(slotView.Map.Id));
     }
 
     protected override void OnViewHold(SaveLoadSlotView slotView)

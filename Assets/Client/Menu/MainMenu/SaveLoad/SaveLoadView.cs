@@ -53,11 +53,11 @@ namespace Client.Menu.MainMenu.SaveLoad
       _deleteView.Show(slotView);
     }
 
-    public void DeleteSlot(SaveLoadSlotView slotView) => MapsService.DeleteMap(slotView.Map);
+    public void DeleteSlot(SaveLoadSlotView slotView) => MapsService.DeleteMap(slotView.Map.Id);
 
     public void Rename(SaveLoadSlotView slotView, string newName)
     {
-      MapsService.RenameMap(slotView.Map, newName);
+      MapsService.RenameMap(slotView.Map.Id, newName);
       slotView.Header = newName;
     }
 
@@ -67,7 +67,7 @@ namespace Client.Menu.MainMenu.SaveLoad
     {
     }
 
-    protected SaveLoadSlotView CreateView(MapController map)
+    protected SaveLoadSlotView CreateView(IReadOnlyMap map)
     {
       var view = _pool.Get();
       view.transform.SetSiblingIndex(_activeViews.Count + 1);

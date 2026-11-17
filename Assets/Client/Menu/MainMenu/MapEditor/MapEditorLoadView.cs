@@ -31,7 +31,7 @@ namespace Client.Menu.MainMenu.MapEditor
 
     protected override void OnViewClick(SaveLoadSlotView slotView)
     {
-      MapsService.SetStartMap(slotView.Map);
+      MapsService.SetStartMapFromSlot(slotView.Map.Id);
       _projectController.LoadMapEditor();
       Hide();
     }
