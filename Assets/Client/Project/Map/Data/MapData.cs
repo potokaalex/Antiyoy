@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Client.Project.Map.Data
 {
@@ -10,7 +9,7 @@ namespace Client.Project.Map.Data
     public int Id = -1;
     public List<PlayerData> InitialPlayers = new();
     public List<PlayerData> Players = new();
-    public Vector2Int Size;
+    public LevelSize LevelSize;
     public string Name;
     public long CreationTime;
     public bool IsAutosave;

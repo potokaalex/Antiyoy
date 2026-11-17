@@ -36,11 +36,11 @@ namespace Client.Project.Map
       CreateCapitals(regions);
       var players = _mapsFactory.CreatePlayers(regions);
 
-      return _mapsFactory.CreateMapData(players, size, name, id: id);
+      return _mapsFactory.CreateMapData(players, levelSize, name, id: id);
     }
 
     public MapData GenerateEmptyData(LevelSize levelSize, string name) =>
-      _mapsFactory.CreateMapData(new List<PlayerData>(), GameUtilities.LevelSizeToFieldSize(levelSize), name);
+      _mapsFactory.CreateMapData(new List<PlayerData>(), levelSize, name);
 
     private void CreateCells(Yiotro.Hex[,] field, Vector2Int size)
     {

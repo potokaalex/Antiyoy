@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Client.Project.Infrastructure;
 using Client.Project.Map.Data;
-using UnityEngine;
 
 namespace Client.Project.Map
 {
@@ -20,7 +19,7 @@ namespace Client.Project.Map
 
     public int Id => Data.Id;
 
-    public Vector2Int Size => Data.Size;
+    public LevelSize LevelSize => Data.LevelSize;
 
     public string Name { get => Data.Name; set => Data.Name = value; }
 
@@ -45,13 +44,13 @@ namespace Client.Project.Map
         yield return region;
     }
 
-    public void Restart() => Data = _mapsFactory.CreateMapData(Data.InitialPlayers, Data.Size, Data.Name, CreationTime, Id);
+    public void Restart() => Data = _mapsFactory.CreateMapData(Data.InitialPlayers, Data.LevelSize, Data.Name, CreationTime, Id);
 
     public void CopyFrom(MapController map)
     {
       var otherData = map.Data;
       Data = _mapsFactory.CreateMapData(_mapsFactory.CopyPlayers(otherData.InitialPlayers), _mapsFactory.CopyPlayers(otherData.Players), 
-        otherData.Size, otherData.Name, map.CreationTime, otherData.Id, isAutosave: map.IsAutosave, isEditor: map.IsEditor);
+        otherData.LevelSize, otherData.Name, map.CreationTime, otherData.Id, isAutosave: map.IsAutosave, isEditor: map.IsEditor);
     }
   }
 }

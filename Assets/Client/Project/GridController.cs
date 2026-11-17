@@ -32,10 +32,11 @@ namespace Client.Project
 
     public void InitialCreateCells(IReadOnlyMap map)
     {
-      _sizeX = map.Size.x;
-      _sizeY = map.Size.y;
+      var size = GameUtilities.LevelSizeToFieldSize(map.LevelSize);
+      _sizeX = size.x;
+      _sizeY = size.y;
 
-      LevelSize = GameUtilities.FieldSizeToLevelSize(Size);
+      LevelSize = map.LevelSize;
       _cells = new CellController[_sizeX * _sizeY];
 
       foreach (var cell in map.GetCells())

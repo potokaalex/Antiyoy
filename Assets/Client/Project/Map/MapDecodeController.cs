@@ -11,9 +11,10 @@ namespace Client.Project.Map
   public class MapDecodeController : IInitializable
   {
     private MapsFactory _mapsFactory;
-    private Vector2Int _mapSize;
-    private string _source;
     private UnsafeNullable<CellData>[,] _cells;
+    private Vector2Int _mapSize;
+    private LevelSize _levelSize;
+    private string _source;
     private string _mapName;
     private bool _isHuge;
 
@@ -48,7 +49,7 @@ namespace Client.Project.Map
       var regions = _mapsFactory.CreateRegions(_cells, _mapSize, 0);
       DecodeProvinces(regions);
       var players = _mapsFactory.CreatePlayers(regions);
-      return _mapsFactory.CreateMapData(players, _mapSize, name ?? _mapName, id: id);
+      return _mapsFactory.CreateMapData(players, _levelSize, name ?? _mapName, id: id);
     }
 
     private void DecodeLevelSize()
@@ -57,10 +58,9 @@ namespace Client.Project.Map
       if (section == null)
         return;
 
-      var levelSize = YiotroUtilities.CodeToLevelSize(int.Parse(section));
-
-      _mapSize = GameUtilities.LevelSizeToFieldSize(levelSize);
-      _isHuge = levelSize == LevelSize.Huge;
+      _levelSize = YiotroUtilities.CodeToLevelSize(int.Parse(section));
+      _mapSize = GameUtilities.LevelSizeToFieldSize(_levelSize);
+      _isHuge = _levelSize == LevelSize.Huge;
       _cells = _mapsFactory.CellsBuffer;
       _mapsFactory.ClearCellsBuffer();
     }

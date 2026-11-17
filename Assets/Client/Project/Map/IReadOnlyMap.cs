@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Client.Project.Map.Data;
-using UnityEngine;
 
 namespace Client.Project.Map
 {
@@ -12,7 +11,7 @@ namespace Client.Project.Map
     DateTime CreationTime { get; }
     bool IsAutosave { get; }
     bool IsEditor { get; }
-    Vector2Int Size { get; }
+    LevelSize LevelSize { get; }
     IEnumerable<CellData> GetCells();
     IEnumerable<RegionData> GetRegions();
   }

@@ -31,11 +31,11 @@ namespace Client.Project.Map
       _gridController = Locator.Get<GridController>();
     }
 
-    public MapData CreateMapData(List<PlayerData> initialPlayers, Vector2Int size, string name, DateTime creationTime = default, int id = -1,
+    public MapData CreateMapData(List<PlayerData> initialPlayers, LevelSize size, string name, DateTime creationTime = default, int id = -1,
       bool isAutosave = false, bool isEditor = false) =>
       CreateMapData(initialPlayers, CopyPlayers(initialPlayers), size, name, creationTime, id, isAutosave, isEditor);
 
-    public MapData CreateMapData(List<PlayerData> initialPlayers, List<PlayerData> players, Vector2Int size, string name,
+    public MapData CreateMapData(List<PlayerData> initialPlayers, List<PlayerData> players, LevelSize size, string name,
       DateTime creationTime = default, int id = -1, bool isAutosave = false, bool isEditor = false)
     {
       return new MapData
@@ -43,7 +43,7 @@ namespace Client.Project.Map
         Id = id,
         InitialPlayers = initialPlayers,
         Players = players,
-        Size = size,
+        LevelSize = size,
         Name = name,
         CreationTime = creationTime.ToBinary(),
         IsAutosave = isAutosave,
@@ -75,7 +75,7 @@ namespace Client.Project.Map
         });
       }
 
-      return CreateMapData(isEditor ? players : initialPlayers, players, _gridController.Size, name, DateTime.Now, id, isAutosave, isEditor);
+      return CreateMapData(isEditor ? players : initialPlayers, players, _gridController.LevelSize, name, DateTime.Now, id, isAutosave, isEditor);
     }
 
     public List<RegionData> CreateRegions(UnsafeNullable<CellData>[,] cells, Vector2Int size, int initialMoney)
