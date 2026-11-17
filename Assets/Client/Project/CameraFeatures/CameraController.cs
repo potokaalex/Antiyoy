@@ -110,19 +110,32 @@ namespace Client.Project.CameraFeatures
     {
       _touches.Clear();
 
+      if (Input.GetKey(KeyCode.Escape))
+        return;
+
       using (ListPool<int>.Get(out var allTouchesId))
       {
         for (var i = 0; i < Input.touchCount; i++)
         {
           var touch = Input.GetTouch(i);
           allTouchesId.Add(touch.fingerId);
-          var ignored = _ignoredTouches.Contains(touch.fingerId);
+          if (_ignoredTouches.Contains(touch.fingerId))
+            continue;
 
-          if (touch.phase == TouchPhase.Began && _inputController.IsPointerOverUI(touch.position) && !ignored)
-            _ignoredTouches.Add(touch.fingerId);
+          if (touch.phase == TouchPhase.Began)
+          {
+            var backGestureEdgeWidth = 40f;
+            var isBackGesture = touch.position.x <= backGestureEdgeWidth || touch.position.x >= Screen.width - backGestureEdgeWidth;
+            var isOverUI = _inputController.IsPointerOverUI(touch.position);
 
-          if (!ignored)
-            _touches.Add(touch);
+            if (isBackGesture || isOverUI)
+            {
+              _ignoredTouches.Add(touch.fingerId);
+              continue;
+            }
+          }
+
+          _touches.Add(touch);
         }
 
         _ignoredTouches.RemoveAll(touchId => !allTouchesId.Contains(touchId));

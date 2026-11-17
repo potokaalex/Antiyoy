@@ -40,5 +40,7 @@ namespace Client.MapEditor.UI
     public void ShowAgreeView(MapEditorAgreeViewParameters parameters) => _agreeView.Show(parameters);
 
     public bool IsShowingAgreeView() => _agreeView.IsShowing;
+
+    public bool IsShowingPlayersColorsView() => _playerColorsView.IsShowing;
   }
 }

@@ -52,7 +52,8 @@ namespace Client.MapEditor.UI
 
     private void Update()
     {
-      if (_topAndBottomMenuAnimator.IsShowing && !_mapEditorUI.IsShowingAgreeView() && _inputController.BackClicked) 
+      if (_topAndBottomMenuAnimator.IsShowing && !_mapEditorUI.IsShowingAgreeView() && !_mapEditorUI.IsShowingPlayersColorsView() &&
+          _inputController.BackClicked)
         _pauseButton.Click();
     }
 
