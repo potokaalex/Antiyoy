@@ -34,7 +34,7 @@ namespace Client.Project.Map
       return true;
     }
 
-    public MapData DecodeToMapData(string levelCode)
+    public MapData DecodeToMapData(string levelCode, int id = -1, string name = null)
     {
       _source = levelCode;
 
@@ -48,7 +48,7 @@ namespace Client.Project.Map
       var regions = _mapsFactory.CreateRegions(_cells, _mapSize, 0);
       DecodeProvinces(regions);
       var players = _mapsFactory.CreatePlayers(regions);
-      return _mapsFactory.CreateMapData(players, _mapSize, _mapName);
+      return _mapsFactory.CreateMapData(players, _mapSize, name ?? _mapName, id: id);
     }
 
     private void DecodeLevelSize()

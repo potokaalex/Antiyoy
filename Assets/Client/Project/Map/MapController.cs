@@ -9,29 +9,30 @@ namespace Client.Project.Map
   public class MapController : IReadOnlyMap
   {
     private readonly MapsFactory _mapsFactory;
-    private MapData _data;
 
-    public MapController(MapData data)
+    public MapController(MapData data = null)
     {
       _mapsFactory = Locator.Get<MapsFactory>();
-      _data = data;
+      Data = data;
     }
 
-    public int Id => _data.Id;
+    public MapData Data { get; set; }
 
-    public Vector2Int Size => _data.Size;
+    public int Id => Data.Id;
 
-    public string Name { get => _data.Name; set => _data.Name = value; }
+    public Vector2Int Size => Data.Size;
 
-    public DateTime CreationTime => DateTime.FromBinary(_data.CreationTime);
+    public string Name { get => Data.Name; set => Data.Name = value; }
 
-    public bool IsAutosave => _data.IsAutosave;
+    public DateTime CreationTime => DateTime.FromBinary(Data.CreationTime);
 
-    public bool IsEditor => _data.IsEditor;
+    public bool IsAutosave => Data.IsAutosave;
+
+    public bool IsEditor => Data.IsEditor;
 
     public IEnumerable<CellData> GetCells()
     {
-      foreach (var player in _data.Players)
+      foreach (var player in Data.Players)
       foreach (var region in player.Regions)
       foreach (var cell in region.Cells)
         yield return cell;
@@ -39,17 +40,18 @@ namespace Client.Project.Map
 
     public IEnumerable<RegionData> GetRegions()
     {
-      foreach (var player in _data.Players)
+      foreach (var player in Data.Players)
       foreach (var region in player.Regions)
         yield return region;
     }
 
-    public MapData GetData() => _data;
+    public void Restart() => Data = _mapsFactory.CreateMapData(Data.InitialPlayers, Data.Size, Data.Name, CreationTime, Id);
 
-    public void Restart() => _data = _mapsFactory.CreateMapData(_data.InitialPlayers, _data.Size, _data.Name, CreationTime, Id);
-
-    public void SetSize(Vector2Int size) => _data.Size = size;
-
-    public void SetPlayers(List<PlayerData> players) => _data.Players = players;
+    public void CopyFrom(MapController map)
+    {
+      var otherData = map.Data;
+      Data = _mapsFactory.CreateMapData(_mapsFactory.CopyPlayers(otherData.InitialPlayers), _mapsFactory.CopyPlayers(otherData.Players), 
+        otherData.Size, otherData.Name, map.CreationTime, otherData.Id, isAutosave: map.IsAutosave, isEditor: map.IsEditor);
+    }
   }
 }

@@ -14,7 +14,6 @@ namespace Client.Project.Map
     private MapsFactory _mapsFactory;
     private MapDecodeController _mapDecodeController;
     private MapEncodeController _mapEncodeController;
-    private MapController _autosaveMap;
     private MapController _startMap;
 
     public IReadOnlyMap StartMap => _startMap;
@@ -22,6 +21,7 @@ namespace Client.Project.Map
     public void Initialize()
     {
       _mapGenerator = new();
+      _startMap = new();
       _progressController = Locator.Get<ProgressController>();
       _mapsFactory = Locator.Get<MapsFactory>();
       _mapDecodeController = Locator.Get<MapDecodeController>();
@@ -29,89 +29,47 @@ namespace Client.Project.Map
       Load();
     }
 
-    public IEnumerable<IReadOnlyMap> GetMaps()
-    {
-      foreach (var map in _maps)
-          yield return map;
-    }
+    public IReadOnlyList<IReadOnlyMap> GetMaps() => _maps;
 
-    //создаёт начальную карту без слота.
-    public void GenerateStartMap(LevelSize levelSize, int colorsCount, string name) => _startMap = _mapGenerator.Generate(levelSize, colorsCount, name);
+    public void GenerateStartMap(LevelSize levelSize, int colorsCount, string name) =>
+      _startMap.Data = _mapGenerator.GenerateData(levelSize, colorsCount, name);
 
-    //изменяет данные начальной карты.
-    public void GenerateMapIntoStart(LevelSize levelSize, int colorsCount)
-    {
-      var data = _mapGenerator.GenerateData(levelSize, colorsCount, null);
-      _startMap.SetSize(data.Size);
-      _startMap.SetPlayers(data.Players);
-    }
+    public void GenerateMapIntoStart(LevelSize levelSize, int colorsCount) =>
+      _startMap.Data = _mapGenerator.GenerateData(levelSize, colorsCount, _startMap.Name, _startMap.Id);
 
-    //создаёт начальную карту без слота.
-    public void GenerateEmptyStartMap(LevelSize levelSize, string name) => _startMap = _mapGenerator.GenerateEmpty(levelSize, name);
+    public void GenerateEmptyStartMap(LevelSize levelSize, string name) => _startMap.Data = _mapGenerator.GenerateEmptyData(levelSize, name);
 
     public bool CanGenerateFromCopyBuffer() => _mapDecodeController.IsValidLevelCode(GUIUtility.systemCopyBuffer);
 
-    //создаёт начальную карту без слота.
-    public void GenerateStartMapFromCopyBuffer() => _startMap = new MapController(_mapDecodeController.DecodeToMapData(GUIUtility.systemCopyBuffer));
+    public void GenerateStartMapFromCopyBuffer() => _startMap.Data = _mapDecodeController.DecodeToMapData(GUIUtility.systemCopyBuffer);
 
-    //изменяет данные начальной карты.
-    public void GenerateFromCopyBufferIntoStartMap()
+    public void GenerateFromCopyBufferIntoStartMap() =>
+      _startMap.Data = _mapDecodeController.DecodeToMapData(GUIUtility.systemCopyBuffer, _startMap.Id, _startMap.Name);
+
+    public void SetStartMapFromSlot(int mapId) => SetStartMap(GetMap(mapId));
+
+    public void RenameMap(int mapId, string name)
     {
-      var data = _mapDecodeController.DecodeToMapData(GUIUtility.systemCopyBuffer);
-      _startMap.SetSize(data.Size);
-      _startMap.SetPlayers(data.Players);
-    }
-
-    //устанавливает начальную карту, т.е. карта может быть без слота. НЕТ, мы можем только из слота это делать.
-    public void SetStartMapFromSlot(int id) => _startMap = _maps[id];
-
-    //переименовывает карту.
-    public void RenameMap(int id, string name)
-    {
-      _maps[id].Name = name;
+      GetMap(mapId).Name = name;
       _progressController.Save();
     }
 
-    //удалаяет карту.
-    public void DeleteMap(int id) => DeleteMap(_maps[id]);
+    public void DeleteMap(int mapId) => DeleteMap(GetMap(mapId));
 
-    //сохраняет карту в новый слот.
+    public IReadOnlyMap SaveRuntimeMapInNewSlot() => SaveRuntimeMapInSlotInternal(-1);
 
-    public IReadOnlyMap SaveRuntimeMapInNewSlot()
-    {
-      InsertNullMap();
-      return SaveRuntimeMapInSlotInternal(0);
-    }
-
-    //сохраняет карту в слот.
-
-    public IReadOnlyMap SaveRuntimeMapInSlot(int id) =>
-      SaveRuntimeMapInSlotInternal(id);//поидее не должно пересоздавать карту.
-
-    //сохраняет карту в слот автосейва.
+    public IReadOnlyMap SaveRuntimeMapInSlot(int mapId) => SaveRuntimeMapInSlotInternal(mapId);
 
     public void SaveRuntimeMapInAutosave()
     {
-      if (_autosaveMap != null)
-        DeleteMap(_autosaveMap);
+      var autosave = _maps.FirstOrDefault(x => x.IsAutosave);
+      if (autosave != null)
+        DeleteMap(autosave, false);
 
-      InsertNullMap();
-      _autosaveMap = SaveRuntimeMapInSlotInternal(0, isAutosave: true);
+      SaveRuntimeMapInSlotInternal(-1, isAutosave: true);
     }
 
-    //сохраняет карту либо в слот, либо в новый слот.
-
-    public void SaveRuntimeEditorMap()
-    {
-      var index = _maps.IndexOf(_startMap);
-      if (index == -1)
-      {
-        InsertNullMap();
-        index = 0;
-      }
-
-      _startMap = SaveRuntimeMapInSlotInternal(index, isEditor: true);
-    }
+    public void SaveRuntimeEditorMap() => SetStartMap(SaveRuntimeMapInSlotInternal(_startMap.Id, isEditor: true));
 
     public void RestartStartMap() => _startMap.Restart();
 
@@ -119,50 +77,63 @@ namespace Client.Project.Map
 
     private void Load()
     {
-      var mapIds = _progressController.Data.MapsIds;
-      for (var i = mapIds.Count - 1; i >= 0; i--)
-      {
-        var mapId = mapIds[i];
-        if (!_progressController.LoadMap(mapId, out var mapData))
-        {
-          mapIds.RemoveAt(i);
-          continue;
-        }
-
-        _maps.Insert(0, new MapController(mapData));
-      }
-
-      _progressController.Save();
-      _autosaveMap = _maps.FirstOrDefault(x => x.IsAutosave);
+      foreach (int id in _progressController.Data.MapsIds)
+        if (_maps.All(x => x.Id != id) && _progressController.LoadMap(id, out var mapData))
+          _maps.Add(new MapController(mapData));
+      UpdateIds();
     }
 
-    private MapController SaveRuntimeMapInSlotInternal(int slotIndex, bool isEditor = false, bool isAutosave = false)
+    private MapController SaveRuntimeMapInSlotInternal(int mapId, bool isEditor = false, bool isAutosave = false)
     {
-      var mapData = _mapsFactory.CreateRuntimeMap(_startMap.GetData().InitialPlayers, StartMap.Name, isEditor: isEditor, isAutosave: isAutosave);
-      var mapsIds = _progressController.Data.MapsIds;
-      var oldMap = _maps[slotIndex];
-      var id = oldMap?.Id ?? _mapsFactory.GenerateId(mapsIds);
-      mapData.Id = id;
-      var map = new MapController(mapData);
-      _maps[slotIndex] = map;
+      MapController map;
+      if (mapId == -1)
+      {
+        mapId = _mapsFactory.GenerateId(_progressController.Data.MapsIds);
+        map = new MapController();
+        _maps.Insert(0, map);
+      }
+      else
+        map = GetMap(mapId);
+
+      var mapData = _mapsFactory.CreateRuntimeMap(_startMap.Data.InitialPlayers, StartMap.Name, isEditor: isEditor, isAutosave: isAutosave,
+        id: mapId);
+      map.Data = mapData;
       _progressController.SaveMap(mapData);
-      mapsIds[slotIndex] = mapData.Id;
-      _progressController.Save();
+      UpdateIds();
       return map;
     }
 
-    private void InsertNullMap()
+    private void DeleteMap(MapController map, bool saveIds = true)
     {
-      _maps.Insert(0, null);
-      _progressController.Data.MapsIds.Insert(0, -1);
+      if (_maps.Remove(map))
+      {
+        _progressController.ClearMap(map.Id);
+        UpdateIds(saveIds);
+      }
     }
 
-    private void DeleteMap(MapController map)
+    private void UpdateIds(bool saveIds = true)
     {
-      _maps.Remove(map);
-      _progressController.ClearMap(map.Id);
-      _progressController.Data.MapsIds.Remove(map.Id);
-      _progressController.Save();
+      var ids = _progressController.Data.MapsIds;
+      ids.Clear();
+      foreach (var map in _maps)
+        ids.Add(map.Id);
+      if (saveIds)
+        _progressController.Save();
+    }
+
+    private void SetStartMap(MapController map) => _startMap.CopyFrom(map);
+
+    private MapController GetMap(int mapId)
+    {
+      for (var i = 0; i < _maps.Count; i++)
+      {
+        var map = _maps[i];
+        if (map.Id == mapId)
+          return map;
+      }
+
+      return null;
     }
   }
 }

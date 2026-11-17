@@ -24,27 +24,34 @@ namespace Client.Project.Map
       var maxFieldSize = GameUtilities.MaxFieldSize;
       CellsBuffer = new UnsafeNullable<CellData>[maxFieldSize.x, maxFieldSize.y];
     }
- 
+
     public void Initialize()
     {
       _governmentsService = Locator.Get<GovernmentsService>();
       _gridController = Locator.Get<GridController>();
     }
 
-    public MapData CreateMapData(List<PlayerData> initialPlayers, Vector2Int size, string name, DateTime creationTime = default, int id = -1)
+    public MapData CreateMapData(List<PlayerData> initialPlayers, Vector2Int size, string name, DateTime creationTime = default, int id = -1,
+      bool isAutosave = false, bool isEditor = false) =>
+      CreateMapData(initialPlayers, CopyPlayers(initialPlayers), size, name, creationTime, id, isAutosave, isEditor);
+
+    public MapData CreateMapData(List<PlayerData> initialPlayers, List<PlayerData> players, Vector2Int size, string name,
+      DateTime creationTime = default, int id = -1, bool isAutosave = false, bool isEditor = false)
     {
       return new MapData
       {
         Id = id,
         InitialPlayers = initialPlayers,
-        Players = CopyPlayers(initialPlayers),
+        Players = players,
         Size = size,
         Name = name,
-        CreationTime = creationTime.ToBinary()
+        CreationTime = creationTime.ToBinary(),
+        IsAutosave = isAutosave,
+        IsEditor = isEditor
       };
     }
 
-    public MapData CreateRuntimeMap(List<PlayerData> initialPlayers, string name, bool isAutosave = false, bool isEditor = false)
+    public MapData CreateRuntimeMap(List<PlayerData> initialPlayers, string name, bool isAutosave = false, bool isEditor = false, int id = -1)
     {
       var players = new List<PlayerData>();
 
@@ -68,16 +75,7 @@ namespace Client.Project.Map
         });
       }
 
-      return new MapData
-      {
-        InitialPlayers = isEditor ? players : initialPlayers,
-        Players = players,
-        Size = _gridController.Size,
-        Name = name,
-        CreationTime = DateTime.Now.ToBinary(),
-        IsAutosave = isAutosave,
-        IsEditor = isEditor
-      };
+      return CreateMapData(isEditor ? players : initialPlayers, players, _gridController.Size, name, DateTime.Now, id, isAutosave, isEditor);
     }
 
     public List<RegionData> CreateRegions(UnsafeNullable<CellData>[,] cells, Vector2Int size, int initialMoney)
@@ -140,7 +138,7 @@ namespace Client.Project.Map
 
       return newRegions;
     }
-    
+
     public List<PlayerData> CreatePlayers(List<RegionData> regions)
     {
       var players = new List<PlayerData>();
@@ -189,7 +187,7 @@ namespace Client.Project.Map
     public void SetUnit(UnsafeNullable<UnitData> unit, UnsafeNullable<CellData>[,] cells, int x, int y)
     {
       ref var cellNullable = ref cells[x, y];
-      if (cellNullable.HasValue) 
+      if (cellNullable.HasValue)
         cellNullable.Value.Unit = unit;
     }
 
@@ -219,7 +217,7 @@ namespace Client.Project.Map
 
     public void ClearCellsBuffer() => Array.Clear(CellsBuffer, 0, CellsBuffer.Length);
 
-    private List<PlayerData> CopyPlayers(List<PlayerData> players) => players.Select(x => x.Copy()).ToList();
+    public List<PlayerData> CopyPlayers(List<PlayerData> players) => players.Select(x => x.Copy()).ToList();
 
     private List<CellData> CreateCells(RegionController region)
     {

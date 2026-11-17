@@ -23,9 +23,7 @@ namespace Client.Project.Map
 
     public MapGenerator() => _mapsFactory = Locator.Get<MapsFactory>();
 
-    public MapController Generate(LevelSize levelSize, int colorsCount, string name) => new(GenerateData(levelSize, colorsCount, name));
-
-    public MapData GenerateData(LevelSize levelSize, int colorsCount, string name)
+    public MapData GenerateData(LevelSize levelSize, int colorsCount, string name, int id = -1)
     {
       var size = GameUtilities.LevelSizeToFieldSize(levelSize);
       var field = _yiotroMapGenerator.GenerateMap(new System.Random(Environment.TickCount), levelSize, colorsCount, size);
@@ -38,11 +36,11 @@ namespace Client.Project.Map
       CreateCapitals(regions);
       var players = _mapsFactory.CreatePlayers(regions);
 
-      return _mapsFactory.CreateMapData(players, size, name);
+      return _mapsFactory.CreateMapData(players, size, name, id: id);
     }
 
-    public MapController GenerateEmpty(LevelSize levelSize, string name) =>
-      new(_mapsFactory.CreateMapData(new List<PlayerData>(), GameUtilities.LevelSizeToFieldSize(levelSize), name));
+    public MapData GenerateEmptyData(LevelSize levelSize, string name) =>
+      _mapsFactory.CreateMapData(new List<PlayerData>(), GameUtilities.LevelSizeToFieldSize(levelSize), name);
 
     private void CreateCells(Yiotro.Hex[,] field, Vector2Int size)
     {
