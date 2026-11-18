@@ -76,6 +76,7 @@ namespace Client.Gameplay.Gameplay
       _gridController.InitialCreateCells(map);
       _unitsService.InitialCreateUnits(map);
       _regionsService.InitialCreateRegions(map);
+      _governmentsService.Setup(map);
       _capitalsController.CheckCapitals();
       _gameplayRegionsController.Enable();
       _cameraController.Setup();

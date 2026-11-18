@@ -1,3 +1,4 @@
+using Client.Project;
 using Client.Project.Infrastructure;
 using Client.Project.Region;
 using Client.Project.UI;
@@ -35,7 +36,7 @@ namespace Client.MapEditor.UI.Panels.Settings
 
     private void OnClick()
     {
-      _mapEditorController.PlayerRegionType = new MapEditorPlayerRegionType(_regionType, _randomRegionType);
+      _mapEditorController.FirstPlayer = new PlayerRegionType(_regionType, _randomRegionType);
       var color = _image.color;
       if (_randomRegionType)
         color = new Color(0.5490196f, 0.5411765f, 0.5490196f, 1);

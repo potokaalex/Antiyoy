@@ -23,10 +23,10 @@ namespace Client.Project.Map
 
     public MapGenerator() => _mapsFactory = Locator.Get<MapsFactory>();
 
-    public MapData GenerateData(LevelSize levelSize, int colorsCount, string name, int id = -1)
+    public MapData GenerateData(LevelSize levelSize, int regionsCount, string name, int difficultyMode, int playersMode, int id = -1)
     {
       var size = GameUtilities.LevelSizeToFieldSize(levelSize);
-      var field = _yiotroMapGenerator.GenerateMap(new System.Random(Environment.TickCount), levelSize, colorsCount, size);
+      var field = _yiotroMapGenerator.GenerateMap(new System.Random(Environment.TickCount), levelSize, regionsCount, size);
 
       _allPlayerRegions.Shuffle();
       _cells = _mapsFactory.CellsBuffer;
@@ -36,11 +36,12 @@ namespace Client.Project.Map
       CreateCapitals(regions);
       var players = _mapsFactory.CreatePlayers(regions);
 
-      return _mapsFactory.CreateMapData(players, levelSize, name, id: id);
+      return _mapsFactory.CreateMapData(players, _mapsFactory.CopyPlayers(players), levelSize, name, id: id, difficultyMode: difficultyMode,
+        playersMode: playersMode, firstPlayer: new PlayerRegionType(isRandom: true));
     }
 
-    public MapData GenerateEmptyData(LevelSize levelSize, string name) =>
-      _mapsFactory.CreateMapData(new List<PlayerData>(), levelSize, name);
+    public MapData GenerateEmptyData(LevelSize levelSize, string name) => _mapsFactory.CreateMapData(new List<PlayerData>(), new List<PlayerData>(),
+      levelSize, name, firstPlayer: new PlayerRegionType(RegionType.Lime), playersMode: 1, difficultyMode: 4);
 
     private void CreateCells(Yiotro.Hex[,] field, Vector2Int size)
     {

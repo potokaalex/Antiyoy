@@ -66,7 +66,8 @@ namespace Client.Project.Map
     private void EncodeEditorInfo()
     {
       StartSection("editor_info");
-      _builder.Append(1).Append(" "); // _builder.Append(GameRules.editorChosenColor).Append(" "); //? todo
+      //todo проверить конвертацию.
+      _builder.Append(YiotroUtilities.RegionTypeToFraction(_mapsService.StartMap.FirstPlayer.RegionType)).Append(" ");
       _builder.Append(false).Append(" ");
       _builder.Append(false).Append(" ");
     }
@@ -103,13 +104,13 @@ namespace Client.Project.Map
 
     private void EncodeGeneralInfo()
     {
-      //todo
+      var map = _mapsService.StartMap;
       StartSection("general");
-      _builder.Append(1).Append(" "); //_builder.Append(GameRules.difficulty).Append(" ");
-      _builder.Append(1)
-        .Append(" "); //_builder.Append(gameController.playersNumber).append(" "); вероятно это игроки типа на одном устройстве и боты.
+      _builder.Append(map.DifficultyMode).Append(" ");
+      _builder.Append(map.PlayersMode).Append(" ");
       _builder.Append(_governmentsService.GetAll().Count(x => x.Regions.Count > 0 && x.RegionsType != RegionType.Neutral));
       //_builder.Append(GameRules.fractionsQuantity); - заменить текущий подсчёт на сохраненное значение.
+      //todo
     }
 
     private void EncodeLevelSize()

@@ -35,22 +35,21 @@ namespace Client.MapEditor
     private ProjectController _projectController;
     private GovernmentsService _governmentsService;
     private IMapEditorModeHandler _currentModeHandler;
-    private MapEditorPlayerRegionType _playerRegionType;
     private float _timeToSave;
     private bool _started;
 
-    public int PlayersValue { get; set; }
+    public int PlayersMode { get => _governmentsService.PlayersMode; set => _governmentsService.PlayersMode = value; }
 
-    public int DifficultyValue { get; set; }
+    public int DifficultyMode { get => _governmentsService.DifficultyMode; set => _governmentsService.DifficultyMode = value; }
 
     public event Action OnPlayerRegionTypeChanged;
 
-    public MapEditorPlayerRegionType PlayerRegionType
+    public PlayerRegionType FirstPlayer
     {
-      get => _playerRegionType;
+      get => _governmentsService.FirstPlayer;
       set
       {
-        _playerRegionType = value;
+        _governmentsService.FirstPlayer = value;
         OnPlayerRegionTypeChanged?.Invoke();
       }
     }
@@ -75,9 +74,6 @@ namespace Client.MapEditor
       LoadMap();
       _regionsService.AddMoneyWhenJoin = false;
       _regionsService.RegionInitialMoney = 10;
-      _playerRegionType = new(RegionType.Lime);
-      PlayersValue = 1;
-      DifficultyValue = 4;
       _timeToSave = _saveInterval;
 
       _mapEditorUI.PlayShow();
@@ -247,6 +243,7 @@ namespace Client.MapEditor
       _gridController.InitialCreateCells(map);
       _unitsService.InitialCreateUnits(map);
       _regionsService.InitialCreateRegions(map);
+      _governmentsService.Setup(map);
       _bordersService.ViewRegionsBorders();
       _cameraController.Setup(viewFullMap);
     }

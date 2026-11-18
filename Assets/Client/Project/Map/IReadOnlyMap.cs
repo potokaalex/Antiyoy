@@ -12,6 +12,9 @@ namespace Client.Project.Map
     bool IsAutosave { get; }
     bool IsEditor { get; }
     LevelSize LevelSize { get; }
+    int DifficultyMode { get; }
+    int PlayersMode { get; }
+    PlayerRegionType FirstPlayer { get; }
     IEnumerable<CellData> GetCells();
     IEnumerable<RegionData> GetRegions();
   }

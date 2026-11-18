@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Client.Project.Government;
 using Client.Project.Infrastructure;
 using Client.Project.Progress;
 using UnityEngine;
@@ -10,10 +11,11 @@ namespace Client.Project.Map
   {
     private readonly List<MapController> _maps = new();
     private MapGenerator _mapGenerator;
-    private ProgressController _progressController;
-    private MapsFactory _mapsFactory;
     private MapDecodeController _mapDecodeController;
     private MapEncodeController _mapEncodeController;
+    private ProgressController _progressController;
+    private MapsFactory _mapsFactory;
+    private GovernmentsService _governmentsService;
     private MapController _startMap;
 
     public IReadOnlyMap StartMap => _startMap;
@@ -22,20 +24,22 @@ namespace Client.Project.Map
     {
       _progressController = Locator.Get<ProgressController>();
       _mapsFactory = Locator.Get<MapsFactory>();
+      _governmentsService = Locator.Get<GovernmentsService>();
       _mapGenerator = new();
-      _startMap = new();
       _mapDecodeController = new();
       _mapEncodeController = new();
+      _startMap = new();
       Load();
     }
 
     public IReadOnlyList<IReadOnlyMap> GetMaps() => _maps;
 
-    public void GenerateStartMap(LevelSize levelSize, int colorsCount, string name) =>
-      _startMap.Data = _mapGenerator.GenerateData(levelSize, colorsCount, name);
+    public void GenerateStartMap(LevelSize levelSize, int regionsCount, string name, int difficultyMode, int playersMode) =>
+      _startMap.Data = _mapGenerator.GenerateData(levelSize, regionsCount, name, difficultyMode, playersMode);
 
-    public void GenerateMapIntoStart(LevelSize levelSize, int colorsCount) =>
-      _startMap.Data = _mapGenerator.GenerateData(levelSize, colorsCount, _startMap.Name, _startMap.Id);
+    public void GenerateMapIntoStart(LevelSize levelSize, int colorsCount) => _startMap.Data =
+      _mapGenerator.GenerateData(levelSize, colorsCount, _startMap.Name, _governmentsService.DifficultyMode, _governmentsService.PlayersMode, 
+        _startMap.Id);
 
     public void GenerateEmptyStartMap(LevelSize levelSize, string name) => _startMap.Data = _mapGenerator.GenerateEmptyData(levelSize, name);
 

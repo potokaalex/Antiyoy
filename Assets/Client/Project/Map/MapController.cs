@@ -29,6 +29,12 @@ namespace Client.Project.Map
 
     public bool IsEditor => Data.IsEditor;
 
+    public int DifficultyMode => Data.DifficultyMode;
+
+    public int PlayersMode => Data.PlayersMode;
+
+    public PlayerRegionType FirstPlayer => Data.FirstPlayer;
+
     public IEnumerable<CellData> GetCells()
     {
       foreach (var player in Data.Players)
@@ -44,13 +50,15 @@ namespace Client.Project.Map
         yield return region;
     }
 
-    public void Restart() => Data = _mapsFactory.CreateMapData(Data.InitialPlayers, Data.LevelSize, Data.Name, CreationTime, Id);
+    public void Restart() => Data = _mapsFactory.CreateMapData(Data.InitialPlayers, _mapsFactory.CopyPlayers(Data.InitialPlayers), Data.LevelSize,
+      Data.Name, CreationTime, Id, playersMode: Data.PlayersMode, difficultyMode: Data.DifficultyMode, firstPlayer: Data.FirstPlayer);
 
     public void CopyFrom(MapController map)
     {
       var otherData = map.Data;
-      Data = _mapsFactory.CreateMapData(_mapsFactory.CopyPlayers(otherData.InitialPlayers), _mapsFactory.CopyPlayers(otherData.Players), 
-        otherData.LevelSize, otherData.Name, map.CreationTime, otherData.Id, isAutosave: map.IsAutosave, isEditor: map.IsEditor);
+      Data = _mapsFactory.CreateMapData(_mapsFactory.CopyPlayers(otherData.InitialPlayers), _mapsFactory.CopyPlayers(otherData.Players),
+        otherData.LevelSize, otherData.Name, map.CreationTime, otherData.Id, isAutosave: map.IsAutosave, isEditor: map.IsEditor, 
+        playersMode: otherData.PlayersMode, difficultyMode: otherData.DifficultyMode, firstPlayer: otherData.FirstPlayer);
     }
   }
 }

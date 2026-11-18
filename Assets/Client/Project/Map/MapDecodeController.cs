@@ -17,6 +17,9 @@ namespace Client.Project.Map
     private string _source;
     private string _mapName;
     private bool _isHuge;
+    private PlayerRegionType _firstPlayer;
+    private int _difficultyMode;
+    private int _playersMode;
 
     public MapDecodeController() => _mapsFactory = Locator.Get<MapsFactory>();
 
@@ -44,12 +47,13 @@ namespace Client.Project.Map
       DecodeLand();
       DecodeUnits();
       DecodeEditorInfo();
-      DecodeMapName();
+      DecodeMapName(name);
 
       var regions = _mapsFactory.CreateRegions(_cells, _mapSize, 0);
       DecodeProvinces(regions);
       var players = _mapsFactory.CreatePlayers(regions);
-      return _mapsFactory.CreateMapData(players, _levelSize, name ?? _mapName, id: id);
+      return _mapsFactory.CreateMapData(players, _mapsFactory.CopyPlayers(players), _levelSize, _mapName, id: id, firstPlayer: _firstPlayer, 
+        playersMode: _playersMode, difficultyMode: _difficultyMode);
     }
 
     private void DecodeLevelSize()
@@ -65,14 +69,17 @@ namespace Client.Project.Map
       _mapsFactory.ClearCellsBuffer();
     }
 
-    private void DecodeMapName()
+    private void DecodeMapName(string name)
     {
-      var section = GetSection("map_name");
-      if (section == null)
+      if (name != null)
+      {
+        _mapName = name;
         return;
+      }
 
-      //todo: применить на mapData, чтобы слот загруженной карты назывался по-новому. При загрузке в редакторе - игнорировать.
-      _mapName = section;
+      var section = GetSection("map_name");
+      if (section != null)
+        _mapName = section;
     }
 
     private void DecodeEditorInfo()
@@ -82,9 +89,9 @@ namespace Client.Project.Map
         return;
 
       var split = section.Split(" ");
-
-      //todo
-      //GameRules.setEditorChosenColor(Integer.valueOf(split[0]));
+      //random это какое значение?
+      var value = int.Parse(split[0]);//YiotroUtilities.FractionToRegionType();
+      _firstPlayer = new PlayerRegionType(YiotroUtilities.FractionToRegionType(value)); //todo: проверить работоспособность.
     }
 
     private void DecodeUnits()
@@ -148,10 +155,9 @@ namespace Client.Project.Map
         return;
 
       var split = section.Split(" ");
-      //todo
-      //GameRules.setDifficulty(int.Parse(split[0]));
-      //gameController.setPlayersNumber(int.Parse(split[1]));
-      //GameRules.setFractionsQuantity(int.Parse(split[2]));
+      _difficultyMode = int.Parse(split[0]);
+      _playersMode = int.Parse(split[1]);
+      //_regionsCount = int.Parse(split[2]); //todo
     }
 
     private void DecodeProvinces(List<RegionData> regions)

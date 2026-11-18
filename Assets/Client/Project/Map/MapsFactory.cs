@@ -31,12 +31,9 @@ namespace Client.Project.Map
       _gridController = Locator.Get<GridController>();
     }
 
-    public MapData CreateMapData(List<PlayerData> initialPlayers, LevelSize size, string name, DateTime creationTime = default, int id = -1,
-      bool isAutosave = false, bool isEditor = false) =>
-      CreateMapData(initialPlayers, CopyPlayers(initialPlayers), size, name, creationTime, id, isAutosave, isEditor);
-
     public MapData CreateMapData(List<PlayerData> initialPlayers, List<PlayerData> players, LevelSize size, string name,
-      DateTime creationTime = default, int id = -1, bool isAutosave = false, bool isEditor = false)
+      DateTime creationTime = default, int id = -1, bool isAutosave = false, bool isEditor = false, int playersMode = 0,
+      int difficultyMode = 0, PlayerRegionType firstPlayer = default)
     {
       return new MapData
       {
@@ -47,7 +44,10 @@ namespace Client.Project.Map
         Name = name,
         CreationTime = creationTime.ToBinary(),
         IsAutosave = isAutosave,
-        IsEditor = isEditor
+        IsEditor = isEditor,
+        DifficultyMode = difficultyMode,
+        PlayersMode = playersMode,
+        FirstPlayer = firstPlayer
       };
     }
 
@@ -75,7 +75,9 @@ namespace Client.Project.Map
         });
       }
 
-      return CreateMapData(isEditor ? players : initialPlayers, players, _gridController.LevelSize, name, DateTime.Now, id, isAutosave, isEditor);
+      return CreateMapData(isEditor ? players : initialPlayers, players, _gridController.LevelSize, name, DateTime.Now, id, isAutosave, isEditor,
+        playersMode: _governmentsService.PlayersMode, difficultyMode: _governmentsService.DifficultyMode,
+        firstPlayer: _governmentsService.FirstPlayer);
     }
 
     public List<RegionData> CreateRegions(UnsafeNullable<CellData>[,] cells, Vector2Int size, int initialMoney)
