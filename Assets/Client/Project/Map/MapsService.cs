@@ -20,12 +20,12 @@ namespace Client.Project.Map
 
     public void Initialize()
     {
-      _mapGenerator = new();
-      _startMap = new();
       _progressController = Locator.Get<ProgressController>();
       _mapsFactory = Locator.Get<MapsFactory>();
-      _mapDecodeController = Locator.Get<MapDecodeController>();
-      _mapEncodeController = Locator.Get<MapEncodeController>();
+      _mapGenerator = new();
+      _startMap = new();
+      _mapDecodeController = new();
+      _mapEncodeController = new();
       Load();
     }
 

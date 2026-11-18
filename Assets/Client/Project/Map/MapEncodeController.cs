@@ -8,17 +8,17 @@ using Client.Project.Yiotro;
 
 namespace Client.Project.Map
 {
-  public class MapEncodeController : IInitializable
+  public class MapEncodeController
   {
     private readonly StringBuilder _builder = new();
-    private MapsService _mapsService;
-    private GovernmentsService _governmentsService;
-    private GridController _gridController;
-    private UnitsService _unitsService;
-    private RegionsService _regionsService;
+    private readonly MapsService _mapsService;
+    private readonly GovernmentsService _governmentsService;
+    private readonly GridController _gridController;
+    private readonly UnitsService _unitsService;
+    private readonly RegionsService _regionsService;
     private bool _isHuge;
 
-    public void Initialize()
+    public MapEncodeController()
     {
       _mapsService = Locator.Get<MapsService>();
       _governmentsService = Locator.Get<GovernmentsService>();

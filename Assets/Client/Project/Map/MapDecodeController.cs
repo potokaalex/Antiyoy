@@ -8,9 +8,9 @@ using UnityEngine;
 
 namespace Client.Project.Map
 {
-  public class MapDecodeController : IInitializable
+  public class MapDecodeController
   {
-    private MapsFactory _mapsFactory;
+    private readonly MapsFactory _mapsFactory;
     private UnsafeNullable<CellData>[,] _cells;
     private Vector2Int _mapSize;
     private LevelSize _levelSize;
@@ -18,7 +18,7 @@ namespace Client.Project.Map
     private string _mapName;
     private bool _isHuge;
 
-    public void Initialize() => _mapsFactory = Locator.Get<MapsFactory>();
+    public MapDecodeController() => _mapsFactory = Locator.Get<MapsFactory>();
 
     public bool IsValidLevelCode(string levelCode)
     {

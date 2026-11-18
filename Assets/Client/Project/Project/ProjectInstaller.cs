@@ -38,8 +38,6 @@ namespace Client.Project.Project
       context.Register(new UnitsAreaCalculator());
       context.Register(_unitsService);
       context.Register(new MapsFactory());
-      context.Register(new MapEncodeController());
-      context.Register(new MapDecodeController());
       context.Register(new MapsService());
       context.Register(_introView);
       context.Register(_menuView);
