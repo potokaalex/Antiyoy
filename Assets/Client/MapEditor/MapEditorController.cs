@@ -8,6 +8,7 @@ using Client.Project.CameraFeatures;
 using Client.Project.Government;
 using Client.Project.Infrastructure;
 using Client.Project.Map;
+using Client.Project.Player;
 using Client.Project.Project;
 using Client.Project.Region;
 using Client.Project.Unit.Code;
@@ -34,22 +35,23 @@ namespace Client.MapEditor
     private CapitalsController _capitalsController;
     private ProjectController _projectController;
     private GovernmentsService _governmentsService;
+    private PlayersService _playersService;
     private IMapEditorModeHandler _currentModeHandler;
     private float _timeToSave;
     private bool _started;
 
-    public int PlayersMode { get => _governmentsService.PlayersMode; set => _governmentsService.PlayersMode = value; }
+    public int PlayersMode { get => _playersService.PlayersMode; set => _playersService.PlayersMode = value; }
 
-    public int DifficultyMode { get => _governmentsService.DifficultyMode; set => _governmentsService.DifficultyMode = value; }
+    public int DifficultyMode { get => _playersService.DifficultyMode; set => _playersService.DifficultyMode = value; }
 
     public event Action OnPlayerRegionTypeChanged;
 
     public PlayerRegionType FirstPlayer
     {
-      get => _governmentsService.FirstPlayer;
+      get => _playersService.FirstPlayer;
       set
       {
-        _governmentsService.FirstPlayer = value;
+        _playersService.FirstPlayer = value;
         OnPlayerRegionTypeChanged?.Invoke();
       }
     }
@@ -67,6 +69,7 @@ namespace Client.MapEditor
       _capitalsController = Locator.Get<CapitalsController>();
       _projectController = Locator.Get<ProjectController>();
       _governmentsService = Locator.Get<GovernmentsService>();
+      _playersService = Locator.Get<PlayersService>();
     }
 
     public void Start()
@@ -165,6 +168,7 @@ namespace Client.MapEditor
       _gridController.DestroyAllCells();
       _bordersService.ViewRegionsBorders();
       _governmentsService.Clear();
+      _playersService.Clear();
     }
 
     public void GenerateRandomMap()
@@ -243,7 +247,7 @@ namespace Client.MapEditor
       _gridController.InitialCreateCells(map);
       _unitsService.InitialCreateUnits(map);
       _regionsService.InitialCreateRegions(map);
-      _governmentsService.Setup(map);
+      _playersService.Setup(map);
       _bordersService.ViewRegionsBorders();
       _cameraController.Setup(viewFullMap);
     }

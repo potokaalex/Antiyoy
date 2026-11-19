@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using Client.Project.Government;
 using Client.Project.Infrastructure;
+using Client.Project.Player;
 using Client.Project.Progress;
 using UnityEngine;
 
@@ -15,8 +15,8 @@ namespace Client.Project.Map
     private MapEncodeController _mapEncodeController;
     private ProgressController _progressController;
     private MapsFactory _mapsFactory;
-    private GovernmentsService _governmentsService;
     private MapController _startMap;
+    private PlayersService _playersService;
 
     public IReadOnlyMap StartMap => _startMap;
 
@@ -24,7 +24,7 @@ namespace Client.Project.Map
     {
       _progressController = Locator.Get<ProgressController>();
       _mapsFactory = Locator.Get<MapsFactory>();
-      _governmentsService = Locator.Get<GovernmentsService>();
+      _playersService = Locator.Get<PlayersService>();
       _mapGenerator = new();
       _mapDecodeController = new();
       _mapEncodeController = new();
@@ -38,7 +38,7 @@ namespace Client.Project.Map
       _startMap.Data = _mapGenerator.GenerateData(levelSize, regionsCount, name, difficultyMode, playersMode);
 
     public void GenerateMapIntoStart(LevelSize levelSize, int colorsCount) => _startMap.Data =
-      _mapGenerator.GenerateData(levelSize, colorsCount, _startMap.Name, _governmentsService.DifficultyMode, _governmentsService.PlayersMode, 
+      _mapGenerator.GenerateData(levelSize, colorsCount, _startMap.Name, _playersService.DifficultyMode, _playersService.PlayersMode, 
         _startMap.Id);
 
     public void GenerateEmptyStartMap(LevelSize levelSize, string name) => _startMap.Data = _mapGenerator.GenerateEmptyData(levelSize, name);

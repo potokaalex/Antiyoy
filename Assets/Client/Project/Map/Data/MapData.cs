@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Client.Project.Player;
 
 namespace Client.Project.Map.Data
 {

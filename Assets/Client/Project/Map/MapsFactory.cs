@@ -5,6 +5,7 @@ using Client.Project.Government;
 using Client.Project.Hex;
 using Client.Project.Infrastructure;
 using Client.Project.Map.Data;
+using Client.Project.Player;
 using Client.Project.Region;
 using Client.Project.Utilities;
 using UnityEngine;
@@ -18,6 +19,7 @@ namespace Client.Project.Map
     private readonly Queue<CellData> _frontBuffer = new();
     private GovernmentsService _governmentsService;
     private GridController _gridController;
+    private PlayersService _playersService;
 
     public MapsFactory()
     {
@@ -29,6 +31,7 @@ namespace Client.Project.Map
     {
       _governmentsService = Locator.Get<GovernmentsService>();
       _gridController = Locator.Get<GridController>();
+      _playersService = Locator.Get<PlayersService>();
     }
 
     public MapData CreateMapData(List<PlayerData> initialPlayers, List<PlayerData> players, LevelSize size, string name,
@@ -71,13 +74,15 @@ namespace Client.Project.Map
 
         players.Add(new PlayerData
         {
-          Regions = regions
+          Regions = regions,
+          Type = PlayerType.OnDevice,
+          RegionType = government.RegionsType
         });
       }
 
       return CreateMapData(isEditor ? players : initialPlayers, players, _gridController.LevelSize, name, DateTime.Now, id, isAutosave, isEditor,
-        playersMode: _governmentsService.PlayersMode, difficultyMode: _governmentsService.DifficultyMode,
-        firstPlayer: _governmentsService.FirstPlayer);
+        playersMode: _playersService.PlayersMode, difficultyMode: _playersService.DifficultyMode,
+        firstPlayer: _playersService.FirstPlayer);
     }
 
     public List<RegionData> CreateRegions(UnsafeNullable<CellData>[,] cells, Vector2Int size, int initialMoney)
@@ -152,7 +157,9 @@ namespace Client.Project.Map
 
         var player = new PlayerData
         {
-          Regions = new()
+          Regions = new(),
+          Type = PlayerType.OnDevice,
+          RegionType = rootRegion.Type
         };
 
         players.Add(player);

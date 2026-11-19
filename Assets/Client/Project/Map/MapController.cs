@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Client.Project.Infrastructure;
 using Client.Project.Map.Data;
+using Client.Project.Player;
 
 namespace Client.Project.Map
 {
@@ -50,6 +51,12 @@ namespace Client.Project.Map
         yield return region;
     }
 
+    public IEnumerable<PlayerData> GetPlayers()
+    {
+      foreach (var player in Data.Players)
+        yield return player;
+    }
+
     public void Restart() => Data = _mapsFactory.CreateMapData(Data.InitialPlayers, _mapsFactory.CopyPlayers(Data.InitialPlayers), Data.LevelSize,
       Data.Name, CreationTime, Id, playersMode: Data.PlayersMode, difficultyMode: Data.DifficultyMode, firstPlayer: Data.FirstPlayer);
 
@@ -57,7 +64,7 @@ namespace Client.Project.Map
     {
       var otherData = map.Data;
       Data = _mapsFactory.CreateMapData(_mapsFactory.CopyPlayers(otherData.InitialPlayers), _mapsFactory.CopyPlayers(otherData.Players),
-        otherData.LevelSize, otherData.Name, map.CreationTime, otherData.Id, isAutosave: map.IsAutosave, isEditor: map.IsEditor, 
+        otherData.LevelSize, otherData.Name, map.CreationTime, otherData.Id, isAutosave: map.IsAutosave, isEditor: map.IsEditor,
         playersMode: otherData.PlayersMode, difficultyMode: otherData.DifficultyMode, firstPlayer: otherData.FirstPlayer);
     }
   }

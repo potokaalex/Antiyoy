@@ -3,12 +3,15 @@ using Client.Menu.Intro;
 using Client.Menu.MainMenu;
 using Client.Project.Borders;
 using Client.Project.CameraFeatures;
+using Client.Project.Government;
 using Client.Project.Infrastructure;
 using Client.Project.Map;
+using Client.Project.Player;
 using Client.Project.Progress;
 using Client.Project.Region;
 using Client.Project.Tile;
 using Client.Project.Unit.Code;
+using Client.Project.Unit.Code.Capital;
 using UnityEngine;
 
 namespace Client.Project.Project
@@ -37,6 +40,9 @@ namespace Client.Project.Project
       context.Register(_regionsService);
       context.Register(new UnitsAreaCalculator());
       context.Register(_unitsService);
+      context.Register(new CapitalsController());
+      context.Register(new GovernmentsService());
+      context.Register(new PlayersService());
       context.Register(new MapsFactory());
       context.Register(new MapsService());
       context.Register(_introView);

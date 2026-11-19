@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Client.Project.Infrastructure;
 using Client.Project.Map.Data;
+using Client.Project.Player;
 using Client.Project.Utilities;
 using Client.Project.Yiotro;
 using UnityEngine;

@@ -1,5 +1,6 @@
 using Client.Project;
 using Client.Project.Infrastructure;
+using Client.Project.Player;
 using Client.Project.Region;
 using Client.Project.UI;
 using Sirenix.OdinInspector;

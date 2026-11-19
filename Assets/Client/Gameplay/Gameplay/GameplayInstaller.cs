@@ -3,7 +3,6 @@ using Client.Gameplay.Player;
 using Client.Gameplay.Protection;
 using Client.Gameplay.Recovery;
 using Client.Gameplay.UI;
-using Client.Project.Government;
 using Client.Project.Infrastructure;
 using Client.Project.Unit.Code;
 using Client.Project.Unit.Code.Capital;
@@ -23,9 +22,7 @@ namespace Client.Gameplay.Gameplay
 
     public override void Install(Context context)
     {
-      context.Register(new CapitalsController());
       context.Register(new GameplayRegionsController());
-      context.Register(new GovernmentsService());
       context.Register(new WarriorUnitsAnimator());
       context.Register(new TreesController());
       context.Register(_tilesSelectionView);

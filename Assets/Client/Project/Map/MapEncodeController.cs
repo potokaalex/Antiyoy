@@ -1,6 +1,6 @@
 using System.Text;
-using Client.Project.Government;
 using Client.Project.Infrastructure;
+using Client.Project.Player;
 using Client.Project.Region;
 using Client.Project.Unit.Code;
 using Client.Project.Yiotro;
@@ -11,19 +11,19 @@ namespace Client.Project.Map
   {
     private readonly StringBuilder _builder = new();
     private readonly MapsService _mapsService;
-    private readonly GovernmentsService _governmentsService;
     private readonly GridController _gridController;
     private readonly UnitsService _unitsService;
     private readonly RegionsService _regionsService;
+    private readonly PlayersService _playersService;
     private bool _isHuge;
 
     public MapEncodeController()
     {
       _mapsService = Locator.Get<MapsService>();
-      _governmentsService = Locator.Get<GovernmentsService>();
       _gridController = Locator.Get<GridController>();
       _unitsService = Locator.Get<UnitsService>();
       _regionsService = Locator.Get<RegionsService>();
+      _playersService = Locator.Get<PlayersService>();
     }
 
     public string EncodeFromRuntime()
@@ -65,7 +65,7 @@ namespace Client.Project.Map
     private void EncodeEditorInfo()
     {
       StartSection("editor_info");
-      _builder.Append(YiotroUtilities.PlayerRegionTypeToCode(_governmentsService.FirstPlayer)).Append(" ");
+      _builder.Append(YiotroUtilities.PlayerRegionTypeToCode(_playersService.FirstPlayer)).Append(" ");
       _builder.Append(false).Append(" ");
       _builder.Append(false).Append(" ");
     }
@@ -103,9 +103,9 @@ namespace Client.Project.Map
     private void EncodeGeneralInfo()
     {
       StartSection("general");
-      _builder.Append(_governmentsService.DifficultyMode).Append(" ");
-      _builder.Append(_governmentsService.PlayersMode).Append(" ");
-      _builder.Append(_governmentsService.PlayersCount());
+      _builder.Append(_playersService.DifficultyMode).Append(" ");
+      _builder.Append(_playersService.PlayersMode).Append(" ");
+      _builder.Append(_playersService.PlayersCount());
     }
 
     private void EncodeLevelSize()

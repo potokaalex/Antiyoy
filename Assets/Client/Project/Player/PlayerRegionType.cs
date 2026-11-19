@@ -1,7 +1,7 @@
 using System;
 using Client.Project.Region;
 
-namespace Client.Project
+namespace Client.Project.Player
 {
   [Serializable]
   public struct PlayerRegionType

@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Client.Project.Map.Data;
+using Client.Project.Player;
 
 namespace Client.Project.Map
 {
@@ -17,5 +19,6 @@ namespace Client.Project.Map
     PlayerRegionType FirstPlayer { get; }
     IEnumerable<CellData> GetCells();
     IEnumerable<RegionData> GetRegions();
+    IEnumerable<PlayerData> GetPlayers();
   }
 }

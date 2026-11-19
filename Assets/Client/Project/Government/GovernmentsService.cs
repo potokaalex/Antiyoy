@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
-using Client.Project.Map;
 using Client.Project.Region;
 using UnityEngine.Pool;
 
@@ -9,19 +7,6 @@ namespace Client.Project.Government
   public class GovernmentsService
   {
     private readonly Dictionary<RegionType, GovernmentController> _governments = new();
-
-    public int DifficultyMode { get; set; }
-
-    public int PlayersMode { get; set; }
-
-    public PlayerRegionType FirstPlayer { get; set; }
-
-    public void Setup(IReadOnlyMap map)
-    {
-      DifficultyMode = map.DifficultyMode;
-      PlayersMode = map.PlayersMode;
-      FirstPlayer = map.FirstPlayer;
-    }
 
     public void AddRegion(RegionController region)
     {
@@ -74,13 +59,7 @@ namespace Client.Project.Government
       return null;
     }
 
-    public void Clear()
-    {
-      _governments.Clear();
-      DifficultyMode = 0;
-      PlayersMode = 0;
-      FirstPlayer = default;
-    }
+    public void Clear() => _governments.Clear();
 
     public void ClearEmpty()
     {
@@ -94,7 +73,5 @@ namespace Client.Project.Government
           _governments.Remove(government.RegionsType);
       }
     }
-
-    public int PlayersCount() => GetAll().Count(x => x.Regions.Count > 0 && x.RegionsType != RegionType.Neutral);
   }
 }
