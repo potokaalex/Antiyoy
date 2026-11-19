@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Text;
 using Client.Project.Government;
 using Client.Project.Infrastructure;
@@ -66,8 +65,7 @@ namespace Client.Project.Map
     private void EncodeEditorInfo()
     {
       StartSection("editor_info");
-      //todo проверить конвертацию.
-      _builder.Append(YiotroUtilities.RegionTypeToFraction(_mapsService.StartMap.FirstPlayer.RegionType)).Append(" ");
+      _builder.Append(YiotroUtilities.PlayerRegionTypeToCode(_governmentsService.FirstPlayer)).Append(" ");
       _builder.Append(false).Append(" ");
       _builder.Append(false).Append(" ");
     }
@@ -104,13 +102,10 @@ namespace Client.Project.Map
 
     private void EncodeGeneralInfo()
     {
-      var map = _mapsService.StartMap;
       StartSection("general");
-      _builder.Append(map.DifficultyMode).Append(" ");
-      _builder.Append(map.PlayersMode).Append(" ");
-      _builder.Append(_governmentsService.GetAll().Count(x => x.Regions.Count > 0 && x.RegionsType != RegionType.Neutral));
-      //_builder.Append(GameRules.fractionsQuantity); - заменить текущий подсчёт на сохраненное значение.
-      //todo
+      _builder.Append(_governmentsService.DifficultyMode).Append(" ");
+      _builder.Append(_governmentsService.PlayersMode).Append(" ");
+      _builder.Append(_governmentsService.PlayersCount());
     }
 
     private void EncodeLevelSize()

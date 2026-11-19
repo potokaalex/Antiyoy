@@ -89,9 +89,7 @@ namespace Client.Project.Map
         return;
 
       var split = section.Split(" ");
-      //random это какое значение?
-      var value = int.Parse(split[0]);//YiotroUtilities.FractionToRegionType();
-      _firstPlayer = new PlayerRegionType(YiotroUtilities.FractionToRegionType(value)); //todo: проверить работоспособность.
+      _firstPlayer = YiotroUtilities.CodeToPlayerRegionType(int.Parse(split[0]));
     }
 
     private void DecodeUnits()
@@ -157,7 +155,6 @@ namespace Client.Project.Map
       var split = section.Split(" ");
       _difficultyMode = int.Parse(split[0]);
       _playersMode = int.Parse(split[1]);
-      //_regionsCount = int.Parse(split[2]); //todo
     }
 
     private void DecodeProvinces(List<RegionData> regions)

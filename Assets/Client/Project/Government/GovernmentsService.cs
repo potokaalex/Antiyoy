@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Client.Project.Map;
 using Client.Project.Region;
 using UnityEngine.Pool;
@@ -93,5 +94,7 @@ namespace Client.Project.Government
           _governments.Remove(government.RegionsType);
       }
     }
+
+    public int PlayersCount() => GetAll().Count(x => x.Regions.Count > 0 && x.RegionsType != RegionType.Neutral);
   }
 }
