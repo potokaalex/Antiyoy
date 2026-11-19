@@ -175,8 +175,12 @@ namespace Client.Project.Yiotro
     {
       if (playerRegionType.IsRandom)
         return 0;
+      return RegionTypeToEditorColorCode(playerRegionType.RegionType);
+    }
 
-      return playerRegionType.RegionType switch
+    public static int RegionTypeToEditorColorCode(RegionType regionType)
+    {
+      return regionType switch
       {
         RegionType.Lime => 1,
         RegionType.Rose => 2,

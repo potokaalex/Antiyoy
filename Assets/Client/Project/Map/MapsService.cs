@@ -35,11 +35,11 @@ namespace Client.Project.Map
     public IReadOnlyList<IReadOnlyMap> GetMaps() => _maps;
 
     public void GenerateStartMap(LevelSize levelSize, int regionsCount, string name, int difficultyMode, int playersMode) =>
-      _startMap.Data = _mapGenerator.GenerateData(levelSize, regionsCount, name, difficultyMode, playersMode);
+      _startMap.Data = _mapGenerator.GenerateDataAndFirstPlayer(levelSize, regionsCount, name, difficultyMode, playersMode);
 
     public void GenerateMapIntoStart(LevelSize levelSize, int colorsCount) => _startMap.Data =
       _mapGenerator.GenerateData(levelSize, colorsCount, _startMap.Name, _playersService.DifficultyMode, _playersService.PlayersMode, 
-        _startMap.Id);
+        _playersService.FirstPlayer, _startMap.Id);
 
     public void GenerateEmptyStartMap(LevelSize levelSize, string name) => _startMap.Data = _mapGenerator.GenerateEmptyData(levelSize, name);
 

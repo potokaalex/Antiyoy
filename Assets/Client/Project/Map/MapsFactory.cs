@@ -8,6 +8,7 @@ using Client.Project.Map.Data;
 using Client.Project.Player;
 using Client.Project.Region;
 using Client.Project.Utilities;
+using Client.Project.Yiotro;
 using UnityEngine;
 
 namespace Client.Project.Map
@@ -58,6 +59,7 @@ namespace Client.Project.Map
     {
       var players = new List<PlayerData>();
 
+      //todo: динамически создавать игроков. и создавать регионы из игроков.
       foreach (var government in _governmentsService.GetAll())
       {
         var regions = new List<RegionData>();
@@ -146,7 +148,7 @@ namespace Client.Project.Map
       return newRegions;
     }
 
-    public List<PlayerData> CreatePlayers(List<RegionData> regions)
+    public List<PlayerData> CreatePlayers(List<RegionData> regions, PlayerRegionType firstPlayer, int playersMode)
     {
       var players = new List<PlayerData>();
 
@@ -158,7 +160,7 @@ namespace Client.Project.Map
         var player = new PlayerData
         {
           Regions = new(),
-          Type = PlayerType.OnDevice,
+          Type = PlayerType.AI,
           RegionType = rootRegion.Type
         };
 
@@ -174,6 +176,28 @@ namespace Client.Project.Map
             regions.RemoveAt(i);
           }
         }
+      }
+
+      if (players.Count > 0 && !firstPlayer.IsRandom)
+      {
+        players.SortByIncreasing(x => x.RegionType == RegionType.Neutral ? int.MaxValue : YiotroUtilities.RegionTypeToEditorColorCode(x.RegionType));
+        var movement = players.FindIndex(x => x.RegionType == firstPlayer.RegionType);
+        var shift = (movement % players.Count + players.Count) % players.Count;
+        var temp = players.GetRange(0, shift);
+        players.RemoveRange(0, shift);
+        players.AddRange(temp);
+
+        var neutralIndex = players.FindIndex(x => x.RegionType == RegionType.Neutral);
+        if(neutralIndex != -1)
+        {
+          var player = players[neutralIndex];
+          players.RemoveAt(neutralIndex);
+          players.Add(player);
+        }
+
+        var array = players.ExtractArray();
+        for (var i = 0; i < playersMode; i++)
+          array[i].Type = PlayerType.OnDevice;
       }
 
       return players;

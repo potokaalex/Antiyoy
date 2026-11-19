@@ -11,7 +11,6 @@ namespace Client.Project.Player
 {
   public class PlayersService : IInitializable
   {
-    //todo: playerData.Type && RegionType
     private readonly List<IPlayerController> _players = new();
     private GovernmentsService _governmentsService;
 
@@ -19,7 +18,7 @@ namespace Client.Project.Player
 
     public int PlayersMode { get; set; }
 
-    public PlayerRegionType FirstPlayer { get; set; }
+    public PlayerRegionType FirstPlayer { get; set; } //todo: editor only!
 
     public IReadOnlyList<IPlayerController> Players => _players;
 
@@ -31,7 +30,7 @@ namespace Client.Project.Player
       PlayersMode = map.PlayersMode;
       FirstPlayer = map.FirstPlayer;
 
-      foreach (var player in map.GetPlayers().OrderBy(x => x.RegionType))
+      foreach (var player in map.GetPlayers())
         if(player.RegionType != RegionType.Neutral)
           CreatePlayer(player);
     }
@@ -44,7 +43,7 @@ namespace Client.Project.Player
       FirstPlayer = default;
     }
 
-    public int PlayersCount() => _governmentsService.GetAll().Count(x => x.Regions.Count > 0 && x.RegionsType != RegionType.Neutral);
+    public int PlayersCount() => _governmentsService.GetAll().Count(x => x.Regions.Count > 0 && x.RegionsType != RegionType.Neutral);//todo
 
     public bool HasPlayers() => _players.Count > 0;
 
@@ -76,7 +75,6 @@ namespace Client.Project.Player
 
     private void CreatePlayer(PlayerData player)
     {
-      //todo мы должны как-то определять порядок игроков, кто ходит первым, кто является ai и т.д. это на этапе сохранения должно определяться. т.е. возможно даже не в формате.
       IPlayerController controller;
 
       if (player.Type == PlayerType.OnDevice)
