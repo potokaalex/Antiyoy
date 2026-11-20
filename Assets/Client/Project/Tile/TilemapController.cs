@@ -23,19 +23,24 @@ namespace Client.Project.Tile
     public void FillByBaseTiles()
     {
       foreach (var cell in _gridController.GetAllCells())
-        CreateTile(cell.Position);
+      {
+        var tilemapPosition = GetPosition(cell.Position); 
+        _tilemap.SetTile(tilemapPosition, _tile);
+        if(_gridController.IsBorderCell(cell))
+          CreateShadowTile(tilemapPosition);
+      }
     }
 
     public void CreateTile(HexCoordinates position)
     {
-      var tilemapPosition = _gridController.GridIndexFrom2DIndex(position.ToArray2DIndex());
+      var tilemapPosition = GetPosition(position); 
       _tilemap.SetTile(tilemapPosition, _tile);
-      _tilemapShadows.SetTile(tilemapPosition, _tile);
+      CreateShadowTile(tilemapPosition);
     }
 
     public void DestroyTile(HexCoordinates position)
     {
-      var tilemapPosition = _gridController.GridIndexFrom2DIndex(position.ToArray2DIndex());
+      var tilemapPosition = GetPosition(position);
       _tilemap.SetTile(tilemapPosition, null);
       _tilemapShadows.SetTile(tilemapPosition, null);
     }
@@ -48,9 +53,8 @@ namespace Client.Project.Tile
 
     public void SetColor(HexCoordinates position, Color color)
     {
-      var tilemapPosition = _gridController.GridIndexFrom2DIndex(position.ToArray2DIndex());
+      var tilemapPosition = GetPosition(position);
       _tilemap.SetColor(tilemapPosition, color);
-      _tilemapShadows.SetColor(tilemapPosition, Color.white);
     }
 
     public void TilemapMaskCreateTiles(List<CellController> cells)
@@ -58,7 +62,7 @@ namespace Client.Project.Tile
       _tilemapMask.gameObject.SetActive(true);
       foreach (var cell in cells)
       {
-        var tilemapPosition = _gridController.GridIndexFrom2DIndex(cell.Position.ToArray2DIndex());
+        var tilemapPosition = GetPosition(cell.Position);
         _tilemapMask.SetTile(tilemapPosition, _tile);
       }
     }
@@ -68,5 +72,13 @@ namespace Client.Project.Tile
       _tilemapMask.ClearAllTiles();
       _tilemapMask.gameObject.SetActive(false);
     }
+
+    private void CreateShadowTile(Vector3Int position)
+    {
+      _tilemapShadows.SetTile(position, _tile);
+      _tilemapShadows.SetColor(position, Color.white);
+    }
+
+    private Vector3Int GetPosition(HexCoordinates position) => _gridController.GridIndexFrom2DIndex(position.ToArray2DIndex());
   }
 }

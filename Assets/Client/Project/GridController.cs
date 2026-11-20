@@ -120,6 +120,17 @@ namespace Client.Project
       _tilemapController.ClearAllTiles();
     }
 
+    public bool IsBorderCell(CellController cell)
+    {
+      var aroundPosition = cell.Position;
+      var cellsCount = 0;
+      foreach (var direction in HexUtilities.Directions)
+        if (GetCell(aroundPosition + direction, out _))
+          cellsCount++;
+
+      return cellsCount < 6;
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private bool IsPositionInGrid(int x, int y) => x >= 0 && y >= 0 && x < _sizeX && y < _sizeY;
 

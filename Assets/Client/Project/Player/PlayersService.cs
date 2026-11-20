@@ -8,7 +8,6 @@ using Client.Project.Map;
 using Client.Project.Map.Data;
 using Client.Project.Region;
 using Client.Project.Yiotro;
-using UnityEngine;
 
 namespace Client.Project.Player
 {
@@ -16,21 +15,12 @@ namespace Client.Project.Player
   {
     private readonly List<IPlayerController> _players = new();
     private GovernmentsService _governmentsService;
-    private PlayerRegionType _fp;
 
     public int DifficultyMode { get; set; }
 
     public int PlayersMode { get; set; }
 
-    public PlayerRegionType FirstPlayer
-    {
-      get => _fp;
-      set
-      {
-        _fp = value;
-        Debug.Log($"Set {_fp.IsRandom}, {_fp.RegionType}");
-      }
-    } //todo: editor only!
+    public PlayerRegionType FirstPlayer { get; set; }
 
     public IReadOnlyList<IPlayerController> Players => _players;
 
