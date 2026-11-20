@@ -1,4 +1,6 @@
 using Client.Menu;
+using Client.Project;
+using Client.Project.Infrastructure;
 using Client.Project.UI;
 using Client.Project.Utilities;
 using DG.Tweening;
@@ -13,9 +15,13 @@ namespace Client.MapEditor.UI.Panels.Settings
     [SerializeField] private TopAndBottomMenuAnimator _topAndBottomMenuAnimator;
     [SerializeField] private MapEditorPlayerColorButton[] _buttons;
     [SerializeField] private Image _animationImage;
+    private InputController _inputController;
+
+    public bool IsShowing => _topAndBottomMenuAnimator.IsShowing;
 
     private void Awake()
     {
+      _inputController = Locator.Get<InputController>();
       _closeButton.OnClick += Hide;
       _animationImage.gameObject.SetActive(false);
     }
@@ -24,6 +30,12 @@ namespace Client.MapEditor.UI.Panels.Settings
     {
       _closeButton.OnClick -= Hide;
       DOTween.Kill(this);
+    }
+
+    private void Update()
+    {
+      if (IsShowing && _inputController.BackClicked)
+        _closeButton.Click();
     }
 
     public void Show()

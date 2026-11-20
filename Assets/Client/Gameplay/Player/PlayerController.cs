@@ -4,31 +4,33 @@ using Client.Project;
 using Client.Project.CameraFeatures;
 using Client.Project.Government;
 using Client.Project.Infrastructure;
+using Client.Project.Player;
 using Client.Project.Region;
 using Client.Project.Unit.Code;
+using Client.Project.Unit.Code.Capital;
 using Client.Project.Utilities;
+using UnityEngine;
 
 namespace Client.Gameplay.Player
 {
-  public class PlayerController
+  public class PlayerController : IPlayerController
   {
     private readonly CameraController _cameraController;
     private readonly GridController _gridController;
     private readonly UnitsService _unitsService;
     private readonly InputController _inputController;
     private readonly ActionsHistoryController _actionsHistoryController;
-    private readonly GovernmentsService _governmentService;
+    private readonly GovernmentsService _governmentsService;
     private readonly GameplayFieldController _gameplayFieldController;
     private readonly PlayerViewController _playerViewController;
     private readonly UnitsMoveAnimator _unitsMoveAnimator;
+    private readonly CapitalsController _capitalsController;
     private IUnit _selectedUnit;
     private RegionController _lastSelectedRegion;
     private GameplayMode _gameplayMode;
     private UnitType _creationUnitType;
 
     public RegionType RegionType { get; }
-
-    public bool Alive => _governmentService.IsAlive(RegionType);
 
     public RegionController SelectedRegion { get; private set; }
 
@@ -40,10 +42,11 @@ namespace Client.Gameplay.Player
       _unitsService = Locator.Get<UnitsService>();
       _inputController = Locator.Get<InputController>();
       _actionsHistoryController = Locator.Get<ActionsHistoryController>();
-      _governmentService = Locator.Get<GovernmentsService>();
+      _governmentsService = Locator.Get<GovernmentsService>();
       _gameplayFieldController = Locator.Get<GameplayFieldController>();
       _playerViewController = Locator.Get<PlayerViewController>();
       _unitsMoveAnimator = Locator.Get<UnitsMoveAnimator>();
+      _capitalsController = Locator.Get<CapitalsController>();
     }
 
     public void Tick() => UpdatePlayerInput();
@@ -58,7 +61,12 @@ namespace Client.Gameplay.Player
 
     public void Pause() => Clear();
 
-    public void StartTurn() => _playerViewController.SetPlayerController(this);
+    public void StartTurn()
+    {
+      Debug.Log($"OnDevicePlayer turn: {RegionType}");
+      _playerViewController.SetPlayerController(this);
+      _cameraController.Focus(_capitalsController.GetCapital(_governmentsService.Get(RegionType).Regions[0]).WorldPosition);
+    }
 
     public void EndTurn()
     {
@@ -98,7 +106,7 @@ namespace Client.Gameplay.Player
         return;
       }
 
-      if (_gameplayMode == GameplayMode.SelectedRegion && ShowBuildingsProtection(cell))
+      if (_gameplayMode == GameplayMode.SelectedRegion && cell.Region == SelectedRegion && ShowBuildingsProtection(cell))
         return;
 
       if (_gameplayMode == GameplayMode.None || _gameplayMode == GameplayMode.SelectedRegion)

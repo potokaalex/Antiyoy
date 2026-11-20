@@ -32,7 +32,7 @@ namespace Client.Project.Unit.Code
           x => x.gameObject.SetActive(true), x => x.gameObject.SetActive(false)));
     }
 
-    public void InitialCreateUnits(MapController map)
+    public void InitialCreateUnits(IReadOnlyMap map)
     {
       foreach (var cell in map.GetCells())
       {

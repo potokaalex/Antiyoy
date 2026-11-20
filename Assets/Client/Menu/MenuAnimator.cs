@@ -24,6 +24,8 @@ namespace Client.Menu
     private Vector2 _topPanelEndPosition;
     private bool _initialized;
 
+    public bool IsShowing { get; private set; }
+
     private void Awake()
     {
       if (_autoInitialize)
@@ -59,15 +61,19 @@ namespace Client.Menu
     public void PlayShow()
     {
       Initialize();
-      var tween = MenuAnimation(_topPanelStartPosition, 1, 1).JoinCallback(() => gameObject.SetActive(true));
+      gameObject.SetActive(true);
+      _inputController.SetBlockInput(true);
+      var tween = MenuAnimation(_topPanelStartPosition, 1, 1);
       if (_hasBackgroundAnimation)
         tween.Join(_menuView.Background.PlayColorTransition(_backgroundShowColor, _particlesShowColor));
+      IsShowing = true;
     }
 
     public void PlayHide()
     {
       Initialize();
       MenuAnimation(_topPanelEndPosition, _bodyMinScale, 0).AddOnComplete(() => gameObject.SetActive(false));
+      IsShowing = false;
     }
 
     private Sequence MenuAnimation(Vector3 topPosition, float bodyScale, float alpha)
@@ -82,7 +88,6 @@ namespace Client.Menu
 
       sequence
         .Join(_canvasGroup.DOFade(alpha, 0.35f / _speedFactor))
-        .JoinCallback(() => _inputController.SetBlockInput(true))
         .AddOnComplete(() => _inputController.SetBlockInput(false))
         .SetEase(AnimationsUtilities.MenuDefaultEase)
         .SetId(this);

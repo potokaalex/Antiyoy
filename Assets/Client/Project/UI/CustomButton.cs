@@ -49,11 +49,12 @@ namespace Client.Project.UI
         _background.color = Color.clear;
     }
 
-    public void OnPointerDown(PointerEventData eventData)
+    public void Click(PointerEventData eventData = null)
     {
       _isPressed = true;
       _pressTime = Time.unscaledTime;
-      _pressPosition = eventData.position;
+      if (eventData != null)
+        _pressPosition = eventData.position;
       IsLongPress = false;
       WasDragged = false;
 
@@ -67,6 +68,8 @@ namespace Client.Project.UI
 
       OnClick?.Invoke();
     }
+
+    public void OnPointerDown(PointerEventData eventData) => Click(eventData);
 
     public void OnPointerUp(PointerEventData eventData)
     {

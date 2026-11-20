@@ -1,8 +1,4 @@
-using System.Collections.Generic;
-using System.Linq;
 using Client.Gameplay.ActionsHistory;
-using Client.Gameplay.DebugFeatures;
-using Client.Gameplay.Player;
 using Client.Gameplay.UI;
 using Client.Menu.MainMenu;
 using Client.Project;
@@ -11,16 +7,15 @@ using Client.Project.CameraFeatures;
 using Client.Project.Government;
 using Client.Project.Infrastructure;
 using Client.Project.Map;
+using Client.Project.Player;
 using Client.Project.Region;
 using Client.Project.Unit.Code;
 using Client.Project.Unit.Code.Capital;
-using UnityEngine.Pool;
 
 namespace Client.Gameplay.Gameplay
 {
   public class GameplayController : IInitializable, ITickable
   {
-    private readonly List<PlayerController> _players = new();
     private CameraController _cameraController;
     private GridController _gridController;
     private UnitsService _unitsService;
@@ -32,13 +27,14 @@ namespace Client.Gameplay.Gameplay
     private CapitalsMarksController _capitalsMarksController;
     private MainMenuView _mainMenuView;
     private TreesController _treesController;
-    private PlayerController _currentPlayer;
+    private IPlayerController _currentPlayer;
     private WarriorUnitsAnimator _warriorUnitsAnimator;
     private CapitalsController _capitalsController;
     private GameplayRegionsController _gameplayRegionsController;
-    private DebugController _debugController;
     private MapsService _mapsService;
+    private PlayersService _playersService;
     private int _turnsCount;
+    private bool _started;
 
     private int TurnsCount
     {
@@ -49,8 +45,6 @@ namespace Client.Gameplay.Gameplay
         _gameplayUI.ViewTurnsCount(value);
       }
     }
-
-    public bool Started { get; private set; }
 
     public void Initialize()
     {
@@ -68,8 +62,8 @@ namespace Client.Gameplay.Gameplay
       _warriorUnitsAnimator = Locator.Get<WarriorUnitsAnimator>();
       _capitalsController = Locator.Get<CapitalsController>();
       _gameplayRegionsController = Locator.Get<GameplayRegionsController>();
-      _debugController = Locator.Get<DebugController>();
       _mapsService = Locator.Get<MapsService>();
+      _playersService = Locator.Get<PlayersService>();
     }
 
     public void Start()
@@ -80,21 +74,25 @@ namespace Client.Gameplay.Gameplay
       _gridController.InitialCreateCells(map);
       _unitsService.InitialCreateUnits(map);
       _regionsService.InitialCreateRegions(map);
+      _playersService.Setup(map);
+      _playersService.CreatePlayers(map);
       _capitalsController.CheckCapitals();
       _gameplayRegionsController.Enable();
-      _cameraController.Setup();
-      CreatePlayers();
-      //_debugController.CreateCells();
 
       TurnsCount = 0;
       _bordersService.ViewRegionsBorders();
       _gameplayUI.PlayShow();
-      Started = true;
+      _started = true;
+
+      if (SetFirstPlayer())
+        _currentPlayer.StartTurn();
+
+      _cameraController.Setup();
     }
 
     public void Tick()
     {
-      if (!Started || !HasPlayers())
+      if (!_started || !_playersService.HasPlayers())
         return;
 
       _currentPlayer.Tick();
@@ -102,7 +100,7 @@ namespace Client.Gameplay.Gameplay
 
     public void NextTurn()
     {
-      if (!HasPlayers())
+      if (!_playersService.HasPlayers())
         return;
 
       _currentPlayer.EndTurn();
@@ -110,21 +108,27 @@ namespace Client.Gameplay.Gameplay
       if (CheckWin())
         return;
 
+      var needAutosave = false;
+
       if (!MoveNextPlayer())
       {
         TurnsCount++;
         SetFirstPlayer();
         _treesController.UpdateTrees();
-        _mapsService.SaveCurrentMapInAutosave();
+        needAutosave = true;
       }
 
       UpdatePlayerRegions();
-      _cameraController.Focus(_capitalsController.GetCapital(_governmentsService.Get(_currentPlayer.RegionType).Regions[0]).WorldPosition);
+
+      if (needAutosave)
+        _mapsService.SaveRuntimeMapInAutosave();
+
+      _currentPlayer.StartTurn();
     }
 
     public void Pause()
     {
-      if (HasPlayers())
+      if (_playersService.HasPlayers())
         _currentPlayer.Pause();
       _gameplayUI.ShowPause();
     }
@@ -148,7 +152,7 @@ namespace Client.Gameplay.Gameplay
 
     private void End()
     {
-      Started = false;
+      _started = false;
       _warriorUnitsAnimator.Disable();
       _capitalsMarksController.Disable();
       _gameplayRegionsController.Disable();
@@ -156,34 +160,19 @@ namespace Client.Gameplay.Gameplay
       _regionsService.Clear();
       _actionsHistoryController.Clear();
       _governmentsService.Clear();
-      //_debugController.Clear();
+      _playersService.ClearPlayers();
+      _gridController.DestroyAllCells();
     }
 
-    private void SetFirstPlayer()
+    private bool SetFirstPlayer()
     {
-      if (HasPlayers())
-        SetCurrentPlayer(_players[0]);
-    }
-
-    private void SetCurrentPlayer(PlayerController playerController)
-    {
-      _currentPlayer = playerController;
-      _currentPlayer.StartTurn();
-    }
-
-    private void CreatePlayers()
-    {
-      _players.Clear();
-
-      using (ListPool<GovernmentController>.Get(out var governments))
+      if (_playersService.HasPlayers())
       {
-        _governmentsService.GetAllAlive(governments);
-        governments.Sort((x, y) => x.RegionsType.CompareTo(y.RegionsType));
-        foreach (var government in governments)
-          _players.Add(new PlayerController(government.RegionsType));
+        _currentPlayer = _playersService.Players[0];
+        return true;
       }
 
-      SetFirstPlayer();
+      return false;
     }
 
     private void UpdatePlayerRegions()
@@ -200,11 +189,9 @@ namespace Client.Gameplay.Gameplay
 
     private bool MoveNextPlayer()
     {
-      var currentIndex = _players.IndexOf(_currentPlayer);
-      var maxIndex = _players.Count - 1;
-      if (currentIndex < maxIndex)
+      if (_playersService.CanGetNextPlayer(_currentPlayer, out var next))
       {
-        SetCurrentPlayer(_players[currentIndex + 1]);
+        _currentPlayer = next;
         return true;
       }
 
@@ -213,15 +200,13 @@ namespace Client.Gameplay.Gameplay
 
     private bool CheckWin()
     {
-      if (_players.Count(x => x.Alive) == 1)
+      if (_playersService.IsOneAlive(out var alive))
       {
-        _gameplayUI.ShowEndScreen(_players.First(x => x.Alive).RegionType);
+        _gameplayUI.ShowEndScreen(alive.RegionType);
         return true;
       }
 
       return false;
     }
-
-    private bool HasPlayers() => _players.Count > 0;
   }
 }

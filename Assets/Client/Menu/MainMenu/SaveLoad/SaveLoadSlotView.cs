@@ -17,13 +17,13 @@ namespace Client.Menu.MainMenu.SaveLoad
 
     public string Header { get => _name.text; set => _name.SetText(value); }
 
-    public MapController Map { get; private set; }
+    public IReadOnlyMap Map { get; private set; }
 
     public event Action<SaveLoadSlotView> OnClick;
 
     public event Action<SaveLoadSlotView> OnHold;
 
-    public void Setup(MapController map, Color color)
+    public void Setup(IReadOnlyMap map, Color color)
     {
       Map = map;
       if (map != null)
@@ -49,7 +49,7 @@ namespace Client.Menu.MainMenu.SaveLoad
       Map = null;
     }
 
-    public void SetMap(MapController map)
+    public void SetMap(IReadOnlyMap map)
     {
       Map = map;
       _name.SetText(map.IsAutosave ? "Autosave" : map.Name);

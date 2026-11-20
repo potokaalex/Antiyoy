@@ -13,6 +13,7 @@ namespace Client.Project.Utilities
   public static class GameUtilities
   {
     public static readonly List<CellController> AreaBuffer = new();
+    public static Vector2Int MaxFieldSize = new(42, 65);
 
     public static readonly RegionType[] AllPlayerRegions =
     {
@@ -45,7 +46,7 @@ namespace Client.Project.Utilities
         case LevelSize.Big:
           return new Vector2Int(28, 48);
         case LevelSize.Huge:
-          return new Vector2Int(42, 65);
+          return MaxFieldSize;
         default:
           throw new ArgumentOutOfRangeException(nameof(levelSize), levelSize, null);
       }
@@ -59,7 +60,7 @@ namespace Client.Project.Utilities
         return LevelSize.Medium;
       if (fieldSize == new Vector2Int(28, 48))
         return LevelSize.Big;
-      if (fieldSize == new Vector2Int(42, 65))
+      if (fieldSize == MaxFieldSize)
         return LevelSize.Huge;
 
       throw new Exception($"Cant find levelSize for fieldSize: {fieldSize}");
@@ -67,10 +68,10 @@ namespace Client.Project.Utilities
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ref T GetRef<T>(this List<T> list, int index) => ref ExtractArrayFromList(list)[index];
+    public static ref T GetRef<T>(this List<T> list, int index) => ref list.ExtractArray()[index];
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static T[] ExtractArrayFromList<T>(List<T> list) => UnsafeUtility.As<List<T>, ListPrivateFieldAccess<T>>(ref list)._items;
+    public static T[] ExtractArray<T>(this List<T> list) => UnsafeUtility.As<List<T>, ListPrivateFieldAccess<T>>(ref list)._items;
 
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     private class ListPrivateFieldAccess<T>

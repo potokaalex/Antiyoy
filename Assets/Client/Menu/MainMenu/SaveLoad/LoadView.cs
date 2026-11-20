@@ -23,7 +23,7 @@ namespace Client.Menu.MainMenu.SaveLoad
 
     protected override void OnViewClick(SaveLoadSlotView slotView)
     {
-      MapsService.SetStartMap(slotView.Map);
+      MapsService.SetStartMapFromSlot(slotView.Map.Id);
       _projectController.LoadGameplay();
       Hide();
     }

@@ -41,10 +41,9 @@ namespace Client.Project.Region
       _bordersService = Locator.Get<BordersService>();
     }
 
-    public void InitialCreateRegions(MapController map)
+    public void InitialCreateRegions(IReadOnlyMap map)
     {
-      foreach (var player in map.Players)
-      foreach (var region in player.Regions)
+      foreach (var region in map.GetRegions())
       {
         var cells = new List<CellController>();
         foreach (var cell in region.Cells)

@@ -55,8 +55,8 @@ namespace Client.Menu.MainMenu.GameplayModes
 
     private void Update()
     {
-      if (_inputController.BackClicked)
-        OnBackClick();
+      if (_menuAnimator.IsShowing && _inputController.BackClicked)
+        _backButton.Click();
     }
 
     public void Show()
@@ -74,7 +74,7 @@ namespace Client.Menu.MainMenu.GameplayModes
 
     private void OnStartClick()
     {
-      _mapsService.GenerateStartMap((LevelSize)_mapSize.Value, _colors.Value + 2, "Skirmish");
+      _mapsService.GenerateStartMap((LevelSize)_mapSize.Value, _colors.Value + 2, "Skirmish", _difficulty.Value, _players.Value);
       _projectController.LoadGameplay();
       _menuAnimator.PlayHide();
       _topAndBottomMenuAnimator.PlayHide();

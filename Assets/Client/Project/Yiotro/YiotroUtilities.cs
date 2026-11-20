@@ -1,6 +1,7 @@
 using System;
 using Client.Project.Hex;
 using Client.Project.Map;
+using Client.Project.Player;
 using Client.Project.Region;
 using Client.Project.Unit.Code;
 using UnityEngine;
@@ -147,6 +148,50 @@ namespace Client.Project.Yiotro
         2 => LevelSize.Medium,
         4 => LevelSize.Big,
         9 => LevelSize.Huge,
+        _ => throw new ArgumentOutOfRangeException()
+      };
+    }
+
+    public static PlayerRegionType CodeToPlayerRegionType(int code)
+    {
+      return code switch
+      {
+        0 => new PlayerRegionType(isRandom: true),
+        1 => new PlayerRegionType(RegionType.Lime),
+        2 => new PlayerRegionType(RegionType.Rose),
+        3 => new PlayerRegionType(RegionType.Blue),
+        4 => new PlayerRegionType(RegionType.Cyan),
+        5 => new PlayerRegionType(RegionType.Yellow),
+        6 => new PlayerRegionType(RegionType.Red),
+        7 => new PlayerRegionType(RegionType.Mint),
+        9 => new PlayerRegionType(RegionType.Green),
+        10 => new PlayerRegionType(RegionType.Purple),
+        11 => new PlayerRegionType(RegionType.Brown),
+        _ => throw new ArgumentOutOfRangeException()
+      };
+    }
+
+    public static int PlayerRegionTypeToCode(PlayerRegionType playerRegionType)
+    {
+      if (playerRegionType.IsRandom)
+        return 0;
+      return RegionTypeToEditorColorCode(playerRegionType.RegionType);
+    }
+
+    public static int RegionTypeToEditorColorCode(RegionType regionType)
+    {
+      return regionType switch
+      {
+        RegionType.Lime => 1,
+        RegionType.Rose => 2,
+        RegionType.Blue => 3,
+        RegionType.Cyan => 4,
+        RegionType.Yellow => 5,
+        RegionType.Red => 6,
+        RegionType.Mint => 7,
+        RegionType.Green => 9,
+        RegionType.Purple => 10,
+        RegionType.Brown => 11,
         _ => throw new ArgumentOutOfRangeException()
       };
     }

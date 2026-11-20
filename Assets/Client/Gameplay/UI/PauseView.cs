@@ -44,8 +44,8 @@ namespace Client.Gameplay.UI
 
     private void Update()
     {
-      if (_inputController.BackClicked)
-        ToMainMenu();
+      if (_menuAnimator.IsShowing && _inputController.BackClicked)
+        _mainMenuButton.Click();
     }
 
     public void PlayShow() => _menuAnimator.PlayShow();

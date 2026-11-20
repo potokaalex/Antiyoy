@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Client.Project.Hex;
+using Client.Project.Utilities;
 using UnityEngine;
 
 namespace Client.Project.Yiotro
@@ -7,26 +8,29 @@ namespace Client.Project.Yiotro
   public class FieldManager
   {
     public readonly List<Hex> ActiveHexes = new();
+    private readonly List<Hex> _solidObjects = new();
+    public readonly Hex NullHex;
+    public readonly Hex[,] Field;
     public int FWidth;
     public int FHeight;
-    public Hex NullHex;
-    public Hex[][] Field;
-    private readonly List<Hex> _solidObjects = new();
 
-    public void Setup(Vector2Int size)
+    public FieldManager()
     {
-      FWidth = size.x;
-      FHeight = size.y;
-
-      Field = new Hex[FWidth][];
-      for (var i = 0; i < FWidth; i++)
-        Field[i] = new Hex[FHeight];
+      var maxFieldSize = GameUtilities.MaxFieldSize;
+      Field = new Hex[maxFieldSize.x, maxFieldSize.y];
+      for (var x = 0; x < maxFieldSize.x; x++)
+      for (var y = 0; y < maxFieldSize.y; y++)
+        Field[x, y] = new Hex(x, y, this);
 
       NullHex = new Hex(-1, -1, this);
       NullHex.Active = false;
     }
 
-    public void ClearActiveHexesList() => ActiveHexes.Clear();
+    public void Setup(Vector2Int size)
+    {
+      FWidth = size.x;
+      FHeight = size.y;
+    }
 
     public void SpawnTree(Hex hex)
     {
@@ -39,29 +43,26 @@ namespace Client.Project.Yiotro
     {
       ActiveHexes.Clear();
       _solidObjects.Clear();
+
       for (var i = 0; i < FWidth; i++)
-      {
-        Field[i] = new Hex[FHeight];
-        for (var j = 0; j < FHeight; j++)
-          Field[i][j] = new Hex(i, j, this);
-      }
+      for (var j = 0; j < FHeight; j++)
+        Field[i, j].Setup();
     }
 
-    public Hex AdjacentHex(Hex hex, int direction) => AdjacentHex(hex.Index1, hex.Index2, direction);
-
-    private Hex AdjacentHex(int i, int j, int direction)
+    public Hex AdjacentHex(Hex hex, int direction)
     {
       if (direction < 0 || direction >= HexUtilities.Directions.Length)
         return NullHex;
 
       var offset = HexUtilities.Directions[direction];
-      var root = HexCoordinates.FromArray2DIndex(new Vector2Int(i, j));
-      var index = (root + offset).ToArray2DIndex();
+      var index = HexCoordinates.AddOffsetToArray2DIndex(hex.Index1, hex.Index2, offset);
+      var x = index.x;
+      var y = index.y;
 
-      if (index.x < 0 || index.x >= FWidth || index.y < 0 || index.y >= FHeight)
+      if (x < 0 || x >= FWidth || y < 0 || y >= FHeight)
         return NullHex;
 
-      return Field[index.x][index.y];
+      return Field[x, y];
     }
 
     private void AddSolidObject(Hex hex, int type)

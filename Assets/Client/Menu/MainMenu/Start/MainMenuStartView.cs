@@ -50,7 +50,7 @@ namespace Client.Menu.MainMenu.Start
     private void Update()
     {
       if (_inputController.BackClicked)
-        _projectController.Quit();
+        _quitButton.Click();
     }
 
     public Tween PlayAppearAnimation()

@@ -58,7 +58,11 @@ namespace Client.Project.UI.Slider
       }
     }
 
-    public void SetValueWithoutNotify(int value) => _slider.SetValueWithoutNotify(value);
+    public void SetValueWithoutNotify(int value)
+    {
+      _slider.SetValueWithoutNotify(value);
+      ViewValueName(value);
+    }
 
     private void SliderOnValueChanged(float value)
     {

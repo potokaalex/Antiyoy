@@ -59,6 +59,8 @@ namespace Client.Project
     {
       _regionsService.RemoveFromRegion(this);
       _unitsService.Destroy(Unit);
+      _protectionsUnit.Clear();
+      Unit = null;
     }
 
     public void AddUnitForProtection(IUnit unit) => _protectionsUnit.Add(unit);

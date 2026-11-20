@@ -1,22 +1,40 @@
+using System.Runtime.CompilerServices;
+
 namespace Client.Project.Yiotro
 {
   public class Hex
   {
+    private readonly Hex[] _adjacentHexes = new Hex[6];
+    private readonly FieldManager _fieldManager;
     public readonly int Index1;
     public readonly int Index2;
+    private readonly bool _isNullHex;
     public bool Active;
     public int Fraction;
     public int ObjectInside;
     public int GenPotential;
     public int MoveZoneNumber;
     public bool GenFlag;
-    private readonly FieldManager _fieldManager;
 
     public Hex(int index1, int index2, FieldManager fieldManager)
     {
       Index1 = index1;
       Index2 = index2;
       _fieldManager = fieldManager;
+      _isNullHex = Index1 == -1 && Index2 == -1;
+    }
+
+    public void Setup()
+    {
+      Active = false;
+      Fraction = 0;
+      ObjectInside = 0;
+      GenPotential = 0;
+      MoveZoneNumber = 0;
+      GenFlag = false;
+
+      for (var i = 0; i < 6; i++)
+        _adjacentHexes[i] = _fieldManager.AdjacentHex(this, i);
     }
 
     public int NumberOfFriendlyHexesNearby()
@@ -37,27 +55,17 @@ namespace Client.Project.Yiotro
 
     public bool IsNeutral() => Fraction == YiotroMapGenerator.NEUTRAL_FRACTION;
 
-    public Hex GetAdjacentHex(int direction) => _fieldManager.AdjacentHex(this, direction);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Hex GetAdjacentHex(int direction) => _adjacentHexes[direction];
 
-    public bool IsNullHex() => Index1 == -1 && Index2 == -1;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool IsNullHex() => _isNullHex;
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool SameFraction(Hex hex) => SameFraction(hex.Fraction);
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool SameFraction(int fraction) => Fraction == fraction;
-
-    public bool NoProvincesNearby()
-    {
-      if (NumberOfFriendlyHexesNearby() > 0)
-        return false;
-      for (var i = 0; i < 6; i++)
-      {
-        var adjHex = GetAdjacentHex(i);
-        if (adjHex.Active && adjHex.NumberOfFriendlyHexesNearby() > 0)
-          return false;
-      }
-
-      return true;
-    }
 
     public int NumberOfActiveHexesNearby() => NumberOfFriendlyHexesNearby() + HowManyEnemyHexesNear();
 

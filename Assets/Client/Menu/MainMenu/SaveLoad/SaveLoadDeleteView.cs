@@ -1,3 +1,5 @@
+using Client.Project;
+using Client.Project.Infrastructure;
 using Client.Project.UI;
 using UnityEngine;
 
@@ -10,12 +12,22 @@ namespace Client.Menu.MainMenu.SaveLoad
     [SerializeField] private MenuAnimator _menuAnimator;
     private SaveLoadView _saveLoadView;
     private SaveLoadSlotView _slotView;
+    private InputController _inputController;
+
+    public bool IsShowing => _menuAnimator.IsShowing;
 
     public void Initialize(SaveLoadView saveLoadView)
     {
+      _inputController = Locator.Get<InputController>();
       _saveLoadView = saveLoadView;
       _backButton.OnClick += OnBackClick;
       _deleteButton.OnClick += OnDeleteClick;
+    }
+
+    private void Update()
+    {
+      if (IsShowing && _inputController.BackClicked)
+        _backButton.Click();
     }
 
     public void Show(SaveLoadSlotView slotView)

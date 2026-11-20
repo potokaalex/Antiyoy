@@ -8,6 +8,7 @@ using Client.Project.CameraFeatures;
 using Client.Project.Government;
 using Client.Project.Infrastructure;
 using Client.Project.Map;
+using Client.Project.Player;
 using Client.Project.Project;
 using Client.Project.Region;
 using Client.Project.Unit.Code;
@@ -34,23 +35,23 @@ namespace Client.MapEditor
     private CapitalsController _capitalsController;
     private ProjectController _projectController;
     private GovernmentsService _governmentsService;
+    private PlayersService _playersService;
     private IMapEditorModeHandler _currentModeHandler;
-    private MapEditorPlayerRegionType _playerRegionType;
     private float _timeToSave;
     private bool _started;
 
-    public int PlayersValue { get; set; }
+    public int PlayersMode { get => _playersService.PlayersMode; set => _playersService.PlayersMode = value; }
 
-    public int DifficultyValue { get; set; }
+    public int DifficultyMode { get => _playersService.DifficultyMode; set => _playersService.DifficultyMode = value; }
 
     public event Action OnPlayerRegionTypeChanged;
 
-    public MapEditorPlayerRegionType PlayerRegionType
+    public PlayerRegionType FirstPlayer
     {
-      get => _playerRegionType;
+      get => _playersService.FirstPlayer;
       set
       {
-        _playerRegionType = value;
+        _playersService.FirstPlayer = value;
         OnPlayerRegionTypeChanged?.Invoke();
       }
     }
@@ -68,6 +69,7 @@ namespace Client.MapEditor
       _capitalsController = Locator.Get<CapitalsController>();
       _projectController = Locator.Get<ProjectController>();
       _governmentsService = Locator.Get<GovernmentsService>();
+      _playersService = Locator.Get<PlayersService>();
     }
 
     public void Start()
@@ -75,9 +77,6 @@ namespace Client.MapEditor
       LoadMap();
       _regionsService.AddMoneyWhenJoin = false;
       _regionsService.RegionInitialMoney = 10;
-      _playerRegionType = new(RegionType.Lime);
-      PlayersValue = 1;
-      DifficultyValue = 4;
       _timeToSave = _saveInterval;
 
       _mapEditorUI.PlayShow();
@@ -175,8 +174,8 @@ namespace Client.MapEditor
     {
       ClearMap();
       var levelSize = _gridController.LevelSize;
-      _mapsService.GenerateStartMap(levelSize, GetFractionsCount(levelSize), _mapsService.StartMap.Name);
-      LoadMap();
+      _mapsService.GenerateMapIntoStart(levelSize, GetFractionsCount(levelSize));
+      LoadMap(false);
     }
 
     public bool Play()
@@ -184,6 +183,7 @@ namespace Client.MapEditor
       if (MapEmpty())
         return false;
 
+      _mapsService.GenerateFromRuntimeIntoStartMap();
       End();
       _projectController.LoadGameplay();
       return true;
@@ -200,11 +200,11 @@ namespace Client.MapEditor
     public void Import()
     {
       ClearMap();
-      _mapsService.GenerateFromCopyBufferIntoEditorStartMap();
-      LoadMap();
+      _mapsService.GenerateFromCopyBufferIntoStartMap();
+      LoadMap(false);
     }
 
-    public bool CanImport() => _mapsService.CanGenerateStartMapFromCopyBuffer();
+    public bool CanImport() => _mapsService.CanGenerateFromCopyBuffer();
 
     private void End()
     {
@@ -241,14 +241,15 @@ namespace Client.MapEditor
         _unitsService.Destroy(cell.Unit);
     }
 
-    private void LoadMap()
+    private void LoadMap(bool viewFullMap = true)
     {
       var map = _mapsService.StartMap;
       _gridController.InitialCreateCells(map);
       _unitsService.InitialCreateUnits(map);
       _regionsService.InitialCreateRegions(map);
+      _playersService.Setup(map);
       _bordersService.ViewRegionsBorders();
-      _cameraController.Setup();
+      _cameraController.Setup(viewFullMap);
     }
 
     private int GetFractionsCount(LevelSize levelSize)
@@ -269,7 +270,7 @@ namespace Client.MapEditor
       if (!MapEmpty())
       {
         _governmentsService.ClearEmpty();
-        _mapsService.SaveCurrentEditorMap();
+        _mapsService.SaveRuntimeEditorMap();
       }
     }
 

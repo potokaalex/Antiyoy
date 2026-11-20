@@ -1,3 +1,5 @@
+using Client.Project;
+using Client.Project.Infrastructure;
 using Client.Project.UI;
 using Client.Project.Utilities;
 using DG.Tweening;
@@ -19,9 +21,13 @@ namespace Client.Menu.MainMenu.SaveLoad
     private readonly float _fadeAnimationSpeedFactor = 1.5f;
     private SaveLoadView _saveLoadView;
     private SaveLoadSlotView _slotView;
+    private InputController _inputController;
+
+    public bool IsShowing => gameObject.activeSelf;
 
     public void Initialize(SaveLoadView saveLoadView)
     {
+      _inputController = Locator.Get<InputController>();
       _saveLoadView = saveLoadView;
       _backButton.OnClick += OnBackClick;
       _renameButton.OnClick += OnRenameClick;
@@ -36,6 +42,12 @@ namespace Client.Menu.MainMenu.SaveLoad
       _deleteButton.OnClick -= OnDeleteClick;
       _inputField.onEndEdit.RemoveListener(OnEndRename);
       DOTween.Kill(this);
+    }
+
+    private void Update()
+    {
+      if (_inputController.BackClicked)
+        _backButton.Click();
     }
 
     public void Show(SaveLoadSlotView slotView)
@@ -62,6 +74,7 @@ namespace Client.Menu.MainMenu.SaveLoad
       _inputFieldAnimator.PlayShow();
       _bodyMenuAnimator.PlayHide();
       _inputField.text = _slotView.Header;
+      _inputField.Select();
     }
 
     private void OnDeleteClick()
@@ -72,7 +85,8 @@ namespace Client.Menu.MainMenu.SaveLoad
 
     private void OnEndRename(string value)
     {
-      _saveLoadView.Rename(_slotView, value);
+      if (!string.IsNullOrEmpty(value))
+        _saveLoadView.Rename(_slotView, value);
       Hide();
     }
   }

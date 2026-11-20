@@ -2,35 +2,27 @@ using System.Collections.Generic;
 using Client.Project;
 using Client.Project.Borders;
 using Client.Project.Infrastructure;
+using Client.Project.Tile;
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.Pool;
 
-namespace Client.Gameplay.TileSelectionView
+namespace Client.Gameplay
 {
   public class TilesSelectionView : MonoBehaviour
   {
-    [SerializeField] private GameObject _tileMaskPrefab;
     [SerializeField] private SpriteRenderer _hidePanel;
-    private readonly List<GameObject> _activeMasks = new();
     private BordersService _bordersService;
-    private ObjectPool<GameObject> _pool;
+    private TilemapController _tilemapController;
 
     private void Awake()
     {
       _bordersService = Locator.Get<BordersService>();
-      _pool = new ObjectPool<GameObject>(() => Instantiate(_tileMaskPrefab, transform), x => x.SetActive(true), x => x.SetActive(false));
+      _tilemapController = Locator.Get<TilemapController>();
     }
 
     public void ViewTiles(List<CellController> cells)
     {
-      foreach (var cell in cells)
-      {
-        var mask = _pool.Get();
-        mask.transform.position = cell.WorldPosition;
-        _activeMasks.Add(mask);
-      }
-
+      _tilemapController.TilemapMaskCreateTiles(cells);
       DOTween.Kill(this);
       _hidePanel.enabled = true;
       _hidePanel.DOFade(0.4f, 0.2f).SetEase(Ease.OutQuad);
@@ -40,9 +32,7 @@ namespace Client.Gameplay.TileSelectionView
     public void ClearView()
     {
       _hidePanel.DOFade(0, 0.2f).SetEase(Ease.OutQuad).SetId(this).onComplete += () => _hidePanel.enabled = false;
-      foreach (var mask in _activeMasks)
-        _pool.Release(mask);
-      _activeMasks.Clear();
+      _tilemapController.TilemapMaskClearTiles();
       _bordersService.ClearTilesSelectionBorders();
     }
   }

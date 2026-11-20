@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using Client.Project.Unit.Code;
 
 namespace Client.Project.Map.Data
@@ -15,6 +16,7 @@ namespace Client.Project.Map.Data
       HasTurns = hasTurns;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool Equals(UnitData other) => Type == other.Type && HasTurns == other.HasTurns;
 
     public override bool Equals(object obj) => obj is UnitData other && Equals(other);

@@ -5,38 +5,57 @@ using Client.Project.Government;
 using Client.Project.Hex;
 using Client.Project.Infrastructure;
 using Client.Project.Map.Data;
+using Client.Project.Player;
 using Client.Project.Region;
 using Client.Project.Utilities;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Client.Project.Map
 {
   public class MapsFactory : IInitializable
   {
-    private readonly HashSet<CellData> _passedBuffer = new();
+    public readonly UnsafeNullable<CellData>[,] CellsBuffer;
+    private readonly HashSet<CellData> _passedBuffer = new(CellDataEqualityComparer.Instance);
     private readonly Queue<CellData> _frontBuffer = new();
     private GovernmentsService _governmentsService;
     private GridController _gridController;
+    private PlayersService _playersService;
+
+    public MapsFactory()
+    {
+      var maxFieldSize = GameUtilities.MaxFieldSize;
+      CellsBuffer = new UnsafeNullable<CellData>[maxFieldSize.x, maxFieldSize.y];
+    }
 
     public void Initialize()
     {
       _governmentsService = Locator.Get<GovernmentsService>();
       _gridController = Locator.Get<GridController>();
+      _playersService = Locator.Get<PlayersService>();
     }
 
-    public MapData CreateMapData(List<PlayerData> initialPlayers, Vector2Int size, string name, DateTime creationTime = default)
+    public MapData CreateMapData(List<PlayerData> initialPlayers, List<PlayerData> players, LevelSize size, string name,
+      DateTime creationTime = default, int id = -1, bool isAutosave = false, bool isEditor = false, int playersMode = 0,
+      int difficultyMode = 0, PlayerRegionType firstPlayer = default)
     {
       return new MapData
       {
+        Id = id,
         InitialPlayers = initialPlayers,
-        Players = CopyPlayers(initialPlayers),
-        Size = size,
+        Players = players,
+        LevelSize = size,
         Name = name,
-        CreationTime = creationTime.ToBinary()
+        CreationTime = creationTime.ToBinary(),
+        IsAutosave = isAutosave,
+        IsEditor = isEditor,
+        DifficultyMode = difficultyMode,
+        PlayersMode = playersMode,
+        FirstPlayer = firstPlayer
       };
     }
 
-    public MapData CreateRuntimeMap(List<PlayerData> initialPlayers, string name, bool isAutosave = false, bool isEditor = false)
+    public MapData CreateRuntimeMap(List<PlayerData> initialPlayers, string name, bool isAutosave = false, bool isEditor = false, int id = -1)
     {
       var players = new List<PlayerData>();
 
@@ -56,33 +75,34 @@ namespace Client.Project.Map
 
         players.Add(new PlayerData
         {
-          Regions = regions
+          Regions = regions,
+          RegionType = government.RegionsType
         });
       }
 
-      return new MapData
-      {
-        InitialPlayers = isEditor ? players : initialPlayers,
-        Players = players,
-        Size = _gridController.Size,
-        Name = name,
-        CreationTime = DateTime.Now.ToBinary(),
-        IsAutosave = isAutosave
-      };
+      if (!isEditor && GenerateFirstPlayer(players, _playersService.FirstPlayer, out var firstPlayer))
+        _playersService.FirstPlayer = firstPlayer;
+
+      return CreateMapData(isEditor ? players : initialPlayers, players, _gridController.LevelSize, name, DateTime.Now, id, isAutosave, isEditor,
+        playersMode: _playersService.PlayersMode, difficultyMode: _playersService.DifficultyMode,
+        firstPlayer: _playersService.FirstPlayer);
     }
 
-    public List<RegionData> CreateRegions(CellData?[,] cells, Vector2Int size, int initialMoney)
+    public List<RegionData> CreateRegions(UnsafeNullable<CellData>[,] cells, Vector2Int size, int initialMoney)
     {
       var newRegions = new List<RegionData>();
       _passedBuffer.Clear();
       _frontBuffer.Clear();
 
-      foreach (var rootCellNull in cells)
+      for (var x = 0; x < size.x; x++)
+      for (var y = 0; y < size.y; y++)
       {
+        ref var rootCellNull = ref cells[x, y];
+
         if (!rootCellNull.HasValue)
           continue;
 
-        var rootCell = rootCellNull.Value;
+        ref var rootCell = ref rootCellNull.Value;
 
         if (_passedBuffer.Contains(rootCell))
           continue;
@@ -103,13 +123,24 @@ namespace Client.Project.Map
         {
           var cell = _frontBuffer.Dequeue();
 
-          foreach (var neighbour in GetNeighbourCells(cells, cell, size))
+          var aroundPosition = cell.Position;
+
+          for (var i = 0; i < HexUtilities.Directions.Length; i++)
           {
-            if (neighbour.RegionType == rootCell.RegionType && !_passedBuffer.Contains(neighbour))
+            var index = aroundPosition.AddOffsetAndConvertToArray2DIndex(HexUtilities.Directions[i]);
+            if (index.x >= 0 && index.x < size.x && index.y >= 0 && index.y < size.y)
             {
-              newRegion.Cells.Add(neighbour);
-              _frontBuffer.Enqueue(neighbour);
-              _passedBuffer.Add(neighbour);
+              ref var neighbourNull = ref cells[index.x, index.y];
+              if (neighbourNull.HasValue)
+              {
+                ref var neighbour = ref neighbourNull.Value;
+                if (neighbour.RegionType == rootCell.RegionType && !_passedBuffer.Contains(neighbour))
+                {
+                  newRegion.Cells.Add(neighbour);
+                  _frontBuffer.Enqueue(neighbour);
+                  _passedBuffer.Add(neighbour);
+                }
+              }
             }
           }
         }
@@ -129,7 +160,8 @@ namespace Client.Project.Map
 
         var player = new PlayerData
         {
-          Regions = new()
+          Regions = new(),
+          RegionType = rootRegion.Type
         };
 
         players.Add(player);
@@ -149,7 +181,7 @@ namespace Client.Project.Map
       return players;
     }
 
-    public void SetUnit(UnitData? unit, RegionData region, HexCoordinates cellPosition)
+    public void SetUnit(UnsafeNullable<UnitData> unit, RegionData region, HexCoordinates cellPosition)
     {
       var cells = region.Cells;
       for (var i = 0; i < cells.Count; i++)
@@ -163,16 +195,11 @@ namespace Client.Project.Map
       }
     }
 
-    public void SetUnit(UnitData? unit, CellData?[,] cells, int x, int y)
+    public void SetUnit(UnsafeNullable<UnitData> unit, UnsafeNullable<CellData>[,] cells, int x, int y)
     {
       ref var cellNullable = ref cells[x, y];
-
       if (cellNullable.HasValue)
-      {
-        var cell = cellNullable.Value;
-        cell.Unit = unit;
-        cells[x, y] = cell;
-      }
+        cellNullable.Value.Unit = unit;
     }
 
     public ref RegionData GetRegionByCell(HexCoordinates hex, List<RegionData> regions)
@@ -188,41 +215,40 @@ namespace Client.Project.Map
       throw new Exception("Cant get region by cell");
     }
 
-    private List<PlayerData> CopyPlayers(List<PlayerData> players) => players.Select(x => x.Copy()).ToList();
-
-    private IEnumerable<CellData> GetNeighbourCells(CellData?[,] cells, CellData cell, Vector2Int size)
+    public int GenerateId(List<int> existedIds)
     {
-      var aroundPosition = cell.Position;
-
-      foreach (var direction in HexUtilities.Directions)
+      for (var i = 0; i < int.MaxValue; i++)
       {
-        var index = (aroundPosition + direction).ToArray2DIndex();
-        if (index.x >= 0 && index.x < size.x && index.y >= 0 && index.y < size.y)
-        {
-          var item = cells[index.x, index.y];
-          if (item.HasValue)
-            yield return item.Value;
-        }
+        if (!existedIds.Contains(i))
+          return i;
       }
+
+      throw new Exception("Cant generate id");
     }
+
+    public bool GenerateFirstPlayer(List<PlayerData> players, PlayerRegionType currentFirstPlayer, out PlayerRegionType result)
+    {
+      var playersRegions = players.Select(x => x.RegionType).Where(x => x != RegionType.Neutral).ToList();
+      if (currentFirstPlayer.IsRandom || !playersRegions.Contains(currentFirstPlayer.RegionType))
+      {
+        result = new PlayerRegionType(playersRegions[Random.Range(0, playersRegions.Count)]);
+        return true;
+      }
+
+      result = default;
+      return false;
+    }
+
+    public void ClearCellsBuffer() => Array.Clear(CellsBuffer, 0, CellsBuffer.Length);
+
+    public List<PlayerData> CopyPlayers(List<PlayerData> players) => players.Select(x => x.Copy()).ToList();
 
     private List<CellData> CreateCells(RegionController region)
     {
       var result = new List<CellData>();
       foreach (var cell in region.Cells)
       {
-        UnitData? unit;
-
-        if (cell.HasUnit)
-        {
-          unit = new UnitData
-          {
-            Type = cell.Unit.Type,
-            HasTurns = cell.Unit.HasTurns
-          };
-        }
-        else
-          unit = null;
+        var unit = cell.HasUnit ? new UnsafeNullable<UnitData>(new UnitData(cell.Unit.Type, cell.Unit.HasTurns)) : default;
 
         result.Add(new CellData
         {

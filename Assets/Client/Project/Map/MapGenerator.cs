@@ -4,6 +4,7 @@ using System.Linq;
 using Client.Project.Hex;
 using Client.Project.Infrastructure;
 using Client.Project.Map.Data;
+using Client.Project.Player;
 using Client.Project.Region;
 using Client.Project.Unit.Code;
 using Client.Project.Utilities;
@@ -19,61 +20,66 @@ namespace Client.Project.Map
     private readonly YiotroMapGeneratorGeneric _yiotroMapGenerator = new();
     private readonly RegionType[] _allPlayerRegions = GameUtilities.AllPlayerRegions.ToArray();
     private readonly MapsFactory _mapsFactory;
+    private UnsafeNullable<CellData>[,] _cells;
 
     public MapGenerator() => _mapsFactory = Locator.Get<MapsFactory>();
 
-    public MapController Generate(LevelSize levelSize, int colorsCount, string name)
+    public MapData GenerateDataAndFirstPlayer(LevelSize levelSize, int regionsCount, string name, int difficultyMode, int playersMode) =>
+      GenerateData(levelSize, regionsCount, name, difficultyMode, playersMode, default, true);
+
+    public MapData GenerateData(LevelSize levelSize, int regionsCount, string name, int difficultyMode, int playersMode, PlayerRegionType firstPlayer,
+      int id = -1) => GenerateData(levelSize, regionsCount, name, difficultyMode, playersMode, firstPlayer, false, id);
+
+    public MapData GenerateEmptyData(LevelSize levelSize, string name) => _mapsFactory.CreateMapData(new List<PlayerData>(), new List<PlayerData>(),
+      levelSize, name, firstPlayer: new PlayerRegionType(RegionType.Lime), playersMode: 1, difficultyMode: 4);
+
+    private MapData GenerateData(LevelSize levelSize, int regionsCount, string name, int difficultyMode, int playersMode,
+      PlayerRegionType firstPlayer, bool generateFirstPlayer, int id = -1)
     {
-      var field = _yiotroMapGenerator.GenerateMap(new System.Random(Environment.TickCount), levelSize, colorsCount);
+      var size = GameUtilities.LevelSizeToFieldSize(levelSize);
+      var field = _yiotroMapGenerator.GenerateMap(new System.Random(Environment.TickCount), levelSize, regionsCount, size);
 
       _allPlayerRegions.Shuffle();
-      var size = new Vector2Int(field.Length, field[0].Length);
-      var cells = CreateCells(field, size);
-      var regions = _mapsFactory.CreateRegions(cells, size, 10);
+      _cells = _mapsFactory.CellsBuffer;
+      _mapsFactory.ClearCellsBuffer();
+      CreateCells(field, size);
+      var regions = _mapsFactory.CreateRegions(_cells, size, 10);
       CreateCapitals(regions);
       var players = _mapsFactory.CreatePlayers(regions);
 
-      return new MapController(_mapsFactory.CreateMapData(players, size, name));
+      if (generateFirstPlayer && _mapsFactory.GenerateFirstPlayer(players, new PlayerRegionType(isRandom: true), out var player))
+        firstPlayer = player;
+
+      return _mapsFactory.CreateMapData(players, _mapsFactory.CopyPlayers(players), levelSize, name, id: id, difficultyMode: difficultyMode,
+        playersMode: playersMode, firstPlayer: firstPlayer);
     }
 
-    public MapController GenerateEmpty(LevelSize levelSize, string name) =>
-      new(_mapsFactory.CreateMapData(new List<PlayerData>(), GameUtilities.LevelSizeToFieldSize(levelSize), name));
-
-    private CellData?[,] CreateCells(Yiotro.Hex[][] field, Vector2Int size)
+    private void CreateCells(Yiotro.Hex[,] field, Vector2Int size)
     {
-      var cells = new CellData?[size.x, size.y];
-
       for (var x = 0; x < size.x; x++)
+      for (var y = 0; y < size.y; y++)
       {
-        var hexes = field[x];
-        for (var y = 0; y < size.y; y++)
+        var hex = field[x, y];
+        if (hex.Active)
         {
-          var hex = hexes[y];
-          if (hex.Active)
-          {
-            cells[x, y] = new CellData
-            {
-              Position = HexCoordinates.FromArray2DIndex(new Vector2Int(x, y)),
-              RegionType = GetRegionType(hex),
-              Unit = CreateUnitData(hex)
-            };
-          }
+          ref var data = ref _cells[x, y];
+          data.HasValue = true;
+          data.Value.Position = HexCoordinates.FromArray2DIndex(x, y);
+          data.Value.RegionType = GetRegionType(hex.Fraction);
+          data.Value.Unit = CreateUnitData(hex);
         }
       }
-
-      return cells;
     }
 
-    private UnitData? CreateUnitData(Yiotro.Hex hex)
+    private UnsafeNullable<UnitData> CreateUnitData(Yiotro.Hex hex)
     {
       if (hex.ObjectInside != 0)
-        return new UnitData(YiotroUtilities.ObjToUnitType(hex.ObjectInside), true);
-      return null;
+        return new UnsafeNullable<UnitData>(new UnitData(YiotroUtilities.ObjToUnitType(hex.ObjectInside), true));
+      return default;
     }
 
-    private RegionType GetRegionType(Yiotro.Hex hex)
+    private RegionType GetRegionType(int fraction)
     {
-      var fraction = hex.Fraction;
       if (fraction == YiotroMapGenerator.NEUTRAL_FRACTION)
         return RegionType.Neutral;
       return _allPlayerRegions[fraction];
@@ -87,7 +93,7 @@ namespace Client.Project.Map
         {
           var cell = (GetRandomFreeCell(region.Cells) ?? GetRandomCellExceptTowers(region.Cells)) ??
                      region.Cells[Random.Range(0, region.Cells.Count)];
-          _mapsFactory.SetUnit(new UnitData(UnitType.Capital), region, cell.Position);
+          _mapsFactory.SetUnit(new UnsafeNullable<UnitData>(new UnitData(UnitType.Capital)), region, cell.Position);
         }
       }
     }

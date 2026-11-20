@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Client.Project.Hex
@@ -17,25 +18,40 @@ namespace Client.Project.Hex
       R = r;
     }
 
-    public static HexCoordinates FromArray2DIndex(Vector2Int index)
-    {
-      return new HexCoordinates
-      {
-        Q = index.x,
-        R = index.y - (index.x - (index.x & 1)) / 2
-      };
-    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static HexCoordinates FromArray2DIndex(Vector2Int index) => FromArray2DIndex(index.x, index.y);
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static HexCoordinates FromArray2DIndex(int x, int y) => new(x, y - ((x - (x & 1)) >> 1));
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Vector2Int ToArray2DIndex()
     {
-      return new Vector2Int
-      {
-        x = Q,
-        y = R + (Q - (Q & 1)) / 2
-      };
+      var q = Q;
+      return new Vector2Int(q, R + ((q - (q & 1)) >> 1));
     }
 
-    public float GetMagnitude() => (Math.Abs(Q) + Math.Abs(R) + Math.Abs(S)) / 2f;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void ToArray2DIndex(out int x, out int y)
+    {
+      x = Q;
+      y = R + ((x - (x & 1)) >> 1);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Vector2Int AddOffsetToArray2DIndex(int x, int y, HexCoordinates offset)
+    {
+      var q = x + offset.Q;
+      return new Vector2Int(q, y + offset.R + ((q - (q & 1)) >> 1) - ((x - (x & 1)) >> 1));
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Vector2Int AddOffsetAndConvertToArray2DIndex(HexCoordinates offset)
+    {
+      var q = Q + offset.Q;
+      var r = R + offset.R;
+      return new Vector2Int(q, r + ((q - (q & 1)) >> 1));
+    }
 
     public override string ToString() => $"{Q};{R};{S}";
 
@@ -47,6 +63,7 @@ namespace Client.Project.Hex
 
     public static bool operator !=(HexCoordinates a, HexCoordinates b) => !a.Equals(b);
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool Equals(HexCoordinates other) => Q == other.Q && R == other.R;
 
     public override bool Equals(object obj) => obj is HexCoordinates other && Equals(other);

@@ -2,41 +2,70 @@ using System;
 using System.Collections.Generic;
 using Client.Project.Infrastructure;
 using Client.Project.Map.Data;
-using UnityEngine;
+using Client.Project.Player;
 
 namespace Client.Project.Map
 {
-  public class MapController
+  public class MapController : IReadOnlyMap
   {
     private readonly MapsFactory _mapsFactory;
-    private readonly MapData _data;
 
-    public MapController(MapData data)
+    public MapController(MapData data = null)
     {
       _mapsFactory = Locator.Get<MapsFactory>();
-      _data = data;
+      Data = data;
     }
 
-    public Vector2Int Size => _data.Size;
+    public MapData Data { get; set; }
 
-    public IReadOnlyList<PlayerData> Players => _data.Players;
+    public int Id => Data.Id;
 
-    public string Name { get => _data.Name; set => _data.Name = value; }
+    public LevelSize LevelSize => Data.LevelSize;
 
-    public DateTime CreationTime => DateTime.FromBinary(_data.CreationTime);
+    public string Name { get => Data.Name; set => Data.Name = value; }
 
-    public bool IsAutosave => _data.IsAutosave;
+    public DateTime CreationTime => DateTime.FromBinary(Data.CreationTime);
+
+    public bool IsAutosave => Data.IsAutosave;
+
+    public bool IsEditor => Data.IsEditor;
+
+    public int DifficultyMode => Data.DifficultyMode;
+
+    public int PlayersMode => Data.PlayersMode;
+
+    public PlayerRegionType FirstPlayer => Data.FirstPlayer;
 
     public IEnumerable<CellData> GetCells()
     {
-      foreach (var player in _data.Players)
+      foreach (var player in Data.Players)
       foreach (var region in player.Regions)
       foreach (var cell in region.Cells)
         yield return cell;
     }
 
-    public MapData GetData() => _data;
+    public IEnumerable<RegionData> GetRegions()
+    {
+      foreach (var player in Data.Players)
+      foreach (var region in player.Regions)
+        yield return region;
+    }
 
-    public MapController RestartCopy() => new(_mapsFactory.CreateMapData(_data.InitialPlayers, _data.Size, _data.Name, CreationTime));
+    public IEnumerable<PlayerData> GetPlayers()
+    {
+      foreach (var player in Data.Players)
+        yield return player;
+    }
+
+    public void Restart() => Data = _mapsFactory.CreateMapData(Data.InitialPlayers, _mapsFactory.CopyPlayers(Data.InitialPlayers), Data.LevelSize,
+      Data.Name, CreationTime, Id, playersMode: Data.PlayersMode, difficultyMode: Data.DifficultyMode, firstPlayer: Data.FirstPlayer);
+
+    public void CopyFrom(MapController map)
+    {
+      var otherData = map.Data;
+      Data = _mapsFactory.CreateMapData(_mapsFactory.CopyPlayers(otherData.InitialPlayers), _mapsFactory.CopyPlayers(otherData.Players),
+        otherData.LevelSize, otherData.Name, map.CreationTime, otherData.Id, isAutosave: map.IsAutosave, isEditor: map.IsEditor,
+        playersMode: otherData.PlayersMode, difficultyMode: otherData.DifficultyMode, firstPlayer: otherData.FirstPlayer);
+    }
   }
 }

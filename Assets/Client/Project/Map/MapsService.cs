@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Client.Project.Infrastructure;
+using Client.Project.Player;
 using Client.Project.Progress;
 using UnityEngine;
 
@@ -9,159 +10,136 @@ namespace Client.Project.Map
   public class MapsService : IInitializable
   {
     private readonly List<MapController> _maps = new();
-    private readonly List<MapController> _editorMaps = new();
-    private readonly MapGenerator _mapGenerator = new();
-    private ProgressController _progressController;
-    private MapsFactory _mapsFactory;
+    private MapGenerator _mapGenerator;
     private MapDecodeController _mapDecodeController;
     private MapEncodeController _mapEncodeController;
+    private ProgressController _progressController;
+    private MapsFactory _mapsFactory;
+    private MapController _startMap;
+    private PlayersService _playersService;
 
-    public MapController StartMap { get; private set; }
-
-    private MapController AutosaveMap { get; set; }
-
-    public IReadOnlyList<MapController> Maps => _maps;
-
-    public IReadOnlyList<MapController> EditorMaps => _editorMaps;
+    public IReadOnlyMap StartMap => _startMap;
 
     public void Initialize()
     {
       _progressController = Locator.Get<ProgressController>();
       _mapsFactory = Locator.Get<MapsFactory>();
-      _mapDecodeController = Locator.Get<MapDecodeController>();
-      _mapEncodeController = Locator.Get<MapEncodeController>();
+      _playersService = Locator.Get<PlayersService>();
+      _mapGenerator = new();
+      _mapDecodeController = new();
+      _mapEncodeController = new();
+      _startMap = new();
       Load();
     }
 
-    public void GenerateStartMap(LevelSize levelSize, int colorsCount, string name) =>
-      StartMap = _mapGenerator.Generate(levelSize, colorsCount, name);
+    public IReadOnlyList<IReadOnlyMap> GetMaps() => _maps;
 
-    public void GenerateEmptyStartMap(LevelSize levelSize, string name) => StartMap = _mapGenerator.GenerateEmpty(levelSize, name);
+    public void GenerateStartMap(LevelSize levelSize, int regionsCount, string name, int difficultyMode, int playersMode) =>
+      _startMap.Data = _mapGenerator.GenerateDataAndFirstPlayer(levelSize, regionsCount, name, difficultyMode, playersMode);
 
-    public void GenerateFromCopyBufferIntoEditorStartMap() => GenerateStartMapFromCopyBuffer(StartMap.Name, _editorMaps.IndexOf(StartMap));
+    public void GenerateMapIntoStart(LevelSize levelSize, int colorsCount) => _startMap.Data =
+      _mapGenerator.GenerateData(levelSize, colorsCount, _startMap.Name, _playersService.DifficultyMode, _playersService.PlayersMode,
+        _playersService.FirstPlayer, _startMap.Id);
 
-    public bool GenerateStartMapFromCopyBuffer() => GenerateStartMapFromCopyBuffer(null);
+    public void GenerateEmptyStartMap(LevelSize levelSize, string name) => _startMap.Data = _mapGenerator.GenerateEmptyData(levelSize, name);
 
-    private bool GenerateStartMapFromCopyBuffer(string overrideName, int editorIndex = -1)
+    public bool CanGenerateFromCopyBuffer() => _mapDecodeController.IsValidLevelCode(GUIUtility.systemCopyBuffer);
+
+    public void GenerateStartMapFromCopyBuffer() => _startMap.Data = _mapDecodeController.DecodeToMapData(GUIUtility.systemCopyBuffer);
+
+    public void GenerateFromCopyBufferIntoStartMap() =>
+      _startMap.Data = _mapDecodeController.DecodeToMapData(GUIUtility.systemCopyBuffer, _startMap.Id, _startMap.Name);
+
+    public void GenerateFromRuntimeIntoStartMap() => _startMap.Data = _mapsFactory.CreateRuntimeMap(_startMap.Data.InitialPlayers, "Skirmish");
+
+    public void SetStartMapFromSlot(int mapId) => SetStartMap(GetMap(mapId));
+
+    public void RenameMap(int mapId, string name)
     {
-      var code = GUIUtility.systemCopyBuffer;
-      if (_mapDecodeController.IsValidLevelCode(code))
-      {
-        StartMap = new MapController(_mapDecodeController.DecodeToMapData(code));
-        if (overrideName != null)
-          StartMap.Name = overrideName;
-        if (editorIndex != -1)
-          _editorMaps[editorIndex] = StartMap;
-        return true;
-      }
-
-      return false;
-    }
-
-    public bool CanGenerateStartMapFromCopyBuffer() => _mapDecodeController.IsValidLevelCode(GUIUtility.systemCopyBuffer);
-
-    public void SetStartMap(MapController map) => StartMap = map;
-
-    public void RenameMap(MapController map, string name)
-    {
-      map.Name = name;
+      GetMap(mapId).Name = name;
       _progressController.Save();
     }
 
-    public void DeleteMap(MapController map)
+    public void DeleteMap(int mapId) => DeleteMap(GetMap(mapId));
+
+    public IReadOnlyMap SaveRuntimeMapInNewSlot() => SaveRuntimeMapInSlotInternal(-1);
+
+    public IReadOnlyMap SaveRuntimeMapInSlot(int mapId) => SaveRuntimeMapInSlotInternal(mapId);
+
+    public void SaveRuntimeMapInAutosave()
     {
-      DeleteMapWithoutSave(map);
-      _progressController.Save();
+      var autosave = _maps.FirstOrDefault(x => x.IsAutosave);
+      if (autosave != null)
+        DeleteMap(autosave, false);
+
+      SaveRuntimeMapInSlotInternal(-1, isAutosave: true);
     }
 
-    public void DeleteEditorMap(MapController map)
-    {
-      _editorMaps.Remove(map);
-      _progressController.Data.EditorMaps.Remove(map.GetData());
-      _progressController.Save();
-    }
+    public void SaveRuntimeEditorMap() => SetStartMap(SaveRuntimeMapInSlotInternal(_startMap.Id, isEditor: true));
 
-    public MapController SaveCurrentMapInNewSlot()
-    {
-      InsertNullMap();
-      return SaveCurrentMapInSlot(0);
-    }
+    public void RestartStartMap() => _startMap.Restart();
 
-    public MapController SaveCurrentMapInSlot(MapController mapController) =>
-      SaveCurrentMapInSlot(_maps.IndexOf(mapController));
-
-    public void SaveCurrentMapInAutosave()
-    {
-      if (AutosaveMap == null)
-        InsertNullMap();
-
-      AutosaveMap = SaveCurrentMapInSlot(0, isAutosave: true);
-    }
-
-    public void SaveCurrentEditorMap()
-    {
-      var index = _editorMaps.IndexOf(StartMap);
-      if (index == -1)
-      {
-        InsertNullMap(isEditor: true);
-        index = 0;
-      }
-
-      StartMap = SaveCurrentMapInSlot(index, isEditor: true);
-    }
-
-    public void RestartStartMap() => StartMap = StartMap.RestartCopy();
-
-    public void ExportFromRuntime() =>  GUIUtility.systemCopyBuffer = _mapEncodeController.EncodeFromRuntime();
+    public void ExportFromRuntime() => GUIUtility.systemCopyBuffer = _mapEncodeController.EncodeFromRuntime();
 
     private void Load()
     {
-      foreach (var mapData in _progressController.Data.Maps)
-        _maps.Add(new MapController(mapData));
-
-      AutosaveMap = _maps.FirstOrDefault(x => x.IsAutosave);
-
-      foreach (var mapData in _progressController.Data.EditorMaps)
-        _editorMaps.Add(new MapController(mapData));
+      foreach (int id in _progressController.Data.MapsIds)
+        if (_maps.All(x => x.Id != id) && _progressController.LoadMap(id, out var mapData))
+          _maps.Add(new MapController(mapData));
+      UpdateIds();
     }
 
-    private void DeleteMapWithoutSave(MapController map)
+    private MapController SaveRuntimeMapInSlotInternal(int mapId, bool isEditor = false, bool isAutosave = false)
     {
-      _maps.Remove(map);
-      _progressController.Data.Maps.Remove(map.GetData());
-    }
-
-    private MapController SaveCurrentMapInSlot(int slotIndex, bool isEditor = false, bool isAutosave = false)
-    {
-      var mapData = _mapsFactory.CreateRuntimeMap(StartMap.GetData().InitialPlayers, StartMap.Name, isEditor: isEditor, isAutosave: isAutosave);
-      var map = new MapController(mapData);
-      if (isEditor)
+      MapController map;
+      if (mapId == -1)
       {
-        _progressController.Data.EditorMaps[slotIndex] = mapData;
-        _editorMaps[slotIndex] = map;
+        mapId = _mapsFactory.GenerateId(_progressController.Data.MapsIds);
+        map = new MapController();
+        _maps.Insert(0, map);
       }
       else
-      {
-        _progressController.Data.Maps[slotIndex] = mapData;
-        _maps[slotIndex] = map;
-      }
+        map = GetMap(mapId);
 
-      _progressController.Save();
+      var mapData = _mapsFactory.CreateRuntimeMap(_startMap.Data.InitialPlayers, StartMap.Name, isEditor: isEditor, isAutosave: isAutosave,
+        id: mapId);
+      map.Data = mapData;
+      _progressController.SaveMap(mapData);
+      UpdateIds();
       return map;
     }
 
-    private void InsertNullMap(bool isEditor = false)
+    private void DeleteMap(MapController map, bool saveIds = true)
     {
-      if (isEditor)
+      if (_maps.Remove(map))
       {
-        _editorMaps.Insert(0, null);
-        _progressController.Data.EditorMaps.Insert(0, null);
+        _progressController.ClearMap(map.Id);
+        UpdateIds(saveIds);
       }
-      else
+    }
+
+    private void UpdateIds(bool saveIds = true)
+    {
+      var ids = _progressController.Data.MapsIds;
+      ids.Clear();
+      foreach (var map in _maps)
+        ids.Add(map.Id);
+      if (saveIds)
+        _progressController.Save();
+    }
+
+    private void SetStartMap(MapController map) => _startMap.CopyFrom(map);
+
+    private MapController GetMap(int mapId)
+    {
+      for (var i = 0; i < _maps.Count; i++)
       {
-        _maps.Insert(0, null);
-        _progressController.Data.Maps.Insert(0, null);
+        var map = _maps[i];
+        if (map.Id == mapId)
+          return map;
       }
+
+      return null;
     }
   }
 }

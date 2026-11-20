@@ -1,30 +1,32 @@
-using System.Linq;
 using System.Text;
 using Client.Project.Government;
 using Client.Project.Infrastructure;
+using Client.Project.Player;
 using Client.Project.Region;
 using Client.Project.Unit.Code;
 using Client.Project.Yiotro;
 
 namespace Client.Project.Map
 {
-  public class MapEncodeController : IInitializable
+  public class MapEncodeController
   {
     private readonly StringBuilder _builder = new();
-    private MapsService _mapsService;
-    private GovernmentsService _governmentsService;
-    private GridController _gridController;
-    private UnitsService _unitsService;
-    private RegionsService _regionsService;
+    private readonly MapsService _mapsService;
+    private readonly GridController _gridController;
+    private readonly UnitsService _unitsService;
+    private readonly RegionsService _regionsService;
+    private readonly PlayersService _playersService;
+    private readonly GovernmentsService _governmentsService;
     private bool _isHuge;
 
-    public void Initialize()
+    public MapEncodeController()
     {
       _mapsService = Locator.Get<MapsService>();
-      _governmentsService = Locator.Get<GovernmentsService>();
       _gridController = Locator.Get<GridController>();
       _unitsService = Locator.Get<UnitsService>();
       _regionsService = Locator.Get<RegionsService>();
+      _playersService = Locator.Get<PlayersService>();
+      _governmentsService = Locator.Get<GovernmentsService>();
     }
 
     public string EncodeFromRuntime()
@@ -66,7 +68,7 @@ namespace Client.Project.Map
     private void EncodeEditorInfo()
     {
       StartSection("editor_info");
-      _builder.Append(1).Append(" "); // _builder.Append(GameRules.editorChosenColor).Append(" "); //? todo
+      _builder.Append(YiotroUtilities.PlayerRegionTypeToCode(_playersService.FirstPlayer)).Append(" ");
       _builder.Append(false).Append(" ");
       _builder.Append(false).Append(" ");
     }
@@ -103,13 +105,10 @@ namespace Client.Project.Map
 
     private void EncodeGeneralInfo()
     {
-      //todo
       StartSection("general");
-      _builder.Append(1).Append(" "); //_builder.Append(GameRules.difficulty).Append(" ");
-      _builder.Append(1)
-        .Append(" "); //_builder.Append(gameController.playersNumber).append(" "); вероятно это игроки типа на одном устройстве и боты.
-      _builder.Append(_governmentsService.GetAll().Count(x => x.Regions.Count > 0 && x.RegionsType != RegionType.Neutral));
-      //_builder.Append(GameRules.fractionsQuantity); - заменить текущий подсчёт на сохраненное значение.
+      _builder.Append(_playersService.DifficultyMode).Append(" ");
+      _builder.Append(_playersService.PlayersMode).Append(" ");
+      _builder.Append(_governmentsService.CountNonEmptyWithoutNeutral());
     }
 
     private void EncodeLevelSize()

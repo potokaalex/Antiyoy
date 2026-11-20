@@ -1,3 +1,6 @@
+using Client.Project.Infrastructure;
+using Client.Project.Map;
+using Client.Project.Yiotro;
 using UnityEngine;
 
 namespace Client.Project.Unit.Code
@@ -6,6 +9,11 @@ namespace Client.Project.Unit.Code
   {
     [SerializeField] private Sprite[] _sprites;
 
-    protected override void SetupSprite() => Renderer.sprite = _sprites[Random.Range(0, _sprites.Length)];
+    protected override void SetupSprite()
+    {
+      var gridController = Locator.Get<GridController>();
+      var index = YiotroUtilities.HexToIndex(Cell.Position, gridController.LevelSize == LevelSize.Huge);
+      Renderer.sprite = _sprites[(101 * index.x * index.y + 7 * index.y) % 3];
+    }
   }
 }

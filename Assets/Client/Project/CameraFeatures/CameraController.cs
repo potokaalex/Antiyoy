@@ -15,8 +15,9 @@ namespace Client.Project.CameraFeatures
     [SerializeField] private float _positionDragMultiplier; //The smaller the value, the smaller the drag.
     [SerializeField] private float _positionLerpFactor;
     [SerializeField] private float _positionInertiaFactor; //The smaller the value, the smaller the inertia.
-    [SerializeField] private float _zoomDragMultiplier;
     [SerializeField] private float _zoomLerpFactor;
+    [SerializeField] private float _zoomTouchSensitivity;
+    [SerializeField] private float _zoomWheelSensitivity;
     [SerializeField] private LayerMask _gameplayLayers;
     [SerializeField] private LayerMask _menuLayers;
     private readonly List<Touch> _touches = new();
@@ -33,7 +34,7 @@ namespace Client.Project.CameraFeatures
     private Vector2 _maxPosition;
     private bool _canDrag;
     private float _targetSize;
-    private float _maxSize;
+    private float _maxSize = 4;
     private Vector2 _center;
     private Vector3 _dragInertia;
 
@@ -68,20 +69,27 @@ namespace Client.Project.CameraFeatures
 
     public IEnumerator CreateScreenshotCoroutine(RenderTexture rt) => _imageController.CreateScreenshotCoroutine(rt);
 
-    public void Setup()
+    public void Setup(bool viewFullMap = true)
     {
       var gridMin = (Vector2)_gridController.HexPositionToWorld(HexCoordinates.FromArray2DIndex(Vector2Int.zero));
       var gridMax = (Vector2)_gridController.HexPositionToWorld(HexCoordinates.FromArray2DIndex(_gridController.Size - Vector2Int.one));
       _center = (gridMin + gridMax) / 2f;
 
       var unitsAbove = 5;
-      var maxVisibleUnits = gridMax.y - gridMin.y + unitsAbove;
-      _maxSize = Mathf.Max(maxVisibleUnits / 2f, _minSize);
-      SetSize(_maxSize);
-
       _minPosition = gridMin - Vector2.one * unitsAbove / 2f;
       _maxPosition = gridMax + Vector2.one * unitsAbove / 2f;
-      SetPosition(_center);
+      _maxSize = Mathf.Max((_maxPosition.y - _minPosition.y) / 2f, _minSize);
+
+      if (viewFullMap)
+      {
+        SetSize(_maxSize);
+        SetPosition(_center);
+      }
+      else
+      {
+        SetSize(_camera.orthographicSize);
+        SetPosition(_camera.transform.position);
+      }
     }
 
     public void Focus(Vector3 position)
@@ -102,19 +110,32 @@ namespace Client.Project.CameraFeatures
     {
       _touches.Clear();
 
+      if (Input.GetKey(KeyCode.Escape))
+        return;
+
       using (ListPool<int>.Get(out var allTouchesId))
       {
         for (var i = 0; i < Input.touchCount; i++)
         {
           var touch = Input.GetTouch(i);
           allTouchesId.Add(touch.fingerId);
-          var ignored = _ignoredTouches.Contains(touch.fingerId);
+          if (_ignoredTouches.Contains(touch.fingerId))
+            continue;
 
-          if (touch.phase == TouchPhase.Began && _inputController.IsPointerOverUI(touch.position) && !ignored)
-            _ignoredTouches.Add(touch.fingerId);
+          if (touch.phase == TouchPhase.Began)
+          {
+            var backGestureEdgeWidth = 40f;
+            var isBackGesture = touch.position.x <= backGestureEdgeWidth || touch.position.x >= Screen.width - backGestureEdgeWidth;
+            var isOverUI = _inputController.IsPointerOverUI(touch.position);
 
-          if (!ignored)
-            _touches.Add(touch);
+            if (isBackGesture || isOverUI)
+            {
+              _ignoredTouches.Add(touch.fingerId);
+              continue;
+            }
+          }
+
+          _touches.Add(touch);
         }
 
         _ignoredTouches.RemoveAll(touchId => !allTouchesId.Contains(touchId));
@@ -186,8 +207,6 @@ namespace Client.Project.CameraFeatures
 
     private void Zoom()
     {
-      var zoomDragMultiplier = _zoomDragMultiplier * _maxSize / 6f;
-
       if (_touches.Count == 2)
       {
         var touch0 = _touches[0];
@@ -196,20 +215,29 @@ namespace Client.Project.CameraFeatures
         var prevPos1 = touch1.position - touch1.deltaPosition;
         var prevDistance = Vector2.Distance(prevPos0, prevPos1);
         var currentDistance = Vector2.Distance(touch0.position, touch1.position);
-        var pixelDelta = currentDistance - prevDistance;
-        var screenDelta = pixelDelta * PixelToScreenSizeFactor();
-        _targetSize = _camera.orthographicSize - screenDelta * zoomDragMultiplier;
+
+        if (prevDistance > 0.01f)
+        {
+          var zoomFactor = prevDistance / currentDistance;
+          zoomFactor = Mathf.Pow(zoomFactor, _zoomTouchSensitivity);
+          _targetSize *= zoomFactor;
+        }
       }
 
       if (PlatformUtilities.IsEditor)
       {
-        var delta = Input.mouseScrollDelta.y;
-        if (Mathf.Abs(delta) > 0)
-          _targetSize = _camera.orthographicSize - delta * zoomDragMultiplier / 5f;
+        var scroll = Input.mouseScrollDelta.y;
+
+        if (Mathf.Abs(scroll) > 0.01f)
+        {
+          var zoomFactor = Mathf.Exp(-scroll * _zoomWheelSensitivity);
+          _targetSize *= zoomFactor;
+        }
       }
 
-      _targetSize = Mathf.Clamp(_targetSize, _minSize, _maxSize);
-      _camera.orthographicSize = Mathf.Lerp(_camera.orthographicSize, _targetSize, _zoomLerpFactor * Time.deltaTime);
+      _targetSize = ClampSize(_targetSize);
+      var lerpFactor = 1f - Mathf.Exp(-_zoomLerpFactor * Time.deltaTime);
+      _camera.orthographicSize = Mathf.Lerp(_camera.orthographicSize, _targetSize, lerpFactor);
     }
 
     private float PixelToScreenSizeFactor()
@@ -228,11 +256,17 @@ namespace Client.Project.CameraFeatures
     {
       var halfHeight = _camera.orthographicSize;
       var halfWidth = halfHeight * _camera.aspect;
-      position.x = Mathf.Clamp(position.x, _minPosition.x + halfWidth, _maxPosition.x - halfWidth);
-      position.y = Mathf.Clamp(position.y, _minPosition.y + halfHeight, _maxPosition.y - halfHeight);
+      var minX = _minPosition.x + halfWidth;
+      var maxX = _maxPosition.x - halfWidth;
+      var minY = _minPosition.y + halfHeight;
+      var maxY = _maxPosition.y - halfHeight;
+      position.x = minX > maxX ? (_minPosition.x + _maxPosition.x) / 2f : Mathf.Clamp(position.x, minX, maxX);
+      position.y = minY > maxY ? (_minPosition.y + _maxPosition.y) / 2f : Mathf.Clamp(position.y, minY, maxY);
       position.z = _positionZ;
       return position;
     }
+
+    private float ClampSize(float size) => Mathf.Clamp(size, _minSize, _maxSize);
 
     private void ClearDrag() => SetPosition(_camera.transform.position);
 
@@ -244,7 +278,7 @@ namespace Client.Project.CameraFeatures
 
     private void SetPosition(Vector3 value)
     {
-      value.z = _positionZ;
+      value = ClampPosition(value);
       _startPosition = value;
       _targetPosition = value;
       _camera.transform.position = value;
@@ -254,6 +288,7 @@ namespace Client.Project.CameraFeatures
 
     private void SetSize(float value)
     {
+      value = ClampSize(value);
       _targetSize = value;
       _camera.orthographicSize = value;
     }

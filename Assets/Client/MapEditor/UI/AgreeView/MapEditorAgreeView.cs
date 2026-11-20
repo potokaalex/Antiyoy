@@ -1,5 +1,7 @@
 using System;
 using Client.Menu;
+using Client.Project;
+using Client.Project.Infrastructure;
 using Client.Project.UI;
 using TMPro;
 using UnityEngine;
@@ -18,9 +20,13 @@ namespace Client.MapEditor.UI.AgreeView
     [SerializeField] private Image _agreeButtonImage;
     [SerializeField] private TextMeshProUGUI _agreeButtonText;
     private Action _agreeAction;
+    private InputController _inputController;
+
+    public bool IsShowing => _topAndBottomMenuAnimator.IsShowing;
 
     private void Awake()
     {
+      _inputController = Locator.Get<InputController>();
       _cancelButton.OnClick += Hide;
       _agreeButton.OnClick += OnAgreeButtonClick;
     }
@@ -29,6 +35,12 @@ namespace Client.MapEditor.UI.AgreeView
     {
       _cancelButton.OnClick -= Hide;
       _agreeButton.OnClick -= OnAgreeButtonClick;
+    }
+
+    private void Update()
+    {
+      if (IsShowing && _inputController.BackClicked)
+        _cancelButton.Click();
     }
 
     public void Show(MapEditorAgreeViewParameters parameters)

@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Client.Project.Utilities
@@ -9,6 +10,10 @@ namespace Client.Project.Utilities
     public static readonly float HexHeight = HexSide * Sqrt3Div2;
     public static readonly float HexHalfHeight = HexHeight / 2f;
 
-    public static int ToArrayIndex(Vector2Int array2DIndex, int arrayWidth) => array2DIndex.y * arrayWidth + array2DIndex.x;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static int ToArrayIndex(Vector2Int array2DIndex, int arrayWidth) => ToArrayIndex(array2DIndex.x, array2DIndex.y, arrayWidth);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static int ToArrayIndex(int x, int y, int arrayWidth) => y * arrayWidth + x;
   }
 }

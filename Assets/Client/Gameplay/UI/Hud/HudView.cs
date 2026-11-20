@@ -55,7 +55,7 @@ namespace Client.Gameplay.UI.Hud
     private void Update()
     {
       if (_inputController.BackClicked)
-        _gameplayController.Pause();
+        _pauseButton.Click();
     }
 
     public void ViewTurnsCount(int value) => _turnsCount.SetText($"Turn {value}");

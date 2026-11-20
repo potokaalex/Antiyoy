@@ -58,8 +58,8 @@ namespace Client.MapEditor.UI.Panels.Settings
     public void Show()
     {
       _topAndBottomMenuAnimator.PlayShow();
-      _playersSlider.SetValueWithoutNotify(_mapEditorController.PlayersValue);
-      _difficultySlider.SetValueWithoutNotify(_mapEditorController.DifficultyValue);
+      _playersSlider.SetValueWithoutNotify(_mapEditorController.PlayersMode);
+      _difficultySlider.SetValueWithoutNotify(_mapEditorController.DifficultyMode);
       ViewPlayerColor();
     }
 
@@ -95,13 +95,13 @@ namespace Client.MapEditor.UI.Panels.Settings
       });
     }
 
-    private void OnPlayersValueChanged() => _mapEditorController.PlayersValue = _playersSlider.Value;
+    private void OnPlayersValueChanged() => _mapEditorController.PlayersMode = _playersSlider.Value;
 
-    private void OnDifficultyValueChanged() => _mapEditorController.DifficultyValue = _difficultySlider.Value;
+    private void OnDifficultyValueChanged() => _mapEditorController.DifficultyMode = _difficultySlider.Value;
 
     private void ViewPlayerColor()
     {
-      var value = _mapEditorController.PlayerRegionType;
+      var value = _mapEditorController.FirstPlayer;
       if (value.IsRandom)
       {
         _playerRandomColorImage.gameObject.SetActive(true);

@@ -37,8 +37,8 @@ namespace Client.Menu.MainMenu.SaveLoad
 
     private void Update()
     {
-      if (_inputController.BackClicked)
-        OnBackClick();
+      if (_menuAnimator.IsShowing && !_optionsView.IsShowing && !_deleteView.IsShowing && _inputController.BackClicked)
+        _backButton.Click();
     }
 
     public void Show()
@@ -53,11 +53,11 @@ namespace Client.Menu.MainMenu.SaveLoad
       _deleteView.Show(slotView);
     }
 
-    public virtual void DeleteSlot(SaveLoadSlotView slotView) => MapsService.DeleteMap(slotView.Map);
+    public void DeleteSlot(SaveLoadSlotView slotView) => MapsService.DeleteMap(slotView.Map.Id);
 
     public void Rename(SaveLoadSlotView slotView, string newName)
     {
-      MapsService.RenameMap(slotView.Map, newName);
+      MapsService.RenameMap(slotView.Map.Id, newName);
       slotView.Header = newName;
     }
 
@@ -67,7 +67,7 @@ namespace Client.Menu.MainMenu.SaveLoad
     {
     }
 
-    protected SaveLoadSlotView CreateView(MapController map)
+    protected SaveLoadSlotView CreateView(IReadOnlyMap map)
     {
       var view = _pool.Get();
       view.transform.SetSiblingIndex(_activeViews.Count + 1);
@@ -80,8 +80,9 @@ namespace Client.Menu.MainMenu.SaveLoad
 
     protected virtual void CreateViews()
     {
-      for (var i = 0; i < MapsService.Maps.Count; i++)
-        CreateView(MapsService.Maps[i]);
+      foreach (var map in MapsService.GetMaps())
+        if (!map.IsEditor)
+          CreateView(map);
     }
 
     protected virtual void ClearView(SaveLoadSlotView view)

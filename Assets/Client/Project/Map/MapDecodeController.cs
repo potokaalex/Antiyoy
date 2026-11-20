@@ -2,22 +2,27 @@ using System;
 using System.Collections.Generic;
 using Client.Project.Infrastructure;
 using Client.Project.Map.Data;
+using Client.Project.Player;
 using Client.Project.Utilities;
 using Client.Project.Yiotro;
 using UnityEngine;
 
 namespace Client.Project.Map
 {
-  public class MapDecodeController : IInitializable
+  public class MapDecodeController
   {
-    private MapsFactory _mapsFactory;
+    private readonly MapsFactory _mapsFactory;
+    private UnsafeNullable<CellData>[,] _cells;
     private Vector2Int _mapSize;
+    private LevelSize _levelSize;
     private string _source;
-    private CellData?[,] _cells;
     private string _mapName;
     private bool _isHuge;
+    private PlayerRegionType _firstPlayer;
+    private int _difficultyMode;
+    private int _playersMode;
 
-    public void Initialize() => _mapsFactory = Locator.Get<MapsFactory>();
+    public MapDecodeController() => _mapsFactory = Locator.Get<MapsFactory>();
 
     public bool IsValidLevelCode(string levelCode)
     {
@@ -34,7 +39,7 @@ namespace Client.Project.Map
       return true;
     }
 
-    public MapData DecodeToMapData(string levelCode)
+    public MapData DecodeToMapData(string levelCode, int id = -1, string name = null)
     {
       _source = levelCode;
 
@@ -43,12 +48,14 @@ namespace Client.Project.Map
       DecodeLand();
       DecodeUnits();
       DecodeEditorInfo();
-      DecodeMapName();
+      DecodeMapName(name);
 
       var regions = _mapsFactory.CreateRegions(_cells, _mapSize, 0);
       DecodeProvinces(regions);
+
       var players = _mapsFactory.CreatePlayers(regions);
-      return _mapsFactory.CreateMapData(players, _mapSize, _mapName);
+      return _mapsFactory.CreateMapData(players, _mapsFactory.CopyPlayers(players), _levelSize, _mapName, id: id, firstPlayer: _firstPlayer,
+        playersMode: _playersMode, difficultyMode: _difficultyMode);
     }
 
     private void DecodeLevelSize()
@@ -57,21 +64,24 @@ namespace Client.Project.Map
       if (section == null)
         return;
 
-      var levelSize = YiotroUtilities.CodeToLevelSize(int.Parse(section));
-
-      _mapSize = GameUtilities.LevelSizeToFieldSize(levelSize);
-      _isHuge = levelSize == LevelSize.Huge;
-      _cells = new CellData?[_mapSize.x, _mapSize.y];
+      _levelSize = YiotroUtilities.CodeToLevelSize(int.Parse(section));
+      _mapSize = GameUtilities.LevelSizeToFieldSize(_levelSize);
+      _isHuge = _levelSize == LevelSize.Huge;
+      _cells = _mapsFactory.CellsBuffer;
+      _mapsFactory.ClearCellsBuffer();
     }
 
-    private void DecodeMapName()
+    private void DecodeMapName(string name)
     {
-      var section = GetSection("map_name");
-      if (section == null)
+      if (name != null)
+      {
+        _mapName = name;
         return;
+      }
 
-      //todo: применить на mapData, чтобы слот загруженной карты назывался по-новому. При загрузке в редакторе - игнорировать.
-      _mapName = section;
+      var section = GetSection("map_name");
+      if (section != null)
+        _mapName = section;
     }
 
     private void DecodeEditorInfo()
@@ -81,9 +91,7 @@ namespace Client.Project.Map
         return;
 
       var split = section.Split(" ");
-
-      //todo
-      //GameRules.setEditorChosenColor(Integer.valueOf(split[0]));
+      _firstPlayer = YiotroUtilities.CodeToPlayerRegionType(int.Parse(split[0]));
     }
 
     private void DecodeUnits()
@@ -105,7 +113,7 @@ namespace Client.Project.Map
       var ready = bool.Parse(split[3]);
       var unitType = YiotroUtilities.StrengthToUnitType(strength);
       var index = YiotroUtilities.IndexToHex(index1, index2, _isHuge).ToArray2DIndex();
-      _mapsFactory.SetUnit(new UnitData(unitType, ready), _cells, index.x, index.y);
+      _mapsFactory.SetUnit(new UnsafeNullable<UnitData>(new UnitData(unitType, ready)), _cells, index.x, index.y);
     }
 
     private void DecodeLand()
@@ -129,21 +137,14 @@ namespace Client.Project.Map
         var hex = YiotroUtilities.IndexToHex(index1, index2, _isHuge);
         var index = hex.ToArray2DIndex();
 
-        UnitData? unitData = null;
-        if (objectInside != 0)
-        {
-          var unitType = YiotroUtilities.ObjToUnitType(objectInside);
-          unitData = new UnitData(unitType);
-        }
-
+        var unitData = objectInside != 0 ? new UnsafeNullable<UnitData>(new UnitData(YiotroUtilities.ObjToUnitType(objectInside))) : default;
         var regionType = YiotroUtilities.FractionToRegionType(fraction);
 
-        _cells[index.x, index.y] = new CellData
-        {
-          Position = hex,
-          RegionType = regionType,
-          Unit = unitData
-        };
+        ref var cell = ref _cells[index.x, index.y];
+        cell.HasValue = true;
+        cell.Value.Position = hex;
+        cell.Value.RegionType = regionType;
+        cell.Value.Unit = unitData;
       }
     }
 
@@ -154,10 +155,8 @@ namespace Client.Project.Map
         return;
 
       var split = section.Split(" ");
-      //todo
-      //GameRules.setDifficulty(int.Parse(split[0]));
-      //gameController.setPlayersNumber(int.Parse(split[1]));
-      //GameRules.setFractionsQuantity(int.Parse(split[2]));
+      _difficultyMode = int.Parse(split[0]);
+      _playersMode = int.Parse(split[1]);
     }
 
     private void DecodeProvinces(List<RegionData> regions)
