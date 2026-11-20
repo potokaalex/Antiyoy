@@ -1,4 +1,5 @@
 using System.Text;
+using Client.Project.Government;
 using Client.Project.Infrastructure;
 using Client.Project.Player;
 using Client.Project.Region;
@@ -15,6 +16,7 @@ namespace Client.Project.Map
     private readonly UnitsService _unitsService;
     private readonly RegionsService _regionsService;
     private readonly PlayersService _playersService;
+    private readonly GovernmentsService _governmentsService;
     private bool _isHuge;
 
     public MapEncodeController()
@@ -24,6 +26,7 @@ namespace Client.Project.Map
       _unitsService = Locator.Get<UnitsService>();
       _regionsService = Locator.Get<RegionsService>();
       _playersService = Locator.Get<PlayersService>();
+      _governmentsService = Locator.Get<GovernmentsService>();
     }
 
     public string EncodeFromRuntime()
@@ -105,7 +108,7 @@ namespace Client.Project.Map
       StartSection("general");
       _builder.Append(_playersService.DifficultyMode).Append(" ");
       _builder.Append(_playersService.PlayersMode).Append(" ");
-      _builder.Append(_playersService.PlayersCount());
+      _builder.Append(_governmentsService.CountNonEmptyWithoutNeutral());
     }
 
     private void EncodeLevelSize()

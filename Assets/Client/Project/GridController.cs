@@ -100,7 +100,7 @@ namespace Client.Project
 
     public CellController CreateCell(HexCoordinates position, bool createTile = false)
     {
-      if(createTile)
+      if (createTile)
         _tilemapController.CreateTile(position);
 
       var cell = _pool.Get();
@@ -112,7 +112,7 @@ namespace Client.Project
 
     public void DestroyAllCells()
     {
-      if(_cells == null)
+      if (_cells == null)
         return;
 
       foreach (var cell in _cells)

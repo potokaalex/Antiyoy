@@ -8,8 +8,8 @@ using Client.Project.Map.Data;
 using Client.Project.Player;
 using Client.Project.Region;
 using Client.Project.Utilities;
-using Client.Project.Yiotro;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Client.Project.Map
 {
@@ -59,7 +59,6 @@ namespace Client.Project.Map
     {
       var players = new List<PlayerData>();
 
-      //todo: динамически создавать игроков. и создавать регионы из игроков.
       foreach (var government in _governmentsService.GetAll())
       {
         var regions = new List<RegionData>();
@@ -77,10 +76,12 @@ namespace Client.Project.Map
         players.Add(new PlayerData
         {
           Regions = regions,
-          Type = PlayerType.OnDevice,
           RegionType = government.RegionsType
         });
       }
+
+      if (!isEditor && GenerateFirstPlayer(players, _playersService.FirstPlayer, out var firstPlayer))
+        _playersService.FirstPlayer = firstPlayer;
 
       return CreateMapData(isEditor ? players : initialPlayers, players, _gridController.LevelSize, name, DateTime.Now, id, isAutosave, isEditor,
         playersMode: _playersService.PlayersMode, difficultyMode: _playersService.DifficultyMode,
@@ -148,7 +149,7 @@ namespace Client.Project.Map
       return newRegions;
     }
 
-    public List<PlayerData> CreatePlayers(List<RegionData> regions, PlayerRegionType firstPlayer, int playersMode)
+    public List<PlayerData> CreatePlayers(List<RegionData> regions)
     {
       var players = new List<PlayerData>();
 
@@ -160,7 +161,6 @@ namespace Client.Project.Map
         var player = new PlayerData
         {
           Regions = new(),
-          Type = PlayerType.AI,
           RegionType = rootRegion.Type
         };
 
@@ -176,28 +176,6 @@ namespace Client.Project.Map
             regions.RemoveAt(i);
           }
         }
-      }
-
-      if (players.Count > 0 && !firstPlayer.IsRandom)
-      {
-        players.SortByIncreasing(x => x.RegionType == RegionType.Neutral ? int.MaxValue : YiotroUtilities.RegionTypeToEditorColorCode(x.RegionType));
-        var movement = players.FindIndex(x => x.RegionType == firstPlayer.RegionType);
-        var shift = (movement % players.Count + players.Count) % players.Count;
-        var temp = players.GetRange(0, shift);
-        players.RemoveRange(0, shift);
-        players.AddRange(temp);
-
-        var neutralIndex = players.FindIndex(x => x.RegionType == RegionType.Neutral);
-        if(neutralIndex != -1)
-        {
-          var player = players[neutralIndex];
-          players.RemoveAt(neutralIndex);
-          players.Add(player);
-        }
-
-        var array = players.ExtractArray();
-        for (var i = 0; i < playersMode; i++)
-          array[i].Type = PlayerType.OnDevice;
       }
 
       return players;
@@ -246,6 +224,24 @@ namespace Client.Project.Map
       }
 
       throw new Exception("Cant generate id");
+    }
+
+    public bool GenerateFirstPlayer(List<PlayerData> players, PlayerRegionType currentFirstPlayer, out PlayerRegionType result)
+    {
+      Debug.Log(players.Count);
+      var playersRegions = players.Select(x =>
+      {
+        Debug.Log(x.RegionType);
+        return x.RegionType;
+      }).Where(x => x != RegionType.Neutral).ToList();
+      if (currentFirstPlayer.IsRandom || !playersRegions.Contains(currentFirstPlayer.RegionType))
+      {
+        result = new PlayerRegionType(playersRegions[Random.Range(0, playersRegions.Count)]);
+        return true;
+      }
+
+      result = default;
+      return false;
     }
 
     public void ClearCellsBuffer() => Array.Clear(CellsBuffer, 0, CellsBuffer.Length);

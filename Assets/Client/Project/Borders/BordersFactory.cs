@@ -150,7 +150,7 @@ namespace Client.Project.Borders
 
     private void PrewarmPool(int count)
     {
-      for (var i = 0; i < count; i++) 
+      for (var i = 0; i < count; i++)
         ReleaseInstance(CreateInstance());
     }
 

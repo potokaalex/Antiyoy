@@ -75,6 +75,7 @@ namespace Client.Gameplay.Gameplay
       _unitsService.InitialCreateUnits(map);
       _regionsService.InitialCreateRegions(map);
       _playersService.Setup(map);
+      _playersService.CreatePlayers(map);
       _capitalsController.CheckCapitals();
       _gameplayRegionsController.Enable();
 
@@ -159,7 +160,7 @@ namespace Client.Gameplay.Gameplay
       _regionsService.Clear();
       _actionsHistoryController.Clear();
       _governmentsService.Clear();
-      _playersService.Clear();
+      _playersService.ClearPlayers();
       _gridController.DestroyAllCells();
     }
 

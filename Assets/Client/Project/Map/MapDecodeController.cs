@@ -53,7 +53,7 @@ namespace Client.Project.Map
       var regions = _mapsFactory.CreateRegions(_cells, _mapSize, 0);
       DecodeProvinces(regions);
 
-      var players = _mapsFactory.CreatePlayers(regions, _firstPlayer, _playersMode);
+      var players = _mapsFactory.CreatePlayers(regions);
       return _mapsFactory.CreateMapData(players, _mapsFactory.CopyPlayers(players), _levelSize, _mapName, id: id, firstPlayer: _firstPlayer,
         playersMode: _playersMode, difficultyMode: _difficultyMode);
     }

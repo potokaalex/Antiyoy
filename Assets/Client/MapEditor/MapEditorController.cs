@@ -168,7 +168,6 @@ namespace Client.MapEditor
       _gridController.DestroyAllCells();
       _bordersService.ViewRegionsBorders();
       _governmentsService.Clear();
-      _playersService.Clear();
     }
 
     public void GenerateRandomMap()
@@ -184,6 +183,7 @@ namespace Client.MapEditor
       if (MapEmpty())
         return false;
 
+      _mapsService.GenerateFromRuntimeIntoStartMap();
       End();
       _projectController.LoadGameplay();
       return true;

@@ -37,7 +37,7 @@ namespace Client.Menu.MainMenu.Options
 
     private void Update()
     {
-      if (_menuAnimator.IsShowing && _inputController.BackClicked) 
+      if (_menuAnimator.IsShowing && _inputController.BackClicked)
         _backButton.Click();
     }
 

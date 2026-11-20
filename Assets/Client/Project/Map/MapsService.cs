@@ -38,7 +38,7 @@ namespace Client.Project.Map
       _startMap.Data = _mapGenerator.GenerateDataAndFirstPlayer(levelSize, regionsCount, name, difficultyMode, playersMode);
 
     public void GenerateMapIntoStart(LevelSize levelSize, int colorsCount) => _startMap.Data =
-      _mapGenerator.GenerateData(levelSize, colorsCount, _startMap.Name, _playersService.DifficultyMode, _playersService.PlayersMode, 
+      _mapGenerator.GenerateData(levelSize, colorsCount, _startMap.Name, _playersService.DifficultyMode, _playersService.PlayersMode,
         _playersService.FirstPlayer, _startMap.Id);
 
     public void GenerateEmptyStartMap(LevelSize levelSize, string name) => _startMap.Data = _mapGenerator.GenerateEmptyData(levelSize, name);
@@ -49,6 +49,8 @@ namespace Client.Project.Map
 
     public void GenerateFromCopyBufferIntoStartMap() =>
       _startMap.Data = _mapDecodeController.DecodeToMapData(GUIUtility.systemCopyBuffer, _startMap.Id, _startMap.Name);
+
+    public void GenerateFromRuntimeIntoStartMap() => _startMap.Data = _mapsFactory.CreateRuntimeMap(_startMap.Data.InitialPlayers, "Skirmish");
 
     public void SetStartMapFromSlot(int mapId) => SetStartMap(GetMap(mapId));
 

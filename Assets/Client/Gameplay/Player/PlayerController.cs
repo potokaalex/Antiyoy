@@ -9,6 +9,7 @@ using Client.Project.Region;
 using Client.Project.Unit.Code;
 using Client.Project.Unit.Code.Capital;
 using Client.Project.Utilities;
+using UnityEngine;
 
 namespace Client.Gameplay.Player
 {
@@ -62,7 +63,7 @@ namespace Client.Gameplay.Player
 
     public void StartTurn()
     {
-      UnityEngine.Debug.Log($"OnDevicePlayer turn: {RegionType}");
+      Debug.Log($"OnDevicePlayer turn: {RegionType}");
       _playerViewController.SetPlayerController(this);
       _cameraController.Focus(_capitalsController.GetCapital(_governmentsService.Get(RegionType).Regions[0]).WorldPosition);
     }

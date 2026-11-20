@@ -46,7 +46,7 @@ namespace Client.Menu.MainMenu.SaveLoad
 
     private void Update()
     {
-      if (_inputController.BackClicked) 
+      if (_inputController.BackClicked)
         _backButton.Click();
     }
 
@@ -85,7 +85,7 @@ namespace Client.Menu.MainMenu.SaveLoad
 
     private void OnEndRename(string value)
     {
-      if(!string.IsNullOrEmpty(value))
+      if (!string.IsNullOrEmpty(value))
         _saveLoadView.Rename(_slotView, value);
       Hide();
     }

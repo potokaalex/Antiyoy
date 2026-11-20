@@ -20,13 +20,13 @@ namespace Client.Project
     public bool Equals(UnsafeNullable<T> other)
     {
       var otherHasValue = other.HasValue;
-      
+
       if (!HasValue && !otherHasValue)
         return true;
-      
+
       if (HasValue && otherHasValue)
         return EqualityComparer<T>.Default.Equals(Value, other.Value);
-      
+
       return false;
     }
 

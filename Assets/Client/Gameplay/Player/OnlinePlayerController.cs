@@ -2,6 +2,7 @@ using Client.Gameplay.Gameplay;
 using Client.Project.Infrastructure;
 using Client.Project.Player;
 using Client.Project.Region;
+using UnityEngine;
 
 namespace Client.Gameplay.Player
 {
@@ -19,7 +20,7 @@ namespace Client.Gameplay.Player
 
     public void StartTurn()
     {
-      UnityEngine.Debug.Log($"OnlinePlayerTurn: {RegionType}");
+      Debug.Log($"OnlinePlayerTurn: {RegionType}");
       _gameplayController.NextTurn();
     }
 

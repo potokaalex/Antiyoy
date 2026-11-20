@@ -45,15 +45,10 @@ namespace Client.Project.Map
       CreateCells(field, size);
       var regions = _mapsFactory.CreateRegions(_cells, size, 10);
       CreateCapitals(regions);
+      var players = _mapsFactory.CreatePlayers(regions);
 
-      if (generateFirstPlayer)
-      {
-        var randomPlayer = Random.Range(0, regionsCount);
-        var firstPlayerType = GetRegionType(randomPlayer == YiotroMapGenerator.NEUTRAL_FRACTION ? randomPlayer + 1 : randomPlayer);
-        firstPlayer = new PlayerRegionType(firstPlayerType);
-      }
-
-      var players = _mapsFactory.CreatePlayers(regions, firstPlayer, playersMode);
+      if (generateFirstPlayer && _mapsFactory.GenerateFirstPlayer(players, new PlayerRegionType(isRandom: true), out var player))
+        firstPlayer = player;
 
       return _mapsFactory.CreateMapData(players, _mapsFactory.CopyPlayers(players), levelSize, name, id: id, difficultyMode: difficultyMode,
         playersMode: playersMode, firstPlayer: firstPlayer);

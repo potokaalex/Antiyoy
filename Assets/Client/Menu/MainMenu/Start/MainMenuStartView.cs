@@ -49,7 +49,7 @@ namespace Client.Menu.MainMenu.Start
 
     private void Update()
     {
-      if (_inputController.BackClicked) 
+      if (_inputController.BackClicked)
         _quitButton.Click();
     }
 
