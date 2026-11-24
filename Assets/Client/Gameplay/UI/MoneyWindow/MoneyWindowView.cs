@@ -3,7 +3,7 @@ using System.Linq;
 using Client.Gameplay.Player;
 using Client.Project.Government;
 using Client.Project.Infrastructure;
-using Client.Project.Region;
+using Client.Project.Player;
 using Client.Project.UI;
 using Client.Project.Utilities;
 using UnityEngine;
@@ -20,6 +20,7 @@ namespace Client.Gameplay.UI.MoneyWindow
     [SerializeField] private Transform _viewsRoot;
     private readonly List<MoneyWindowGovernmentView> _views = new();
     private GovernmentsService _governmentsService;
+    private PlayersService _playersService;
     private PlayerViewController _playerViewController;
     private ObjectPool<MoneyWindowGovernmentView> _pool;
 
@@ -27,6 +28,7 @@ namespace Client.Gameplay.UI.MoneyWindow
     {
       _playerViewController = Locator.Get<PlayerViewController>();
       _governmentsService = Locator.Get<GovernmentsService>();
+      _playersService = Locator.Get<PlayersService>();
       _root.gameObject.SetActive(false);
       _pool = new ObjectPool<MoneyWindowGovernmentView>(() => Instantiate(_viewPrefab, _viewsRoot), x => x.SetActive(true), x => x.SetActive(false));
       _closeButton.OnClick += Close;
@@ -45,21 +47,22 @@ namespace Client.Gameplay.UI.MoneyWindow
 
     private void CreateViews()
     {
-      using (ListPool<GovernmentController>.Get(out var governments))
+      //получить всех игроков.
+      
+      using (ListPool<IPlayerController>.Get(out var players))
       {
-        _governmentsService.GetAll(governments);
-        governments.Remove(_governmentsService.Get(RegionType.Neutral));
-        var playerGovernment = _governmentsService.Get(_playerViewController.SelectedRegion.Type);
-        governments.Remove(playerGovernment);
-        governments.Insert(0, playerGovernment);
+        players.AddRange(_playersService.Players);
+        var playerGovernment = players.First(x => x.RegionType == _playerViewController.SelectedRegion.Type);
+        players.Remove(playerGovernment);
+        players.Insert(0, playerGovernment);
 
         var maxColumnSize = 631f;
-        var maxIncome = Mathf.Max(0, governments.Max(x => x.GetInfoIncome()));
+        var maxIncome = Mathf.Max(0, players.Max(x => _governmentsService.Get(x.RegionType).GetInfoIncome()));
         var columnSizeFactor = maxColumnSize / maxIncome;
-        var width = Mathf.Min(875f / governments.Count, 110f);
+        var width = Mathf.Min(875f / players.Count, 110f);
 
-        for (var i = 0; i < governments.Count; i++)
-          CreateView(governments[i], columnSizeFactor, width, i);
+        for (var i = 0; i < players.Count; i++)
+          CreateView(_governmentsService.Get(players[i].RegionType), columnSizeFactor, width, i);
       }
     }
 

@@ -10,6 +10,8 @@ namespace Client.Gameplay.Player
   {
     private readonly GameplayController _gameplayController;
 
+    public PlayerType Type => PlayerType.AI;
+
     public RegionType RegionType { get; }
 
     public AIPlayerController(RegionType regionType)

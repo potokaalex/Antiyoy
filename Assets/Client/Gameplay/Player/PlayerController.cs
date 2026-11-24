@@ -30,6 +30,8 @@ namespace Client.Gameplay.Player
     private GameplayMode _gameplayMode;
     private UnitType _creationUnitType;
 
+    public PlayerType Type => PlayerType.OnDevice;
+
     public RegionType RegionType { get; }
 
     public RegionController SelectedRegion { get; private set; }
@@ -65,7 +67,8 @@ namespace Client.Gameplay.Player
     {
       Debug.Log($"OnDevicePlayer turn: {RegionType}");
       _playerViewController.SetPlayerController(this);
-      _cameraController.Focus(_capitalsController.GetCapital(_governmentsService.Get(RegionType).Regions[0]).WorldPosition);
+      if(_governmentsService.IsAlive(RegionType))
+        _cameraController.Focus(_capitalsController.GetCapital(_governmentsService.Get(RegionType).Regions[0]).WorldPosition);
     }
 
     public void EndTurn()

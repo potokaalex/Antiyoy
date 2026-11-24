@@ -1,3 +1,4 @@
+using System;
 using Client.Gameplay.ActionsHistory;
 using Client.Gameplay.UI;
 using Client.Menu.MainMenu;
@@ -11,6 +12,7 @@ using Client.Project.Player;
 using Client.Project.Region;
 using Client.Project.Unit.Code;
 using Client.Project.Unit.Code.Capital;
+using Cysharp.Threading.Tasks;
 
 namespace Client.Gameplay.Gameplay
 {
@@ -92,7 +94,7 @@ namespace Client.Gameplay.Gameplay
 
     public void Tick()
     {
-      if (!_started || !_playersService.HasPlayers())
+      if (!_started || !_playersService.HasAlivePlayers())
         return;
 
       _currentPlayer.Tick();
@@ -100,7 +102,7 @@ namespace Client.Gameplay.Gameplay
 
     public void NextTurn()
     {
-      if (!_playersService.HasPlayers())
+      if (!_playersService.HasAlivePlayers())
         return;
 
       _currentPlayer.EndTurn();
@@ -123,12 +125,19 @@ namespace Client.Gameplay.Gameplay
       if (needAutosave)
         _mapsService.SaveRuntimeMapInAutosave();
 
-      _currentPlayer.StartTurn();
+      if (_playersService.IsBotsBattle())
+        UniTask.Create(async () =>
+        {
+          await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
+          _currentPlayer.StartTurn();
+        }).Forget();
+      else
+        _currentPlayer.StartTurn();
     }
 
     public void Pause()
     {
-      if (_playersService.HasPlayers())
+      if (_playersService.HasAlivePlayers())
         _currentPlayer.Pause();
       _gameplayUI.ShowPause();
     }
@@ -166,9 +175,9 @@ namespace Client.Gameplay.Gameplay
 
     private bool SetFirstPlayer()
     {
-      if (_playersService.HasPlayers())
+      if (_playersService.HasAlivePlayers())
       {
-        _currentPlayer = _playersService.Players[0];
+        _currentPlayer = _playersService.GetFirstAlivePlayer();
         return true;
       }
 
@@ -189,7 +198,7 @@ namespace Client.Gameplay.Gameplay
 
     private bool MoveNextPlayer()
     {
-      if (_playersService.CanGetNextPlayer(_currentPlayer, out var next))
+      if (_playersService.CanGetNextAlivePlayer(_currentPlayer, out var next))
       {
         _currentPlayer = next;
         return true;

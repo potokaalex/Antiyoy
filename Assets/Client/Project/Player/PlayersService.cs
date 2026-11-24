@@ -35,7 +35,7 @@ namespace Client.Project.Player
 
     public void CreatePlayers(IReadOnlyMap map)
     {
-      var players = map.GetPlayers()
+      var players = map.GetInitialPlayers()
         .OrderBy(x => x.RegionType == RegionType.Neutral ? int.MaxValue : YiotroUtilities.RegionTypeToEditorColorCode(x.RegionType)).ToList();
 
       if (FirstPlayer.IsRandom || players.All(x => x.RegionType != FirstPlayer.RegionType))
@@ -60,7 +60,7 @@ namespace Client.Project.Player
 
     public void ClearPlayers() => _players.Clear();
 
-    public bool HasPlayers() => _players.Count > 0;
+    public bool HasAlivePlayers() => _players.Count(IsAlive) > 0;
 
     public bool IsOneAlive(out IPlayerController alive)
     {
@@ -74,19 +74,31 @@ namespace Client.Project.Player
       return false;
     }
 
-    public bool CanGetNextPlayer(IPlayerController currentPlayer, out IPlayerController next)
+    public bool CanGetNextAlivePlayer(IPlayerController currentPlayer, out IPlayerController next)
     {
       var currentIndex = _players.IndexOf(currentPlayer);
       var maxIndex = _players.Count - 1;
-      if (currentIndex < maxIndex)
+      while (currentIndex < maxIndex)
       {
         next = _players[currentIndex + 1];
-        return true;
+        if (IsAlive(next))
+          return true;
+        currentIndex++;
       }
 
       next = null;
       return false;
     }
+
+    public bool IsBotsBattle()
+    {
+      foreach (var player in _players)
+        if (IsAlive(player) && player.Type == PlayerType.OnDevice)
+          return false;
+      return true;
+    }
+
+    public IPlayerController GetFirstAlivePlayer() => _players.FirstOrDefault(IsAlive);
 
     private void CreatePlayer(PlayerData player, PlayerType type)
     {

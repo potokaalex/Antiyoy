@@ -18,6 +18,6 @@ namespace Client.Project.Map
     PlayerRegionType FirstPlayer { get; }
     IEnumerable<CellData> GetCells();
     IEnumerable<RegionData> GetRegions();
-    IEnumerable<PlayerData> GetPlayers();
+    IEnumerable<PlayerData> GetInitialPlayers();
   }
 }

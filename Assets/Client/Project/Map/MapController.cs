@@ -51,9 +51,9 @@ namespace Client.Project.Map
         yield return region;
     }
 
-    public IEnumerable<PlayerData> GetPlayers()
+    public IEnumerable<PlayerData> GetInitialPlayers()
     {
-      foreach (var player in Data.Players)
+      foreach (var player in Data.InitialPlayers)
         yield return player;
     }
 
