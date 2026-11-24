@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Client.Gameplay.ActionsHistory;
 using Client.Gameplay.UI;
 using Client.Menu.MainMenu;
@@ -29,14 +30,16 @@ namespace Client.Gameplay.Gameplay
     private CapitalsMarksController _capitalsMarksController;
     private MainMenuView _mainMenuView;
     private TreesController _treesController;
-    private IPlayerController _currentPlayer;
     private WarriorUnitsAnimator _warriorUnitsAnimator;
     private CapitalsController _capitalsController;
     private GameplayRegionsController _gameplayRegionsController;
     private MapsService _mapsService;
     private PlayersService _playersService;
+    private IPlayerController _currentPlayer;
+    private CancellationTokenSource _cts;
     private int _turnsCount;
     private bool _started;
+    private bool _isPaused;
 
     private int TurnsCount
     {
@@ -70,6 +73,7 @@ namespace Client.Gameplay.Gameplay
 
     public void Start()
     {
+      _cts = new();
       var map = _mapsService.StartMap;
       _warriorUnitsAnimator.Enable();
       _capitalsMarksController.Enable();
@@ -85,6 +89,7 @@ namespace Client.Gameplay.Gameplay
       _bordersService.ViewRegionsBorders();
       _gameplayUI.PlayShow();
       _started = true;
+      _isPaused = false;
 
       if (SetFirstPlayer())
         _currentPlayer.StartTurn();
@@ -102,7 +107,7 @@ namespace Client.Gameplay.Gameplay
 
     public void NextTurn()
     {
-      if (!_playersService.HasAlivePlayers())
+      if (!_playersService.HasAlivePlayers() || _isPaused)
         return;
 
       _currentPlayer.EndTurn();
@@ -126,14 +131,10 @@ namespace Client.Gameplay.Gameplay
         _mapsService.SaveRuntimeMapInAutosave();
 
       if (_playersService.IsBotsBattle())
-        UniTask.Create(async () =>
-        {
-          await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
-          _currentPlayer.StartTurn();
-        }).Forget();
+        StartTurnWithDelayAsync().Forget();
       else
       {
-        if(_playersService.MoreThenOneHumanPlayer())
+        if (_playersService.MoreThenOneHumanPlayer())
           _cameraController.Focus(_capitalsController.GetCapital(_governmentsService.Get(_currentPlayer.RegionType).Regions[0]).WorldPosition);
         _currentPlayer.StartTurn();
       }
@@ -144,9 +145,14 @@ namespace Client.Gameplay.Gameplay
       if (_playersService.HasAlivePlayers())
         _currentPlayer.Pause();
       _gameplayUI.ShowPause();
+      _isPaused = true;
     }
 
-    public void UnPause() => _gameplayUI.HidePause();
+    public void UnPause()
+    {
+      _gameplayUI.HidePause();
+      _isPaused = false;
+    }
 
     public void MainMenu()
     {
@@ -165,6 +171,7 @@ namespace Client.Gameplay.Gameplay
 
     private void End()
     {
+      _cts.Cancel();
       _started = false;
       _warriorUnitsAnimator.Disable();
       _capitalsMarksController.Disable();
@@ -220,6 +227,18 @@ namespace Client.Gameplay.Gameplay
       }
 
       return false;
+    }
+
+    private async UniTaskVoid StartTurnWithDelayAsync()
+    {
+      try
+      {
+        await UniTask.Delay(TimeSpan.FromSeconds(0.5f), cancellationToken: _cts.Token);
+        _currentPlayer.StartTurn();
+      }
+      catch (OperationCanceledException)
+      {
+      }
     }
   }
 }

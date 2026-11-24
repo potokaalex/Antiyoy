@@ -229,10 +229,13 @@ namespace Client.Project.Map
     public bool GenerateFirstPlayer(List<PlayerData> players, PlayerRegionType currentFirstPlayer, out PlayerRegionType result)
     {
       var playersRegions = players.Select(x => x.RegionType).Where(x => x != RegionType.Neutral).ToList();
-      if (currentFirstPlayer.IsRandom || !playersRegions.Contains(currentFirstPlayer.RegionType))
+      if (playersRegions.Count > 0)
       {
-        result = new PlayerRegionType(playersRegions[Random.Range(0, playersRegions.Count)]);
-        return true;
+        if (currentFirstPlayer.IsRandom || !playersRegions.Contains(currentFirstPlayer.RegionType))
+        {
+          result = new PlayerRegionType(playersRegions[Random.Range(0, playersRegions.Count)]);
+          return true;
+        }
       }
 
       result = default;
