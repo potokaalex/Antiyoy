@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Client.Project.Player;
+using Client.Project.Region;
 
 namespace Client.Project.Map.Data
 {
@@ -18,5 +19,6 @@ namespace Client.Project.Map.Data
     public PlayerRegionType FirstPlayer;
     public bool IsAutosave;
     public bool IsEditor;
+    public RegionType CurrentPlayer;
   }
 }

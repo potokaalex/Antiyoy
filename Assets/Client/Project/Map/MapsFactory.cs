@@ -37,7 +37,7 @@ namespace Client.Project.Map
 
     public MapData CreateMapData(List<PlayerData> initialPlayers, List<PlayerData> players, LevelSize size, string name,
       DateTime creationTime = default, int id = -1, bool isAutosave = false, bool isEditor = false, int playersMode = 0,
-      int difficultyMode = 0, PlayerRegionType firstPlayer = default)
+      int difficultyMode = 0, PlayerRegionType firstPlayer = default, RegionType currentPlayer = default)
     {
       return new MapData
       {
@@ -51,7 +51,8 @@ namespace Client.Project.Map
         IsEditor = isEditor,
         DifficultyMode = difficultyMode,
         PlayersMode = playersMode,
-        FirstPlayer = firstPlayer
+        FirstPlayer = firstPlayer,
+        CurrentPlayer = currentPlayer,
       };
     }
 
@@ -83,9 +84,11 @@ namespace Client.Project.Map
       if (!isEditor && GenerateFirstPlayer(players, _playersService.FirstPlayer, out var firstPlayer))
         _playersService.FirstPlayer = firstPlayer;
 
+      var currentPlayer = isEditor ? default : _playersService.CurrentPlayer?.RegionType ?? default;
+      
       return CreateMapData(isEditor ? players : initialPlayers, players, _gridController.LevelSize, name, DateTime.Now, id, isAutosave, isEditor,
         playersMode: _playersService.PlayersMode, difficultyMode: _playersService.DifficultyMode,
-        firstPlayer: _playersService.FirstPlayer);
+        firstPlayer: _playersService.FirstPlayer, currentPlayer: currentPlayer);
     }
 
     public List<RegionData> CreateRegions(UnsafeNullable<CellData>[,] cells, Vector2Int size, int initialMoney)

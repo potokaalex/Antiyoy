@@ -35,7 +35,6 @@ namespace Client.Gameplay.Gameplay
     private GameplayRegionsController _gameplayRegionsController;
     private MapsService _mapsService;
     private PlayersService _playersService;
-    private IPlayerController _currentPlayer;
     private CancellationTokenSource _cts;
     private int _turnsCount;
     private bool _started;
@@ -91,8 +90,8 @@ namespace Client.Gameplay.Gameplay
       _started = true;
       _isPaused = false;
 
-      if (SetFirstPlayer())
-        _currentPlayer.StartTurn();
+      if (_playersService.HasAlivePlayers())
+        _playersService.CurrentPlayer.StartTurn();
 
       _cameraController.Setup();
     }
@@ -102,7 +101,7 @@ namespace Client.Gameplay.Gameplay
       if (!_started || !_playersService.HasAlivePlayers())
         return;
 
-      _currentPlayer.Tick();
+      _playersService.CurrentPlayer.Tick();
     }
 
     public void NextTurn()
@@ -110,17 +109,18 @@ namespace Client.Gameplay.Gameplay
       if (!_playersService.HasAlivePlayers() || _isPaused)
         return;
 
-      _currentPlayer.EndTurn();
+      _playersService.CurrentPlayer.EndTurn();
 
       if (CheckWin())
         return;
 
       var needAutosave = false;
 
-      if (!MoveNextPlayer())
+      if (!_playersService.SetNextAlivePlayerAsCurrent())
       {
         TurnsCount++;
-        SetFirstPlayer();
+        _playersService.SetFirstAlivePlayerAsCurrent();
+        //SetFirstPlayer();
         _treesController.UpdateTrees();
         needAutosave = true;
       }
@@ -135,15 +135,19 @@ namespace Client.Gameplay.Gameplay
       else
       {
         if (_playersService.MoreThenOneHumanPlayer())
-          _cameraController.Focus(_capitalsController.GetCapital(_governmentsService.Get(_currentPlayer.RegionType).Regions[0]).WorldPosition);
-        _currentPlayer.StartTurn();
+        {
+          var region = _governmentsService.Get(_playersService.CurrentPlayer.RegionType).Regions[0];
+          _cameraController.Focus(_capitalsController.GetCapital(region).WorldPosition);
+        }
+
+        _playersService.CurrentPlayer.StartTurn();
       }
     }
 
     public void Pause()
     {
       if (_playersService.HasAlivePlayers())
-        _currentPlayer.Pause();
+        _playersService.CurrentPlayer.Pause();
       _gameplayUI.ShowPause();
       _isPaused = true;
     }
@@ -184,38 +188,16 @@ namespace Client.Gameplay.Gameplay
       _gridController.DestroyAllCells();
     }
 
-    private bool SetFirstPlayer()
-    {
-      if (_playersService.HasAlivePlayers())
-      {
-        _currentPlayer = _playersService.GetFirstAlivePlayer();
-        return true;
-      }
-
-      return false;
-    }
-
     private void UpdatePlayerRegions()
     {
       foreach (var region in _regionsService.Regions)
       {
-        if (region.Type == _currentPlayer.RegionType)
+        if (region.Type == _playersService.CurrentPlayer.RegionType)
         {
           _treesController.UpdateGraves(region);
           _gameplayRegionsController.Update(region);
         }
       }
-    }
-
-    private bool MoveNextPlayer()
-    {
-      if (_playersService.CanGetNextAlivePlayer(_currentPlayer, out var next))
-      {
-        _currentPlayer = next;
-        return true;
-      }
-
-      return false;
     }
 
     private bool CheckWin()
@@ -234,7 +216,7 @@ namespace Client.Gameplay.Gameplay
       try
       {
         await UniTask.Delay(TimeSpan.FromSeconds(0.5f), cancellationToken: _cts.Token);
-        _currentPlayer.StartTurn();
+        _playersService.CurrentPlayer.StartTurn();
       }
       catch (OperationCanceledException)
       {

@@ -24,6 +24,8 @@ namespace Client.Project.Player
 
     public IReadOnlyList<IPlayerController> Players => _players;
 
+    public IPlayerController CurrentPlayer { get; private set; }
+
     public void Initialize() => _governmentsService = Locator.Get<GovernmentsService>();
 
     public void Setup(IReadOnlyMap map)
@@ -56,9 +58,21 @@ namespace Client.Project.Player
         for (var i = 0; i < players.Count; i++)
           CreatePlayer(players[i], i < PlayersMode ? PlayerType.Human : PlayerType.AI);
       }
+
+      if (HasAlivePlayers())
+      {
+        var playerType = map.CurrentPlayer;
+        if (playerType == default || !IsAlive(playerType))
+          playerType = GetFirstAlivePlayer().RegionType;
+        CurrentPlayer = _players.First(x => x.RegionType == playerType);
+      }
     }
 
-    public void ClearPlayers() => _players.Clear();
+    public void ClearPlayers()
+    {
+      _players.Clear();
+      CurrentPlayer = null;
+    }
 
     public bool HasAlivePlayers() => _players.Count(IsAlive) > 0;
 
@@ -74,7 +88,54 @@ namespace Client.Project.Player
       return false;
     }
 
-    public bool CanGetNextAlivePlayer(IPlayerController currentPlayer, out IPlayerController next)
+    public bool IsBotsBattle()
+    {
+      foreach (var player in _players)
+        if (IsAlive(player) && player.Type == PlayerType.Human)
+          return false;
+      return true;
+    }
+
+
+    public bool MoreThenOneHumanPlayer() => _players.Count(x => IsAlive(x) && x.Type == PlayerType.Human) > 1;
+
+    public void SetFirstAlivePlayerAsCurrent()
+    {
+      if (HasAlivePlayers())
+        CurrentPlayer = GetFirstAlivePlayer();
+    }
+
+    public bool SetNextAlivePlayerAsCurrent()
+    {
+      if (CanGetNextAlivePlayer(CurrentPlayer, out var next))
+      {
+        CurrentPlayer = next;
+        return true;
+      }
+
+      return false;
+    }
+
+    private void CreatePlayer(PlayerData player, PlayerType type)
+    {
+      IPlayerController controller;
+
+      if (type == PlayerType.Human)
+        controller = new HumanPlayerController(player.RegionType);
+      else
+        controller = new AIPlayerController(player.RegionType);
+
+      _players.Add(controller);
+    }
+
+
+    private bool IsAlive(IPlayerController player) => IsAlive(player.RegionType);
+
+    private bool IsAlive(RegionType type) => _governmentsService.IsAlive(type);
+
+    private IPlayerController GetFirstAlivePlayer() => _players.FirstOrDefault(IsAlive);
+
+    private bool CanGetNextAlivePlayer(IPlayerController currentPlayer, out IPlayerController next)
     {
       var currentIndex = _players.IndexOf(currentPlayer);
       var maxIndex = _players.Count - 1;
@@ -89,31 +150,5 @@ namespace Client.Project.Player
       next = null;
       return false;
     }
-
-    public bool IsBotsBattle()
-    {
-      foreach (var player in _players)
-        if (IsAlive(player) && player.Type == PlayerType.Human)
-          return false;
-      return true;
-    }
-
-    public IPlayerController GetFirstAlivePlayer() => _players.FirstOrDefault(IsAlive);
-
-    public bool MoreThenOneHumanPlayer() => _players.Count(x => IsAlive(x) && x.Type == PlayerType.Human) > 1;
-
-    private void CreatePlayer(PlayerData player, PlayerType type)
-    {
-      IPlayerController controller;
-
-      if (type == PlayerType.Human)
-        controller = new HumanPlayerController(player.RegionType);
-      else
-        controller = new AIPlayerController(player.RegionType);
-
-      _players.Add(controller);
-    }
-
-    private bool IsAlive(IPlayerController player) => _governmentsService.IsAlive(player.RegionType);
   }
 }

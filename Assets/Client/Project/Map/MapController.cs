@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Client.Project.Infrastructure;
 using Client.Project.Map.Data;
 using Client.Project.Player;
+using Client.Project.Region;
 
 namespace Client.Project.Map
 {
@@ -36,6 +37,8 @@ namespace Client.Project.Map
 
     public PlayerRegionType FirstPlayer => Data.FirstPlayer;
 
+    public RegionType CurrentPlayer => Data.CurrentPlayer;
+
     public IEnumerable<CellData> GetCells()
     {
       foreach (var player in Data.Players)
@@ -65,7 +68,8 @@ namespace Client.Project.Map
       var otherData = map.Data;
       Data = _mapsFactory.CreateMapData(_mapsFactory.CopyPlayers(otherData.InitialPlayers), _mapsFactory.CopyPlayers(otherData.Players),
         otherData.LevelSize, otherData.Name, map.CreationTime, otherData.Id, isAutosave: map.IsAutosave, isEditor: map.IsEditor,
-        playersMode: otherData.PlayersMode, difficultyMode: otherData.DifficultyMode, firstPlayer: otherData.FirstPlayer);
+        playersMode: otherData.PlayersMode, difficultyMode: otherData.DifficultyMode, firstPlayer: otherData.FirstPlayer, 
+        currentPlayer: otherData.CurrentPlayer);
     }
   }
 }
