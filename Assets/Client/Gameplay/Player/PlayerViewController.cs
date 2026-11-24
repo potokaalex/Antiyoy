@@ -17,13 +17,13 @@ namespace Client.Gameplay.Player
     private GameplayUI _gameplayUI;
     private BordersService _bordersService;
     private ProtectionView _protectionView;
-    private PlayerController _playerController;
+    private HumanPlayerController _humanPlayerController;
     private CapitalsMarksController _capitalsMarksController;
     private UnitSelectionView _unitSelectionViw;
     private WarriorUnitsAnimator _warriorUnitsAnimator;
     private TileClickView _tileClickView;
 
-    public RegionController SelectedRegion => _playerController.SelectedRegion;
+    public RegionController SelectedRegion => _humanPlayerController.SelectedRegion;
 
     public void Initialize()
     {
@@ -38,16 +38,16 @@ namespace Client.Gameplay.Player
       _tileClickView = Locator.Get<TileClickView>();
     }
 
-    public void SetPlayerController(PlayerController playerController)
+    public void SetPlayerController(HumanPlayerController humanPlayerController)
     {
-      _playerController = playerController;
-      _warriorUnitsAnimator.StartAnimations(playerController.RegionType);
-      _capitalsMarksController.StartAnimations(playerController.RegionType);
+      _humanPlayerController = humanPlayerController;
+      _warriorUnitsAnimator.StartAnimations(humanPlayerController.RegionType);
+      _capitalsMarksController.StartAnimations(humanPlayerController.RegionType);
     }
 
     public void ClearPlayerController()
     {
-      _playerController = null;
+      _humanPlayerController = null;
       _warriorUnitsAnimator.StopAnimations();
       _capitalsMarksController.StopAnimations();
     }
@@ -91,11 +91,11 @@ namespace Client.Gameplay.Player
 
     public void Undo()
     {
-      if (_playerController != null)
-        _playerController.Undo();
+      if (_humanPlayerController != null)
+        _humanPlayerController.Undo();
     }
 
-    public void SetCreateUnitMode(UnitType unitType) => _playerController.SetCreateUnitMode(unitType);
+    public void SetCreateUnitMode(UnitType unitType) => _humanPlayerController.SetCreateUnitMode(unitType);
 
     public void ClearUnitSelectionView() => _unitSelectionViw.Hide();
 

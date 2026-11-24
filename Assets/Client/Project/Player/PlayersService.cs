@@ -54,7 +54,7 @@ namespace Client.Project.Player
           players.RemoveAt(neutralIndex);
 
         for (var i = 0; i < players.Count; i++)
-          CreatePlayer(players[i], i < PlayersMode ? PlayerType.OnDevice : PlayerType.AI);
+          CreatePlayer(players[i], i < PlayersMode ? PlayerType.Human : PlayerType.AI);
       }
     }
 
@@ -93,19 +93,21 @@ namespace Client.Project.Player
     public bool IsBotsBattle()
     {
       foreach (var player in _players)
-        if (IsAlive(player) && player.Type == PlayerType.OnDevice)
+        if (IsAlive(player) && player.Type == PlayerType.Human)
           return false;
       return true;
     }
 
     public IPlayerController GetFirstAlivePlayer() => _players.FirstOrDefault(IsAlive);
 
+    public bool MoreThenOneHumanPlayer() => _players.Count(x => IsAlive(x) && x.Type == PlayerType.Human) > 1;
+
     private void CreatePlayer(PlayerData player, PlayerType type)
     {
       IPlayerController controller;
 
-      if (type == PlayerType.OnDevice)
-        controller = new PlayerController(player.RegionType);
+      if (type == PlayerType.Human)
+        controller = new HumanPlayerController(player.RegionType);
       else
         controller = new AIPlayerController(player.RegionType);
 

@@ -35,8 +35,8 @@ namespace Client.MapEditor.UI
     {
       _region = region;
       _topAndBottomMenuAnimator.PlayShow();
-      ViewRegionMoney();
       _customSlider.SetValueWithoutNotify(GetClosestValueIndex(_region.Money));
+      ViewRegionMoney();
       _bordersService.ViewRegionSelectionBorders(region, false);
     }
 

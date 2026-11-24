@@ -132,7 +132,11 @@ namespace Client.Gameplay.Gameplay
           _currentPlayer.StartTurn();
         }).Forget();
       else
+      {
+        if(_playersService.MoreThenOneHumanPlayer())
+          _cameraController.Focus(_capitalsController.GetCapital(_governmentsService.Get(_currentPlayer.RegionType).Regions[0]).WorldPosition);
         _currentPlayer.StartTurn();
+      }
     }
 
     public void Pause()
