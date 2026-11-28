@@ -8,7 +8,7 @@
 - AI
 - Online
 - Diplomacy
-- Victory Predict
+- Victory predict
 - Game replay
 - Statistics
 - Settings
