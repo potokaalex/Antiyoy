@@ -5,13 +5,13 @@
 - UniTask
 
 ### Not implemented
-- AI.
-- Online.
-- Diplomacy.
-- Victory Predict.
-- Game replay.
-- Statistics.
-- Settings.
+- AI
+- Online
+- Diplomacy
+- Victory Predict
+- Game replay
+- Statistics
+- Settings
 
 ### Problems
 - A close connection between the game data and the logic.
