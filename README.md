@@ -4,7 +4,7 @@
 - DoTween
 - UniTask
 
-### Not implemented
+### Not implemented:
 - AI
 - Online
 - Diplomacy
@@ -13,6 +13,6 @@
 - Statistics
 - Settings
 
-### Problems
+### Problems:
 - A close connection between the game data and the logic.
 - The format of the MapData.
