@@ -247,6 +247,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e61b378d1c1744f6b4c27fab28149d80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Client::Client.UITests.MainMenu.MainMenuView
+--- !u!331 &1285835218 stripped
+SpriteMask:
+  m_CorrespondingSourceObject: {fileID: 7390176238179915508, guid: de2618af98cc6ad4f89432b995a43a40, type: 3}
+  m_PrefabInstance: {fileID: 7482117256635800560}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1436845849
 GameObject:
   m_ObjectHideFlags: 0
@@ -1333,6 +1338,10 @@ PrefabInstance:
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 3146268636949199500, guid: de2618af98cc6ad4f89432b995a43a40, type: 3}
+    - target: {fileID: 3415073252693007450, guid: de2618af98cc6ad4f89432b995a43a40, type: 3}
+      propertyPath: _spriteMask
+      value: 
+      objectReference: {fileID: 1285835218}
     - target: {fileID: 4790469562312440994, guid: de2618af98cc6ad4f89432b995a43a40, type: 3}
       propertyPath: _zoomLerpFactor
       value: 10

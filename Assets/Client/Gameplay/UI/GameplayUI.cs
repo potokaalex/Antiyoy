@@ -18,8 +18,6 @@ namespace Client.Gameplay.UI
 
     public void HideRegionUI() => _view.HideRegionUI();
 
-    public void ViewTurnsCount(int value) => _view.ViewTurnsCount(value);
-
     public void ShowEndScreen(RegionType winner) => _view.ShowEndScreen(winner);
 
     public void ClearRegionCreation() => _view.ClearRegionCreation();

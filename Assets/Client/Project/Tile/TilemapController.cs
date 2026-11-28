@@ -65,6 +65,7 @@ namespace Client.Project.Tile
         var tilemapPosition = GetPosition(cell.Position);
         _tilemapMask.SetTile(tilemapPosition, _tile);
       }
+      _tilemapMask.CompressBounds();
     }
 
     public void TilemapMaskClearTiles()

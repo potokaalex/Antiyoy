@@ -5,7 +5,6 @@ using Client.Project.Infrastructure;
 using Client.Project.UI;
 using Client.Project.Utilities;
 using DG.Tweening;
-using TMPro;
 using UnityEngine;
 
 namespace Client.Gameplay.UI.Hud
@@ -14,7 +13,6 @@ namespace Client.Gameplay.UI.Hud
   {
     [SerializeField] private CustomButton _nextTurnButton;
     [SerializeField] private RegionView _regionView;
-    [SerializeField] private TextMeshProUGUI _turnsCount;
     [SerializeField] private RectTransform _topPanel;
     [SerializeField] private RectTransform _bottomPanel;
     [SerializeField] private CanvasGroup _canvasGroup;
@@ -57,8 +55,6 @@ namespace Client.Gameplay.UI.Hud
       if (_inputController.BackClicked)
         _pauseButton.Click();
     }
-
-    public void ViewTurnsCount(int value) => _turnsCount.SetText($"Turn {value}");
 
     public void PlayShow()
     {

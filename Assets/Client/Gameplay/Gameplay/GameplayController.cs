@@ -36,19 +36,8 @@ namespace Client.Gameplay.Gameplay
     private MapsService _mapsService;
     private PlayersService _playersService;
     private CancellationTokenSource _cts;
-    private int _turnsCount;
     private bool _started;
     private bool _isPaused;
-
-    private int TurnsCount
-    {
-      get => _turnsCount;
-      set
-      {
-        _turnsCount = value;
-        _gameplayUI.ViewTurnsCount(value);
-      }
-    }
 
     public void Initialize()
     {
@@ -84,7 +73,6 @@ namespace Client.Gameplay.Gameplay
       _capitalsController.CheckCapitals();
       _gameplayRegionsController.Enable();
 
-      TurnsCount = 0;
       _bordersService.ViewRegionsBorders();
       _gameplayUI.PlayShow();
       _started = true;
@@ -118,9 +106,7 @@ namespace Client.Gameplay.Gameplay
 
       if (!_playersService.SetNextAlivePlayerAsCurrent())
       {
-        TurnsCount++;
         _playersService.SetFirstAlivePlayerAsCurrent();
-        //SetFirstPlayer();
         _treesController.UpdateTrees();
         needAutosave = true;
       }

@@ -7,7 +7,6 @@ using Client.Project.Player;
 using Client.Project.Region;
 using Client.Project.Unit.Code;
 using Client.Project.Utilities;
-using UnityEngine;
 
 namespace Client.Gameplay.Player
 {
@@ -57,11 +56,7 @@ namespace Client.Gameplay.Player
 
     public void Pause() => Clear();
 
-    public void StartTurn()
-    {
-      Debug.Log($"OnDevicePlayer turn: {RegionType}");
-      _playerViewController.SetPlayerController(this);
-    }
+    public void StartTurn() => _playerViewController.SetPlayerController(this);
 
     public void EndTurn()
     {

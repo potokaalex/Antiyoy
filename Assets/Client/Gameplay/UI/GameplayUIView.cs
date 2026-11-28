@@ -32,8 +32,6 @@ namespace Client.Gameplay.UI
 
     public void HideRegionUI() => _hudView.Region.SetActive(false);
 
-    public void ViewTurnsCount(int value) => _hudView.ViewTurnsCount(value);
-
     public void ShowEndScreen(RegionType winner)
     {
       _hudView.PlayHide();
